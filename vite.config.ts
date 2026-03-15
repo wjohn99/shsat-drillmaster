@@ -5,8 +5,8 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  // GitHub Pages base path: https://wjohn99.github.io/shsat-drillmaster/
-  base: "/shsat-drillmaster/",
+  // Use base path only for production builds (GitHub Pages)
+  base: mode === "production" ? "/shsat-drillmaster/" : "/",
   server: {
     host: "::",
     port: 8080,
