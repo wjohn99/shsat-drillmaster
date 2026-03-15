@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FilterPanel } from "@/components/bank/FilterPanel";
 import { QuestionCard } from "@/components/question/QuestionCard";
-import { getFilteredQuestions } from "@/data/mockData";
+import { getFilteredQuestions, questions } from "@/data/mockData";
 import { Loader2, Grid3X3, List } from "lucide-react";
 
 const QuestionBank = () => {
@@ -33,7 +33,7 @@ const QuestionBank = () => {
           {/* Sidebar */}
           <div className="w-80 flex-shrink-0">
             <FilterPanel 
-              totalCount={3290}
+              totalCount={questions.length}
               filteredCount={filteredQuestions.length}
               onFiltersChange={handleFiltersChange}
             />
@@ -96,8 +96,8 @@ const QuestionBank = () => {
               </Card>
             )}
 
-            {/* Load More */}
-            {filteredQuestions.length > 0 && !isLoading && (
+            {/* Load More - only show when there are more questions to load (e.g. pagination) */}
+            {filteredQuestions.length > 0 && filteredQuestions.length < questions.length && !isLoading && (
               <div className="text-center mt-8">
                 <Button variant="outline">
                   Load More Questions

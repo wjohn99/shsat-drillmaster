@@ -16,21 +16,19 @@ import {
   Brain,
   Target
 } from "lucide-react";
-import { Subject, Difficulty, ScoreBand } from "@/types";
+import { Subject, ScoreBand } from "@/types";
 import { allTags, getFilteredQuestions } from "@/data/mockData";
 
 export default function PracticeSetup() {
   const navigate = useNavigate();
   
   const [selectedSubjects, setSelectedSubjects] = useState<Subject[]>([]);
-  const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
   const [selectedScoreBands, setSelectedScoreBands] = useState<ScoreBand[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [questionsCount, setQuestionsCount] = useState(20);
   const [timedMode, setTimedMode] = useState(true);
 
   const subjects: Subject[] = ['MATH', 'ELA'];
-  const difficulties: Difficulty[] = ['Easy', 'Medium', 'Hard'];
   const scoreBands: ScoreBand[] = [1, 2, 3, 4, 5, 6, 7, 8];
 
   const toggleArraySelection = <T,>(array: T[], setArray: (arr: T[]) => void, item: T) => {
@@ -44,7 +42,6 @@ export default function PracticeSetup() {
   const getAvailableQuestions = () => {
     return getFilteredQuestions({
       subjects: selectedSubjects,
-      difficulties: selectedDifficulties,
       scoreBands: selectedScoreBands,
       tagCodes: selectedTags
     });
@@ -55,7 +52,6 @@ export default function PracticeSetup() {
   const startPractice = () => {
     const params = new URLSearchParams();
     if (selectedSubjects.length > 0) params.set('subjects', selectedSubjects.join(','));
-    if (selectedDifficulties.length > 0) params.set('difficulties', selectedDifficulties.join(','));
     if (selectedScoreBands.length > 0) params.set('scoreBands', selectedScoreBands.join(','));
     if (selectedTags.length > 0) params.set('tagCodes', selectedTags.join(','));
     params.set('count', questionsCount.toString());
@@ -102,30 +98,6 @@ export default function PracticeSetup() {
                         className="flex-1 justify-center"
                       >
                         {subject}
-                      </Chip>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Difficulty Selection */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Target className="h-5 w-5" />
-                    Difficulty
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex gap-3">
-                    {difficulties.map((difficulty) => (
-                      <Chip
-                        key={difficulty}
-                        variant={selectedDifficulties.includes(difficulty) ? "selected" : "default"}
-                        onClick={() => toggleArraySelection(selectedDifficulties, setSelectedDifficulties, difficulty)}
-                        className="flex-1 justify-center"
-                      >
-                        {difficulty}
                       </Chip>
                     ))}
                   </div>
@@ -280,12 +252,6 @@ export default function PracticeSetup() {
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Difficulty:</span>
-                      <span>
-                        {selectedDifficulties.length === 0 ? 'All' : selectedDifficulties.join(', ')}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
                       <span>Est. Time:</span>
                       <span>{Math.round(questionsCount * 1.5)} min</span>
                     </div>
@@ -316,7 +282,7 @@ export default function PracticeSetup() {
                   <Button 
                     variant="outline" 
                     className="w-full"
-                    onClick={() => navigate('/bank')}
+                    onClick={() => navigate('/question-bank')}
                   >
                     Browse Individual Questions
                   </Button>
