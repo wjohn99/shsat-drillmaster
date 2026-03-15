@@ -17,6 +17,7 @@ import {
 import { Link } from "react-router-dom";
 import { questions, forms } from "@/data/mockData";
 import heroImage from "@/assets/hero-education.jpg";
+import logoIcon from "@/assets/logo-icon.png";
 
 const Index = () => {
   const stats = {
@@ -244,7 +245,7 @@ const Index = () => {
           <div className="flex h-full items-center justify-between">
             <div className="flex items-center space-x-2">
               <div className="flex h-12 w-12 items-center justify-center">
-                <img src="/src/assets/logo-icon.png" alt="StepPrep Logo" className="h-12 w-12 object-contain" />
+                <img src={logoIcon} alt="StepPrep Logo" className="h-12 w-12 object-contain" />
               </div>
               <div className="flex flex-col">
                 <span className="text-lg font-bold">StepPrep</span>

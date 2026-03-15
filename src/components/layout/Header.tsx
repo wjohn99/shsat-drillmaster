@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, User, Search, Menu } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import logoIcon from "@/assets/logo-icon.png";
 
 export const Header = () => {
   const location = useLocation();
@@ -14,7 +15,7 @@ export const Header = () => {
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2">
           <div className="flex h-12 w-12 items-center justify-center">
-            <img src="/src/assets/logo-icon.png" alt="StepPrep Logo" className="h-12 w-12 object-contain" />
+            <img src={logoIcon} alt="StepPrep Logo" className="h-12 w-12 object-contain" />
           </div>
           <div className="flex flex-col">
             <span className="text-lg font-bold">StepPrep</span>
