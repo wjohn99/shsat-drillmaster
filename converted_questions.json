@@ -1,0 +1,2849 @@
+[
+  {
+    "id": "q9",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "A bicycle that originally cost $420 is on sale for 30% off. What is the sale price of the bicycle?",
+    "choices": [
+      {
+        "id": "q9-a",
+        "label": "A",
+        "text": "$126",
+        "isCorrect": false
+      },
+      {
+        "id": "q9-b",
+        "label": "B",
+        "text": "$294",
+        "isCorrect": false
+      },
+      {
+        "id": "q9-c",
+        "label": "C",
+        "text": "$300",
+        "isCorrect": false
+      },
+      {
+        "id": "q9-d",
+        "label": "D",
+        "text": "$390",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-10",
+        "domain": "MATH",
+        "code": "",
+        "label": "percent"
+      },
+      {
+        "id": "math-10",
+        "domain": "MATH",
+        "code": "",
+        "label": "discount"
+      },
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "arithmetic"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.299Z"
+  },
+  {
+    "id": "q10",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Medium",
+    "scoreBand": 4,
+    "stem": "A circle with a radius of 4 inches is inscribed perfectly inside a square. What is the area of the region that is inside the square but outside the circle, in square inches?",
+    "choices": [
+      {
+        "id": "q10-e",
+        "label": "E",
+        "text": "64−16π",
+        "isCorrect": false
+      },
+      {
+        "id": "q10-f",
+        "label": "F",
+        "text": "64−8π",
+        "isCorrect": false
+      },
+      {
+        "id": "q10-g",
+        "label": "G",
+        "text": "16−16π",
+        "isCorrect": false
+      },
+      {
+        "id": "q10-h",
+        "label": "H",
+        "text": "16−8π",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-16",
+        "domain": "MATH",
+        "code": "",
+        "label": "geometry"
+      },
+      {
+        "id": "math-16",
+        "domain": "MATH",
+        "code": "",
+        "label": "area"
+      },
+      {
+        "id": "math-19",
+        "domain": "MATH",
+        "code": "",
+        "label": "circles"
+      },
+      {
+        "id": "math-17",
+        "domain": "MATH",
+        "code": "",
+        "label": "squares"
+      }
+    ],
+    "timeToSolve": 120,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.299Z"
+  },
+  {
+    "id": "q11",
+    "subject": "MATH",
+    "subtype": "GRID_IN",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "What is the value of the expression 20 − 3 × (4 − 2)?",
+    "tags": [
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "order_of_operations"
+      },
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "arithmetic"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.299Z"
+  },
+  {
+    "id": "q12",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "If 9k − 15 = 4k + 5, what is the value of k?",
+    "choices": [
+      {
+        "id": "q12-e",
+        "label": "E",
+        "text": "1",
+        "isCorrect": false
+      },
+      {
+        "id": "q12-f",
+        "label": "F",
+        "text": "2",
+        "isCorrect": false
+      },
+      {
+        "id": "q12-g",
+        "label": "G",
+        "text": "3",
+        "isCorrect": false
+      },
+      {
+        "id": "q12-h",
+        "label": "H",
+        "text": "4",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "algebra"
+      },
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "solve_linear_equation"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.299Z"
+  },
+  {
+    "id": "q13",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "The mean of five test scores is 85. If four of the scores are 80, 92, 78, and 88, what is the fifth score?",
+    "choices": [
+      {
+        "id": "q13-a",
+        "label": "A",
+        "text": "85",
+        "isCorrect": false
+      },
+      {
+        "id": "q13-b",
+        "label": "B",
+        "text": "87",
+        "isCorrect": false
+      },
+      {
+        "id": "q13-c",
+        "label": "C",
+        "text": "89",
+        "isCorrect": false
+      },
+      {
+        "id": "q13-d",
+        "label": "D",
+        "text": "91",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-11",
+        "domain": "MATH",
+        "code": "",
+        "label": "statistics"
+      },
+      {
+        "id": "math-11",
+        "domain": "MATH",
+        "code": "",
+        "label": "mean"
+      },
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "algebra"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.299Z"
+  },
+  {
+    "id": "q14",
+    "subject": "MATH",
+    "subtype": "TEI_DRAG_DROP",
+    "difficulty": "Medium",
+    "scoreBand": 4,
+    "stem": "A phone was originally priced at $800. It is first discounted by 25%. Then, a 10% sales tax is applied to the discounted price. What is the final cost of the phone?\nMove the correct answer into the correct box: [600, 540, 680, 660, 720]",
+    "tags": [
+      {
+        "id": "math-10",
+        "domain": "MATH",
+        "code": "",
+        "label": "percent"
+      },
+      {
+        "id": "math-10",
+        "domain": "MATH",
+        "code": "",
+        "label": "discount"
+      },
+      {
+        "id": "math-10",
+        "domain": "MATH",
+        "code": "",
+        "label": "sales_tax"
+      },
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "multi_step"
+      }
+    ],
+    "timeToSolve": 120,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.299Z"
+  },
+  {
+    "id": "q15",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "How many distinct prime factors does the number 120 have?",
+    "choices": [
+      {
+        "id": "q15-a",
+        "label": "A",
+        "text": "2",
+        "isCorrect": false
+      },
+      {
+        "id": "q15-b",
+        "label": "B",
+        "text": "3",
+        "isCorrect": false
+      },
+      {
+        "id": "q15-c",
+        "label": "C",
+        "text": "4",
+        "isCorrect": false
+      },
+      {
+        "id": "q15-d",
+        "label": "D",
+        "text": "8",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "number_theory"
+      },
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "prime_factorization"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.299Z"
+  },
+  {
+    "id": "q16",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Medium",
+    "scoreBand": 4,
+    "stem": "A car travels for 2 hours at a speed of 50 miles per hour and then for 3 hours at a speed of 40 miles per hour. What is the car's average speed for the entire 5-hour trip?",
+    "choices": [
+      {
+        "id": "q16-e",
+        "label": "E",
+        "text": "44 mph",
+        "isCorrect": false
+      },
+      {
+        "id": "q16-f",
+        "label": "F",
+        "text": "45 mph",
+        "isCorrect": false
+      },
+      {
+        "id": "q16-g",
+        "label": "G",
+        "text": "46 mph",
+        "isCorrect": false
+      },
+      {
+        "id": "q16-h",
+        "label": "H",
+        "text": "48 mph",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-9",
+        "domain": "MATH",
+        "code": "",
+        "label": "rate"
+      },
+      {
+        "id": "math-9",
+        "domain": "MATH",
+        "code": "",
+        "label": "average_speed"
+      },
+      {
+        "id": "math-11",
+        "domain": "MATH",
+        "code": "",
+        "label": "weighted_average"
+      }
+    ],
+    "timeToSolve": 120,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.299Z"
+  },
+  {
+    "id": "q17",
+    "subject": "MATH",
+    "subtype": "TEI_MULTIPLE_SELECT",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "Select all of the following expressions that are equivalent to 3(2x+5).",
+    "choices": [
+      {
+        "id": "q17-1",
+        "label": "1",
+        "text": "6x + 15",
+        "isCorrect": false
+      },
+      {
+        "id": "q17-2",
+        "label": "2",
+        "text": "3(2x) + 3(5)",
+        "isCorrect": false
+      },
+      {
+        "id": "q17-3",
+        "label": "3",
+        "text": "5x + 8",
+        "isCorrect": false
+      },
+      {
+        "id": "q17-4",
+        "label": "4",
+        "text": "3(5 + 2x)",
+        "isCorrect": false
+      },
+      {
+        "id": "q17-5",
+        "label": "5",
+        "text": "6x+5",
+        "isCorrect": false
+      },
+      {
+        "id": "q17-6",
+        "label": "6",
+        "text": "3x+10",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "algebra"
+      },
+      {
+        "id": "math-7",
+        "domain": "MATH",
+        "code": "",
+        "label": "distributive_property"
+      },
+      {
+        "id": "math-7",
+        "domain": "MATH",
+        "code": "",
+        "label": "select_all"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.299Z"
+  },
+  {
+    "id": "q18",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Medium",
+    "scoreBand": 4,
+    "stem": "A bag contains 4 red marbles and 6 blue marbles. A marble is drawn at random and not replaced. A second marble is then drawn. What is the probability that both marbles drawn are red?",
+    "choices": [
+      {
+        "id": "q18-e",
+        "label": "E",
+        "text": "2/15",
+        "isCorrect": false
+      },
+      {
+        "id": "q18-f",
+        "label": "F",
+        "text": "4/15",
+        "isCorrect": false
+      },
+      {
+        "id": "q18-g",
+        "label": "G",
+        "text": "1/5",
+        "isCorrect": false
+      },
+      {
+        "id": "q18-h",
+        "label": "H",
+        "text": "4/25",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-13",
+        "domain": "MATH",
+        "code": "",
+        "label": "probability"
+      },
+      {
+        "id": "math-13",
+        "domain": "MATH",
+        "code": "",
+        "label": "without_replacement"
+      }
+    ],
+    "timeToSolve": 120,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q19",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "What is the midpoint of the line segment connecting the points A(-4, 9) and B(8, 1)?",
+    "choices": [
+      {
+        "id": "q19-a",
+        "label": "A",
+        "text": "(2, 5)",
+        "isCorrect": false
+      },
+      {
+        "id": "q19-b",
+        "label": "B",
+        "text": "(4, 10)",
+        "isCorrect": false
+      },
+      {
+        "id": "q19-c",
+        "label": "C",
+        "text": "(6, 4)",
+        "isCorrect": false
+      },
+      {
+        "id": "q19-d",
+        "label": "D",
+        "text": "(12, 8)",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-17",
+        "domain": "MATH",
+        "code": "",
+        "label": "coordinate_geometry"
+      },
+      {
+        "id": "math-17",
+        "domain": "MATH",
+        "code": "",
+        "label": "midpoint"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q20",
+    "subject": "MATH",
+    "subtype": "TEI_DRAG_DROP",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "A recipe that makes 12 cookies requires 3 cups of flour. Based on this ratio, how many cups of flour are needed to make 30 cookies?\nMove the correct answer into the correct box: [10, 6, 7.5, 9, 8]",
+    "tags": [
+      {
+        "id": "math-9",
+        "domain": "MATH",
+        "code": "",
+        "label": "ratio_proportion"
+      },
+      {
+        "id": "math-9",
+        "domain": "MATH",
+        "code": "",
+        "label": "scale_up"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q21",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Medium",
+    "scoreBand": 4,
+    "stem": "The three angles of a triangle are in the ratio 2:3:4. What is the measure, in degrees, of the smallest angle?",
+    "choices": [
+      {
+        "id": "q21-a",
+        "label": "A",
+        "text": "20",
+        "isCorrect": false
+      },
+      {
+        "id": "q21-b",
+        "label": "B",
+        "text": "40",
+        "isCorrect": false
+      },
+      {
+        "id": "q21-c",
+        "label": "C",
+        "text": "60",
+        "isCorrect": false
+      },
+      {
+        "id": "q21-d",
+        "label": "D",
+        "text": "80",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-16",
+        "domain": "MATH",
+        "code": "",
+        "label": "geometry"
+      },
+      {
+        "id": "math-9",
+        "domain": "MATH",
+        "code": "",
+        "label": "ratios"
+      },
+      {
+        "id": "math-17",
+        "domain": "MATH",
+        "code": "",
+        "label": "triangle_sum"
+      }
+    ],
+    "timeToSolve": 120,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q22",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "Liam invests $2,000 in an account that earns 4% simple interest annually. How much interest will he have earned after 3 years?",
+    "choices": [
+      {
+        "id": "q22-e",
+        "label": "E",
+        "text": "$80",
+        "isCorrect": false
+      },
+      {
+        "id": "q22-f",
+        "label": "F",
+        "text": "$120",
+        "isCorrect": false
+      },
+      {
+        "id": "q22-g",
+        "label": "G",
+        "text": "$240",
+        "isCorrect": false
+      },
+      {
+        "id": "q22-h",
+        "label": "H",
+        "text": "$2,240",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-10",
+        "domain": "MATH",
+        "code": "",
+        "label": "finance"
+      },
+      {
+        "id": "math-10",
+        "domain": "MATH",
+        "code": "",
+        "label": "simple_interest"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q23",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Medium",
+    "scoreBand": 4,
+    "stem": "A trapezoid has parallel bases of 9 cm and 15 cm, and a height of 6 cm. What is the area of the trapezoid in square centimeters?",
+    "choices": [
+      {
+        "id": "q23-a",
+        "label": "A",
+        "text": "54",
+        "isCorrect": false
+      },
+      {
+        "id": "q23-b",
+        "label": "B",
+        "text": "72",
+        "isCorrect": false
+      },
+      {
+        "id": "q23-c",
+        "label": "C",
+        "text": "108",
+        "isCorrect": false
+      },
+      {
+        "id": "q23-d",
+        "label": "D",
+        "text": "144",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-16",
+        "domain": "MATH",
+        "code": "",
+        "label": "geometry"
+      },
+      {
+        "id": "math-16",
+        "domain": "MATH",
+        "code": "",
+        "label": "area"
+      },
+      {
+        "id": "math-16",
+        "domain": "MATH",
+        "code": "",
+        "label": "trapezoid"
+      }
+    ],
+    "timeToSolve": 120,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q24",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Medium",
+    "scoreBand": 4,
+    "stem": "If a is a positive odd integer and b is a positive even integer, which of the following expressions MUST result in an odd integer?",
+    "choices": [
+      {
+        "id": "q24-e",
+        "label": "E",
+        "text": "a×b",
+        "isCorrect": false
+      },
+      {
+        "id": "q24-f",
+        "label": "F",
+        "text": "a+b",
+        "isCorrect": false
+      },
+      {
+        "id": "q24-g",
+        "label": "G",
+        "text": "2a+b",
+        "isCorrect": false
+      },
+      {
+        "id": "q24-h",
+        "label": "H",
+        "text": "a−b−1",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "number_properties"
+      },
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "parity"
+      }
+    ],
+    "timeToSolve": 120,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q25",
+    "subject": "MATH",
+    "subtype": "GRID_IN",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "What is the value of x if (2x/3) − 5 = 7?",
+    "tags": [
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "algebra"
+      },
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "solve_linear_equation"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q26",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "A drawer contains 5 black socks, 8 white socks, and 3 gray socks. What is the probability of randomly selecting a sock that is NOT white?",
+    "choices": [
+      {
+        "id": "q26-e",
+        "label": "E",
+        "text": "1/2",
+        "isCorrect": false
+      },
+      {
+        "id": "q26-f",
+        "label": "F",
+        "text": "3/16",
+        "isCorrect": false
+      },
+      {
+        "id": "q26-g",
+        "label": "G",
+        "text": "5/16",
+        "isCorrect": false
+      },
+      {
+        "id": "q26-h",
+        "label": "H",
+        "text": "1/8",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-13",
+        "domain": "MATH",
+        "code": "",
+        "label": "probability"
+      },
+      {
+        "id": "math-13",
+        "domain": "MATH",
+        "code": "",
+        "label": "complement"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q27",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Medium",
+    "scoreBand": 4,
+    "stem": "What is the slope of a line that is perpendicular to the line passing through the points (1, 2) and (5, 10)?",
+    "choices": [
+      {
+        "id": "q27-a",
+        "label": "A",
+        "text": "2",
+        "isCorrect": false
+      },
+      {
+        "id": "q27-b",
+        "label": "B",
+        "text": "-2",
+        "isCorrect": false
+      },
+      {
+        "id": "q27-c",
+        "label": "C",
+        "text": "1/2",
+        "isCorrect": false
+      },
+      {
+        "id": "q27-d",
+        "label": "D",
+        "text": "-1/2",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-2",
+        "domain": "MATH",
+        "code": "",
+        "label": "slope"
+      },
+      {
+        "id": "math-2",
+        "domain": "MATH",
+        "code": "",
+        "label": "perpendicular_lines"
+      }
+    ],
+    "timeToSolve": 120,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q28",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "A machine fills 30 bottles in 4 minutes. At this constant rate, how many bottles can the machine fill in 10 minutes?",
+    "choices": [
+      {
+        "id": "q28-e",
+        "label": "E",
+        "text": "60",
+        "isCorrect": false
+      },
+      {
+        "id": "q28-f",
+        "label": "F",
+        "text": "75",
+        "isCorrect": false
+      },
+      {
+        "id": "q28-g",
+        "label": "G",
+        "text": "80",
+        "isCorrect": false
+      },
+      {
+        "id": "q28-h",
+        "label": "H",
+        "text": "120",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "rates"
+      },
+      {
+        "id": "math-9",
+        "domain": "MATH",
+        "code": "",
+        "label": "proportion"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q29",
+    "subject": "MATH",
+    "subtype": "GRID_IN",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "A store sold 250 hats last month. Of those, 40% were baseball caps. How many baseball caps did the store sell?",
+    "tags": [
+      {
+        "id": "math-10",
+        "domain": "MATH",
+        "code": "",
+        "label": "percent"
+      },
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "arithmetic"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q30",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "What is the value of the expression 3x^2 − 2y when x = -2 and y = 4?",
+    "choices": [
+      {
+        "id": "q30-e",
+        "label": "E",
+        "text": "-20",
+        "isCorrect": false
+      },
+      {
+        "id": "q30-f",
+        "label": "F",
+        "text": "-4",
+        "isCorrect": false
+      },
+      {
+        "id": "q30-g",
+        "label": "G",
+        "text": "4",
+        "isCorrect": false
+      },
+      {
+        "id": "q30-h",
+        "label": "H",
+        "text": "20",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-7",
+        "domain": "MATH",
+        "code": "",
+        "label": "substitution"
+      },
+      {
+        "id": "math-7",
+        "domain": "MATH",
+        "code": "",
+        "label": "expressions"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q31",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "A rectangular park is 30 meters wide and 40 meters long. If a person walks diagonally across the park from one corner to the opposite corner, what is the distance they walk in meters?",
+    "choices": [
+      {
+        "id": "q31-a",
+        "label": "A",
+        "text": "50",
+        "isCorrect": false
+      },
+      {
+        "id": "q31-b",
+        "label": "B",
+        "text": "60",
+        "isCorrect": false
+      },
+      {
+        "id": "q31-c",
+        "label": "C",
+        "text": "70",
+        "isCorrect": false
+      },
+      {
+        "id": "q31-d",
+        "label": "D",
+        "text": "1200",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-18",
+        "domain": "MATH",
+        "code": "",
+        "label": "pythagorean_theorem"
+      },
+      {
+        "id": "math-18",
+        "domain": "MATH",
+        "code": "",
+        "label": "distance"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q32",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Medium",
+    "scoreBand": 4,
+    "stem": "What is the median of the following set of numbers: 14, 9, 21, 15, 9, 18?",
+    "choices": [
+      {
+        "id": "q32-e",
+        "label": "E",
+        "text": "9",
+        "isCorrect": false
+      },
+      {
+        "id": "q32-f",
+        "label": "F",
+        "text": "14",
+        "isCorrect": false
+      },
+      {
+        "id": "q32-g",
+        "label": "G",
+        "text": "14.5",
+        "isCorrect": false
+      },
+      {
+        "id": "q32-h",
+        "label": "H",
+        "text": "15",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-11",
+        "domain": "MATH",
+        "code": "",
+        "label": "statistics"
+      },
+      {
+        "id": "math-11",
+        "domain": "MATH",
+        "code": "",
+        "label": "median"
+      }
+    ],
+    "timeToSolve": 120,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q33",
+    "subject": "MATH",
+    "subtype": "TEI_MULTIPLE_SELECT",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "Select all of the following numbers that are factors of 72.",
+    "choices": [
+      {
+        "id": "q33-1",
+        "label": "1",
+        "text": "3",
+        "isCorrect": false
+      },
+      {
+        "id": "q33-2",
+        "label": "2",
+        "text": "4",
+        "isCorrect": false
+      },
+      {
+        "id": "q33-3",
+        "label": "3",
+        "text": "5",
+        "isCorrect": false
+      },
+      {
+        "id": "q33-4",
+        "label": "4",
+        "text": "6",
+        "isCorrect": false
+      },
+      {
+        "id": "q33-5",
+        "label": "5",
+        "text": "8",
+        "isCorrect": false
+      },
+      {
+        "id": "q33-6",
+        "label": "6",
+        "text": "9",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "factors_multiples"
+      },
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "number_theory"
+      },
+      {
+        "id": "math-7",
+        "domain": "MATH",
+        "code": "",
+        "label": "select_all"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q34",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "The sum of two numbers is 25 and their difference is 7. What is the larger of the two numbers?",
+    "choices": [
+      {
+        "id": "q34-e",
+        "label": "E",
+        "text": "9",
+        "isCorrect": false
+      },
+      {
+        "id": "q34-f",
+        "label": "F",
+        "text": "12",
+        "isCorrect": false
+      },
+      {
+        "id": "q34-g",
+        "label": "G",
+        "text": "16",
+        "isCorrect": false
+      },
+      {
+        "id": "q34-h",
+        "label": "H",
+        "text": "18",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-4",
+        "domain": "MATH",
+        "code": "",
+        "label": "systems"
+      },
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "algebra"
+      },
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "number_logic"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q35",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "A cylinder has a radius of 3 inches and a height of 10 inches. What is its volume in terms of π?",
+    "choices": [
+      {
+        "id": "q35-a",
+        "label": "A",
+        "text": "30π",
+        "isCorrect": false
+      },
+      {
+        "id": "q35-b",
+        "label": "B",
+        "text": "60π",
+        "isCorrect": false
+      },
+      {
+        "id": "q35-c",
+        "label": "C",
+        "text": "90π",
+        "isCorrect": false
+      },
+      {
+        "id": "q35-d",
+        "label": "D",
+        "text": "300π",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-16",
+        "domain": "MATH",
+        "code": "",
+        "label": "geometry"
+      },
+      {
+        "id": "math-16",
+        "domain": "MATH",
+        "code": "",
+        "label": "volume"
+      },
+      {
+        "id": "math-16",
+        "domain": "MATH",
+        "code": "",
+        "label": "cylinders"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q36",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Hard",
+    "scoreBand": 6,
+    "stem": "Maya drives from her house to the beach, a distance of 150 miles. She drives the first 60 miles at a speed of 30 mph. How fast must she drive for the remaining part of the trip to complete the entire journey in exactly 3 hours?",
+    "choices": [
+      {
+        "id": "q36-e",
+        "label": "E",
+        "text": "60 mph",
+        "isCorrect": false
+      },
+      {
+        "id": "q36-f",
+        "label": "F",
+        "text": "75 mph",
+        "isCorrect": false
+      },
+      {
+        "id": "q36-g",
+        "label": "G",
+        "text": "80 mph",
+        "isCorrect": false
+      },
+      {
+        "id": "q36-h",
+        "label": "H",
+        "text": "90 mph",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-9",
+        "domain": "MATH",
+        "code": "",
+        "label": "rate_time_distance"
+      },
+      {
+        "id": "math-9",
+        "domain": "MATH",
+        "code": "",
+        "label": "piecewise_speed"
+      }
+    ],
+    "timeToSolve": 180,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q37",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "A circular tabletop has a diameter of 16 inches. What is the area of the tabletop in terms of π?",
+    "choices": [
+      {
+        "id": "q37-a",
+        "label": "A",
+        "text": "8π",
+        "isCorrect": false
+      },
+      {
+        "id": "q37-b",
+        "label": "B",
+        "text": "16π",
+        "isCorrect": false
+      },
+      {
+        "id": "q37-c",
+        "label": "C",
+        "text": "64π",
+        "isCorrect": false
+      },
+      {
+        "id": "q37-d",
+        "label": "D",
+        "text": "256π",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-19",
+        "domain": "MATH",
+        "code": "",
+        "label": "circles"
+      },
+      {
+        "id": "math-16",
+        "domain": "MATH",
+        "code": "",
+        "label": "area"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q38",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "A train travels 210 miles in 3.5 hours. What is its average speed in miles per hour?",
+    "choices": [
+      {
+        "id": "q38-e",
+        "label": "E",
+        "text": "55 mph",
+        "isCorrect": false
+      },
+      {
+        "id": "q38-f",
+        "label": "F",
+        "text": "60 mph",
+        "isCorrect": false
+      },
+      {
+        "id": "q38-g",
+        "label": "G",
+        "text": "65 mph",
+        "isCorrect": false
+      },
+      {
+        "id": "q38-h",
+        "label": "H",
+        "text": "70 mph",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-9",
+        "domain": "MATH",
+        "code": "",
+        "label": "rate"
+      },
+      {
+        "id": "math-9",
+        "domain": "MATH",
+        "code": "",
+        "label": "average_speed"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q39",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "Which of the following expressions is equivalent to 3(x+2y) − (2x − y)?",
+    "choices": [
+      {
+        "id": "q39-a",
+        "label": "A",
+        "text": "x + 5y",
+        "isCorrect": false
+      },
+      {
+        "id": "q39-b",
+        "label": "B",
+        "text": "x + 7y",
+        "isCorrect": false
+      },
+      {
+        "id": "q39-c",
+        "label": "C",
+        "text": "5x + 5y",
+        "isCorrect": false
+      },
+      {
+        "id": "q39-d",
+        "label": "D",
+        "text": "x + 3y",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "algebra"
+      },
+      {
+        "id": "math-7",
+        "domain": "MATH",
+        "code": "",
+        "label": "simplify_expressions"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q40",
+    "subject": "MATH",
+    "subtype": "GRID_IN",
+    "difficulty": "Medium",
+    "scoreBand": 4,
+    "stem": "What is the value of the expression 5 + 3 × (8 − 22)?",
+    "tags": [
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "order_of_operations"
+      },
+      {
+        "id": "math-7",
+        "domain": "MATH",
+        "code": "",
+        "label": "exponents"
+      }
+    ],
+    "timeToSolve": 120,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q41",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Medium",
+    "scoreBand": 4,
+    "stem": "For the set of numbers {5, 8, 12, 5, 10}, what is the positive difference between the mean and the median?",
+    "choices": [
+      {
+        "id": "q41-e",
+        "label": "E",
+        "text": "0",
+        "isCorrect": false
+      },
+      {
+        "id": "q41-f",
+        "label": "F",
+        "text": "1",
+        "isCorrect": false
+      },
+      {
+        "id": "q41-g",
+        "label": "G",
+        "text": "3",
+        "isCorrect": false
+      },
+      {
+        "id": "q41-h",
+        "label": "H",
+        "text": "8",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-11",
+        "domain": "MATH",
+        "code": "",
+        "label": "statistics"
+      },
+      {
+        "id": "math-11",
+        "domain": "MATH",
+        "code": "",
+        "label": "mean_median"
+      }
+    ],
+    "timeToSolve": 120,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q42",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "Maria has $50. She buys 3 books that cost b dollars each and receives $14 in change. What is the value of b?",
+    "choices": [
+      {
+        "id": "q42-a",
+        "label": "A",
+        "text": "$10.50",
+        "isCorrect": false
+      },
+      {
+        "id": "q42-b",
+        "label": "B",
+        "text": "$12.00",
+        "isCorrect": false
+      },
+      {
+        "id": "q42-c",
+        "label": "C",
+        "text": "$14.00",
+        "isCorrect": false
+      },
+      {
+        "id": "q42-d",
+        "label": "D",
+        "text": "$18.00",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "linear_equation"
+      },
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "one_variable"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q43",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "A right triangle has a hypotenuse with a length of 13 cm and one leg with a length of 5 cm. What is the length, in centimeters, of the other leg?",
+    "choices": [
+      {
+        "id": "q43-e",
+        "label": "E",
+        "text": "8",
+        "isCorrect": false
+      },
+      {
+        "id": "q43-f",
+        "label": "F",
+        "text": "9",
+        "isCorrect": false
+      },
+      {
+        "id": "q43-g",
+        "label": "G",
+        "text": "12",
+        "isCorrect": false
+      },
+      {
+        "id": "q43-h",
+        "label": "H",
+        "text": "18",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-18",
+        "domain": "MATH",
+        "code": "",
+        "label": "pythagorean_theorem"
+      },
+      {
+        "id": "math-17",
+        "domain": "MATH",
+        "code": "",
+        "label": "triangles"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q44",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Medium",
+    "scoreBand": 4,
+    "stem": "The table shows: Math 60, Science 45, English 75, History 20. What percentage of the students surveyed chose English as their favorite subject?",
+    "choices": [
+      {
+        "id": "q44-a",
+        "label": "A",
+        "text": "30%",
+        "isCorrect": false
+      },
+      {
+        "id": "q44-b",
+        "label": "B",
+        "text": "37.5%",
+        "isCorrect": false
+      },
+      {
+        "id": "q44-c",
+        "label": "C",
+        "text": "45%",
+        "isCorrect": false
+      },
+      {
+        "id": "q44-d",
+        "label": "D",
+        "text": "75%",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-10",
+        "domain": "MATH",
+        "code": "",
+        "label": "percent"
+      },
+      {
+        "id": "math-11",
+        "domain": "MATH",
+        "code": "",
+        "label": "tables"
+      },
+      {
+        "id": "math-9",
+        "domain": "MATH",
+        "code": "",
+        "label": "proportion"
+      }
+    ],
+    "timeToSolve": 120,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q45",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "The ratio of apples to oranges in a fruit basket is 4:7. If there are 28 oranges in the basket, how many apples are there?",
+    "choices": [
+      {
+        "id": "q45-e",
+        "label": "E",
+        "text": "12",
+        "isCorrect": false
+      },
+      {
+        "id": "q45-f",
+        "label": "F",
+        "text": "16",
+        "isCorrect": false
+      },
+      {
+        "id": "q45-g",
+        "label": "G",
+        "text": "21",
+        "isCorrect": false
+      },
+      {
+        "id": "q45-h",
+        "label": "H",
+        "text": "49",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-9",
+        "domain": "MATH",
+        "code": "",
+        "label": "ratios"
+      },
+      {
+        "id": "math-9",
+        "domain": "MATH",
+        "code": "",
+        "label": "proportions"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q46",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "A line segment has endpoints at (-3, -2) and (5, 4). What are the coordinates of its midpoint?",
+    "choices": [
+      {
+        "id": "q46-a",
+        "label": "A",
+        "text": "(1, 1)",
+        "isCorrect": false
+      },
+      {
+        "id": "q46-b",
+        "label": "B",
+        "text": "(2, 2)",
+        "isCorrect": false
+      },
+      {
+        "id": "q46-c",
+        "label": "C",
+        "text": "(2, 6)",
+        "isCorrect": false
+      },
+      {
+        "id": "q46-d",
+        "label": "D",
+        "text": "(8, 6)",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-17",
+        "domain": "MATH",
+        "code": "",
+        "label": "coordinate_geometry"
+      },
+      {
+        "id": "math-17",
+        "domain": "MATH",
+        "code": "",
+        "label": "midpoint"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q47",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "A bag contains 2 red, 3 blue, and 5 green marbles. What is the probability of randomly drawing a marble that is NOT green?",
+    "choices": [
+      {
+        "id": "q47-e",
+        "label": "E",
+        "text": "1/5",
+        "isCorrect": false
+      },
+      {
+        "id": "q47-f",
+        "label": "F",
+        "text": "1/3",
+        "isCorrect": false
+      },
+      {
+        "id": "q47-g",
+        "label": "G",
+        "text": "1/2",
+        "isCorrect": false
+      },
+      {
+        "id": "q47-h",
+        "label": "H",
+        "text": "2/3",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-13",
+        "domain": "MATH",
+        "code": "",
+        "label": "probability"
+      },
+      {
+        "id": "math-13",
+        "domain": "MATH",
+        "code": "",
+        "label": "complement"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q48",
+    "subject": "MATH",
+    "subtype": "TEI_MULTIPLE_SELECT",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "Select all of the following values that are equivalent to 3/4.",
+    "choices": [
+      {
+        "id": "q48-1",
+        "label": "1",
+        "text": "0.75",
+        "isCorrect": false
+      },
+      {
+        "id": "q48-2",
+        "label": "2",
+        "text": "7.5%",
+        "isCorrect": false
+      },
+      {
+        "id": "q48-3",
+        "label": "3",
+        "text": "6/8",
+        "isCorrect": false
+      },
+      {
+        "id": "q48-4",
+        "label": "4",
+        "text": "75%",
+        "isCorrect": false
+      },
+      {
+        "id": "q48-5",
+        "label": "5",
+        "text": "0.34",
+        "isCorrect": false
+      },
+      {
+        "id": "q48-6",
+        "label": "6",
+        "text": "1.25",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-10",
+        "domain": "MATH",
+        "code": "",
+        "label": "fractions_decimals_percents"
+      },
+      {
+        "id": "math-7",
+        "domain": "MATH",
+        "code": "",
+        "label": "equivalents"
+      },
+      {
+        "id": "math-7",
+        "domain": "MATH",
+        "code": "",
+        "label": "select_all"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q49",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "The sum of two numbers is 30. The larger number is twice the smaller number. What is the smaller of the two numbers?",
+    "choices": [
+      {
+        "id": "q49-e",
+        "label": "E",
+        "text": "5",
+        "isCorrect": false
+      },
+      {
+        "id": "q49-f",
+        "label": "F",
+        "text": "10",
+        "isCorrect": false
+      },
+      {
+        "id": "q49-g",
+        "label": "G",
+        "text": "15",
+        "isCorrect": false
+      },
+      {
+        "id": "q49-h",
+        "label": "H",
+        "text": "20",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-4",
+        "domain": "MATH",
+        "code": "",
+        "label": "systems"
+      },
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "algebra"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q50",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Hard",
+    "scoreBand": 6,
+    "stem": "The total surface area of a cube is 150 square inches. What is the volume of the cube in cubic inches?",
+    "choices": [
+      {
+        "id": "q50-a",
+        "label": "A",
+        "text": "25",
+        "isCorrect": false
+      },
+      {
+        "id": "q50-b",
+        "label": "B",
+        "text": "75",
+        "isCorrect": false
+      },
+      {
+        "id": "q50-c",
+        "label": "C",
+        "text": "125",
+        "isCorrect": false
+      },
+      {
+        "id": "q50-d",
+        "label": "D",
+        "text": "225",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-16",
+        "domain": "MATH",
+        "code": "",
+        "label": "geometry"
+      },
+      {
+        "id": "math-16",
+        "domain": "MATH",
+        "code": "",
+        "label": "surface_area"
+      },
+      {
+        "id": "math-16",
+        "domain": "MATH",
+        "code": "",
+        "label": "volume"
+      },
+      {
+        "id": "math-16",
+        "domain": "MATH",
+        "code": "",
+        "label": "cubes"
+      }
+    ],
+    "timeToSolve": 180,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q51",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Medium",
+    "scoreBand": 4,
+    "stem": "A store buys a jacket for $60. To make a profit, the store marks up the price by 50%. What is the final selling price of the jacket after a 10% sales tax is applied to the marked-up price?",
+    "choices": [
+      {
+        "id": "q51-e",
+        "label": "E",
+        "text": "$93",
+        "isCorrect": false
+      },
+      {
+        "id": "q51-f",
+        "label": "F",
+        "text": "$96",
+        "isCorrect": false
+      },
+      {
+        "id": "q51-g",
+        "label": "G",
+        "text": "$99",
+        "isCorrect": false
+      },
+      {
+        "id": "q51-h",
+        "label": "H",
+        "text": "$105",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-10",
+        "domain": "MATH",
+        "code": "",
+        "label": "percent"
+      },
+      {
+        "id": "math-10",
+        "domain": "MATH",
+        "code": "",
+        "label": "markup"
+      },
+      {
+        "id": "math-10",
+        "domain": "MATH",
+        "code": "",
+        "label": "sales_tax"
+      },
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "multi_step"
+      }
+    ],
+    "timeToSolve": 120,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q52",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "Last year, a concert ticket cost $80. This year, the cost increased by 15%. What is the new cost of the ticket?",
+    "choices": [
+      {
+        "id": "q52-a",
+        "label": "A",
+        "text": "$81.20",
+        "isCorrect": false
+      },
+      {
+        "id": "q52-b",
+        "label": "B",
+        "text": "$92.00",
+        "isCorrect": false
+      },
+      {
+        "id": "q52-c",
+        "label": "C",
+        "text": "$95.00",
+        "isCorrect": false
+      },
+      {
+        "id": "q52-d",
+        "label": "D",
+        "text": "$105.00",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-10",
+        "domain": "MATH",
+        "code": "",
+        "label": "percent_increase"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q53",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "If x = 5 and y = -2, what is the value of the expression x − y^2?",
+    "choices": [
+      {
+        "id": "q53-e",
+        "label": "E",
+        "text": "1",
+        "isCorrect": false
+      },
+      {
+        "id": "q53-f",
+        "label": "F",
+        "text": "3",
+        "isCorrect": false
+      },
+      {
+        "id": "q53-g",
+        "label": "G",
+        "text": "7",
+        "isCorrect": false
+      },
+      {
+        "id": "q53-h",
+        "label": "H",
+        "text": "9",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-7",
+        "domain": "MATH",
+        "code": "",
+        "label": "substitution"
+      },
+      {
+        "id": "math-7",
+        "domain": "MATH",
+        "code": "",
+        "label": "exponents"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q54",
+    "subject": "MATH",
+    "subtype": "GRID_IN",
+    "difficulty": "Medium",
+    "scoreBand": 4,
+    "stem": "A student's scores on four tests are 88, 95, 90, and 81. What score must the student get on the fifth test to have a mean score of 90?",
+    "tags": [
+      {
+        "id": "math-11",
+        "domain": "MATH",
+        "code": "",
+        "label": "statistics"
+      },
+      {
+        "id": "math-11",
+        "domain": "MATH",
+        "code": "",
+        "label": "mean"
+      },
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "algebra"
+      }
+    ],
+    "timeToSolve": 120,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q55",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "A triangle has a base of 14 inches and a height of 9 inches. What is the area of the triangle in square inches?",
+    "choices": [
+      {
+        "id": "q55-e",
+        "label": "E",
+        "text": "23",
+        "isCorrect": false
+      },
+      {
+        "id": "q55-f",
+        "label": "F",
+        "text": "54",
+        "isCorrect": false
+      },
+      {
+        "id": "q55-g",
+        "label": "G",
+        "text": "63",
+        "isCorrect": false
+      },
+      {
+        "id": "q55-h",
+        "label": "H",
+        "text": "126",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-16",
+        "domain": "MATH",
+        "code": "",
+        "label": "geometry"
+      },
+      {
+        "id": "math-16",
+        "domain": "MATH",
+        "code": "",
+        "label": "area"
+      },
+      {
+        "id": "math-17",
+        "domain": "MATH",
+        "code": "",
+        "label": "triangles"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q56",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Medium",
+    "scoreBand": 4,
+    "stem": "The ratio of fiction books to non-fiction books in a library is 7:4. If there are 240 non-fiction books, what is the total number of books in the library?",
+    "choices": [
+      {
+        "id": "q56-a",
+        "label": "A",
+        "text": "420",
+        "isCorrect": false
+      },
+      {
+        "id": "q56-b",
+        "label": "B",
+        "text": "600",
+        "isCorrect": false
+      },
+      {
+        "id": "q56-c",
+        "label": "C",
+        "text": "660",
+        "isCorrect": false
+      },
+      {
+        "id": "q56-d",
+        "label": "D",
+        "text": "960",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-9",
+        "domain": "MATH",
+        "code": "",
+        "label": "ratios"
+      },
+      {
+        "id": "math-9",
+        "domain": "MATH",
+        "code": "",
+        "label": "proportions"
+      },
+      {
+        "id": "math-9",
+        "domain": "MATH",
+        "code": "",
+        "label": "total_from_part"
+      }
+    ],
+    "timeToSolve": 120,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q57",
+    "subject": "MATH",
+    "subtype": "TEI_DRAG_DROP",
+    "difficulty": "Medium",
+    "scoreBand": 4,
+    "stem": "A family has a monthly budget of $4,800. They spend 1/4 of the budget on rent and 1/3 of the budget on food. How much money, in dollars, is left after paying for rent and food?\nMove the correct answer into the correct box: [1200, 2800, 1600, 2000, 3200]",
+    "tags": [
+      {
+        "id": "math-9",
+        "domain": "MATH",
+        "code": "",
+        "label": "fractions"
+      },
+      {
+        "id": "math-10",
+        "domain": "MATH",
+        "code": "",
+        "label": "budget"
+      },
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "multi_step"
+      }
+    ],
+    "timeToSolve": 120,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q58",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Medium",
+    "scoreBand": 4,
+    "stem": "A rental car company charges a flat fee of $40 plus $0.25 per mile. If the total cost for a rental was $115, how many miles were driven?",
+    "choices": [
+      {
+        "id": "q58-a",
+        "label": "A",
+        "text": "187",
+        "isCorrect": false
+      },
+      {
+        "id": "q58-b",
+        "label": "B",
+        "text": "250",
+        "isCorrect": false
+      },
+      {
+        "id": "q58-c",
+        "label": "C",
+        "text": "300",
+        "isCorrect": false
+      },
+      {
+        "id": "q58-d",
+        "label": "D",
+        "text": "460",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "linear_equation"
+      },
+      {
+        "id": "math-9",
+        "domain": "MATH",
+        "code": "",
+        "label": "unit_rate"
+      }
+    ],
+    "timeToSolve": 120,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q59",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "The figure shows an outer rectangle 20 in by 15 in with an inner rectangle (picture) 12 in by 8 in. What is the area of the shaded frame in square inches?",
+    "choices": [
+      {
+        "id": "q59-e",
+        "label": "E",
+        "text": "96",
+        "isCorrect": false
+      },
+      {
+        "id": "q59-f",
+        "label": "F",
+        "text": "204",
+        "isCorrect": false
+      },
+      {
+        "id": "q59-g",
+        "label": "G",
+        "text": "300",
+        "isCorrect": false
+      },
+      {
+        "id": "q59-h",
+        "label": "H",
+        "text": "396",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-16",
+        "domain": "MATH",
+        "code": "",
+        "label": "geometry"
+      },
+      {
+        "id": "math-16",
+        "domain": "MATH",
+        "code": "",
+        "label": "area_composite"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q60",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "A standard six-sided die is rolled. What is the probability of rolling a prime number?",
+    "choices": [
+      {
+        "id": "q60-a",
+        "label": "A",
+        "text": "6/1",
+        "isCorrect": false
+      },
+      {
+        "id": "q60-b",
+        "label": "B",
+        "text": "3/1",
+        "isCorrect": false
+      },
+      {
+        "id": "q60-c",
+        "label": "C",
+        "text": "2/1",
+        "isCorrect": false
+      },
+      {
+        "id": "q60-d",
+        "label": "D",
+        "text": "3/2",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-13",
+        "domain": "MATH",
+        "code": "",
+        "label": "probability"
+      },
+      {
+        "id": "math-13",
+        "domain": "MATH",
+        "code": "",
+        "label": "sample_space"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q61",
+    "subject": "MATH",
+    "subtype": "GRID_IN",
+    "difficulty": "Easy",
+    "scoreBand": 2,
+    "stem": "A cylindrical can has a radius of 5 cm and a height of 10 cm. Using V = πr^2h and approximating π as 3.14, what is the volume of the can in cubic centimeters?",
+    "tags": [
+      {
+        "id": "math-16",
+        "domain": "MATH",
+        "code": "",
+        "label": "volume"
+      },
+      {
+        "id": "math-16",
+        "domain": "MATH",
+        "code": "",
+        "label": "cylinders"
+      },
+      {
+        "id": "math-1",
+        "domain": "MATH",
+        "code": "",
+        "label": "approximation"
+      }
+    ],
+    "timeToSolve": 60,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q62",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Medium",
+    "scoreBand": 4,
+    "stem": "What is the distance between the points (2, -1) and (8, 7) on the coordinate plane?",
+    "choices": [
+      {
+        "id": "q62-a",
+        "label": "A",
+        "text": "8",
+        "isCorrect": false
+      },
+      {
+        "id": "q62-b",
+        "label": "B",
+        "text": "10",
+        "isCorrect": false
+      },
+      {
+        "id": "q62-c",
+        "label": "C",
+        "text": "12",
+        "isCorrect": false
+      },
+      {
+        "id": "q62-d",
+        "label": "D",
+        "text": "14",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-18",
+        "domain": "MATH",
+        "code": "",
+        "label": "distance_formula"
+      },
+      {
+        "id": "math-17",
+        "domain": "MATH",
+        "code": "",
+        "label": "coordinate_geometry"
+      }
+    ],
+    "timeToSolve": 120,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q63",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Medium",
+    "scoreBand": 4,
+    "stem": "Simplify the expression: (2^3)^2 × 2^(-4).",
+    "choices": [
+      {
+        "id": "q63-e",
+        "label": "E",
+        "text": "1",
+        "isCorrect": false
+      },
+      {
+        "id": "q63-f",
+        "label": "F",
+        "text": "2",
+        "isCorrect": false
+      },
+      {
+        "id": "q63-g",
+        "label": "G",
+        "text": "4",
+        "isCorrect": false
+      },
+      {
+        "id": "q63-h",
+        "label": "H",
+        "text": "8",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-7",
+        "domain": "MATH",
+        "code": "",
+        "label": "exponents"
+      },
+      {
+        "id": "math-7",
+        "domain": "MATH",
+        "code": "",
+        "label": "laws_of_exponents"
+      }
+    ],
+    "timeToSolve": 120,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q64",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Hard",
+    "scoreBand": 6,
+    "stem": "At a farm stand, 3 apples and 2 oranges cost $4.30. One apple and 3 oranges cost $3.95. What is the cost of one orange?",
+    "choices": [
+      {
+        "id": "q64-a",
+        "label": "A",
+        "text": "$0.85",
+        "isCorrect": false
+      },
+      {
+        "id": "q64-b",
+        "label": "B",
+        "text": "$0.95",
+        "isCorrect": false
+      },
+      {
+        "id": "q64-c",
+        "label": "C",
+        "text": "$1.05",
+        "isCorrect": false
+      },
+      {
+        "id": "q64-d",
+        "label": "D",
+        "text": "$1.15",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-4",
+        "domain": "MATH",
+        "code": "",
+        "label": "systems_of_equations"
+      },
+      {
+        "id": "math-4",
+        "domain": "MATH",
+        "code": "",
+        "label": "linear_algebra"
+      }
+    ],
+    "timeToSolve": 180,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  },
+  {
+    "id": "q65",
+    "subject": "MATH",
+    "subtype": "MC4_A-D",
+    "difficulty": "Medium",
+    "scoreBand": 4,
+    "stem": "Two trains leave from the same station at the same time, traveling in opposite directions. One train travels at 60 mph and the other at 75 mph. How many hours will it take for the trains to be 540 miles apart?",
+    "choices": [
+      {
+        "id": "q65-e",
+        "label": "E",
+        "text": "3.5",
+        "isCorrect": false
+      },
+      {
+        "id": "q65-f",
+        "label": "F",
+        "text": "4.0",
+        "isCorrect": false
+      },
+      {
+        "id": "q65-g",
+        "label": "G",
+        "text": "4.5",
+        "isCorrect": false
+      },
+      {
+        "id": "q65-h",
+        "label": "H",
+        "text": "9.0",
+        "isCorrect": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "math-9",
+        "domain": "MATH",
+        "code": "",
+        "label": "relative_speed"
+      },
+      {
+        "id": "math-9",
+        "domain": "MATH",
+        "code": "",
+        "label": "rate_time_distance"
+      }
+    ],
+    "timeToSolve": 120,
+    "userAttempted": false,
+    "createdAt": "2025-09-05T01:08:41.300Z"
+  }
+]
