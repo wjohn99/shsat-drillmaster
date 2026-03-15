@@ -22,6 +22,9 @@ import {
 } from "lucide-react";
 import { questions, passages } from "@/data/mockData";
 import { Question as QuestionType } from "@/types";
+import { toast } from "@/hooks/use-toast";
+
+const NOTES_STORAGE_KEY = "question-notes";
 
 export default function Question() {
   const { id } = useParams<{ id: string }>();
@@ -38,12 +41,37 @@ export default function Question() {
 
   const question = questions.find(q => q.id === id);
   const passage = question?.passageId ? passages.find(p => p.id === question.passageId) : null;
+  const currentIndex = question ? questions.findIndex(q => q.id === question.id) : -1;
+  const nextQuestion = currentIndex >= 0 && currentIndex < questions.length - 1
+    ? questions[currentIndex + 1]
+    : null;
 
   useEffect(() => {
     if (question) {
       setIsBookmarked(question.userBookmarked || false);
     }
   }, [question]);
+
+  // Load notes for this question from localStorage
+  useEffect(() => {
+    if (!id) return;
+    try {
+      const stored = localStorage.getItem(`${NOTES_STORAGE_KEY}-${id}`);
+      setUserNotes(stored ?? "");
+    } catch {
+      setUserNotes("");
+    }
+  }, [id]);
+
+  // Reset practice state when navigating between questions in practice mode
+  useEffect(() => {
+    if (!question) return;
+    setSelectedAnswer("");
+    setGridAnswer("");
+    setShowSolution(!isPracticeMode);
+    setTimeElapsed(0);
+    setIsTimerRunning(isPracticeMode);
+  }, [question?.id, isPracticeMode]);
 
   // Timer effect
   useEffect(() => {
@@ -64,7 +92,7 @@ export default function Question() {
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Question not found</h1>
             <Button asChild>
-              <Link to="/bank">Back to Question Bank</Link>
+              <Link to="/question-bank">Back to Question Bank</Link>
             </Button>
           </div>
         </div>
@@ -89,6 +117,20 @@ export default function Question() {
     return question.subtype === 'GRID_IN' ? gridAnswer : selectedAnswer;
   };
 
+  const handleSaveNotes = () => {
+    if (!question) return;
+    try {
+      localStorage.setItem(`${NOTES_STORAGE_KEY}-${question.id}`, userNotes);
+      toast({
+        title: "Notes saved",
+        description: "Your notes have been saved for this question.",
+        duration: 3000,
+      });
+    } catch {
+      toast({ title: "Could not save notes", variant: "destructive" });
+    }
+  };
+
   const isAnswerCorrect = () => {
     if (question.subtype === 'GRID_IN') {
       // For grid-in questions, you'd implement proper answer checking logic
@@ -100,11 +142,6 @@ export default function Question() {
   };
 
   const subjectVariant = question.subject === 'MATH' ? 'math' : 'ela';
-  const difficultyColor = {
-    Easy: 'difficulty-easy',
-    Medium: 'difficulty-medium',
-    Hard: 'difficulty-hard'
-  }[question.difficulty];
 
   return (
     <div className="min-h-screen bg-background">
@@ -114,7 +151,7 @@ export default function Question() {
         {/* Navigation */}
         <div className="flex items-center gap-4 mb-6">
           <Button variant="ghost" asChild>
-            <Link to="/bank">
+            <Link to="/question-bank">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Bank
             </Link>
@@ -149,11 +186,6 @@ export default function Question() {
                       <BookOpen className="h-5 w-5" />
                       {passage.title}
                     </CardTitle>
-                    <div className="flex items-center gap-2">
-                      {passage.lexile && (
-                        <Badge variant="outline">Lexile: {passage.lexile}</Badge>
-                      )}
-                    </div>
                   </div>
                   {passage.sourceMeta && (
                     <p className="text-sm text-muted-foreground">{passage.sourceMeta}</p>
@@ -177,11 +209,6 @@ export default function Question() {
                     <Badge variant={subjectVariant === 'math' ? 'default' : 'secondary'}>
                       {question.subject}
                     </Badge>
-                    <div 
-                      className={`h-3 w-3 rounded-full`}
-                      style={{ backgroundColor: `hsl(var(--${difficultyColor}))` }}
-                      title={`${question.difficulty} difficulty`}
-                    />
                     <div 
                       className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white`}
                       style={{ backgroundColor: `hsl(var(--score-band-${question.scoreBand}))` }}
@@ -303,6 +330,19 @@ export default function Question() {
                     </div>
                   </div>
                 )}
+
+                {/* Practice navigation */}
+                {isPracticeMode && nextQuestion && (
+                  <div className="pt-6 border-t flex justify-end">
+                    <Button
+                      asChild
+                    >
+                      <Link to={`/question/${nextQuestion.id}?practice=true`}>
+                        Next Question
+                      </Link>
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -318,7 +358,7 @@ export default function Question() {
                   onChange={(e) => setUserNotes(e.target.value)}
                   rows={4}
                 />
-                <Button className="mt-3" size="sm">Save Notes</Button>
+                <Button className="mt-3" size="sm" onClick={handleSaveNotes}>Save Notes</Button>
               </CardContent>
             </Card>
           </div>
@@ -339,16 +379,6 @@ export default function Question() {
                   <span className="text-sm text-muted-foreground">Question Type</span>
                   <Badge variant="outline" className="text-xs">{question.subtype}</Badge>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Difficulty</span>
-                  <div className="flex items-center gap-2">
-                    <div 
-                      className={`h-2 w-2 rounded-full`}
-                      style={{ backgroundColor: `hsl(var(--${difficultyColor}))` }}
-                    />
-                    <span className="text-sm">{question.difficulty}</span>
-                  </div>
-                </div>
                 <Separator />
                 <div>
                   <span className="text-sm text-muted-foreground mb-2 block">Tags</span>
@@ -359,35 +389,6 @@ export default function Question() {
                       </Badge>
                     ))}
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Related Questions */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Related Questions</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {questions
-                    .filter(q => q.id !== question.id && q.tags.some(tag => question.tags.map(t => t.code).includes(tag.code)))
-                    .slice(0, 3)
-                    .map((relatedQ) => (
-                      <Link
-                        key={relatedQ.id}
-                        to={`/question/${relatedQ.id}`}
-                        className="block p-3 rounded-lg border hover:bg-accent transition-colors"
-                      >
-                        <div className="flex items-center gap-2 mb-1">
-                          <Badge variant={relatedQ.subject === 'MATH' ? 'default' : 'secondary'} className="text-xs">
-                            {relatedQ.subject}
-                          </Badge>
-                          <span className="text-xs text-muted-foreground">{relatedQ.difficulty}</span>
-                        </div>
-                        <p className="text-sm line-clamp-2">{relatedQ.stem}</p>
-                      </Link>
-                    ))}
                 </div>
               </CardContent>
             </Card>

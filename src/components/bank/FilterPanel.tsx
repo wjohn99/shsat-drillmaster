@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Search, Filter, RotateCcw, ChevronDown } from "lucide-react";
-import { Subject, Difficulty, QuestionSubtype, ScoreBand } from "@/types";
+import { Subject, QuestionSubtype, ScoreBand } from "@/types";
 import { allTags } from "@/data/mockData";
 
 interface FilterPanelProps {
@@ -21,7 +21,6 @@ interface FilterPanelProps {
 export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: FilterPanelProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSubjects, setSelectedSubjects] = useState<Subject[]>([]);
-  const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
   const [selectedScoreBands, setSelectedScoreBands] = useState<ScoreBand[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedSubtypes, setSelectedSubtypes] = useState<QuestionSubtype[]>([]);
@@ -30,7 +29,6 @@ export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: Filt
   const [tagSearchOpen, setTagSearchOpen] = useState(false);
 
   const subjects: Subject[] = ['MATH', 'ELA'];
-  const difficulties: Difficulty[] = ['Easy', 'Medium', 'Hard'];
   const subtypes: QuestionSubtype[] = ['MC4_A-D', 'MC4_E-H', 'GRID_IN', 'TEI_DRAG_DROP', 'TEI_MULTIPLE_SELECT'];
   const scoreBands: ScoreBand[] = [1, 2, 3, 4, 5, 6, 7, 8];
   const userStatusOptions = [
@@ -42,7 +40,6 @@ export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: Filt
   const updateFilters = () => {
     onFiltersChange({
       subjects: selectedSubjects,
-      difficulties: selectedDifficulties,
       scoreBands: selectedScoreBands,
       tagCodes: selectedTags,
       subtypes: selectedSubtypes,
@@ -60,7 +57,6 @@ export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: Filt
   const resetFilters = () => {
     setSearchQuery("");
     setSelectedSubjects([]);
-    setSelectedDifficulties([]);
     setSelectedScoreBands([]);
     setSelectedTags([]);
     setSelectedSubtypes([]);
@@ -138,26 +134,6 @@ export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: Filt
               count={subject === 'MATH' ? 5 : 3} // Mock counts
             >
               {subject}
-            </Chip>
-          ))}
-        </div>
-      </div>
-
-      {/* Difficulty filter */}
-      <div className="mb-6">
-        <Label className="text-sm font-medium mb-3 block">Difficulty</Label>
-        <div className="flex gap-2">
-          {difficulties.map((difficulty) => (
-            <Chip
-              key={difficulty}
-              variant={selectedDifficulties.includes(difficulty) ? "selected" : "default"}
-              onClick={() => {
-                toggleArraySelection(selectedDifficulties, setSelectedDifficulties, difficulty);
-                setTimeout(updateFilters, 0);
-              }}
-              count={difficulty === 'Medium' ? 4 : difficulty === 'Easy' ? 2 : 2} // Mock counts
-            >
-              {difficulty}
             </Chip>
           ))}
         </div>

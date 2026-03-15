@@ -11,8 +11,6 @@ import {
   Target,
   ArrowRight
 } from "lucide-react";
-import { Link } from "react-router-dom";
-
 const Worksheets = () => {
   const presetWorksheets = [
     {
@@ -20,7 +18,6 @@ const Worksheets = () => {
       title: 'Algebra Basics',
       description: 'Linear equations and expressions fundamentals',
       questionCount: 20,
-      difficulty: 'Medium',
       estimatedTime: '30 min',
       subject: 'MATH'
     },
@@ -29,7 +26,6 @@ const Worksheets = () => {
       title: 'Reading Comprehension Set 1',
       description: 'Science and technology passages',
       questionCount: 15,
-      difficulty: 'Medium',
       estimatedTime: '25 min',
       subject: 'ELA'
     },
@@ -38,7 +34,6 @@ const Worksheets = () => {
       title: 'Grammar Essentials',
       description: 'Comma usage and sentence structure',
       questionCount: 25,
-      difficulty: 'Easy',
       estimatedTime: '20 min',
       subject: 'ELA'
     },
@@ -47,7 +42,6 @@ const Worksheets = () => {
       title: 'Geometry & Shapes',
       description: 'Area, volume, and coordinate geometry',
       questionCount: 18,
-      difficulty: 'Hard',
       estimatedTime: '35 min',
       subject: 'MATH'
     }
@@ -98,12 +92,15 @@ const Worksheets = () => {
               <p className="text-muted-foreground mb-4">
                 Select specific questions from the question bank to create your own worksheet.
               </p>
-              <Button variant="outline" className="w-full" asChild>
-                <Link to="/question-bank">
+              <div className="space-y-2">
+                <Button variant="outline" className="w-full" disabled>
                   Create Custom
                   <ArrowRight className="h-4 w-4 ml-2" />
-                </Link>
-              </Button>
+                </Button>
+                <p className="text-xs text-muted-foreground">
+                  This feature is currently under development and will be available in a future update.
+                </p>
+              </div>
             </CardContent>
           </Card>
 
@@ -118,10 +115,15 @@ const Worksheets = () => {
               <p className="text-muted-foreground mb-4">
                 Let AI create personalized worksheets based on your learning goals.
               </p>
-              <Button variant="outline" className="w-full">
-                Generate Worksheet
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
+              <div className="space-y-2">
+                <Button variant="outline" className="w-full" disabled>
+                  Generate Worksheet
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+                <p className="text-xs text-muted-foreground">
+                  This feature is currently under development and will be available in a future update.
+                </p>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -143,9 +145,6 @@ const Worksheets = () => {
                       className="text-xs"
                     >
                       {worksheet.subject}
-                    </Badge>
-                    <Badge variant="outline" className="text-xs">
-                      {worksheet.difficulty}
                     </Badge>
                   </div>
                   <CardTitle className="text-lg leading-tight">

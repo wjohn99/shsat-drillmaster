@@ -34,12 +34,6 @@ export default function Passages() {
               
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  {passage.lexile && (
-                    <div className="flex items-center gap-1">
-                      <FileText className="h-4 w-4" />
-                      <span>Lexile: {passage.lexile}</span>
-                    </div>
-                  )}
                   <div className="flex items-center gap-1">
                     <BookOpen className="h-4 w-4" />
                     <span>{passage.questions.length} questions</span>
@@ -58,7 +52,7 @@ export default function Passages() {
                     </Link>
                   </Button>
                   <Button variant="outline" asChild>
-                    <Link to={`/bank?passage=${passage.id}`}>View Questions</Link>
+                    <Link to={`/question-bank?passage=${passage.id}`}>View Questions</Link>
                   </Button>
                 </div>
               </CardContent>

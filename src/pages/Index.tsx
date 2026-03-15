@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Header } from "@/components/layout/Header";
 import { 
   BookOpen, 
@@ -38,20 +37,23 @@ const Index = () => {
           className="absolute inset-0 bg-cover bg-center opacity-30"
           style={{ backgroundImage: `url(${heroImage})` }}
         />
-        <div className="relative container py-24 md:py-32">
+        <div className="relative container pt-14 pb-20 md:pt-20 md:pb-24">
           <div className="max-w-3xl">
-            <Badge className="mb-6 bg-white/20 text-white border-white/30">
-              SHSAT Prep Platform
-            </Badge>
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
               Master the SHSAT with 
               <span className="block text-transparent bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text leading-normal pb-2">
-                StepPrep Tutoring
+                StepPrep Hub
               </span>
             </h1>
-            <p className="text-xl text-white/90 mb-8 leading-relaxed">
+            <p className="text-xl text-white/90 mb-3 leading-relaxed">
               Access hundreds of expertly crafted questions with advanced filtering, 
               instant feedback, and detailed analytics to boost your SHSAT score.
+            </p>
+            <p className="mb-8">
+              <span className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 px-4 py-2.5 text-sm font-medium text-white shadow-sm">
+                <CheckCircle className="h-4 w-4 shrink-0 text-emerald-300" />
+                Included with StepPrep Hub: full access to this platform, no extra cost
+              </span>
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button asChild variant="hero" size="lg">
@@ -126,7 +128,7 @@ const Index = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Find exactly what you need with powerful filters by subject, difficulty, 
+                  Find exactly what you need with powerful filters by subject, 
                   score band, question type, and skill tags.
                 </p>
               </CardContent>

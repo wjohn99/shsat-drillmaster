@@ -1,4 +1,4 @@
-import { Question, Tag, Passage, Form, Subject, Difficulty, QuestionSubtype } from '@/types';
+import { Question, Tag, Passage, Form, Subject, QuestionSubtype } from '@/types';
 
 // ELA Tags
 const elaTags: Tag[] = [
@@ -78,7 +78,6 @@ export const questions: Question[] = [
     id: 'q1',
     subject: 'ELA',
     subtype: 'MC4_A-D',
-    difficulty: 'Medium',
     scoreBand: 5,
     stem: 'Based on the passage, what was the primary factor that drove changes in urban planning during the Industrial Revolution?',
     choices: [
@@ -98,7 +97,6 @@ export const questions: Question[] = [
     id: 'q2',
     subject: 'ELA',
     subtype: 'MC4_A-D',
-    difficulty: 'Hard',
     scoreBand: 7,
     stem: 'Which choice provides the best evidence for the answer to the previous question?',
     choices: [
@@ -117,7 +115,6 @@ export const questions: Question[] = [
     id: 'q3',
     subject: 'ELA',
     subtype: 'MC4_A-D',
-    difficulty: 'Easy',
     scoreBand: 3,
     stem: 'According to the passage, where are short-term memories initially processed?',
     choices: [
@@ -140,7 +137,6 @@ export const questions: Question[] = [
     id: 'q4',
     subject: 'MATH',
     subtype: 'MC4_A-D',
-    difficulty: 'Medium',
     scoreBand: 4,
     stem: 'If 3x + 7 = 22, what is the value of x?',
     choices: [
@@ -159,7 +155,6 @@ export const questions: Question[] = [
     id: 'q5',
     subject: 'MATH',
     subtype: 'GRID_IN',
-    difficulty: 'Hard',
     scoreBand: 6,
     stem: 'A recipe calls for 2/3 cup of flour for every 1/4 cup of sugar. If Maria uses 1 1/2 cups of flour, how many cups of sugar should she use? Express your answer as a fraction in lowest terms.',
     tags: [mathTags[5]], // Ratios & Proportions
@@ -171,7 +166,6 @@ export const questions: Question[] = [
     id: 'q6',
     subject: 'MATH',
     subtype: 'MC4_E-H',
-    difficulty: 'Easy',
     scoreBand: 2,
     stem: 'What is the area of a rectangle with length 8 feet and width 6 feet?',
     choices: [
@@ -190,7 +184,6 @@ export const questions: Question[] = [
     id: 'q7',
     subject: 'MATH',
     subtype: 'MC4_A-D',
-    difficulty: 'Hard',
     scoreBand: 8,
     stem: 'The system of equations 2x + 3y = 12 and 4x - y = 10 has a solution (x, y). What is the value of x + y?',
     choices: [
@@ -208,7 +201,6 @@ export const questions: Question[] = [
     id: 'q8',
     subject: 'MATH',
     subtype: 'MC4_E-H',
-    difficulty: 'Medium',
     scoreBand: 5,
     stem: 'In a class of 30 students, 18 play basketball and 20 play soccer. If 12 students play both sports, how many students play neither sport?',
     choices: [
@@ -230,7 +222,6 @@ export const questions: Question[] = [
     id: 'q9',
     subject: 'MATH',
     subtype: 'MC4_A-D',
-    difficulty: 'Easy',
     scoreBand: 2,
     stem: 'A bicycle that originally cost $420 is on sale for 30% off. What is the sale price of the bicycle?',
     choices: [
@@ -248,7 +239,6 @@ export const questions: Question[] = [
     id: 'q10',
     subject: 'MATH',
     subtype: 'MC4_E-H',
-    difficulty: 'Medium',
     scoreBand: 4,
     stem: 'A circle with a radius of 4 inches is inscribed perfectly inside a square. What is the area of the region that is inside the square but outside the circle, in square inches?',
     choices: [
@@ -266,7 +256,6 @@ export const questions: Question[] = [
     id: 'q11',
     subject: 'MATH',
     subtype: 'GRID_IN',
-    difficulty: 'Easy',
     scoreBand: 2,
     stem: 'What is the value of the expression 20 − 3 × (4 − 2)?',
     tags: [mathTags[0], mathTags[0]], // Linear equations
@@ -278,7 +267,6 @@ export const questions: Question[] = [
     id: 'q12',
     subject: 'MATH',
     subtype: 'MC4_E-H',
-    difficulty: 'Easy',
     scoreBand: 2,
     stem: 'If 9k − 15 = 4k + 5, what is the value of k?',
     choices: [
@@ -296,7 +284,6 @@ export const questions: Question[] = [
     id: 'q13',
     subject: 'MATH',
     subtype: 'MC4_A-D',
-    difficulty: 'Easy',
     scoreBand: 2,
     stem: 'The mean of five test scores is 85. If four of the scores are 80, 92, 78, and 88, what is the fifth score?',
     choices: [
@@ -336,7 +323,6 @@ export const forms: Form[] = [
 
 export const getFilteredQuestions = (filters: Partial<{
   subjects: string[];
-  difficulties: string[];
   scoreBands: number[];
   tagCodes: string[];
   subtypes: string[];
@@ -347,11 +333,6 @@ export const getFilteredQuestions = (filters: Partial<{
   return questions.filter(question => {
     // Subject filter
     if (filters.subjects?.length && !filters.subjects.includes(question.subject)) {
-      return false;
-    }
-
-    // Difficulty filter
-    if (filters.difficulties?.length && !filters.difficulties.includes(question.difficulty)) {
       return false;
     }
 

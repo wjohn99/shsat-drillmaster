@@ -27,7 +27,6 @@ export default function QuestionSet() {
   // Get questions based on URL parameters
   const filters = {
     subjects: searchParams.get('subjects')?.split(',') || [],
-    difficulties: searchParams.get('difficulties')?.split(',') || [],
     scoreBands: searchParams.get('scoreBands')?.split(',').map(Number) || [],
     tagCodes: searchParams.get('tagCodes')?.split(',') || []
   };
@@ -49,7 +48,7 @@ export default function QuestionSet() {
           <p className="text-muted-foreground mb-6">
             Try adjusting your filters to find questions.
           </p>
-          <Button onClick={() => navigate('/bank')}>
+          <Button onClick={() => navigate('/question-bank')}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Question Bank
           </Button>
@@ -119,7 +118,7 @@ export default function QuestionSet() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" onClick={() => navigate('/bank')}>
+            <Button variant="ghost" onClick={() => navigate('/question-bank')}>
               <ArrowLeft className="h-4 w-4 mr-2" />
               Exit Practice
             </Button>
@@ -165,7 +164,6 @@ export default function QuestionSet() {
                     <Badge variant={currentQuestion.subject === 'MATH' ? 'default' : 'secondary'}>
                       {currentQuestion.subject}
                     </Badge>
-                    <Badge variant="outline">{currentQuestion.difficulty}</Badge>
                     <div 
                       className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white"
                       style={{ backgroundColor: `hsl(var(--score-band-${currentQuestion.scoreBand}))` }}

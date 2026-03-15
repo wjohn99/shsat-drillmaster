@@ -3,7 +3,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Chip } from "@/components/ui/chip";
 import { Button } from "@/components/ui/button";
-import { Clock, BookOpen, CheckCircle, XCircle, Bookmark, Eye } from "lucide-react";
+import { Clock, BookOpen, CheckCircle, XCircle, Bookmark } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface QuestionCardProps {
@@ -12,11 +12,6 @@ interface QuestionCardProps {
 
 export const QuestionCard = ({ question }: QuestionCardProps) => {
   const subjectVariant = question.subject === 'MATH' ? 'math' : 'ela';
-  const difficultyColor = {
-    Easy: 'difficulty-easy',
-    Medium: 'difficulty-medium',
-    Hard: 'difficulty-hard'
-  }[question.difficulty];
 
   const formatTime = (seconds?: number) => {
     if (!seconds) return "N/A";
@@ -51,11 +46,6 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
             <Chip variant={subjectVariant} size="sm">
               {question.subject}
             </Chip>
-            <div 
-              className={`h-2 w-2 rounded-full`}
-              style={{ backgroundColor: `hsl(var(--${difficultyColor}))` }}
-              title={`${question.difficulty} difficulty`}
-            />
             <div 
               className={`flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold text-white`}
               style={{ backgroundColor: `hsl(var(--score-band-${question.scoreBand}))` }}
@@ -104,29 +94,9 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
       </CardContent>
 
       <CardFooter className="p-4 pt-0">
-        <div className="flex gap-2 w-full">
-          <Button 
-            asChild 
-            variant="outline" 
-            size="sm" 
-            className="flex-1"
-          >
-            <Link to={`/question/${question.id}`}>
-              <Eye className="h-3 w-3 mr-1" />
-              Preview
-            </Link>
-          </Button>
-          <Button 
-            asChild 
-            size="sm" 
-            className="flex-1"
-            variant={subjectVariant === 'math' ? 'default' : 'default'}
-          >
-            <Link to={`/question/${question.id}?practice=true`}>
-              Practice
-            </Link>
-          </Button>
-        </div>
+        <Button asChild size="sm" className="w-full" variant={subjectVariant === 'math' ? 'default' : 'default'}>
+          <Link to={`/question/${question.id}?practice=true`}>Practice</Link>
+        </Button>
       </CardFooter>
     </Card>
   );

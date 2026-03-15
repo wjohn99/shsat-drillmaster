@@ -1,7 +1,5 @@
 export type Subject = 'MATH' | 'ELA';
 
-export type Difficulty = 'Easy' | 'Medium' | 'Hard';
-
 export type QuestionSubtype = 'MC4_A-D' | 'MC4_E-H' | 'GRID_IN' | 'TEI_DRAG_DROP' | 'TEI_MULTIPLE_SELECT';
 
 export type ScoreBand = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
@@ -24,7 +22,6 @@ export interface Question {
   id: string;
   subject: Subject;
   subtype: QuestionSubtype;
-  difficulty: Difficulty;
   scoreBand: ScoreBand;
   stem: string;
   choices?: Choice[];
@@ -56,7 +53,6 @@ export interface Form {
 
 export interface FilterOptions {
   subjects: Subject[];
-  difficulties: Difficulty[];
   scoreBands: ScoreBand[];
   tagCodes: string[];
   subtypes: QuestionSubtype[];

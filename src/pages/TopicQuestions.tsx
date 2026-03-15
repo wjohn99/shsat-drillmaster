@@ -92,7 +92,6 @@ export default function TopicQuestions() {
                     <Badge variant={question.subject === 'MATH' ? 'default' : 'secondary'}>
                       {question.subject}
                     </Badge>
-                    <Badge variant="outline">{question.difficulty}</Badge>
                     <div 
                       className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white"
                       style={{ backgroundColor: `hsl(var(--score-band-${question.scoreBand}))` }}
