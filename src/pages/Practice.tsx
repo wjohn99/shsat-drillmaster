@@ -39,8 +39,8 @@ const Practice = () => {
       title: 'Revising & Editing Part B',
       description: 'Organization, clarity, and writing improvement',
       icon: FileEdit,
-      color: 'bg-gradient-secondary',
-      features: ['Text Organization', 'Clarity & Style', 'Writing Flow'],
+      color: 'bg-gradient-primary',
+      features: ['Text Organization', 'Clarity & Style', 'Writing Flow', 'Sentence Structure'],
       estimatedTime: '35-45 min'
     },
     {
@@ -73,7 +73,7 @@ const Practice = () => {
           {practiceTypes.map((type) => {
             const IconComponent = type.icon;
             return (
-              <Card key={type.id} className="group hover:shadow-lg transition-all duration-300 border-2 hover:border-primary/50">
+              <Card key={type.id} className="group flex h-full flex-col hover:shadow-lg transition-all duration-300 border-2 hover:border-primary/50">
                 <CardHeader>
                   <div className={`h-16 w-16 rounded-xl ${type.color} flex items-center justify-center mb-4`}>
                     {IconComponent && <IconComponent className="h-8 w-8 text-white" />}
@@ -82,12 +82,12 @@ const Practice = () => {
                   <CardTitle className="text-xl mb-2">{type.title}</CardTitle>
                   <p className="text-muted-foreground">{type.description}</p>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {/* Features */}
-                    <div>
+                <CardContent className="flex flex-1 flex-col">
+                  <div className="flex flex-1 flex-col gap-4">
+                    {/* Practice areas — grows so footer aligns across cards in a row */}
+                    <div className="flex min-h-0 flex-1 flex-col">
                       <h4 className="font-medium mb-2">Practice Areas:</h4>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap content-start gap-2">
                         {type.features.map((feature, index) => (
                           <Badge key={index} variant="outline" className="text-xs">
                             {feature}
@@ -96,19 +96,21 @@ const Practice = () => {
                       </div>
                     </div>
 
-                    {/* Time estimate */}
-                    <div className="flex items-center text-sm text-muted-foreground">
-                      <Clock className="h-4 w-4 mr-2" />
-                      Estimated time: {type.estimatedTime}
-                    </div>
+                    <div className="mt-auto flex flex-col gap-4">
+                      {/* Time estimate */}
+                      <div className="flex items-center text-sm text-muted-foreground">
+                        <Clock className="h-4 w-4 mr-2 shrink-0" />
+                        Estimated time: {type.estimatedTime}
+                      </div>
 
-                    {/* Action button */}
-                    <Button className="w-full" asChild>
-                      <Link to={`/practice/${type.id}`}>
-                        Start Practice
-                        <ArrowRight className="h-4 w-4 ml-2" />
-                      </Link>
-                    </Button>
+                      {/* Action button */}
+                      <Button className="w-full" asChild>
+                        <Link to={`/practice/${type.id}`}>
+                          Start Practice
+                          <ArrowRight className="h-4 w-4 ml-2" />
+                        </Link>
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

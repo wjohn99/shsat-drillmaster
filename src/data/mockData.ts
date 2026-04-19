@@ -296,6 +296,192 @@ export const questions: Question[] = [
     timeToSolve: 90,
     userAttempted: false,
     createdAt: '2024-01-15T10:12:00Z'
+  },
+  {
+    id: 'q14',
+    subject: 'MATH',
+    subtype: 'INDY-ATA',
+    scoreBand: 4,
+    stem: 'Select all values of x that satisfy the equation (x − 2)(x + 3) = 0.',
+    choices: [
+      { id: 'q14-a', label: 'A', text: 'x = 2', isCorrect: true },
+      { id: 'q14-b', label: 'B', text: 'x = −3', isCorrect: true },
+      { id: 'q14-c', label: 'C', text: 'x = 3', isCorrect: false },
+      { id: 'q14-d', label: 'D', text: 'x = −2', isCorrect: false },
+      { id: 'q14-e', label: 'E', text: 'x = 6', isCorrect: false },
+    ],
+    tags: [mathTags[7]], // Equivalent expressions / nonlinear equations
+    timeToSolve: 120,
+    userAttempted: false,
+    createdAt: '2024-01-15T10:13:00Z'
+  },
+  {
+    id: 'q15',
+    subject: 'MATH',
+    subtype: 'INDY-DND',
+    scoreBand: 5,
+    stem: 'The mean of a set of five numbers is 11. If four of the numbers in the set are 9, 14, 7, and 12, what is the value of the fifth number?',
+    dnd: {
+      instruction: 'Move the correct answer into the correct box:',
+      pool: [
+        { id: 'q15-d1', text: '10' },
+        { id: 'q15-d2', text: '15' },
+        { id: 'q15-d3', text: '19' },
+        { id: 'q15-d4', text: '13' },
+        { id: 'q15-d5', text: '8' },
+        { id: 'q15-d6', text: '17' },
+      ],
+      zones: [
+        {
+          id: 'q15-z1',
+          beforeText: 'The value of the fifth number is ',
+          afterText: '.',
+        },
+      ],
+      correctMapping: {
+        'q15-z1': 'q15-d4',
+      },
+    },
+    tags: [mathTags[10]],
+    timeToSolve: 120,
+    userAttempted: false,
+    createdAt: '2024-01-15T10:14:00Z'
+  },
+  {
+    id: 'q16',
+    subject: 'MATH',
+    subtype: 'INDY-EE',
+    scoreBand: 4,
+    stem: 'A customer buys a shirt for $22.00 and a pair of pants for $38.00. If the sales tax rate is 8%, what is the total cost of the purchase, in dollars?',
+    ee: {
+      instruction: 'Enter your answer in the space.',
+      inputPrefix: 'Total = $',
+      acceptableAnswers: ['64.80', '64.8'],
+      solutionExplanation:
+        'The subtotal is 22 + 38 = 60 dollars. Sales tax is 8% of 60, which is 4.80 dollars. The total is 60 + 4.80 = 64.80 dollars.',
+    },
+    tags: [mathTags[9]],
+    timeToSolve: 120,
+    userAttempted: false,
+    createdAt: '2024-01-15T10:15:00Z'
+  },
+  {
+    id: 'q17',
+    subject: 'MATH',
+    subtype: 'INDY-CGT',
+    scoreBand: 3,
+    stem: 'The table shows the number of books read by four students last month. Which student read the greatest number of books?',
+    cgt: {
+      visual: {
+        type: 'table',
+        caption: 'Books read by student',
+        headers: ['Student', 'Books read'],
+        rows: [
+          ['Ana', '7'],
+          ['Ben', '5'],
+          ['Chen', '9'],
+          ['Dana', '4'],
+        ],
+      },
+      sourceNote: 'Each student read only whole books.',
+      solutionExplanation:
+        'Compare the numbers in the second column: 9 is the greatest value, so Chen read the most books.',
+    },
+    choices: [
+      { id: 'q17-a', label: 'A', text: 'Ana', isCorrect: false },
+      { id: 'q17-b', label: 'B', text: 'Ben', isCorrect: false },
+      { id: 'q17-c', label: 'C', text: 'Chen', isCorrect: true },
+      { id: 'q17-d', label: 'D', text: 'Dana', isCorrect: false },
+    ],
+    tags: [mathTags[10]],
+    timeToSolve: 90,
+    userAttempted: false,
+    createdAt: '2024-01-15T10:16:00Z'
+  },
+  {
+    id: 'q18',
+    subject: 'MATH',
+    subtype: 'INDY-WP',
+    scoreBand: 4,
+    stem: 'A train travels at a constant speed of 72 miles per hour. How far does the train travel in 2.5 hours?',
+    wp: {
+      instruction: 'Use the relationship distance = rate × time. Select the best answer.',
+      solutionExplanation:
+        'Distance equals rate multiplied by time: 72 × 2.5 = 180 miles.',
+    },
+    choices: [
+      { id: 'q18-a', label: 'A', text: '144 miles', isCorrect: false },
+      { id: 'q18-b', label: 'B', text: '156 miles', isCorrect: false },
+      { id: 'q18-c', label: 'C', text: '180 miles', isCorrect: true },
+      { id: 'q18-d', label: 'D', text: '192 miles', isCorrect: false },
+    ],
+    tags: [mathTags[9]],
+    timeToSolve: 120,
+    userAttempted: false,
+    createdAt: '2024-01-15T10:17:00Z'
+  },
+  {
+    id: 'q19',
+    subject: 'MATH',
+    subtype: 'INDY-IC',
+    scoreBand: 3,
+    stem: 'Complete the sentence using the menu for the blank.',
+    ic: {
+      instruction: 'Select the value that makes the statement true.',
+      segments: [
+        { type: 'text', value: 'If 3x = 18, then x equals ' },
+        { type: 'slot', slotId: 'ic19-s1' },
+        { type: 'text', value: '.' },
+      ],
+      slots: [
+        {
+          slotId: 'ic19-s1',
+          options: [
+            { id: 'ic19-o1', text: '3' },
+            { id: 'ic19-o2', text: '6' },
+            { id: 'ic19-o3', text: '9' },
+            { id: 'ic19-o4', text: '18' },
+          ],
+        },
+      ],
+      correctMapping: {
+        'ic19-s1': 'ic19-o2',
+      },
+      solutionExplanation: 'Divide both sides of 3x = 18 by 3 to get x = 6.',
+    },
+    tags: [mathTags[0]],
+    timeToSolve: 90,
+    userAttempted: false,
+    createdAt: '2024-01-15T10:18:00Z'
+  },
+  {
+    id: 'q22',
+    subject: 'MATH',
+    subtype: 'INDY-GIF',
+    scoreBand: 5,
+    stem:
+      'Plot the point (3, 4) on the coordinate plane. The viewing window is shown; use the grid to align your answer.',
+    gif: {
+      mode: 'plotPoint',
+      xMin: -1,
+      xMax: 8,
+      yMin: -1,
+      yMax: 8,
+      correctX: 3,
+      correctY: 4,
+      tolerance: 0.35,
+      snapToGrid: 0.5,
+      showGrid: true,
+      gridStep: 1,
+      instruction:
+        'Click once in the shaded region to plot your point. Points snap to half-unit grid intersections.',
+      solutionExplanation:
+        'The ordered pair (3, 4) is located 3 units to the right of the origin and 4 units up.',
+    },
+    tags: [mathTags[11]],
+    timeToSolve: 120,
+    userAttempted: false,
+    createdAt: '2024-01-15T10:21:00Z'
   }
 ];
 
@@ -362,9 +548,86 @@ export const getFilteredQuestions = (filters: Partial<{
     // Search query filter
     if (filters.searchQuery) {
       const query = filters.searchQuery.toLowerCase();
+      const dndParts = question.dnd
+        ? [
+            ...(question.dnd.instruction ? [question.dnd.instruction] : []),
+            ...question.dnd.pool.map((d) => d.text),
+            ...question.dnd.zones.flatMap((z) =>
+              [z.prompt, z.beforeText, z.afterText].filter(Boolean) as string[]
+            ),
+          ]
+        : [];
+      const eeParts = question.ee
+        ? [
+            ...(question.ee.instruction ? [question.ee.instruction] : []),
+            ...(question.ee.inputPrefix ? [question.ee.inputPrefix] : []),
+            ...question.ee.acceptableAnswers,
+          ]
+        : [];
+      const cgtParts = question.cgt
+        ? (() => {
+            const c = question.cgt;
+            const v = c.visual;
+            const note = c.sourceNote ? [c.sourceNote] : [];
+            if (v.type === 'table') {
+              return [
+                ...(v.caption ? [v.caption] : []),
+                ...v.headers,
+                ...v.rows.flat(),
+                ...note,
+              ];
+            }
+            return [
+              ...(v.title ? [v.title] : []),
+              ...v.categories,
+              ...v.values.map(String),
+              ...(v.valueSuffix ? [v.valueSuffix] : []),
+              ...note,
+            ];
+          })()
+        : [];
+      const wpParts = question.wp
+        ? [question.wp.instruction, question.wp.solutionExplanation].filter(Boolean) as string[]
+        : [];
+      const msParts = question.ms
+        ? [
+            String(question.ms.selectCount),
+            ...(question.ms.instruction ? [question.ms.instruction] : []),
+          ]
+        : [];
+      const icParts = question.ic
+        ? [
+            ...(question.ic.instruction ? [question.ic.instruction] : []),
+            ...question.ic.segments
+              .filter((s): s is { type: 'text'; value: string } => s.type === 'text')
+              .map((s) => s.value),
+            ...question.ic.slots.flatMap((s) => s.options.map((o) => o.text)),
+          ]
+        : [];
+      const hsParts = question.hs
+        ? [
+            ...(question.hs.instruction ? [question.hs.instruction] : []),
+            ...(question.hs.solutionExplanation ? [question.hs.solutionExplanation] : []),
+            ...(question.hs.imageAlt ? [question.hs.imageAlt] : []),
+          ]
+        : [];
+      const gifParts = question.gif
+        ? [
+            ...(question.gif.instruction ? [question.gif.instruction] : []),
+            ...(question.gif.solutionExplanation ? [question.gif.solutionExplanation] : []),
+          ]
+        : [];
       const searchableText = [
         question.stem,
         ...(question.choices?.map(c => c.text) || []),
+        ...dndParts,
+        ...eeParts,
+        ...cgtParts,
+        ...wpParts,
+        ...msParts,
+        ...icParts,
+        ...hsParts,
+        ...gifParts,
         ...question.tags.map(t => t.label)
       ].join(' ').toLowerCase();
       

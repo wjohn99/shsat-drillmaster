@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -21,8 +22,33 @@ import {
   StopCircle
 } from "lucide-react";
 import { questions, passages } from "@/data/mockData";
-import { Question as QuestionType } from "@/types";
 import { toast } from "@/hooks/use-toast";
+import { isAtaAnswerCorrect, isIndyCheckboxMultiSubtype, serializeAtaAnswer } from "@/lib/indyAta";
+import { isMsAnswerCorrect } from "@/lib/indyMs";
+import {
+  allDndZonesFilled,
+  createEmptyDndPlacements,
+  isDndPlacementCorrect,
+  serializeDndPlacements,
+} from "@/lib/indyDnd";
+import {
+  allIcSlotsFilled,
+  createEmptyIcSelections,
+  isIcSelectionCorrect,
+  serializeIcSelections,
+} from "@/lib/indyIc";
+import { DndBlock } from "@/components/question/DndBlock";
+import { EquationEditorBlock } from "@/components/question/EquationEditorBlock";
+import { isEeAnswerCorrect } from "@/lib/indyEe";
+import { isHsAnswerCorrect } from "@/lib/indyHs";
+import { isGifAnswerCorrect } from "@/lib/indyGif";
+import { CgtBlock } from "@/components/question/CgtBlock";
+import { WpBlock } from "@/components/question/WpBlock";
+import { InlineChoiceBlock } from "@/components/question/InlineChoiceBlock";
+import { HotSpotBlock } from "@/components/question/HotSpotBlock";
+import { GraphFigureBlock } from "@/components/question/GraphFigureBlock";
+import { HighlightableText } from "@/components/exam/HighlightableText";
+import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
 
 const NOTES_STORAGE_KEY = "question-notes";
 
@@ -32,7 +58,13 @@ export default function Question() {
   const isPracticeMode = searchParams.get('practice') === 'true';
   
   const [selectedAnswer, setSelectedAnswer] = useState<string>("");
+  const [ataSelected, setAtaSelected] = useState<string[]>([]);
+  const [dndPlacements, setDndPlacements] = useState<Record<string, string | null>>({});
   const [gridAnswer, setGridAnswer] = useState<string>("");
+  const [eeAnswer, setEeAnswer] = useState<string>("");
+  const [icSelections, setIcSelections] = useState<Record<string, string | null>>({});
+  const [hsSelected, setHsSelected] = useState<string | null>(null);
+  const [gifPlot, setGifPlot] = useState<string | null>(null);
   const [showSolution, setShowSolution] = useState(!isPracticeMode);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [userNotes, setUserNotes] = useState("");
@@ -67,7 +99,13 @@ export default function Question() {
   useEffect(() => {
     if (!question) return;
     setSelectedAnswer("");
+    setAtaSelected([]);
+    setDndPlacements(question.dnd ? createEmptyDndPlacements(question.dnd) : {});
+    setIcSelections(question.ic ? createEmptyIcSelections(question.ic) : {});
+    setHsSelected(null);
+    setGifPlot(null);
     setGridAnswer("");
+    setEeAnswer("");
     setShowSolution(!isPracticeMode);
     setTimeElapsed(0);
     setIsTimerRunning(isPracticeMode);
@@ -110,11 +148,53 @@ export default function Question() {
     setIsTimerRunning(false);
     setShowSolution(true);
     // In a real app, this would submit to the backend
-    console.log('Submitted answer:', question.subtype === 'GRID_IN' ? gridAnswer : selectedAnswer);
+    console.log(
+      'Submitted answer:',
+      question.subtype === 'GRID_IN'
+        ? gridAnswer
+        : question.subtype === 'INDY-ATA' || question.subtype === 'INDY-MS'
+          ? ataSelected
+          : question.subtype === 'INDY-DND' && question.dnd
+            ? serializeDndPlacements(dndPlacements)
+            : question.subtype === 'INDY-EE'
+              ? eeAnswer
+              : question.subtype === 'INDY-IC' && question.ic
+                ? serializeIcSelections(icSelections)
+                : question.subtype === 'INDY-HS'
+                  ? hsSelected ?? ""
+                  : question.subtype === 'INDY-GIF'
+                    ? gifPlot ?? ""
+                    : selectedAnswer
+    );
   };
 
   const getUserAnswer = () => {
-    return question.subtype === 'GRID_IN' ? gridAnswer : selectedAnswer;
+    if (question.subtype === 'GRID_IN') return gridAnswer;
+    if (question.subtype === 'INDY-ATA') {
+      return ataSelected.length > 0 ? serializeAtaAnswer(ataSelected) : "";
+    }
+    if (question.subtype === 'INDY-MS' && question.choices) {
+      const n =
+        question.ms?.selectCount ?? question.choices.filter((c) => c.isCorrect).length;
+      if (ataSelected.length !== n) return "";
+      return serializeAtaAnswer(ataSelected);
+    }
+    if (question.subtype === 'INDY-DND' && question.dnd) {
+      if (!allDndZonesFilled(question.dnd, dndPlacements)) return "";
+      return serializeDndPlacements(dndPlacements);
+    }
+    if (question.subtype === 'INDY-EE') return eeAnswer.trim();
+    if (question.subtype === 'INDY-IC' && question.ic) {
+      if (!allIcSlotsFilled(question.ic, icSelections)) return "";
+      return serializeIcSelections(icSelections);
+    }
+    if (question.subtype === 'INDY-HS' && question.hs) {
+      return hsSelected ?? "";
+    }
+    if (question.subtype === 'INDY-GIF' && question.gif?.mode === "plotPoint") {
+      return gifPlot ?? "";
+    }
+    return selectedAnswer;
   };
 
   const handleSaveNotes = () => {
@@ -133,15 +213,43 @@ export default function Question() {
 
   const isAnswerCorrect = () => {
     if (question.subtype === 'GRID_IN') {
-      // For grid-in questions, you'd implement proper answer checking logic
       return gridAnswer.toLowerCase().trim() === "9/8" || gridAnswer.toLowerCase().trim() === "1.125";
-    } else {
-      const correctChoice = question.choices?.find(c => c.isCorrect);
-      return selectedAnswer === correctChoice?.id;
     }
+    if (question.subtype === 'INDY-ATA' && question.choices) {
+      return isAtaAnswerCorrect(question.choices, ataSelected);
+    }
+    if (question.subtype === 'INDY-MS' && question.choices) {
+      const nCorrect = question.choices.filter((c) => c.isCorrect).length;
+      const ms = question.ms ?? { selectCount: nCorrect };
+      return isMsAnswerCorrect(question.choices, ataSelected, ms);
+    }
+    if (question.subtype === 'INDY-DND' && question.dnd) {
+      return isDndPlacementCorrect(question.dnd, dndPlacements);
+    }
+    if (question.subtype === 'INDY-EE' && question.ee) {
+      return isEeAnswerCorrect(question.ee, eeAnswer);
+    }
+    if (question.subtype === 'INDY-IC' && question.ic) {
+      return isIcSelectionCorrect(question.ic, icSelections);
+    }
+    if (question.subtype === 'INDY-HS' && question.hs) {
+      return isHsAnswerCorrect(hsSelected, question.hs.correctSpotId);
+    }
+    if (question.subtype === 'INDY-GIF' && question.gif) {
+      return isGifAnswerCorrect(question.gif, gifPlot ?? "");
+    }
+    const correctChoice = question.choices?.find((c) => c.isCorrect);
+    return selectedAnswer === correctChoice?.id;
   };
 
   const subjectVariant = question.subject === 'MATH' ? 'math' : 'ela';
+  const showElaHighlighter = shouldShowElaHighlighter(question);
+
+  const toggleAtaChoice = (choiceId: string) => {
+    setAtaSelected((prev) =>
+      prev.includes(choiceId) ? prev.filter((id) => id !== choiceId) : [...prev, choiceId]
+    );
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -192,11 +300,21 @@ export default function Question() {
                   )}
                 </CardHeader>
                 <CardContent>
-                  <div className="prose prose-sm max-w-none">
-                    {passage.body.split('\n\n').map((paragraph, index) => (
-                      <p key={index} className="mb-4 leading-relaxed">{paragraph}</p>
-                    ))}
-                  </div>
+                  {showElaHighlighter ? (
+                    <HighlightableText
+                      text={passage.body}
+                      storageKey={`passage-${passage.id}`}
+                      variant="passage"
+                    />
+                  ) : (
+                    <div className="prose prose-sm max-w-none">
+                      {passage.body.split("\n\n").map((paragraph, index) => (
+                        <p key={index} className="mb-4 leading-relaxed">
+                          {paragraph}
+                        </p>
+                      ))}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             )}
@@ -233,12 +351,138 @@ export default function Question() {
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Question stem */}
-                <div className="prose prose-sm max-w-none">
-                  <p className="text-base leading-relaxed">{question.stem}</p>
-                </div>
+                {showElaHighlighter && question.subtype !== "INDY-IC" ? (
+                  <div className="prose prose-sm max-w-none">
+                    <HighlightableText
+                      text={question.stem}
+                      storageKey={`stem-${question.id}`}
+                      variant="stem"
+                    />
+                  </div>
+                ) : (
+                  <div className="prose prose-sm max-w-none">
+                    <p className="text-base leading-relaxed">{question.stem}</p>
+                  </div>
+                )}
 
-                {/* Answer choices */}
-                {question.choices && (
+                {/* INDY-CGT — chart / graph / table + MCQ */}
+                {question.subtype === 'INDY-CGT' && question.cgt && (
+                  <CgtBlock spec={question.cgt} />
+                )}
+
+                {/* INDY-WP — word problem framing + MCQ */}
+                {question.subtype === 'INDY-WP' && (
+                  <WpBlock spec={question.wp ?? {}} />
+                )}
+
+                {/* INDY-IC — inline dropdown(s) in a sentence */}
+                {question.subtype === 'INDY-IC' && question.ic && (
+                  <InlineChoiceBlock
+                    key={question.id}
+                    spec={question.ic}
+                    selections={icSelections}
+                    onChange={setIcSelections}
+                    disabled={showSolution}
+                    showSolution={showSolution}
+                  />
+                )}
+
+                {/* INDY-HS — click one region on an image */}
+                {question.subtype === 'INDY-HS' && question.hs && (
+                  <HotSpotBlock
+                    key={question.id}
+                    spec={question.hs}
+                    selectedId={hsSelected}
+                    onSelect={setHsSelected}
+                    disabled={showSolution}
+                    showSolution={showSolution}
+                  />
+                )}
+
+                {/* INDY-GIF — graphing / interactive coordinate plane */}
+                {question.subtype === 'INDY-GIF' &&
+                  question.gif?.mode === "plotPoint" && (
+                    <GraphFigureBlock
+                      key={question.id}
+                      spec={question.gif}
+                      value={gifPlot}
+                      onChange={setGifPlot}
+                      disabled={showSolution}
+                      showSolution={showSolution}
+                    />
+                  )}
+
+                {/* INDY-ATA / INDY-MS — checkbox multi-select (all-or-nothing scoring) */}
+                {isIndyCheckboxMultiSubtype(question.subtype) && question.choices && (
+                  <div className="space-y-3">
+                    <p className="text-sm text-muted-foreground">
+                      {question.subtype === "INDY-MS" && question.ms ? (
+                        <>
+                          Select exactly <strong>{question.ms.selectCount}</strong>{" "}
+                          {question.ms.selectCount === 1 ? "answer" : "answers"}. You earn
+                          credit only if those {question.ms.selectCount} choices are{" "}
+                          <em>exactly</em> the correct set (no incorrect choices, no missing
+                          correct answers).
+                        </>
+                      ) : (
+                        <>
+                          Select all that apply. You earn credit only if your selection matches
+                          all correct answers and includes no incorrect answers.
+                        </>
+                      )}
+                    </p>
+                    {question.subtype === "INDY-MS" && question.ms?.instruction ? (
+                      <p className="text-sm text-muted-foreground">{question.ms.instruction}</p>
+                    ) : null}
+                    <div className="space-y-3">
+                      {question.choices.map((choice) => {
+                        const checked = ataSelected.includes(choice.id);
+                        const showWrongPick = showSolution && checked && !choice.isCorrect;
+                        const showMissed = showSolution && !checked && choice.isCorrect;
+                        return (
+                          <div key={choice.id} className="flex items-start space-x-3">
+                            <Checkbox
+                              id={choice.id}
+                              checked={checked}
+                              onCheckedChange={() => toggleAtaChoice(choice.id)}
+                              disabled={showSolution}
+                              className="mt-1"
+                            />
+                            <Label
+                              htmlFor={choice.id}
+                              className={`flex-1 cursor-pointer text-sm leading-relaxed ${
+                                showSolution && choice.isCorrect ? "text-success font-medium" : ""
+                              } ${showWrongPick ? "text-destructive" : ""} ${showMissed ? "text-warning" : ""}`}
+                            >
+                              <span className="font-medium mr-2">{choice.label}.</span>
+                              {choice.text}
+                            </Label>
+                            {showSolution && choice.isCorrect && (
+                              <CheckCircle className="h-4 w-4 shrink-0 text-success mt-1" />
+                            )}
+                            {showWrongPick && (
+                              <XCircle className="h-4 w-4 shrink-0 text-destructive mt-1" />
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* INDY-DND — answer bank + drop box(es); spec carries instruction + layout */}
+                {question.subtype === 'INDY-DND' && question.dnd && (
+                  <DndBlock
+                    spec={question.dnd}
+                    placements={dndPlacements}
+                    onChange={setDndPlacements}
+                    disabled={showSolution}
+                    showSolution={showSolution}
+                  />
+                )}
+
+                {/* Single-select MCQ (includes INDY-CGT with table/chart) */}
+                {question.choices && !isIndyCheckboxMultiSubtype(question.subtype) && question.subtype !== 'INDY-DND' && question.subtype !== 'INDY-EE' && question.subtype !== 'INDY-IC' && question.subtype !== 'INDY-HS' && question.subtype !== 'INDY-GIF' && (
                   <div className="space-y-3">
                     <RadioGroup 
                       value={selectedAnswer} 
@@ -269,6 +513,17 @@ export default function Question() {
                       ))}
                     </RadioGroup>
                   </div>
+                )}
+
+                {/* INDY-EE — equation editor keypad */}
+                {question.subtype === 'INDY-EE' && question.ee && (
+                  <EquationEditorBlock
+                    key={question.id}
+                    spec={question.ee}
+                    value={eeAnswer}
+                    onChange={setEeAnswer}
+                    disabled={showSolution}
+                  />
                 )}
 
                 {/* Grid-in answer */}
@@ -324,7 +579,26 @@ export default function Question() {
                       <p>
                         {question.subtype === 'GRID_IN' 
                           ? "To solve this ratio problem, set up a proportion: 2/3 cup flour : 1/4 cup sugar = 1.5 cups flour : x cups sugar. Cross multiply: (2/3) × x = (1/4) × 1.5. Solving: x = (1/4 × 1.5) ÷ (2/3) = (3/8) ÷ (2/3) = (3/8) × (3/2) = 9/16 cups sugar."
-                          : "This question tests your ability to identify the main cause of urban planning changes during the Industrial Revolution. The passage clearly states that 'rapid urbanization created new challenges' and 'Cities grew exponentially, often without adequate infrastructure to support their populations.'"
+                          : question.subtype === 'INDY-MS'
+                            ? "A number is a multiple of 3 if it is divisible by 3 with no remainder: 12, 15, and 18 are multiples of 3; 20 is not. Select A, B, and C only."
+                            : question.subtype === 'INDY-ATA'
+                              ? "Set each factor equal to zero: x − 2 = 0 gives x = 2, and x + 3 = 0 gives x = −3. The correct selections are A and B only."
+                            : question.subtype === 'INDY-DND'
+                              ? "The sum of the four given numbers is 9 + 14 + 7 + 12 = 42. For the mean of five numbers to be 11, the total must be 5 × 11 = 55, so the fifth number is 55 − 42 = 13."
+                              : question.subtype === 'INDY-EE' && question.ee?.solutionExplanation
+                              ? question.ee.solutionExplanation
+                              : question.subtype === 'INDY-CGT' && question.cgt?.solutionExplanation
+                                ? question.cgt.solutionExplanation
+                                : question.subtype === 'INDY-WP' && question.wp?.solutionExplanation
+                                  ? question.wp.solutionExplanation
+                                  : question.subtype === 'INDY-IC' && question.ic?.solutionExplanation
+                                    ? question.ic.solutionExplanation
+                                    : question.subtype === 'INDY-HS' && question.hs?.solutionExplanation
+                                      ? question.hs.solutionExplanation
+                                      : question.subtype === 'INDY-GIF' &&
+                                          question.gif?.solutionExplanation
+                                        ? question.gif.solutionExplanation
+                                        : "This question tests your ability to identify the main cause of urban planning changes during the Industrial Revolution. The passage clearly states that 'rapid urbanization created new challenges' and 'Cities grew exponentially, often without adequate infrastructure to support their populations.'"
                         }
                       </p>
                     </div>

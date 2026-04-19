@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { 
@@ -15,10 +16,23 @@ import {
   Flag, 
   CheckCircle, 
   XCircle,
-  RotateCcw
+  RotateCcw,
+  BookOpen
 } from "lucide-react";
-import { getFilteredQuestions } from "@/data/mockData";
+import { getFilteredQuestions, passages } from "@/data/mockData";
 import { Question } from "@/types";
+import { isIndyCheckboxMultiSubtype, parseAtaAnswer, serializeAtaAnswer } from "@/lib/indyAta";
+import { parseDndPlacementsForQuestion, serializeDndPlacements } from "@/lib/indyDnd";
+import { DndBlock } from "@/components/question/DndBlock";
+import { EquationEditorBlock } from "@/components/question/EquationEditorBlock";
+import { CgtBlock } from "@/components/question/CgtBlock";
+import { WpBlock } from "@/components/question/WpBlock";
+import { InlineChoiceBlock } from "@/components/question/InlineChoiceBlock";
+import { HotSpotBlock } from "@/components/question/HotSpotBlock";
+import { GraphFigureBlock } from "@/components/question/GraphFigureBlock";
+import { parseIcSelectionsForQuestion, serializeIcSelections } from "@/lib/indyIc";
+import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
+import { HighlightableText } from "@/components/exam/HighlightableText";
 
 export default function QuestionSet() {
   const [searchParams] = useSearchParams();
@@ -58,10 +72,22 @@ export default function QuestionSet() {
   }
 
   const currentQuestion = questions[currentQuestionIndex];
+  const passage = currentQuestion.passageId
+    ? passages.find((p) => p.id === currentQuestion.passageId)
+    : null;
+  const showElaHighlighter = shouldShowElaHighlighter(currentQuestion);
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
   const handleAnswerChange = (questionId: string, answer: string) => {
     setAnswers(prev => ({ ...prev, [questionId]: answer }));
+  };
+
+  const toggleAtaAnswer = (questionId: string, choiceId: string) => {
+    const prev = parseAtaAnswer(answers[questionId]);
+    const next = prev.includes(choiceId)
+      ? prev.filter((id) => id !== choiceId)
+      : [...prev, choiceId];
+    handleAnswerChange(questionId, serializeAtaAnswer(next));
   };
 
   const toggleFlag = (questionId: string) => {
@@ -178,13 +204,133 @@ export default function QuestionSet() {
               </CardHeader>
               
               <CardContent className="space-y-6">
+                {passage && showElaHighlighter && (
+                  <Card className="border-dashed bg-muted/20">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="flex items-center gap-2 text-base">
+                        <BookOpen className="h-4 w-4" />
+                        {passage.title}
+                      </CardTitle>
+                      {passage.sourceMeta && (
+                        <p className="text-sm text-muted-foreground">{passage.sourceMeta}</p>
+                      )}
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <HighlightableText
+                        text={passage.body}
+                        storageKey={`passage-${passage.id}`}
+                        variant="passage"
+                      />
+                    </CardContent>
+                  </Card>
+                )}
+                {passage && !showElaHighlighter && (
+                  <Card className="border-dashed bg-muted/20">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="flex items-center gap-2 text-base">
+                        <BookOpen className="h-4 w-4" />
+                        {passage.title}
+                      </CardTitle>
+                      {passage.sourceMeta && (
+                        <p className="text-sm text-muted-foreground">{passage.sourceMeta}</p>
+                      )}
+                    </CardHeader>
+                    <CardContent className="pt-0 prose prose-sm max-w-none">
+                      {passage.body.split("\n\n").map((para, i) => (
+                        <p key={i} className="mb-4 last:mb-0 leading-relaxed">
+                          {para}
+                        </p>
+                      ))}
+                    </CardContent>
+                  </Card>
+                )}
                 {/* Question stem */}
-                <div className="prose prose-sm max-w-none">
-                  <p className="text-base leading-relaxed">{currentQuestion.stem}</p>
-                </div>
+                {showElaHighlighter && currentQuestion.subtype !== "INDY-IC" ? (
+                  <div className="prose prose-sm max-w-none">
+                    <HighlightableText
+                      text={currentQuestion.stem}
+                      storageKey={`stem-${currentQuestion.id}`}
+                      variant="stem"
+                    />
+                  </div>
+                ) : (
+                  <div className="prose prose-sm max-w-none">
+                    <p className="text-base leading-relaxed">{currentQuestion.stem}</p>
+                  </div>
+                )}
 
-                {/* Answer choices */}
-                {currentQuestion.choices && (
+                {currentQuestion.subtype === 'INDY-CGT' && currentQuestion.cgt && (
+                  <CgtBlock spec={currentQuestion.cgt} />
+                )}
+
+                {currentQuestion.subtype === 'INDY-WP' && (
+                  <WpBlock spec={currentQuestion.wp ?? {}} />
+                )}
+
+                {currentQuestion.subtype === 'INDY-HS' && currentQuestion.hs && (
+                  <HotSpotBlock
+                    spec={currentQuestion.hs}
+                    selectedId={answers[currentQuestion.id] || null}
+                    onSelect={(id) => handleAnswerChange(currentQuestion.id, id)}
+                  />
+                )}
+
+                {currentQuestion.subtype === 'INDY-GIF' &&
+                  currentQuestion.gif?.mode === "plotPoint" && (
+                    <GraphFigureBlock
+                      spec={currentQuestion.gif}
+                      value={answers[currentQuestion.id] || null}
+                      onChange={(s) => handleAnswerChange(currentQuestion.id, s)}
+                    />
+                  )}
+
+                {/* INDY-ATA / INDY-MS */}
+                {isIndyCheckboxMultiSubtype(currentQuestion.subtype) && currentQuestion.choices && (
+                  <div className="space-y-3">
+                    <p className="text-sm text-muted-foreground">
+                      {currentQuestion.subtype === "INDY-MS"
+                        ? "Select all answers that apply."
+                        : "Select all that apply."}
+                    </p>
+                    {currentQuestion.choices.map((choice) => {
+                      const selected = parseAtaAnswer(answers[currentQuestion.id]);
+                      return (
+                        <div key={choice.id} className="flex items-start space-x-3">
+                          <Checkbox
+                            id={`${currentQuestion.id}-${choice.id}`}
+                            checked={selected.includes(choice.id)}
+                            onCheckedChange={() => toggleAtaAnswer(currentQuestion.id, choice.id)}
+                            className="mt-1"
+                          />
+                          <Label
+                            htmlFor={`${currentQuestion.id}-${choice.id}`}
+                            className="flex-1 cursor-pointer text-sm leading-relaxed"
+                          >
+                            <span className="font-medium mr-2">{choice.label}.</span>
+                            {choice.text}
+                          </Label>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* INDY-DND */}
+                {currentQuestion.subtype === 'INDY-DND' && currentQuestion.dnd && (
+                  <DndBlock
+                    spec={currentQuestion.dnd}
+                    placements={parseDndPlacementsForQuestion(
+                      currentQuestion.dnd,
+                      answers[currentQuestion.id]
+                    )}
+                    onChange={(next) =>
+                      handleAnswerChange(currentQuestion.id, serializeDndPlacements(next))
+                    }
+                  />
+                )}
+
+                {/* Single-select MCQ */}
+                {currentQuestion.choices && !isIndyCheckboxMultiSubtype(currentQuestion.subtype) && currentQuestion.subtype !== 'INDY-DND' && currentQuestion.subtype !== 'INDY-EE' && currentQuestion.subtype !== 'INDY-IC' && currentQuestion.subtype !== 'INDY-HS' && currentQuestion.subtype !== 'INDY-GIF' && (
                   <div className="space-y-3">
                     <RadioGroup 
                       value={answers[currentQuestion.id] || ""} 
@@ -218,6 +364,15 @@ export default function QuestionSet() {
                       className="max-w-md"
                     />
                   </div>
+                )}
+
+                {currentQuestion.subtype === 'INDY-EE' && currentQuestion.ee && (
+                  <EquationEditorBlock
+                    key={currentQuestion.id}
+                    spec={currentQuestion.ee}
+                    value={answers[currentQuestion.id] || ""}
+                    onChange={(v) => handleAnswerChange(currentQuestion.id, v)}
+                  />
                 )}
               </CardContent>
             </Card>
