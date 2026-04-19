@@ -29,7 +29,20 @@ export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: Filt
   const [tagSearchOpen, setTagSearchOpen] = useState(false);
 
   const subjects: Subject[] = ['MATH', 'ELA'];
-  const subtypes: QuestionSubtype[] = ['MC4_A-D', 'MC4_E-H', 'GRID_IN', 'TEI_DRAG_DROP', 'TEI_MULTIPLE_SELECT'];
+  const subtypes: QuestionSubtype[] = [
+    'MC4_A-D',
+    'MC4_E-H',
+    'GRID_IN',
+    'TEI_DRAG_DROP',
+    'TEI_MULTIPLE_SELECT',
+    'INDY-ATA',
+    'INDY-DND',
+    'INDY-EE',
+    'INDY-CGT',
+    'INDY-WP',
+    'INDY-IC',
+    'INDY-GIF',
+  ];
   const scoreBands: ScoreBand[] = [1, 2, 3, 4, 5, 6, 7, 8];
   const userStatusOptions = [
     { value: 'attempted', label: 'Attempted' },
