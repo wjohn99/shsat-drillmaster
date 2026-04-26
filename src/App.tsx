@@ -15,6 +15,7 @@ import Passages from "./pages/Passages";
 import TopicBrowser from "./pages/TopicBrowser";
 import TopicQuestions from "./pages/TopicQuestions";
 import NotFound from "./pages/NotFound";
+import BlitzMode from "./pages/BlitzMode";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/topic/:topicId" element={<TopicQuestions />} />
           <Route path="/forms" element={<Forms />} />
           <Route path="/passages" element={<Passages />} />
+          <Route path="/blitz" element={<BlitzMode />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

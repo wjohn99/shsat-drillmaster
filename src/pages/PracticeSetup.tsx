@@ -16,20 +16,20 @@ import {
   Brain,
   Target
 } from "lucide-react";
-import { Subject, ScoreBand } from "@/types";
+import { Difficulty, Subject } from "@/types";
 import { allTags, getFilteredQuestions } from "@/data/mockData";
 
 export default function PracticeSetup() {
   const navigate = useNavigate();
   
   const [selectedSubjects, setSelectedSubjects] = useState<Subject[]>([]);
-  const [selectedScoreBands, setSelectedScoreBands] = useState<ScoreBand[]>([]);
+  const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [questionsCount, setQuestionsCount] = useState(20);
   const [timedMode, setTimedMode] = useState(true);
 
   const subjects: Subject[] = ['MATH', 'ELA'];
-  const scoreBands: ScoreBand[] = [1, 2, 3, 4, 5, 6, 7, 8];
+  const difficulties: Difficulty[] = ['easy', 'medium', 'hard'];
 
   const toggleArraySelection = <T,>(array: T[], setArray: (arr: T[]) => void, item: T) => {
     if (array.includes(item)) {
@@ -42,7 +42,7 @@ export default function PracticeSetup() {
   const getAvailableQuestions = () => {
     return getFilteredQuestions({
       subjects: selectedSubjects,
-      scoreBands: selectedScoreBands,
+      difficulties: selectedDifficulties,
       tagCodes: selectedTags
     });
   };
@@ -52,7 +52,7 @@ export default function PracticeSetup() {
   const startPractice = () => {
     const params = new URLSearchParams();
     if (selectedSubjects.length > 0) params.set('subjects', selectedSubjects.join(','));
-    if (selectedScoreBands.length > 0) params.set('scoreBands', selectedScoreBands.join(','));
+    if (selectedDifficulties.length > 0) params.set('difficulties', selectedDifficulties.join(','));
     if (selectedTags.length > 0) params.set('tagCodes', selectedTags.join(','));
     params.set('count', questionsCount.toString());
     params.set('timed', timedMode.toString());
@@ -93,7 +93,13 @@ export default function PracticeSetup() {
                     {subjects.map((subject) => (
                       <Chip
                         key={subject}
-                        variant={selectedSubjects.includes(subject) ? "selected" : subject.toLowerCase() as any}
+                        variant={
+                          selectedSubjects.includes(subject)
+                            ? "selected"
+                            : subject === "MATH"
+                              ? "math"
+                              : "ela"
+                        }
                         onClick={() => toggleArraySelection(selectedSubjects, setSelectedSubjects, subject)}
                         className="flex-1 justify-center"
                       >
@@ -104,29 +110,38 @@ export default function PracticeSetup() {
                 </CardContent>
               </Card>
 
-              {/* Score Band Selection */}
+              {/* Difficulty Selection */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Score Band</CardTitle>
+                  <CardTitle>Difficulty</CardTitle>
                   <p className="text-sm text-muted-foreground">
-                    Select target score bands (1 = lowest, 8 = highest)
+                    Select easy, medium, and/or hard questions
                   </p>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-4 gap-3">
-                    {scoreBands.map((band) => (
-                      <button
-                        key={band}
-                        onClick={() => toggleArraySelection(selectedScoreBands, setSelectedScoreBands, band)}
-                        className={`
-                          flex h-12 w-12 items-center justify-center rounded-full text-sm font-bold text-white transition-all mx-auto
-                          ${selectedScoreBands.includes(band) ? 'ring-2 ring-ring ring-offset-2 scale-110' : 'hover:scale-105'}
-                        `}
-                        style={{ backgroundColor: `hsl(var(--score-band-${band}))` }}
-                      >
-                        {band}
-                      </button>
-                    ))}
+                  <div className="flex gap-3">
+                    {difficulties.map((d) => {
+                      const label = d === 'easy' ? 'Easy' : d === 'medium' ? 'Medium' : 'Hard';
+                      const bg =
+                        d === 'easy'
+                          ? `hsl(var(--difficulty-easy))`
+                          : d === 'medium'
+                            ? `hsl(var(--difficulty-medium))`
+                            : `hsl(var(--difficulty-hard))`;
+                      return (
+                        <button
+                          key={d}
+                          onClick={() => toggleArraySelection(selectedDifficulties, setSelectedDifficulties, d)}
+                          className={`
+                            flex-1 h-12 rounded-full text-sm font-bold text-white transition-all
+                            ${selectedDifficulties.includes(d) ? 'ring-2 ring-ring ring-offset-2 scale-[1.02]' : 'hover:opacity-90'}
+                          `}
+                          style={{ backgroundColor: bg }}
+                        >
+                          {label}
+                        </button>
+                      );
+                    })}
                   </div>
                 </CardContent>
               </Card>

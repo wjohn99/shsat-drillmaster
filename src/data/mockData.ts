@@ -1,4 +1,4 @@
-import { Question, Tag, Passage, Form, Subject, QuestionSubtype } from '@/types';
+import { Difficulty, Question, Tag, Passage, Form, Subject, QuestionSubtype } from '@/types';
 
 // ELA Tags
 const elaTags: Tag[] = [
@@ -71,6 +71,12 @@ Recent research has revealed that sleep plays a crucial role in memory consolida
   }
 ];
 
+const scoreBandToDifficulty = (scoreBand: number): Difficulty => {
+  if (scoreBand <= 3) return 'easy';
+  if (scoreBand <= 6) return 'medium';
+  return 'hard';
+};
+
 // Sample Questions
 export const questions: Question[] = [
   // ELA Questions
@@ -78,7 +84,7 @@ export const questions: Question[] = [
     id: 'q1',
     subject: 'ELA',
     subtype: 'MC4_A-D',
-    scoreBand: 5,
+    difficulty: scoreBandToDifficulty(5),
     stem: 'Based on the passage, what was the primary factor that drove changes in urban planning during the Industrial Revolution?',
     choices: [
       { id: 'q1-a', label: 'A', text: 'The desire to create more aesthetically pleasing cities', isCorrect: false },
@@ -97,7 +103,7 @@ export const questions: Question[] = [
     id: 'q2',
     subject: 'ELA',
     subtype: 'MC4_A-D',
-    scoreBand: 7,
+    difficulty: scoreBandToDifficulty(7),
     stem: 'Which choice provides the best evidence for the answer to the previous question?',
     choices: [
       { id: 'q2-a', label: 'A', text: '"The earliest cities...were planned with basic geometric patterns"', isCorrect: false },
@@ -115,7 +121,7 @@ export const questions: Question[] = [
     id: 'q3',
     subject: 'ELA',
     subtype: 'MC4_A-D',
-    scoreBand: 3,
+    difficulty: scoreBandToDifficulty(3),
     stem: 'According to the passage, where are short-term memories initially processed?',
     choices: [
       { id: 'q3-a', label: 'A', text: 'The cerebral cortex', isCorrect: false },
@@ -137,7 +143,7 @@ export const questions: Question[] = [
     id: 'q4',
     subject: 'MATH',
     subtype: 'MC4_A-D',
-    scoreBand: 4,
+    difficulty: scoreBandToDifficulty(4),
     stem: 'If 3x + 7 = 22, what is the value of x?',
     choices: [
       { id: 'q4-a', label: 'A', text: '3', isCorrect: false },
@@ -155,7 +161,7 @@ export const questions: Question[] = [
     id: 'q5',
     subject: 'MATH',
     subtype: 'GRID_IN',
-    scoreBand: 6,
+    difficulty: scoreBandToDifficulty(6),
     stem: 'A recipe calls for 2/3 cup of flour for every 1/4 cup of sugar. If Maria uses 1 1/2 cups of flour, how many cups of sugar should she use? Express your answer as a fraction in lowest terms.',
     tags: [mathTags[5]], // Ratios & Proportions
     timeToSolve: 180,
@@ -166,7 +172,7 @@ export const questions: Question[] = [
     id: 'q6',
     subject: 'MATH',
     subtype: 'MC4_E-H',
-    scoreBand: 2,
+    difficulty: scoreBandToDifficulty(2),
     stem: 'What is the area of a rectangle with length 8 feet and width 6 feet?',
     choices: [
       { id: 'q6-e', label: 'E', text: '14 square feet', isCorrect: false },
@@ -184,7 +190,7 @@ export const questions: Question[] = [
     id: 'q7',
     subject: 'MATH',
     subtype: 'MC4_A-D',
-    scoreBand: 8,
+    difficulty: scoreBandToDifficulty(8),
     stem: 'The system of equations 2x + 3y = 12 and 4x - y = 10 has a solution (x, y). What is the value of x + y?',
     choices: [
       { id: 'q7-a', label: 'A', text: '2', isCorrect: false },
@@ -201,7 +207,7 @@ export const questions: Question[] = [
     id: 'q8',
     subject: 'MATH',
     subtype: 'MC4_E-H',
-    scoreBand: 5,
+    difficulty: scoreBandToDifficulty(5),
     stem: 'In a class of 30 students, 18 play basketball and 20 play soccer. If 12 students play both sports, how many students play neither sport?',
     choices: [
       { id: 'q8-e', label: 'E', text: '2', isCorrect: false },
@@ -222,7 +228,7 @@ export const questions: Question[] = [
     id: 'q9',
     subject: 'MATH',
     subtype: 'MC4_A-D',
-    scoreBand: 2,
+    difficulty: scoreBandToDifficulty(2),
     stem: 'A bicycle that originally cost $420 is on sale for 30% off. What is the sale price of the bicycle?',
     choices: [
       { id: 'q9-a', label: 'A', text: '$126', isCorrect: false },
@@ -239,7 +245,7 @@ export const questions: Question[] = [
     id: 'q10',
     subject: 'MATH',
     subtype: 'MC4_E-H',
-    scoreBand: 4,
+    difficulty: scoreBandToDifficulty(4),
     stem: 'A circle with a radius of 4 inches is inscribed perfectly inside a square. What is the area of the region that is inside the square but outside the circle, in square inches?',
     choices: [
       { id: 'q10-e', label: 'E', text: '64−16π', isCorrect: true },
@@ -256,7 +262,7 @@ export const questions: Question[] = [
     id: 'q11',
     subject: 'MATH',
     subtype: 'GRID_IN',
-    scoreBand: 2,
+    difficulty: scoreBandToDifficulty(2),
     stem: 'What is the value of the expression 20 − 3 × (4 − 2)?',
     tags: [mathTags[0], mathTags[0]], // Linear equations
     timeToSolve: 60,
@@ -267,7 +273,7 @@ export const questions: Question[] = [
     id: 'q12',
     subject: 'MATH',
     subtype: 'MC4_E-H',
-    scoreBand: 2,
+    difficulty: scoreBandToDifficulty(2),
     stem: 'If 9k − 15 = 4k + 5, what is the value of k?',
     choices: [
       { id: 'q12-e', label: 'E', text: '1', isCorrect: false },
@@ -284,7 +290,7 @@ export const questions: Question[] = [
     id: 'q13',
     subject: 'MATH',
     subtype: 'MC4_A-D',
-    scoreBand: 2,
+    difficulty: scoreBandToDifficulty(2),
     stem: 'The mean of five test scores is 85. If four of the scores are 80, 92, 78, and 88, what is the fifth score?',
     choices: [
       { id: 'q13-a', label: 'A', text: '85', isCorrect: false },
@@ -301,7 +307,7 @@ export const questions: Question[] = [
     id: 'q14',
     subject: 'MATH',
     subtype: 'INDY-ATA',
-    scoreBand: 4,
+    difficulty: scoreBandToDifficulty(4),
     stem: 'Select all values of x that satisfy the equation (x − 2)(x + 3) = 0.',
     choices: [
       { id: 'q14-a', label: 'A', text: 'x = 2', isCorrect: true },
@@ -319,7 +325,7 @@ export const questions: Question[] = [
     id: 'q15',
     subject: 'MATH',
     subtype: 'INDY-DND',
-    scoreBand: 5,
+    difficulty: scoreBandToDifficulty(5),
     stem: 'The mean of a set of five numbers is 11. If four of the numbers in the set are 9, 14, 7, and 12, what is the value of the fifth number?',
     dnd: {
       instruction: 'Move the correct answer into the correct box:',
@@ -351,7 +357,7 @@ export const questions: Question[] = [
     id: 'q16',
     subject: 'MATH',
     subtype: 'INDY-EE',
-    scoreBand: 4,
+    difficulty: scoreBandToDifficulty(4),
     stem: 'A customer buys a shirt for $22.00 and a pair of pants for $38.00. If the sales tax rate is 8%, what is the total cost of the purchase, in dollars?',
     ee: {
       instruction: 'Enter your answer in the space.',
@@ -369,7 +375,7 @@ export const questions: Question[] = [
     id: 'q17',
     subject: 'MATH',
     subtype: 'INDY-CGT',
-    scoreBand: 3,
+    difficulty: scoreBandToDifficulty(3),
     stem: 'The table shows the number of books read by four students last month. Which student read the greatest number of books?',
     cgt: {
       visual: {
@@ -402,7 +408,7 @@ export const questions: Question[] = [
     id: 'q18',
     subject: 'MATH',
     subtype: 'INDY-WP',
-    scoreBand: 4,
+    difficulty: scoreBandToDifficulty(4),
     stem: 'A train travels at a constant speed of 72 miles per hour. How far does the train travel in 2.5 hours?',
     wp: {
       instruction: 'Use the relationship distance = rate × time. Select the best answer.',
@@ -424,7 +430,7 @@ export const questions: Question[] = [
     id: 'q19',
     subject: 'MATH',
     subtype: 'INDY-IC',
-    scoreBand: 3,
+    difficulty: scoreBandToDifficulty(3),
     stem: 'Complete the sentence using the menu for the blank.',
     ic: {
       instruction: 'Select the value that makes the statement true.',
@@ -458,7 +464,7 @@ export const questions: Question[] = [
     id: 'q22',
     subject: 'MATH',
     subtype: 'INDY-GIF',
-    scoreBand: 5,
+    difficulty: scoreBandToDifficulty(5),
     stem:
       'Plot the point (3, 4) on the coordinate plane. The viewing window is shown; use the grid to align your answer.',
     gif: {
@@ -509,7 +515,7 @@ export const forms: Form[] = [
 
 export const getFilteredQuestions = (filters: Partial<{
   subjects: string[];
-  scoreBands: number[];
+  difficulties: Difficulty[];
   tagCodes: string[];
   subtypes: string[];
   passageOnly: boolean;
@@ -522,8 +528,8 @@ export const getFilteredQuestions = (filters: Partial<{
       return false;
     }
 
-    // Score band filter
-    if (filters.scoreBands?.length && !filters.scoreBands.includes(question.scoreBand)) {
+    // Difficulty filter
+    if (filters.difficulties?.length && !filters.difficulties.includes(question.difficulty)) {
       return false;
     }
 

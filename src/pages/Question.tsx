@@ -327,12 +327,25 @@ export default function Question() {
                     <Badge variant={subjectVariant === 'math' ? 'default' : 'secondary'}>
                       {question.subject}
                     </Badge>
-                    <div 
-                      className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white`}
-                      style={{ backgroundColor: `hsl(var(--score-band-${question.scoreBand}))` }}
-                      title={`Score Band ${question.scoreBand}`}
+                    <div
+                      className="flex h-6 items-center justify-center rounded-full px-2 text-xs font-bold text-white"
+                      style={{
+                        backgroundColor:
+                          question.difficulty === 'easy'
+                            ? `hsl(var(--difficulty-easy))`
+                            : question.difficulty === 'medium'
+                              ? `hsl(var(--difficulty-medium))`
+                              : `hsl(var(--difficulty-hard))`,
+                      }}
+                      title={`Difficulty: ${
+                        question.difficulty === 'easy'
+                          ? 'Easy'
+                          : question.difficulty === 'medium'
+                            ? 'Medium'
+                            : 'Hard'
+                      }`}
                     >
-                      {question.scoreBand}
+                      {question.difficulty.toUpperCase()}
                     </div>
                     <Badge variant="outline">{question.subtype}</Badge>
                   </div>

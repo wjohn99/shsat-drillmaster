@@ -77,16 +77,6 @@ export default {
 					medium: 'hsl(var(--difficulty-medium))',
 					hard: 'hsl(var(--difficulty-hard))'
 				},
-				'score-band': {
-					1: 'hsl(var(--score-band-1))',
-					2: 'hsl(var(--score-band-2))',
-					3: 'hsl(var(--score-band-3))',
-					4: 'hsl(var(--score-band-4))',
-					5: 'hsl(var(--score-band-5))',
-					6: 'hsl(var(--score-band-6))',
-					7: 'hsl(var(--score-band-7))',
-					8: 'hsl(var(--score-band-8))'
-				},
 				success: {
 					DEFAULT: 'hsl(var(--success))',
 					foreground: 'hsl(var(--success-foreground))'

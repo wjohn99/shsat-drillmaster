@@ -130,7 +130,7 @@ const Index = () => {
               <CardContent>
                 <p className="text-muted-foreground">
                   Find exactly what you need with powerful filters by subject, 
-                  score band, question type, and skill tags.
+                  difficulty, question type, and skill tags.
                 </p>
               </CardContent>
             </Card>
