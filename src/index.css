@@ -44,16 +44,6 @@
     --difficulty-medium: 45 93% 47%;
     --difficulty-hard: 0 84% 60%;
 
-    /* Score band colors */
-    --score-band-1: 0 84% 60%;
-    --score-band-2: 15 100% 50%;
-    --score-band-3: 45 93% 47%;
-    --score-band-4: 60 100% 50%;
-    --score-band-5: 120 60% 50%;
-    --score-band-6: 180 100% 50%;
-    --score-band-7: 240 100% 50%;
-    --score-band-8: 280 85% 55%;
-
     /* Status colors */
     --success: 142 76% 36%;
     --success-foreground: 0 0% 100%;

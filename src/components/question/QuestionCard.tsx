@@ -46,12 +46,25 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
             <Chip variant={subjectVariant} size="sm">
               {question.subject}
             </Chip>
-            <div 
-              className={`flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold text-white`}
-              style={{ backgroundColor: `hsl(var(--score-band-${question.scoreBand}))` }}
-              title={`Score Band ${question.scoreBand}`}
+            <div
+              className="flex h-5 items-center justify-center rounded-full px-2 text-[10px] font-bold text-white"
+              style={{
+                backgroundColor:
+                  question.difficulty === 'easy'
+                    ? `hsl(var(--difficulty-easy))`
+                    : question.difficulty === 'medium'
+                      ? `hsl(var(--difficulty-medium))`
+                      : `hsl(var(--difficulty-hard))`,
+              }}
+              title={`Difficulty: ${
+                question.difficulty === 'easy'
+                  ? 'Easy'
+                  : question.difficulty === 'medium'
+                    ? 'Medium'
+                    : 'Hard'
+              }`}
             >
-              {question.scoreBand}
+              {question.difficulty.toUpperCase()}
             </div>
           </div>
         </div>

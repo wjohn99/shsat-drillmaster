@@ -9,19 +9,19 @@ import { Switch } from "@/components/ui/switch";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Search, Filter, RotateCcw, ChevronDown } from "lucide-react";
-import { Subject, QuestionSubtype, ScoreBand } from "@/types";
+import { Difficulty, FilterOptions, Subject, QuestionSubtype } from "@/types";
 import { allTags } from "@/data/mockData";
 
 interface FilterPanelProps {
   totalCount: number;
   filteredCount: number;
-  onFiltersChange: (filters: any) => void;
+  onFiltersChange: (filters: Partial<FilterOptions>) => void;
 }
 
 export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: FilterPanelProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSubjects, setSelectedSubjects] = useState<Subject[]>([]);
-  const [selectedScoreBands, setSelectedScoreBands] = useState<ScoreBand[]>([]);
+  const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedSubtypes, setSelectedSubtypes] = useState<QuestionSubtype[]>([]);
   const [passageOnly, setPassageOnly] = useState(false);
@@ -43,7 +43,7 @@ export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: Filt
     'INDY-IC',
     'INDY-GIF',
   ];
-  const scoreBands: ScoreBand[] = [1, 2, 3, 4, 5, 6, 7, 8];
+  const difficulties: Difficulty[] = ['easy', 'medium', 'hard'];
   const userStatusOptions = [
     { value: 'attempted', label: 'Attempted' },
     { value: 'correct', label: 'Correct' },
@@ -53,7 +53,7 @@ export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: Filt
   const updateFilters = () => {
     onFiltersChange({
       subjects: selectedSubjects,
-      scoreBands: selectedScoreBands,
+      difficulties: selectedDifficulties,
       tagCodes: selectedTags,
       subtypes: selectedSubtypes,
       passageOnly,
@@ -70,7 +70,7 @@ export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: Filt
   const resetFilters = () => {
     setSearchQuery("");
     setSelectedSubjects([]);
-    setSelectedScoreBands([]);
+    setSelectedDifficulties([]);
     setSelectedTags([]);
     setSelectedSubtypes([]);
     setPassageOnly(false);
@@ -139,7 +139,13 @@ export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: Filt
           {subjects.map((subject) => (
             <Chip
               key={subject}
-              variant={selectedSubjects.includes(subject) ? "selected" : subject.toLowerCase() as any}
+              variant={
+                selectedSubjects.includes(subject)
+                  ? "selected"
+                  : subject === "MATH"
+                    ? "math"
+                    : "ela"
+              }
               onClick={() => {
                 toggleArraySelection(selectedSubjects, setSelectedSubjects, subject);
                 setTimeout(updateFilters, 0);
@@ -152,26 +158,35 @@ export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: Filt
         </div>
       </div>
 
-      {/* Score Band filter */}
+      {/* Difficulty filter */}
       <div className="mb-6">
-        <Label className="text-sm font-medium mb-3 block">Score Band</Label>
-        <div className="grid grid-cols-4 gap-2">
-          {scoreBands.map((band) => (
-            <button
-              key={band}
-              onClick={() => {
-                toggleArraySelection(selectedScoreBands, setSelectedScoreBands, band);
-                setTimeout(updateFilters, 0);
-              }}
-              className={`
-                flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold text-white transition-all
-                ${selectedScoreBands.includes(band) ? 'ring-2 ring-ring ring-offset-2' : 'hover:scale-110'}
-              `}
-              style={{ backgroundColor: `hsl(var(--score-band-${band}))` }}
-            >
-              {band}
-            </button>
-          ))}
+        <Label className="text-sm font-medium mb-3 block">Difficulty</Label>
+        <div className="flex gap-2">
+          {difficulties.map((d) => {
+            const label = d === 'easy' ? 'Easy' : d === 'medium' ? 'Medium' : 'Hard';
+            const bg =
+              d === 'easy'
+                ? `hsl(var(--difficulty-easy))`
+                : d === 'medium'
+                  ? `hsl(var(--difficulty-medium))`
+                  : `hsl(var(--difficulty-hard))`;
+            return (
+              <button
+                key={d}
+                onClick={() => {
+                  toggleArraySelection(selectedDifficulties, setSelectedDifficulties, d);
+                  setTimeout(updateFilters, 0);
+                }}
+                className={`
+                  flex-1 h-8 rounded-full text-xs font-semibold text-white transition-all
+                  ${selectedDifficulties.includes(d) ? 'ring-2 ring-ring ring-offset-2' : 'hover:opacity-90'}
+                `}
+                style={{ backgroundColor: bg }}
+              >
+                {label}
+              </button>
+            );
+          })}
         </div>
       </div>
 

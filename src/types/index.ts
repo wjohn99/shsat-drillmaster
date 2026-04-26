@@ -16,7 +16,7 @@ export type QuestionSubtype =
   | 'INDY-HS'
   | 'INDY-GIF';
 
-export type ScoreBand = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+export type Difficulty = 'easy' | 'medium' | 'hard';
 
 /** Draggable label in the pool (may include distractors unused in the correct mapping). */
 export interface DndDraggableItem {
@@ -180,7 +180,7 @@ export interface Question {
   id: string;
   subject: Subject;
   subtype: QuestionSubtype;
-  scoreBand: ScoreBand;
+  difficulty: Difficulty;
   stem: string;
   choices?: Choice[];
   /** Present when subtype is INDY-DND */
@@ -227,7 +227,7 @@ export interface Form {
 
 export interface FilterOptions {
   subjects: Subject[];
-  scoreBands: ScoreBand[];
+  difficulties: Difficulty[];
   tagCodes: string[];
   subtypes: QuestionSubtype[];
   passageOnly: boolean;

@@ -20,7 +20,7 @@ import {
   BookOpen
 } from "lucide-react";
 import { getFilteredQuestions, passages } from "@/data/mockData";
-import { Question } from "@/types";
+import { Difficulty, Question } from "@/types";
 import { isIndyCheckboxMultiSubtype, parseAtaAnswer, serializeAtaAnswer } from "@/lib/indyAta";
 import { parseDndPlacementsForQuestion, serializeDndPlacements } from "@/lib/indyDnd";
 import { DndBlock } from "@/components/question/DndBlock";
@@ -41,7 +41,9 @@ export default function QuestionSet() {
   // Get questions based on URL parameters
   const filters = {
     subjects: searchParams.get('subjects')?.split(',') || [],
-    scoreBands: searchParams.get('scoreBands')?.split(',').map(Number) || [],
+    difficulties: (searchParams.get('difficulties')?.split(',') || []).filter(
+      (d): d is Difficulty => d === 'easy' || d === 'medium' || d === 'hard'
+    ),
     tagCodes: searchParams.get('tagCodes')?.split(',') || []
   };
   
@@ -190,11 +192,25 @@ export default function QuestionSet() {
                     <Badge variant={currentQuestion.subject === 'MATH' ? 'default' : 'secondary'}>
                       {currentQuestion.subject}
                     </Badge>
-                    <div 
-                      className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white"
-                      style={{ backgroundColor: `hsl(var(--score-band-${currentQuestion.scoreBand}))` }}
+                    <div
+                      className="flex h-6 items-center justify-center rounded-full px-2 text-xs font-bold text-white"
+                      style={{
+                        backgroundColor:
+                          currentQuestion.difficulty === 'easy'
+                            ? `hsl(var(--difficulty-easy))`
+                            : currentQuestion.difficulty === 'medium'
+                              ? `hsl(var(--difficulty-medium))`
+                              : `hsl(var(--difficulty-hard))`,
+                      }}
+                      title={`Difficulty: ${
+                        currentQuestion.difficulty === 'easy'
+                          ? 'Easy'
+                          : currentQuestion.difficulty === 'medium'
+                            ? 'Medium'
+                            : 'Hard'
+                      }`}
                     >
-                      {currentQuestion.scoreBand}
+                      {currentQuestion.difficulty.toUpperCase()}
                     </div>
                   </div>
                   <div className="text-sm text-muted-foreground">

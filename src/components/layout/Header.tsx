@@ -34,6 +34,14 @@ export const Header = () => {
             Question Bank
           </Link>
           <Link
+            to="/blitz"
+            className={`text-sm font-medium transition-colors hover:text-primary ${
+              isActive('/blitz') ? 'text-primary' : 'text-muted-foreground'
+            }`}
+          >
+            Blitz Mode
+          </Link>
+          <Link
             to="/worksheets"
             className={`text-sm font-medium transition-colors hover:text-primary ${
               isActive('/worksheets') ? 'text-primary' : 'text-muted-foreground'
