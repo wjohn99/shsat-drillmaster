@@ -12,7 +12,7 @@ import { Zap, Timer, XCircle } from "lucide-react";
 import type { Difficulty, Question } from "@/types";
 import { questions as allQuestions, passages } from "@/data/mockData";
 import { Chip } from "@/components/ui/chip";
-import { isIndyCheckboxMultiSubtype, isAtaAnswerCorrect, parseAtaAnswer, serializeAtaAnswer } from "@/lib/indyAta";
+import { isIndyCheckboxMultiSubtype, parseAtaAnswer, serializeAtaAnswer } from "@/lib/indyAta";
 import { DndBlock } from "@/components/question/DndBlock";
 import { EquationEditorBlock } from "@/components/question/EquationEditorBlock";
 import { CgtBlock } from "@/components/question/CgtBlock";
@@ -20,24 +20,12 @@ import { WpBlock } from "@/components/question/WpBlock";
 import { HotSpotBlock } from "@/components/question/HotSpotBlock";
 import { GraphFigureBlock } from "@/components/question/GraphFigureBlock";
 import { InlineChoiceBlock } from "@/components/question/InlineChoiceBlock";
-import { parseIcSelectionsForQuestion, serializeIcSelections, allIcSlotsFilled, isIcSelectionCorrect } from "@/lib/indyIc";
-import { parseDndPlacementsForQuestion, serializeDndPlacements, allDndZonesFilled, isDndPlacementCorrect } from "@/lib/indyDnd";
-import { isEeAnswerCorrect } from "@/lib/indyEe";
-import { isHsAnswerCorrect } from "@/lib/indyHs";
-import { isGifAnswerCorrect } from "@/lib/indyGif";
+import { parseIcSelectionsForQuestion, serializeIcSelections } from "@/lib/indyIc";
+import { parseDndPlacementsForQuestion, serializeDndPlacements } from "@/lib/indyDnd";
 import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
 import { HighlightableText } from "@/components/exam/HighlightableText";
-import {
-  CartesianGrid,
-  ComposedChart,
-  Bar,
-  LineChart,
-  Line,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { canSubmitQuestionAnswer, isQuestionAnswerCorrect } from "@/lib/sessionGrading";
+import { SessionResultsDashboard } from "@/components/session/SessionResultsDashboard";
 
 export default function BlitzMode() {
   const WARM_START_SECONDS = 3;
@@ -193,51 +181,6 @@ export default function BlitzMode() {
     if (strikes >= maxStrikes) endSession();
   }, [strikes, phase]);
 
-  const canSubmit = (q: Question): boolean => {
-    const raw = answers[q.id];
-    if (q.subtype === "INDY-DND" && q.dnd) {
-      const placements = parseDndPlacementsForQuestion(q.dnd, raw);
-      return allDndZonesFilled(q.dnd, placements);
-    }
-    if (q.subtype === "INDY-IC" && q.ic) {
-      const selections = parseIcSelectionsForQuestion(q.ic, raw);
-      return allIcSlotsFilled(q.ic, selections);
-    }
-    if (q.subtype === "INDY-EE" && q.ee) return (raw ?? "").trim() !== "";
-    if (q.subtype === "INDY-HS") return Boolean(raw);
-    if (q.subtype === "INDY-GIF") return Boolean(raw);
-    if (isIndyCheckboxMultiSubtype(q.subtype)) return parseAtaAnswer(raw).length > 0;
-    return Boolean(raw);
-  };
-
-  const isAnswerCorrect = (q: Question): boolean => {
-    const raw = answers[q.id];
-
-    if (q.subtype === "INDY-EE" && q.ee) return isEeAnswerCorrect(q.ee, raw ?? "");
-    if (q.subtype === "INDY-DND" && q.dnd) {
-      const placements = parseDndPlacementsForQuestion(q.dnd, raw);
-      return isDndPlacementCorrect(q.dnd, placements);
-    }
-    if (q.subtype === "INDY-IC" && q.ic) {
-      const selections = parseIcSelectionsForQuestion(q.ic, raw);
-      return isIcSelectionCorrect(q.ic, selections);
-    }
-    if (q.subtype === "INDY-HS" && q.hs) return isHsAnswerCorrect(raw ?? null, q.hs.correctSpotId);
-    if (q.subtype === "INDY-GIF" && q.gif) return isGifAnswerCorrect(q.gif, raw ?? "");
-
-    if (isIndyCheckboxMultiSubtype(q.subtype) && q.choices) {
-      return isAtaAnswerCorrect(q.choices, parseAtaAnswer(raw));
-    }
-
-    if (q.choices?.length) {
-      const picked = raw;
-      const correct = q.choices.find((c) => c.isCorrect);
-      return Boolean(correct && picked && picked === correct.id);
-    }
-
-    return false;
-  };
-
   const timeBonusSeconds = (elapsedSeconds: number): number => {
     if (elapsedSeconds <= 8) return 4;
     if (elapsedSeconds <= 15) return 2;
@@ -266,10 +209,10 @@ export default function BlitzMode() {
 
   const submitAnswer = () => {
     if (phase !== "running" || !currentQuestion) return;
-    if (!canSubmit(currentQuestion)) return;
+    if (!canSubmitQuestionAnswer(currentQuestion, answers[currentQuestion.id])) return;
 
     const elapsedSeconds = (Date.now() - questionStartMsRef.current) / 1000;
-    const correct = isAnswerCorrect(currentQuestion);
+    const correct = isQuestionAnswerCorrect(currentQuestion, answers[currentQuestion.id]);
 
     setAnsweredCount((n) => n + 1);
 
@@ -494,93 +437,14 @@ export default function BlitzMode() {
   const strikesLeft = Math.max(0, maxStrikes - strikes);
   const progress = Math.round((timeLeft / durationSeconds) * 100);
 
-  const results = useMemo(() => {
-    const total = events.length;
-    const correct = events.filter((e) => e.correct).length;
-    const avgTime = total ? events.reduce((s, e) => s + e.elapsedSeconds, 0) / total : 0;
-
-    const byDifficulty: Record<Difficulty, { total: number; correct: number; avgTime: number }> = {
-      easy: { total: 0, correct: 0, avgTime: 0 },
-      medium: { total: 0, correct: 0, avgTime: 0 },
-      hard: { total: 0, correct: 0, avgTime: 0 },
-    };
-    const bySubject: Record<Question["subject"], { total: number; correct: number; avgTime: number }> = {
-      MATH: { total: 0, correct: 0, avgTime: 0 },
-      ELA: { total: 0, correct: 0, avgTime: 0 },
-    };
-    const tagStats = new Map<string, { total: number; correct: number }>();
-
-    for (const e of events) {
-      const d = byDifficulty[e.difficulty];
-      d.total += 1;
-      d.correct += e.correct ? 1 : 0;
-      d.avgTime += e.elapsedSeconds;
-
-      const s = bySubject[e.subject];
-      s.total += 1;
-      s.correct += e.correct ? 1 : 0;
-      s.avgTime += e.elapsedSeconds;
-
-      for (const tag of e.tags) {
-        const cur = tagStats.get(tag) ?? { total: 0, correct: 0 };
-        cur.total += 1;
-        cur.correct += e.correct ? 1 : 0;
-        tagStats.set(tag, cur);
-      }
-    }
-    for (const k of Object.keys(byDifficulty) as Difficulty[]) {
-      const d = byDifficulty[k];
-      if (d.total) d.avgTime = d.avgTime / d.total;
-    }
-    for (const k of Object.keys(bySubject) as Array<Question["subject"]>) {
-      const s = bySubject[k];
-      if (s.total) s.avgTime = s.avgTime / s.total;
-    }
-
-    const difficultyChart = (["easy", "medium", "hard"] as Difficulty[]).map((k) => ({
-      difficulty: k.toUpperCase(),
-      accuracy: byDifficulty[k].total ? Math.round((byDifficulty[k].correct / byDifficulty[k].total) * 100) : 0,
-      avgTime: Number(byDifficulty[k].avgTime.toFixed(1)),
-      total: byDifficulty[k].total,
-    }));
-    const subjectChart = (["MATH", "ELA"] as Array<Question["subject"]>).map((k) => ({
-      subject: k,
-      accuracy: bySubject[k].total ? Math.round((bySubject[k].correct / bySubject[k].total) * 100) : 0,
-      avgTime: Number(bySubject[k].avgTime.toFixed(1)),
-      total: bySubject[k].total,
-    }));
-
-    const cumulative = events.map((e, idx) => {
-      const slice = events.slice(0, idx + 1);
-      const c = slice.filter((x) => x.correct).length;
-      return {
-        n: idx + 1,
-        accuracy: Math.round((c / (idx + 1)) * 100),
-        time: Number(e.elapsedSeconds.toFixed(1)),
-      };
-    });
-
-    const weakestTags = [...tagStats.entries()]
-      .map(([tag, v]) => ({
-        tag,
-        total: v.total,
-        accuracy: v.total ? Math.round((v.correct / v.total) * 100) : 0,
-      }))
-      .filter((x) => x.total >= 2)
-      .sort((a, b) => a.accuracy - b.accuracy || b.total - a.total)
-      .slice(0, 6);
-
-    return {
-      total,
-      correct,
-      accuracyPct: total ? Math.round((correct / total) * 100) : 0,
-      avgTime: Number(avgTime.toFixed(1)),
-      difficultyChart,
-      subjectChart,
-      cumulative,
-      weakestTags,
-    };
-  }, [events]);
+  const analyticsEvents = events.map((e) => ({
+    questionId: e.questionId,
+    subject: e.subject,
+    difficulty: e.difficulty,
+    correct: e.correct,
+    elapsedSeconds: e.elapsedSeconds,
+    tags: e.tags,
+  }));
 
   return (
     <div className="min-h-screen bg-background">
@@ -773,7 +637,13 @@ export default function BlitzMode() {
                   <div className="text-xs text-muted-foreground">
                     Tip: faster correct answers earn more bonus time.
                   </div>
-                  <Button onClick={submitAnswer} disabled={!canSubmit(currentQuestion) || Boolean(feedback)}>
+                  <Button
+                    onClick={submitAnswer}
+                    disabled={
+                      !canSubmitQuestionAnswer(currentQuestion, answers[currentQuestion.id]) ||
+                      Boolean(feedback)
+                    }
+                  >
                     Submit
                   </Button>
                 </div>
@@ -835,193 +705,21 @@ export default function BlitzMode() {
           )}
 
           {phase === "ended" && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Blitz Complete</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid gap-3 md:grid-cols-5">
-                  <div className="rounded-lg border p-3">
-                    <div className="text-xs text-muted-foreground">Questions answered</div>
-                    <div className="text-2xl font-bold">{answeredCount}</div>
-                  </div>
-                  <div className="rounded-lg border p-3">
-                    <div className="text-xs text-muted-foreground">Correct</div>
-                    <div className="text-2xl font-bold">{correctCount}</div>
-                  </div>
-                  <div className="rounded-lg border p-3">
-                    <div className="text-xs text-muted-foreground">Accuracy</div>
-                    <div className="text-2xl font-bold">{results.accuracyPct}%</div>
-                  </div>
-                  <div className="rounded-lg border p-3">
-                    <div className="text-xs text-muted-foreground">Strikes used</div>
-                    <div className="text-2xl font-bold">{strikes}</div>
-                  </div>
-                </div>
-
-                <div className="grid gap-6 lg:grid-cols-2">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-base">Accuracy + avg time by difficulty</CardTitle>
-                    </CardHeader>
-                    <CardContent className="h-56">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <ComposedChart data={results.difficultyChart}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="difficulty" />
-                          <YAxis
-                            yAxisId="pct"
-                            domain={[0, 100]}
-                            tickFormatter={(v) => `${v}%`}
-                          />
-                          <YAxis
-                            yAxisId="sec"
-                            orientation="right"
-                            tickFormatter={(v) => `${v}s`}
-                            width={44}
-                          />
-                          <Tooltip
-                            formatter={(v, name) =>
-                              name === "accuracy"
-                                ? [`${v}%`, "Accuracy"]
-                                : [`${v}s`, "Avg time"]
-                            }
-                          />
-                          <Bar
-                            yAxisId="pct"
-                            dataKey="accuracy"
-                            fill="hsl(var(--primary))"
-                            radius={[6, 6, 0, 0]}
-                          />
-                          <Line
-                            yAxisId="sec"
-                            type="monotone"
-                            dataKey="avgTime"
-                            stroke="hsl(var(--foreground))"
-                            strokeWidth={2}
-                            dot={false}
-                          />
-                        </ComposedChart>
-                      </ResponsiveContainer>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-base">Accuracy + avg time by subject</CardTitle>
-                    </CardHeader>
-                    <CardContent className="h-56">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <ComposedChart data={results.subjectChart}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="subject" />
-                          <YAxis
-                            yAxisId="pct"
-                            domain={[0, 100]}
-                            tickFormatter={(v) => `${v}%`}
-                          />
-                          <YAxis
-                            yAxisId="sec"
-                            orientation="right"
-                            tickFormatter={(v) => `${v}s`}
-                            width={44}
-                          />
-                          <Tooltip
-                            formatter={(v, name) =>
-                              name === "accuracy"
-                                ? [`${v}%`, "Accuracy"]
-                                : [`${v}s`, "Avg time"]
-                            }
-                          />
-                          <Bar
-                            yAxisId="pct"
-                            dataKey="accuracy"
-                            fill="hsl(var(--secondary))"
-                            radius={[6, 6, 0, 0]}
-                          />
-                          <Line
-                            yAxisId="sec"
-                            type="monotone"
-                            dataKey="avgTime"
-                            stroke="hsl(var(--foreground))"
-                            strokeWidth={2}
-                            dot={false}
-                          />
-                        </ComposedChart>
-                      </ResponsiveContainer>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="lg:col-span-2">
-                    <CardHeader>
-                      <CardTitle className="text-base">
-                        Accuracy + time (question-by-question)
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="h-56">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={results.cumulative}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="n" tickLine={false} />
-                          <YAxis
-                            yAxisId="pct"
-                            domain={[0, 100]}
-                            tickFormatter={(v) => `${v}%`}
-                          />
-                          <YAxis
-                            yAxisId="sec"
-                            orientation="right"
-                            tickFormatter={(v) => `${v}s`}
-                            width={44}
-                          />
-                          <Tooltip
-                            formatter={(v, name) =>
-                              name === "accuracy"
-                                ? [`${v}%`, "Cumulative accuracy"]
-                                : [`${v}s`, "Time on question"]
-                            }
-                            labelFormatter={(l) => `Q${l}`}
-                          />
-                          <Line
-                            yAxisId="pct"
-                            type="monotone"
-                            dataKey="accuracy"
-                            stroke="hsl(var(--primary))"
-                            strokeWidth={2}
-                            dot={false}
-                          />
-                          <Line
-                            yAxisId="sec"
-                            type="monotone"
-                            dataKey="time"
-                            stroke="hsl(var(--muted-foreground))"
-                            strokeWidth={2}
-                            dot={false}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {results.weakestTags.length > 0 && (
-                  <div className="rounded-lg border p-4">
-                    <div className="text-sm font-medium mb-2">Needs improvement (lowest-accuracy tags)</div>
-                    <div className="flex flex-wrap gap-2">
-                      {results.weakestTags.map((t) => (
-                        <Badge key={t.tag} variant="outline">
-                          {t.tag} • {t.accuracy}% ({t.total})
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex flex-wrap gap-2">
-                  <Button onClick={startSession}>Play again</Button>
-                </div>
-              </CardContent>
-            </Card>
+            <SessionResultsDashboard
+              title="Blitz Complete"
+              events={analyticsEvents}
+              summaryMetrics={[
+                { label: "Questions answered", value: answeredCount },
+                { label: "Correct", value: correctCount },
+                {
+                  label: "Accuracy",
+                  value: `${analyticsEvents.length ? Math.round((correctCount / analyticsEvents.length) * 100) : 0}%`,
+                },
+                { label: "Strikes used", value: strikes },
+              ]}
+              footnote="Charts reflect each graded attempt in this Blitz run."
+              footerActions={<Button onClick={startSession}>Play again</Button>}
+            />
           )}
         </div>
       </div>
