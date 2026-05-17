@@ -5,6 +5,11 @@ import { Chip } from "@/components/ui/chip";
 import { Button } from "@/components/ui/button";
 import { Clock, BookOpen, CheckCircle, XCircle, Bookmark } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  formatTagCodeForSubtype,
+  getTagLabel,
+  isFormatTagCode,
+} from "@/data/taggingScheme";
 
 interface QuestionCardProps {
   question: Question;
@@ -12,6 +17,10 @@ interface QuestionCardProps {
 
 export const QuestionCard = ({ question }: QuestionCardProps) => {
   const subjectVariant = question.subject === 'MATH' ? 'math' : 'ela';
+  const contentTags = question.tags.filter((t) => !isFormatTagCode(t.code));
+  const formatTag = question.tags.find((t) => isFormatTagCode(t.code));
+  const formatLabel =
+    formatTag?.label ?? getTagLabel(formatTagCodeForSubtype(question.subtype));
 
   const formatTime = (seconds?: number) => {
     if (!seconds) return "N/A";
@@ -74,19 +83,21 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
           {question.stem}
         </p>
 
-        {/* Tags */}
-        <div className="flex flex-wrap gap-1 mb-3">
-          {question.tags.slice(0, 3).map((tag) => (
-            <Badge key={tag.id} variant="outline" className="text-xs">
-              {tag.label}
-            </Badge>
-          ))}
-          {question.tags.length > 3 && (
-            <Badge variant="outline" className="text-xs">
-              +{question.tags.length - 3} more
-            </Badge>
-          )}
-        </div>
+        {/* Content skill tags */}
+        {contentTags.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-3">
+            {contentTags.slice(0, 3).map((tag) => (
+              <Badge key={tag.id} variant="outline" className="text-xs">
+                {tag.label}
+              </Badge>
+            ))}
+            {contentTags.length > 3 && (
+              <Badge variant="outline" className="text-xs">
+                +{contentTags.length - 3} more
+              </Badge>
+            )}
+          </div>
+        )}
 
         {/* Metadata */}
         <div className="flex items-center gap-4 text-xs text-muted-foreground">
@@ -101,7 +112,7 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
             </div>
           )}
           <Badge variant="outline" className="text-xs">
-            {question.subtype}
+            {formatLabel}
           </Badge>
         </div>
       </CardContent>

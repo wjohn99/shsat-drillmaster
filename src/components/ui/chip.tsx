@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 
 const chipVariants = cva(
-  "inline-flex items-center rounded-full border text-xs font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex items-center rounded-full border text-xs font-medium transition-colors duration-200 outline-none [-webkit-tap-highlight-color:transparent] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
   {
     variants: {
       variant: {

@@ -50,6 +50,12 @@ export interface DndSpec {
   correctMapping: Record<string, string>;
   /** Shown under the stem, above the answer bank (e.g. “Move the correct answer…”). */
   instruction?: string;
+  /**
+   * One draggable is placed in exactly one zone (e.g. sentence-ordering in a passage).
+   * Other zones must stay empty; only zones listed in `correctMapping` are scored.
+   */
+  singlePlacement?: boolean;
+  solutionExplanation?: string;
 }
 
 /**
@@ -111,6 +117,32 @@ export interface WpSpec {
 export interface MsSpec {
   selectCount: number;
   instruction?: string;
+  solutionExplanation?: string;
+}
+
+export type IcSegment =
+  | { type: 'text'; value: string }
+  | { type: 'slot'; slotId: string };
+
+export interface IcSlotOption {
+  id: string;
+  text: string;
+}
+
+export interface IcSlot {
+  slotId: string;
+  options: IcSlotOption[];
+}
+
+/**
+ * INDY-IC — inline dropdown(s) embedded in a sentence (often with a linked passage).
+ */
+export interface IcSpec {
+  instruction?: string;
+  segments: IcSegment[];
+  slots: IcSlot[];
+  correctMapping: Record<string, string>;
+  solutionExplanation?: string;
 }
 
 /** Rectangle as percentages of the image (0–100), from the top-left corner. */
@@ -228,8 +260,10 @@ export interface Form {
 export interface FilterOptions {
   subjects: Subject[];
   difficulties: Difficulty[];
+  /** Content skill tag codes (RC-*, RE-*, NUM-*, etc.; excludes INDY format tags). */
   tagCodes: string[];
-  subtypes: QuestionSubtype[];
+  /** Question format tag codes (INDY-* from tagging scheme). */
+  formatTagCodes: string[];
   passageOnly: boolean;
   searchQuery: string;
   userStatus: ('attempted' | 'correct' | 'bookmarked')[];

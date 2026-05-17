@@ -14,7 +14,7 @@ import {
   FileText,
   BarChart3
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { AuthLink } from "@/components/auth/AuthLink";
 import { questions, forms } from "@/data/mockData";
 import heroImage from "@/assets/hero-education.jpg";
 import logoIcon from "@/assets/logo-icon.png";
@@ -58,16 +58,16 @@ const Index = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button asChild variant="hero" size="lg">
-                <Link to="/practice">
+                <AuthLink to="/practice">
                   <Search className="h-5 w-5 mr-2" />
                   Start Practice
-                </Link>
+                </AuthLink>
               </Button>
               <Button asChild variant="outline" size="lg" className="border-white/80 text-white bg-white/10 hover:bg-white hover:text-primary backdrop-blur-sm">
-                <Link to="/question-bank">
+                <AuthLink to="/question-bank">
                   <FileText className="h-5 w-5 mr-2" />
                   Browse Questions
-                </Link>
+                </AuthLink>
               </Button>
             </div>
           </div>
@@ -223,17 +223,12 @@ const Index = () => {
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
             Join thousands of students who have improved their scores with our comprehensive practice platform.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex justify-center">
             <Button asChild variant="hero" size="lg" className="bg-white text-primary hover:bg-white/90">
-              <Link to="/question-bank">
-                Get Started Free
+              <AuthLink to="/dashboard">
+                Get Started
                 <ArrowRight className="h-5 w-5 ml-2" />
-              </Link>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="border-white/80 text-white bg-white/10 hover:bg-white hover:text-primary backdrop-blur-sm">
-              <Link to="/worksheets">
-                View Worksheets
-              </Link>
+              </AuthLink>
             </Button>
           </div>
         </div>
@@ -252,11 +247,9 @@ const Index = () => {
                 <span className="text-xs text-muted-foreground">SHSAT Practice</span>
               </div>
             </div>
-            <div className="flex items-center space-x-6 text-sm text-muted-foreground">
-              <Link to="/question-bank" className="hover:text-primary transition-colors">Question Bank</Link>
-              <Link to="/worksheets" className="hover:text-primary transition-colors">Worksheets</Link>
-              <Link to="/practice" className="hover:text-primary transition-colors">Practice</Link>
-            </div>
+            <p className="text-sm text-muted-foreground">
+              © {new Date().getFullYear()} StepPrep. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>

@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
+import type { FilterOptions } from "@/types";
 import { Header } from "@/components/layout/Header";
 import { FilterPanel } from "@/components/bank/FilterPanel";
 import { QuestionCard } from "@/components/question/QuestionCard";
@@ -8,20 +9,29 @@ import { Loader2, Grid3X3, List } from "lucide-react";
 import { questions, getFilteredQuestions } from "@/data/mockData";
 
 export default function Bank() {
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState<Partial<FilterOptions>>({});
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [isLoading, setIsLoading] = useState(false);
 
   const filteredQuestions = useMemo(() => {
     return getFilteredQuestions(filters);
   }, [filters]);
 
-  const handleFiltersChange = (newFilters: any) => {
-    setIsLoading(true);
-    setFilters(newFilters);
-    // Simulate API delay
-    setTimeout(() => setIsLoading(false), 150);
-  };
+  const subjectCounts = useMemo(
+    () => ({
+      MATH: questions.filter((q) => q.subject === "MATH").length,
+      ELA: questions.filter((q) => q.subject === "ELA").length,
+    }),
+    [],
+  );
+
+  const handleFiltersChange = useCallback((newFilters: Partial<FilterOptions>) => {
+    setFilters((prev) => {
+      if (JSON.stringify(prev) === JSON.stringify(newFilters)) {
+        return prev;
+      }
+      return newFilters;
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -32,6 +42,7 @@ export default function Bank() {
         <FilterPanel
           totalCount={questions.length}
           filteredCount={filteredQuestions.length}
+          subjectCounts={subjectCounts}
           onFiltersChange={handleFiltersChange}
         />
 
@@ -68,11 +79,7 @@ export default function Bank() {
 
           {/* Questions Grid */}
           <div className="flex-1 overflow-y-auto p-6">
-            {isLoading ? (
-              <div className="flex items-center justify-center h-64">
-                <Loader2 className="h-8 w-8 animate-spin" />
-              </div>
-            ) : filteredQuestions.length === 0 ? (
+            {filteredQuestions.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-64 text-center">
                 <div className="text-6xl mb-4">🔍</div>
                 <h3 className="text-lg font-semibold mb-2">No questions found</h3>

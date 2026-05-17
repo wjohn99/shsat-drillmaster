@@ -22,6 +22,7 @@ import {
   StopCircle
 } from "lucide-react";
 import { questions, passages } from "@/data/mockData";
+import { useQuestionBookmarks } from "@/contexts/QuestionBookmarksContext";
 import { toast } from "@/hooks/use-toast";
 import { isAtaAnswerCorrect, isIndyCheckboxMultiSubtype, serializeAtaAnswer } from "@/lib/indyAta";
 import { isMsAnswerCorrect } from "@/lib/indyMs";
@@ -66,7 +67,7 @@ export default function Question() {
   const [hsSelected, setHsSelected] = useState<string | null>(null);
   const [gifPlot, setGifPlot] = useState<string | null>(null);
   const [showSolution, setShowSolution] = useState(!isPracticeMode);
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const { isBookmarked, toggleBookmark } = useQuestionBookmarks();
   const [userNotes, setUserNotes] = useState("");
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(isPracticeMode);
@@ -77,12 +78,6 @@ export default function Question() {
   const nextQuestion = currentIndex >= 0 && currentIndex < questions.length - 1
     ? questions[currentIndex + 1]
     : null;
-
-  useEffect(() => {
-    if (question) {
-      setIsBookmarked(question.userBookmarked || false);
-    }
-  }, [question]);
 
   // Load notes for this question from localStorage
   useEffect(() => {
@@ -353,9 +348,22 @@ export default function Question() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => setIsBookmarked(!isBookmarked)}
+                    onClick={async () => {
+                      if (!question) return;
+                      try {
+                        await toggleBookmark(question.id);
+                      } catch {
+                        toast({
+                          title: "Could not save question",
+                          description: "Please try again.",
+                          variant: "destructive",
+                        });
+                      }
+                    }}
+                    aria-pressed={isBookmarked(question.id)}
+                    aria-label={isBookmarked(question.id) ? "Unsave question" : "Save question"}
                   >
-                    {isBookmarked ? 
+                    {isBookmarked(question.id) ? 
                       <BookmarkCheck className="h-4 w-4 text-warning" /> : 
                       <Bookmark className="h-4 w-4" />
                     }
@@ -592,12 +600,16 @@ export default function Question() {
                       <p>
                         {question.subtype === 'GRID_IN' 
                           ? "To solve this ratio problem, set up a proportion: 2/3 cup flour : 1/4 cup sugar = 1.5 cups flour : x cups sugar. Cross multiply: (2/3) × x = (1/4) × 1.5. Solving: x = (1/4 × 1.5) ÷ (2/3) = (3/8) ÷ (2/3) = (3/8) × (3/2) = 9/16 cups sugar."
-                          : question.subtype === 'INDY-MS'
-                            ? "A number is a multiple of 3 if it is divisible by 3 with no remainder: 12, 15, and 18 are multiples of 3; 20 is not. Select A, B, and C only."
+                          : question.subtype === 'INDY-MS' && question.ms?.solutionExplanation
+                            ? question.ms.solutionExplanation
+                            : question.subtype === 'INDY-MS'
+                              ? "A number is a multiple of 3 if it is divisible by 3 with no remainder: 12, 15, and 18 are multiples of 3; 20 is not. Select A, B, and C only."
                             : question.subtype === 'INDY-ATA'
                               ? "Set each factor equal to zero: x − 2 = 0 gives x = 2, and x + 3 = 0 gives x = −3. The correct selections are A and B only."
-                            : question.subtype === 'INDY-DND'
-                              ? "The sum of the four given numbers is 9 + 14 + 7 + 12 = 42. For the mean of five numbers to be 11, the total must be 5 × 11 = 55, so the fifth number is 55 − 42 = 13."
+                            : question.subtype === 'INDY-DND' && question.dnd?.solutionExplanation
+                              ? question.dnd.solutionExplanation
+                              : question.subtype === 'INDY-DND'
+                                ? "The sum of the four given numbers is 9 + 14 + 7 + 12 = 42. For the mean of five numbers to be 11, the total must be 5 × 11 = 55, so the fifth number is 55 − 42 = 13."
                               : question.subtype === 'INDY-EE' && question.ee?.solutionExplanation
                               ? question.ee.solutionExplanation
                               : question.subtype === 'INDY-CGT' && question.cgt?.solutionExplanation

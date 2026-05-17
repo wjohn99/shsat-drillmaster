@@ -1,113 +1,60 @@
-import type { Question, Subject, Tag } from '@/types';
+import type { Question, Tag } from '@/types';
+import {
+  TAG_CATEGORIES,
+  WORKSHEET_CONTENT_SECTIONS,
+  type TagCategoryId,
+  tagCategoryForCode,
+  getTagLabel,
+} from '@/data/taggingScheme';
 
-/** NYC SHSAT-style worksheet sections (4 columns in the custom builder). */
-export type WorksheetSectionId = 'ela-re-a' | 'ela-re-b' | 'ela-rc' | 'math';
+export type WorksheetSectionId = TagCategoryId;
 
-export const WORKSHEET_SECTIONS: {
-  id: WorksheetSectionId;
-  title: string;
-  description: string;
-}[] = [
-  {
-    id: 'ela-re-a',
-    title: 'Revising & Editing — Part A',
-    description: 'Standard English conventions, grammar, and usage',
-  },
-  {
-    id: 'ela-re-b',
-    title: 'Revising & Editing — Part B',
-    description: 'Expression of ideas, organization, and rhetoric',
-  },
-  {
-    id: 'ela-rc',
-    title: 'Reading Comprehension',
-    description: 'Passage-based reading, evidence, and inference',
-  },
-  {
-    id: 'math',
-    title: 'Mathematics',
-    description: 'All math content domains',
-  },
-];
+export const WORKSHEET_SECTIONS = WORKSHEET_CONTENT_SECTIONS;
 
-/** Part A–style ELA skill tags (conventions). */
-const RE_PART_A_CODES = new Set(['SEC', 'BOUNDARIES', 'FORM-STRUCT']);
-
-/** Part B–style ELA skill tags (expression / rhetoric). */
-const RE_PART_B_CODES = new Set(['EXPRESS-IDEAS', 'RHETORIC', 'TRANS']);
-
-/** Reading comprehension–style ELA tags. */
-const READING_CODES = new Set([
-  'CRAFT',
-  'CROSS-TEXT',
-  'TEXT-STRUCT',
-  'WIC',
-  'INFO-IDEAS',
-  'CENTRAL-IDEAS',
-  'COMMAND-EVIDENCE',
-  'INFERENCES',
-]);
-
-export function worksheetSectionForTag(tag: Pick<Tag, 'domain' | 'code'>): WorksheetSectionId {
-  if (tag.domain === 'MATH') return 'math';
-  if (RE_PART_A_CODES.has(tag.code)) return 'ela-re-a';
-  if (RE_PART_B_CODES.has(tag.code)) return 'ela-re-b';
-  if (READING_CODES.has(tag.code)) return 'ela-rc';
-  // New ELA tags not yet classified: default to Reading so they still appear and are selectable.
-  return 'ela-rc';
+export function worksheetSectionForTag(tag: Pick<Tag, 'code'>): WorksheetSectionId {
+  return tagCategoryForCode(tag.code) ?? 'indy';
 }
 
 /**
- * Union of `allTags` and every tag attached to a question, grouped by SHSAT section.
- * Any tag that appears only on questions (not in `allTags`) still shows up — future-proof for new tags.
+ * Union of canonical tags and every tag on questions, grouped by tagging category.
  */
-export function buildWorksheetTagCatalog(allTags: Tag[], questions: Question[]): Record<WorksheetSectionId, Tag[]> {
+export function buildWorksheetTagCatalog(
+  canonicalTags: Tag[],
+  questions: Question[],
+): Record<WorksheetSectionId, Tag[]> {
   const byCode = new Map<string, Tag>();
 
-  for (const t of allTags) {
+  for (const t of canonicalTags) {
     byCode.set(t.code, t);
   }
 
   for (const q of questions) {
     for (const t of q.tags) {
-      const domain: Subject = t.domain ?? q.subject;
       const merged: Tag = {
         ...t,
-        domain,
-        label: t.label?.trim() ? t.label : t.code.replace(/-/g, ' '),
+        domain: t.domain ?? q.subject,
+        label: t.label?.trim() ? t.label : getTagLabel(t.code),
       };
       const existing = byCode.get(t.code);
       if (!existing) {
         byCode.set(t.code, merged);
-      } else {
-        byCode.set(t.code, {
-          ...existing,
-          label: existing.label?.trim() ? existing.label : merged.label,
-        });
+      } else if (!existing.label?.trim()) {
+        byCode.set(t.code, { ...existing, label: merged.label });
       }
     }
   }
 
-  for (const [code, t] of byCode) {
-    if (!t.label?.trim()) {
-      byCode.set(code, { ...t, label: code.replace(/-/g, ' ') });
-    }
-  }
-
-  const buckets: Record<WorksheetSectionId, Tag[]> = {
-    'ela-re-a': [],
-    'ela-re-b': [],
-    'ela-rc': [],
-    math: [],
-  };
+  const buckets = Object.fromEntries(
+    TAG_CATEGORIES.map((c) => [c.id, [] as Tag[]]),
+  ) as Record<WorksheetSectionId, Tag[]>;
 
   for (const tag of byCode.values()) {
     const section = worksheetSectionForTag(tag);
     buckets[section].push(tag);
   }
 
-  for (const k of Object.keys(buckets) as WorksheetSectionId[]) {
-    buckets[k].sort((a, b) => a.label.localeCompare(b.label));
+  for (const c of TAG_CATEGORIES) {
+    buckets[c.id].sort((a, b) => a.label.localeCompare(b.label));
   }
 
   return buckets;
@@ -122,8 +69,23 @@ export function shuffleArray<T>(items: T[]): T[] {
   return a;
 }
 
+/** Random questions for a single subject (self-practice quick drills). */
+export function pickWorksheetQuestionsBySubject(
+  questions: Question[],
+  subject: import('@/types').Subject,
+  limit: number,
+): Question[] {
+  if (limit <= 0) return [];
+  const matched = questions.filter((q) => q.subject === subject);
+  return shuffleArray(matched).slice(0, Math.min(limit, matched.length));
+}
+
 /** Questions that match any selected tag code, capped at `limit`. */
-export function pickWorksheetQuestions(questions: Question[], selectedTagCodes: Set<string>, limit: number): Question[] {
+export function pickWorksheetQuestions(
+  questions: Question[],
+  selectedTagCodes: Set<string>,
+  limit: number,
+): Question[] {
   if (selectedTagCodes.size === 0 || limit <= 0) return [];
   const matched = questions.filter((q) => q.tags.some((t) => selectedTagCodes.has(t.code)));
   const byId = new Map<string, Question>();

@@ -1,13 +1,11 @@
-import { allTags } from "@/data/mockData";
+import { getTagLabel } from "@/data/taggingScheme";
 import type { Difficulty, Question } from "@/types";
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
-
-const TAG_LABEL_BY_CODE = new Map(allTags.map((t) => [t.code, t.label]));
 
 function tagCodesToDisplayNames(codes: string[]): string {
   if (codes.length === 0) return "—";
   const unique = [...new Set(codes)];
-  return unique.map((c) => TAG_LABEL_BY_CODE.get(c) ?? c).join(", ");
+  return unique.map((c) => getTagLabel(c)).join(", ");
 }
 
 /** One row per tag/skill: n = tagged attempts (a question with multiple tags increments each). */

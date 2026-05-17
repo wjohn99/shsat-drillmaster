@@ -17,7 +17,8 @@ import {
   Target
 } from "lucide-react";
 import { Difficulty, Subject } from "@/types";
-import { allTags, getFilteredQuestions } from "@/data/mockData";
+import { getFilteredQuestions } from "@/data/mockData";
+import { TAG_CATEGORIES } from "@/data/taggingScheme";
 
 export default function PracticeSetup() {
   const navigate = useNavigate();
@@ -60,8 +61,8 @@ export default function PracticeSetup() {
     navigate(`/practice-set?${params.toString()}`);
   };
 
-  const elaTags = allTags.filter(tag => tag.domain === 'ELA');
-  const mathTags = allTags.filter(tag => tag.domain === 'MATH');
+  const elaCategories = TAG_CATEGORIES.filter((c) => c.subject === "ELA");
+  const mathCategories = TAG_CATEGORIES.filter((c) => c.subject === "MATH");
 
   return (
     <div className="min-h-screen bg-background">
@@ -159,42 +160,47 @@ export default function PracticeSetup() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {/* ELA Tags */}
-                  {selectedSubjects.includes('ELA') && (
-                    <div>
-                      <Label className="text-sm font-medium mb-2 block">ELA Skills</Label>
-                      <div className="flex flex-wrap gap-2">
-                        {elaTags.map((tag) => (
-                          <Chip
-                            key={tag.id}
-                            variant={selectedTags.includes(tag.code) ? "selected" : "ela"}
-                            size="sm"
-                            onClick={() => toggleArraySelection(selectedTags, setSelectedTags, tag.code)}
-                          >
-                            {tag.label}
-                          </Chip>
-                        ))}
+                  {selectedSubjects.includes("ELA") &&
+                    elaCategories.map((category) => (
+                      <div key={category.id}>
+                        <Label className="text-sm font-medium mb-2 block">{category.title}</Label>
+                        <div className="flex flex-wrap gap-2">
+                          {category.tags.map((tagDef) => (
+                            <Chip
+                              key={tagDef.code}
+                              variant={selectedTags.includes(tagDef.code) ? "selected" : "ela"}
+                              size="sm"
+                              onClick={() =>
+                                toggleArraySelection(selectedTags, setSelectedTags, tagDef.code)
+                              }
+                            >
+                              {tagDef.label}
+                            </Chip>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    ))}
 
-                  {/* Math Tags */}
-                  {selectedSubjects.includes('MATH') && (
-                    <div>
-                      <Label className="text-sm font-medium mb-2 block">Math Skills</Label>
-                      <div className="flex flex-wrap gap-2">
-                        {mathTags.map((tag) => (
-                          <Chip
-                            key={tag.id}
-                            variant={selectedTags.includes(tag.code) ? "selected" : "math"}
-                            size="sm"
-                            onClick={() => toggleArraySelection(selectedTags, setSelectedTags, tag.code)}
-                          >
-                            {tag.label}
-                          </Chip>
-                        ))}
+                  {selectedSubjects.includes("MATH") &&
+                    mathCategories.map((category) => (
+                      <div key={category.id}>
+                        <Label className="text-sm font-medium mb-2 block">{category.title}</Label>
+                        <div className="flex flex-wrap gap-2">
+                          {category.tags.map((tagDef) => (
+                            <Chip
+                              key={tagDef.code}
+                              variant={selectedTags.includes(tagDef.code) ? "selected" : "math"}
+                              size="sm"
+                              onClick={() =>
+                                toggleArraySelection(selectedTags, setSelectedTags, tagDef.code)
+                              }
+                            >
+                              {tagDef.label}
+                            </Chip>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    ))}
                 </CardContent>
               </Card>
 

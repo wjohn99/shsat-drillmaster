@@ -1,48 +1,69 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Chip } from "@/components/ui/chip";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
-import {
-  FileText,
-  Plus,
-  Sparkles,
-  Clock,
-  BookOpen,
-  ArrowRight,
-  ArrowLeft,
-  FileDown,
-} from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { questions, allTags, passages } from "@/data/mockData";
 import type { Question } from "@/types";
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
+import type { WorksheetAssignment } from "@/types/assignment";
 import {
   WORKSHEET_SECTIONS,
   buildWorksheetTagCatalog,
   pickWorksheetQuestions,
 } from "@/lib/worksheetTagCatalog";
 import { openWorksheetPdfInNewTab } from "@/lib/worksheetPdfExport";
+import {
+  createAssignment,
+  fetchStudents,
+  markAssignmentCompleted,
+  resolveQuestionsByIds,
+} from "@/lib/assignmentService";
+import { savePracticeSession } from "@/lib/practiceSessionService";
 import { SessionQuestionRunner } from "@/components/session/SessionQuestionRunner";
 import { SessionResultsDashboard } from "@/components/session/SessionResultsDashboard";
+import {
+  CustomWorksheetBuilder,
+  type WorksheetBuilderVariant,
+} from "@/components/worksheets/CustomWorksheetBuilder";
+import { TutorWorksheetsHome } from "@/components/worksheets/TutorWorksheetsHome";
+import { StudentWorksheetsHome } from "@/components/worksheets/StudentWorksheetsHome";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "@/hooks/use-toast";
+import type { StudentOption } from "@/types/assignment";
+import type { WorksheetsLocationState } from "@/types/worksheetsNavigation";
 
 type Mode = "home" | "build" | "runner" | "results";
+type RunSource = "assignment" | "self" | "tutor-preview";
 
 const Worksheets = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { profile, loading: authLoading } = useAuth();
+  const role = profile?.role;
+
   const [mode, setMode] = useState<Mode>("home");
+  const [buildVariant, setBuildVariant] = useState<WorksheetBuilderVariant>("tutor");
+  const [runSource, setRunSource] = useState<RunSource>("tutor-preview");
   const [runKey, setRunKey] = useState(0);
   const [selectedCodes, setSelectedCodes] = useState<string[]>([]);
   const [questionLimit, setQuestionLimit] = useState(10);
   const [worksheetQuestions, setWorksheetQuestions] = useState<Question[]>([]);
   const [sessionEvents, setSessionEvents] = useState<SessionAnalyticsEvent[]>([]);
+  const [activeAssignment, setActiveAssignment] = useState<WorksheetAssignment | null>(null);
+
+  const [students, setStudents] = useState<StudentOption[]>([]);
+  const [studentsLoading, setStudentsLoading] = useState(false);
+  const [selectedStudentUid, setSelectedStudentUid] = useState("");
+  const [assigning, setAssigning] = useState(false);
+  const [assignmentsRefreshKey, setAssignmentsRefreshKey] = useState(0);
 
   const tagCatalog = useMemo(() => buildWorksheetTagCatalog(allTags, questions), []);
 
   const toggleTag = (code: string) => {
     setSelectedCodes((prev) =>
-      prev.includes(code) ? prev.filter((c) => c !== code) : [...prev, code]
+      prev.includes(code) ? prev.filter((c) => c !== code) : [...prev, code],
     );
   };
 
@@ -55,15 +76,7 @@ const Worksheets = () => {
       if (q.tags.some((t) => selectedSet.has(t.code))) ids.add(q.id);
     }
     return ids.size;
-  }, [questions, selectedCodes, selectedSet]);
-
-  const startWorksheetRun = () => {
-    const picked = pickWorksheetQuestions(questions, selectedSet, questionLimit);
-    setWorksheetQuestions(picked);
-    setRunKey((k) => k + 1);
-    setSessionEvents([]);
-    setMode("runner");
-  };
+  }, [selectedCodes, selectedSet]);
 
   const selectedTagLabels = useMemo(() => {
     return selectedCodes.map((code) => {
@@ -75,8 +88,146 @@ const Worksheets = () => {
     });
   }, [selectedCodes, tagCatalog]);
 
+  useEffect(() => {
+    if (role !== "tutor" || mode !== "build" || buildVariant !== "tutor") return;
+
+    let cancelled = false;
+    (async () => {
+      setStudentsLoading(true);
+      try {
+        const list = await fetchStudents();
+        if (!cancelled) setStudents(list);
+      } catch (err) {
+        if (!cancelled) {
+          toast({
+            title: "Could not load students",
+            description: err instanceof Error ? err.message : "Please try again.",
+            variant: "destructive",
+          });
+        }
+      } finally {
+        if (!cancelled) setStudentsLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [role, mode, buildVariant]);
+
+  const openTutorBuild = () => {
+    setBuildVariant("tutor");
+    setActiveAssignment(null);
+    setMode("build");
+  };
+
+  const openStudentBuild = () => {
+    setBuildVariant("student");
+    setActiveAssignment(null);
+    setMode("build");
+  };
+
+  const pickCurrentQuestions = () =>
+    pickWorksheetQuestions(questions, selectedSet, questionLimit);
+
+  const startWorksheetRun = (picked?: Question[]) => {
+    const next = picked ?? pickCurrentQuestions();
+    setWorksheetQuestions(next);
+    setRunKey((k) => k + 1);
+    setSessionEvents([]);
+    setMode("runner");
+  };
+
+  const startTutorOrSelfPreview = () => {
+    setActiveAssignment(null);
+    setRunSource(buildVariant === "student" ? "self" : "tutor-preview");
+    startWorksheetRun();
+  };
+
+  const startAssignedWorksheet = (assignment: WorksheetAssignment) => {
+    const picked = resolveQuestionsByIds(questions, assignment.questionIds);
+    if (picked.length === 0) {
+      toast({
+        title: "Worksheet unavailable",
+        description: "None of the assigned questions could be loaded.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setActiveAssignment(assignment);
+    setRunSource("assignment");
+    startWorksheetRun(picked);
+  };
+
+  useEffect(() => {
+    if (authLoading || !profile) return;
+
+    const navState = location.state as WorksheetsLocationState | null;
+    if (!navState) return;
+
+    if (navState.openTutorBuild && role === "tutor") {
+      openTutorBuild();
+    } else if (navState.openStudentBuild && role === "student") {
+      openStudentBuild();
+    } else if (navState.autoStartAssignment && role === "student") {
+      startAssignedWorksheet(navState.autoStartAssignment);
+    } else {
+      return;
+    }
+
+    navigate(location.pathname, { replace: true, state: null });
+  }, [authLoading, profile, role, location.state, location.pathname, navigate]);
+
+  const handleAssignToStudent = async () => {
+    if (!profile || role !== "tutor") return;
+    if (!selectedStudentUid) {
+      toast({
+        title: "Select a student",
+        description: "Choose who should receive this worksheet.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const picked = pickCurrentQuestions();
+    if (picked.length === 0) return;
+
+    setAssigning(true);
+    try {
+      const title =
+        selectedTagLabels.length > 0
+          ? `Worksheet: ${selectedTagLabels.slice(0, 2).join(", ")}${selectedTagLabels.length > 2 ? "…" : ""}`
+          : "Custom worksheet";
+
+      await createAssignment({
+        questionIds: picked.map((q) => q.id),
+        tutorUid: profile.uid,
+        assignedToStudentUid: selectedStudentUid,
+        title,
+        tagCodes: selectedCodes,
+      });
+
+      const student = students.find((s) => s.uid === selectedStudentUid);
+      toast({
+        title: "Assignment sent",
+        description: student
+          ? `${student.displayName} will see this in Active Assignments.`
+          : "The student will see this in Active Assignments.",
+      });
+      setSelectedStudentUid("");
+    } catch (err) {
+      toast({
+        title: "Assignment failed",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setAssigning(false);
+    }
+  };
+
   const exportWorksheetPdf = () => {
-    const picked = pickWorksheetQuestions(questions, selectedSet, questionLimit);
+    const picked = pickCurrentQuestions();
     if (picked.length === 0) return;
     const tagPart =
       selectedTagLabels.length > 0 ? selectedTagLabels.join("; ") : "No tags";
@@ -90,56 +241,105 @@ const Worksheets = () => {
     ? Math.round((worksheetCorrect / sessionEvents.length) * 100)
     : 0;
 
-  const presetWorksheets = [
-    {
-      id: "algebra-basics",
-      title: "Algebra Basics",
-      description: "Linear equations and expressions fundamentals",
-      questionCount: 20,
-      estimatedTime: "30 min",
-      subject: "MATH",
-    },
-    {
-      id: "reading-comp-1",
-      title: "Reading Comprehension Set 1",
-      description: "Science and technology passages",
-      questionCount: 15,
-      estimatedTime: "25 min",
-      subject: "ELA",
-    },
-    {
-      id: "grammar-essentials",
-      title: "Grammar Essentials",
-      description: "Comma usage and sentence structure",
-      questionCount: 25,
-      estimatedTime: "20 min",
-      subject: "ELA",
-    },
-    {
-      id: "geometry-shapes",
-      title: "Geometry & Shapes",
-      description: "Area, volume, and coordinate geometry",
-      questionCount: 18,
-      estimatedTime: "35 min",
-      subject: "MATH",
-    },
-  ];
+  const sessionTitle =
+    runSource === "assignment"
+      ? activeAssignment?.title ?? "Assigned worksheet"
+      : runSource === "self"
+        ? "Your practice worksheet"
+        : "Custom worksheet";
+
+  const storageKeyPrefix =
+    runSource === "assignment" && activeAssignment
+      ? `assignment-${activeAssignment.id}`
+      : runSource === "self"
+        ? `worksheet-self-${profile?.uid ?? "anon"}`
+        : "worksheet";
+
+  const exitRunner = () => {
+    if (runSource === "assignment") {
+      setActiveAssignment(null);
+      setMode("home");
+    } else {
+      setMode("build");
+    }
+  };
 
   if (mode === "runner" && worksheetQuestions.length > 0) {
     return (
       <SessionQuestionRunner
         key={runKey}
         questions={worksheetQuestions}
-        sessionTitle="Custom worksheet"
-        storageKeyPrefix="worksheet"
-        onExit={() => setMode("build")}
-        onComplete={(events) => {
+        sessionTitle={sessionTitle}
+        storageKeyPrefix={storageKeyPrefix}
+        onExit={exitRunner}
+        onComplete={async (events) => {
           setSessionEvents(events);
+
+          if (runSource === "assignment" || runSource === "self") {
+            try {
+              await savePracticeSession({
+                sessionType: runSource === "assignment" ? "assignment" : "self",
+                title: sessionTitle,
+                tagCodes:
+                  runSource === "assignment"
+                    ? (activeAssignment?.tagCodes ?? [])
+                    : selectedCodes,
+                questionIds: worksheetQuestions.map((q) => q.id),
+                events,
+                assignmentId: activeAssignment?.id ?? null,
+                tutorUid:
+                  runSource === "assignment" ? (activeAssignment?.tutorUid ?? null) : null,
+              });
+            } catch (err) {
+              toast({
+                title: "Could not save practice results",
+                description: err instanceof Error ? err.message : "Please try again.",
+                variant: "destructive",
+              });
+            }
+          }
+
+          if (
+            runSource === "assignment" &&
+            activeAssignment &&
+            activeAssignment.status === "todo"
+          ) {
+            try {
+              await markAssignmentCompleted(activeAssignment.id);
+              setAssignmentsRefreshKey((k) => k + 1);
+            } catch (err) {
+              toast({
+                title: "Could not save completion",
+                description: err instanceof Error ? err.message : "Please try again.",
+                variant: "destructive",
+              });
+            }
+          }
           setMode("results");
         }}
       />
     );
   }
+
+  const resultsTitle =
+    runSource === "assignment"
+      ? "Assignment complete"
+      : runSource === "self"
+        ? "Practice complete"
+        : "Worksheet complete";
+
+  const backFromResults = () => {
+    if (runSource === "assignment") {
+      setActiveAssignment(null);
+      setMode("home");
+    } else if (runSource === "self") {
+      setActiveAssignment(null);
+      setMode("build");
+    } else {
+      setActiveAssignment(null);
+      setMode("build");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -148,144 +348,91 @@ const Worksheets = () => {
       <div className="container py-8">
         {mode === "results" && (
           <div className="max-w-5xl mx-auto space-y-6">
-            <Button variant="ghost" onClick={() => setMode("build")}>
+            <Button variant="ghost" onClick={backFromResults}>
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to builder
+              {runSource === "assignment" ? "Back to worksheets" : "Back to builder"}
             </Button>
             <SessionResultsDashboard
-              title="Worksheet complete"
+              title={resultsTitle}
               events={sessionEvents}
               summaryMetrics={[
                 { label: "Questions answered", value: sessionEvents.length },
                 { label: "Correct", value: worksheetCorrect },
                 { label: "Accuracy", value: `${worksheetAccuracyPct}%` },
               ]}
-              footnote="Statistics use your answers and time on each question in this worksheet."
+              footnote={
+                runSource === "self"
+                  ? "Self-practice results are for your review only — not shared with your tutor."
+                  : "Statistics use your answers and time on each question in this worksheet."
+              }
               footerActions={
-                <>
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setMode("build");
-                    }}
-                  >
-                    Edit tags
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      startWorksheetRun();
-                    }}
-                  >
-                    New worksheet (same tags)
-                  </Button>
-                </>
+                role === "tutor" ? (
+                  <>
+                    <Button variant="outline" onClick={() => setMode("build")}>
+                      Edit tags
+                    </Button>
+                    <Button onClick={startTutorOrSelfPreview}>New worksheet (same tags)</Button>
+                  </>
+                ) : runSource === "self" ? (
+                  <>
+                    <Button variant="outline" onClick={() => setMode("home")}>
+                      Back to worksheets
+                    </Button>
+                    <Button onClick={startTutorOrSelfPreview}>Practice again</Button>
+                  </>
+                ) : (
+                  <Button onClick={backFromResults}>Back to worksheets</Button>
+                )
               }
             />
           </div>
         )}
 
-        {mode === "build" && (
+        {mode === "build" && (role === "tutor" || role === "student") && (
           <div className="mb-12 max-w-6xl mx-auto">
-            <Button variant="ghost" className="mb-6" onClick={() => setMode("home")}>
+            <Button
+              variant="ghost"
+              className="mb-6"
+              onClick={() => {
+                setActiveAssignment(null);
+                setMode("home");
+              }}
+            >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back
             </Button>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold mb-2">Create custom worksheet</h2>
+              <h2 className="text-3xl font-bold mb-2">
+                {buildVariant === "student"
+                  ? "Create your own practice"
+                  : "Create custom worksheet"}
+              </h2>
               <p className="text-muted-foreground max-w-2xl">
-                Pick skill tags from each SHSAT section. Tags come from the question bank and any new tags on
-                questions are included automatically.
+                {buildVariant === "student"
+                  ? "Pick skill tags and start a worksheet whenever you want to practice."
+                  : "Pick skill tags, preview the worksheet, and assign it to a student."}
               </p>
             </div>
 
-            <Card className="mb-8">
-              <CardHeader>
-                <CardTitle className="text-lg">Worksheet size</CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Maximum number of questions (random from the pool that matches your tags). If the pool is
-                  smaller, you get every match.
-                </p>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between gap-4">
-                  <Label htmlFor="ws-limit">Questions</Label>
-                  <span className="font-mono text-sm tabular-nums">{questionLimit}</span>
-                </div>
-                <Slider
-                  id="ws-limit"
-                  min={1}
-                  max={50}
-                  step={1}
-                  value={[questionLimit]}
-                  onValueChange={(v) => setQuestionLimit(v[0] ?? 10)}
-                />
-                <p className="text-xs text-muted-foreground">
-                  Pool size for current tags: <span className="font-medium text-foreground">{matchingCount}</span>
-                </p>
-              </CardContent>
-            </Card>
-
-            <div className="grid gap-6 lg:grid-cols-2">
-              {WORKSHEET_SECTIONS.map((section) => {
-                const tags = tagCatalog[section.id];
-                return (
-                  <Card key={section.id}>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-base">{section.title}</CardTitle>
-                      <p className="text-xs text-muted-foreground">{section.description}</p>
-                    </CardHeader>
-                    <CardContent>
-                      {tags.length === 0 ? (
-                        <p className="text-sm text-muted-foreground">No tags in this section yet.</p>
-                      ) : (
-                        <div className="flex flex-wrap gap-2 max-h-64 overflow-y-auto pr-1">
-                          {tags.map((tag) => {
-                            const on = selectedCodes.includes(tag.code);
-                            return (
-                              <Chip
-                                key={tag.code}
-                                variant={on ? "selected" : section.id === "math" ? "math" : "ela"}
-                                size="sm"
-                                className="max-w-full text-left justify-start"
-                                onClick={() => toggleTag(tag.code)}
-                              >
-                                {tag.label}
-                              </Chip>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Button
-                onClick={startWorksheetRun}
-                disabled={selectedCodes.length === 0 || matchingCount === 0}
-              >
-                Start worksheet
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={exportWorksheetPdf}
-                disabled={selectedCodes.length === 0 || matchingCount === 0}
-              >
-                <FileDown className="h-4 w-4 mr-2" />
-                Export PDF
-              </Button>
-              <Button variant="outline" onClick={() => setSelectedCodes([])}>
-                Clear tags
-              </Button>
-              <span className="text-sm text-muted-foreground">
-                {selectedCodes.length} tag{selectedCodes.length === 1 ? "" : "s"} selected
-              </span>
-            </div>
+            <CustomWorksheetBuilder
+              variant={buildVariant}
+              selectedCodes={selectedCodes}
+              questionLimit={questionLimit}
+              tagCatalog={tagCatalog}
+              matchingCount={matchingCount}
+              onToggleTag={toggleTag}
+              onQuestionLimitChange={setQuestionLimit}
+              onClearTags={() => setSelectedCodes([])}
+              onStart={startTutorOrSelfPreview}
+              onExportPdf={exportWorksheetPdf}
+              students={students}
+              studentsLoading={studentsLoading}
+              selectedStudentUid={selectedStudentUid}
+              onStudentChange={setSelectedStudentUid}
+              assigning={assigning}
+              onAssign={handleAssignToStudent}
+            />
           </div>
         )}
 
@@ -294,114 +441,38 @@ const Worksheets = () => {
             <div className="text-center mb-12">
               <h1 className="text-4xl font-bold mb-4">Worksheets</h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Create focused practice sessions with curated question sets, custom worksheets, or AI-generated
-                content.
+                {role === "tutor"
+                  ? "Create and assign focused practice sessions for your students."
+                  : role === "student"
+                    ? "Complete tutor assignments and build your own practice anytime."
+                    : "Sign in to create or receive assigned worksheets."}
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8 mb-12">
-              <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-2 hover:border-primary/50">
-                <CardHeader className="text-center">
-                  <div className="h-16 w-16 rounded-full bg-gradient-primary flex items-center justify-center mx-auto mb-4">
-                    <FileText className="h-8 w-8 text-white" />
-                  </div>
-                  <CardTitle className="text-xl">Pre-set Worksheets</CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <p className="text-muted-foreground mb-4">
-                    Ready-made worksheets covering key SHSAT topics and skills.
+            {authLoading ? (
+              <div className="flex justify-center py-16">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : !profile ? (
+              <Card className="max-w-lg mx-auto border-dashed">
+                <CardContent className="py-10 text-center space-y-4">
+                  <p className="text-muted-foreground">
+                    Sign in to access role-based worksheet tools.
                   </p>
-                  <Button className="w-full">
-                    Browse Pre-sets
-                    <ArrowRight className="h-4 w-4 ml-2" />
+                  <Button asChild>
+                    <Link to="/login">Sign in with Google</Link>
                   </Button>
                 </CardContent>
               </Card>
-
-              <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-2 hover:border-primary/50">
-                <CardHeader className="text-center">
-                  <div className="h-16 w-16 rounded-full bg-gradient-ela flex items-center justify-center mx-auto mb-4">
-                    <Plus className="h-8 w-8 text-white" />
-                  </div>
-                  <CardTitle className="text-xl">Customize</CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <p className="text-muted-foreground mb-4">
-                    Choose skill tags from all four SHSAT sections and build a worksheet from the question bank.
-                  </p>
-                  <Button className="w-full" onClick={() => setMode("build")}>
-                    Create Custom
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-2 hover:border-primary/50">
-                <CardHeader className="text-center">
-                  <div className="h-16 w-16 rounded-full bg-gradient-math flex items-center justify-center mx-auto mb-4">
-                    <Sparkles className="h-8 w-8 text-white" />
-                  </div>
-                  <CardTitle className="text-xl">Generate with AI</CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <p className="text-muted-foreground mb-4">
-                    Let AI create personalized worksheets based on your learning goals.
-                  </p>
-                  <div className="space-y-2">
-                    <Button variant="outline" className="w-full" disabled>
-                      Generate Worksheet
-                      <ArrowRight className="h-4 w-4 ml-2" />
-                    </Button>
-                    <p className="text-xs text-muted-foreground">
-                      This feature is currently under development and will be available in a future update.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <section>
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-2xl font-bold">Featured Pre-set Worksheets</h2>
-                <Button variant="outline">View All</Button>
-              </div>
-
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {presetWorksheets.map((worksheet) => (
-                  <Card key={worksheet.id} className="group hover:shadow-lg transition-all duration-300">
-                    <CardHeader>
-                      <div className="flex items-center justify-between mb-2">
-                        <Badge
-                          variant={worksheet.subject === "MATH" ? "default" : "secondary"}
-                          className="text-xs"
-                        >
-                          {worksheet.subject}
-                        </Badge>
-                      </div>
-                      <CardTitle className="text-lg leading-tight">{worksheet.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground mb-4">{worksheet.description}</p>
-
-                      <div className="flex items-center justify-between text-xs text-muted-foreground mb-4">
-                        <div className="flex items-center">
-                          <BookOpen className="h-3 w-3 mr-1" />
-                          {worksheet.questionCount} questions
-                        </div>
-                        <div className="flex items-center">
-                          <Clock className="h-3 w-3 mr-1" />
-                          {worksheet.estimatedTime}
-                        </div>
-                      </div>
-
-                      <Button className="w-full" size="sm">
-                        Start Worksheet
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </section>
+            ) : role === "tutor" ? (
+              <TutorWorksheetsHome onCreateCustom={openTutorBuild} />
+            ) : (
+              <StudentWorksheetsHome
+                assignmentsRefreshKey={assignmentsRefreshKey}
+                onStartAssignment={startAssignedWorksheet}
+                onCreateCustomPractice={openStudentBuild}
+              />
+            )}
           </>
         )}
       </div>

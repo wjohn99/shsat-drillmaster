@@ -4,11 +4,30 @@ export function createEmptyDndPlacements(spec: DndSpec): Record<string, string |
   return Object.fromEntries(spec.zones.map((z) => [z.id, null]));
 }
 
-/** All-or-nothing: every zone must match correctMapping exactly. */
+function isSinglePlacementDnd(spec: DndSpec): boolean {
+  return spec.singlePlacement === true;
+}
+
+/** All-or-nothing: every zone must match correctMapping exactly (or single-placement rules). */
 export function isDndPlacementCorrect(
   spec: DndSpec,
   placements: Record<string, string | null>
 ): boolean {
+  if (isSinglePlacementDnd(spec)) {
+    for (const z of spec.zones) {
+      const placed = placements[z.id];
+      const expected = spec.correctMapping[z.id];
+      if (expected != null) {
+        if (placed !== expected) return false;
+      } else if (placed != null && placed !== "") {
+        return false;
+      }
+    }
+    return Object.entries(spec.correctMapping).every(
+      ([zoneId, draggableId]) => placements[zoneId] === draggableId
+    );
+  }
+
   for (const z of spec.zones) {
     const placed = placements[z.id];
     const expected = spec.correctMapping[z.id];
@@ -21,6 +40,12 @@ export function allDndZonesFilled(
   spec: DndSpec,
   placements: Record<string, string | null>
 ): boolean {
+  if (isSinglePlacementDnd(spec)) {
+    const filled = spec.zones.filter(
+      (z) => placements[z.id] != null && placements[z.id] !== ""
+    );
+    return filled.length === 1;
+  }
   return spec.zones.every((z) => placements[z.id] != null && placements[z.id] !== "");
 }
 

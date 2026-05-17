@@ -1,47 +1,7 @@
-import { Difficulty, Question, Tag, Passage, Form, Subject, QuestionSubtype } from '@/types';
+import { Difficulty, Question, Passage, Form } from '@/types';
+import { allTags, normalizeQuestionTags, tag } from '@/data/taggingScheme';
 
-// ELA Tags
-const elaTags: Tag[] = [
-  { id: 'ela-1', domain: 'ELA', code: 'CRAFT', label: 'Craft and Structure' },
-  { id: 'ela-2', domain: 'ELA', code: 'CROSS-TEXT', label: 'Cross-Text Connections' },
-  { id: 'ela-3', domain: 'ELA', code: 'TEXT-STRUCT', label: 'Text Structure and Purpose' },
-  { id: 'ela-4', domain: 'ELA', code: 'WIC', label: 'Words in Context' },
-  { id: 'ela-5', domain: 'ELA', code: 'EXPRESS-IDEAS', label: 'Expression of Ideas' },
-  { id: 'ela-6', domain: 'ELA', code: 'RHETORIC', label: 'Rhetorical Synthesis' },
-  { id: 'ela-7', domain: 'ELA', code: 'TRANS', label: 'Transitions' },
-  { id: 'ela-8', domain: 'ELA', code: 'INFO-IDEAS', label: 'Information and Ideas' },
-  { id: 'ela-9', domain: 'ELA', code: 'CENTRAL-IDEAS', label: 'Central Ideas and Details' },
-  { id: 'ela-10', domain: 'ELA', code: 'COMMAND-EVIDENCE', label: 'Command of Evidence' },
-  { id: 'ela-11', domain: 'ELA', code: 'INFERENCES', label: 'Inferences' },
-  { id: 'ela-12', domain: 'ELA', code: 'SEC', label: 'Standard English Conventions' },
-  { id: 'ela-13', domain: 'ELA', code: 'BOUNDARIES', label: 'Boundaries' },
-  { id: 'ela-14', domain: 'ELA', code: 'FORM-STRUCT', label: 'Form, Structure, and Sense' },
-];
-
-// Math Tags
-const mathTags: Tag[] = [
-  { id: 'math-1', domain: 'MATH', code: 'ALG-LIN', label: 'Linear equations in one variable' },
-  { id: 'math-2', domain: 'MATH', code: 'FUNC-LIN', label: 'Linear functions' },
-  { id: 'math-3', domain: 'MATH', code: 'ALG-LIN-TWO', label: 'Linear equations in two variables' },
-  { id: 'math-4', domain: 'MATH', code: 'ALG-SYS', label: 'Systems of two linear equations in two variables' },
-  { id: 'math-5', domain: 'MATH', code: 'INEQ', label: 'Linear inequalities in one or two variables' },
-  { id: 'math-6', domain: 'MATH', code: 'FUNC-NONLIN', label: 'Nonlinear functions' },
-  { id: 'math-7', domain: 'MATH', code: 'EQUIV-EXP', label: 'Equivalent expressions' },
-  { id: 'math-8', domain: 'MATH', code: 'NONLIN-EQ', label: 'Nonlinear equations in one variable and systems of equations in two variables' },
-  { id: 'math-9', domain: 'MATH', code: 'PS-PR', label: 'Ratios, rates, proportional relationships, and units' },
-  { id: 'math-10', domain: 'MATH', code: 'PS-PERC', label: 'Percentages' },
-  { id: 'math-11', domain: 'MATH', code: 'PS-STAT-ONE', label: 'One-variable data: Distributions and measures of center and spread' },
-  { id: 'math-12', domain: 'MATH', code: 'PS-STAT-TWO', label: 'Two-variable data: Models and scatterplots' },
-  { id: 'math-13', domain: 'MATH', code: 'PS-PROB', label: 'Probability and conditional probability' },
-  { id: 'math-14', domain: 'MATH', code: 'PS-STAT-INF', label: 'Inference from sample statistics and margin of error' },
-  { id: 'math-15', domain: 'MATH', code: 'PS-STAT-EXP', label: 'Evaluating statistical claims: Observational studies and experiments' },
-  { id: 'math-16', domain: 'MATH', code: 'GEO-AREA', label: 'Area and volume' },
-  { id: 'math-17', domain: 'MATH', code: 'GEO-LINES', label: 'Lines, angles, and triangles' },
-  { id: 'math-18', domain: 'MATH', code: 'GEO-TRIG', label: 'Right triangles and trigonometry' },
-  { id: 'math-19', domain: 'MATH', code: 'GEO-CIRCLES', label: 'Circles' },
-];
-
-export const allTags = [...elaTags, ...mathTags];
+export { allTags };
 
 // Sample ELA Passages
 export const passages: Passage[] = [
@@ -68,7 +28,25 @@ The process begins in the hippocampus, a seahorse-shaped structure deep within t
 
 Recent research has revealed that sleep plays a crucial role in memory consolidation. During sleep, the brain replays the day's experiences, strengthening important neural pathways while eliminating unnecessary connections. This process explains why students often perform better on tests after a good night's sleep.`,
     questions: []
-  }
+  },
+  {
+    id: 'passage-ela-001',
+    title: 'School Gardening Clubs',
+    lexile: 980,
+    sourceMeta: 'Informational article on student gardening programs',
+    body: `(1) Many schools across the country have recently started gardening clubs for students.
+
+(2) Students in these clubs learn how to grow vegetables and flowers while also learning about environmental responsibility.
+
+(3) The gardens are usually maintained after school and during weekends.
+
+(4) Some students say that gardening helps them feel less stressed after long school days.
+
+(5) In addition many schools donate extra vegetables from the gardens to local food pantries.
+
+(6) Gardening clubs have become increasingly popular in urban schools over the past few years.`,
+    questions: [],
+  },
 ];
 
 const scoreBandToDifficulty = (scoreBand: number): Difficulty => {
@@ -77,8 +55,8 @@ const scoreBandToDifficulty = (scoreBand: number): Difficulty => {
   return 'hard';
 };
 
-// Sample Questions
-export const questions: Question[] = [
+// Sample Questions (format tags normalized after definition)
+const rawQuestions: Question[] = [
   // ELA Questions
   {
     id: 'q1',
@@ -92,7 +70,7 @@ export const questions: Question[] = [
       { id: 'q1-c', label: 'C', text: 'The invention of new construction materials', isCorrect: false },
       { id: 'q1-d', label: 'D', text: 'Government regulations requiring systematic planning', isCorrect: false },
     ],
-    tags: [elaTags[0], elaTags[1]], // Main Ideas, Inference
+    tags: [tag('RC-MI'), tag('RC-INF')],
     passageId: 'passage-1',
     timeToSolve: 120,
     userAttempted: true,
@@ -111,7 +89,7 @@ export const questions: Question[] = [
       { id: 'q2-c', label: 'C', text: '"Smart city initiatives leverage data analytics"', isCorrect: false },
       { id: 'q2-d', label: 'D', text: '"These innovations represent a fundamental shift"', isCorrect: false },
     ],
-    tags: [elaTags[1]], // Inference
+    tags: [tag('RC-EV')],
     passageId: 'passage-1',
     timeToSolve: 90,
     userAttempted: false,
@@ -129,12 +107,11 @@ export const questions: Question[] = [
       { id: 'q3-c', label: 'C', text: 'The synapses', isCorrect: false },
       { id: 'q3-d', label: 'D', text: 'The neural networks', isCorrect: false },
     ],
-    tags: [elaTags[0]], // Main Ideas
+    tags: [tag('RC-MI')],
     passageId: 'passage-2',
     timeToSolve: 75,
     userAttempted: true,
     userCorrect: false,
-    userBookmarked: true,
     createdAt: '2024-01-15T10:02:00Z'
   },
 
@@ -151,7 +128,7 @@ export const questions: Question[] = [
       { id: 'q4-c', label: 'C', text: '7', isCorrect: false },
       { id: 'q4-d', label: 'D', text: '15', isCorrect: false },
     ],
-    tags: [mathTags[0]], // Linear Equations
+    tags: [tag('ALG-LIN')],
     timeToSolve: 90,
     userAttempted: true,
     userCorrect: true,
@@ -163,7 +140,7 @@ export const questions: Question[] = [
     subtype: 'GRID_IN',
     difficulty: scoreBandToDifficulty(6),
     stem: 'A recipe calls for 2/3 cup of flour for every 1/4 cup of sugar. If Maria uses 1 1/2 cups of flour, how many cups of sugar should she use? Express your answer as a fraction in lowest terms.',
-    tags: [mathTags[5]], // Ratios & Proportions
+    tags: [tag('NUM-RAT')],
     timeToSolve: 180,
     userAttempted: false,
     createdAt: '2024-01-15T10:04:00Z'
@@ -180,7 +157,7 @@ export const questions: Question[] = [
       { id: 'q6-g', label: 'G', text: '48 square feet', isCorrect: true },
       { id: 'q6-h', label: 'H', text: '64 square feet', isCorrect: false },
     ],
-    tags: [mathTags[10]], // Area & Volume
+    tags: [tag('GEO-ARV')],
     timeToSolve: 60,
     userAttempted: true,
     userCorrect: true,
@@ -198,7 +175,7 @@ export const questions: Question[] = [
       { id: 'q7-c', label: 'C', text: '6', isCorrect: false },
       { id: 'q7-d', label: 'D', text: '8', isCorrect: false },
     ],
-    tags: [mathTags[1]], // Systems of Equations
+    tags: [tag('ALG-SYS')],
     timeToSolve: 240,
     userAttempted: false,
     createdAt: '2024-01-15T10:06:00Z'
@@ -215,11 +192,10 @@ export const questions: Question[] = [
       { id: 'q8-g', label: 'G', text: '6', isCorrect: false },
       { id: 'q8-h', label: 'H', text: '8', isCorrect: false },
     ],
-    tags: [mathTags[7]], // Statistics
+    tags: [tag('DAT-PROB')],
     timeToSolve: 150,
     userAttempted: true,
     userCorrect: false,
-    userBookmarked: true,
     createdAt: '2024-01-15T10:07:00Z'
   },
 
@@ -236,7 +212,7 @@ export const questions: Question[] = [
       { id: 'q9-c', label: 'C', text: '$300', isCorrect: false },
       { id: 'q9-d', label: 'D', text: '$390', isCorrect: false },
     ],
-    tags: [mathTags[9], mathTags[9], mathTags[0]], // Percentages, Percentages, Linear equations
+    tags: [tag('APP-PCT')],
     timeToSolve: 60,
     userAttempted: false,
     createdAt: '2024-01-15T10:08:00Z'
@@ -253,7 +229,7 @@ export const questions: Question[] = [
       { id: 'q10-g', label: 'G', text: '16−16π', isCorrect: false },
       { id: 'q10-h', label: 'H', text: '16−8π', isCorrect: false },
     ],
-    tags: [mathTags[15], mathTags[15], mathTags[18], mathTags[16]], // Area and volume, Circles, Lines angles triangles
+    tags: [tag('GEO-ARV'), tag('GEO-CRC'), tag('GEO-QUAD')],
     timeToSolve: 120,
     userAttempted: false,
     createdAt: '2024-01-15T10:09:00Z'
@@ -264,7 +240,7 @@ export const questions: Question[] = [
     subtype: 'GRID_IN',
     difficulty: scoreBandToDifficulty(2),
     stem: 'What is the value of the expression 20 − 3 × (4 − 2)?',
-    tags: [mathTags[0], mathTags[0]], // Linear equations
+    tags: [tag('NUM-INT')],
     timeToSolve: 60,
     userAttempted: false,
     createdAt: '2024-01-15T10:10:00Z'
@@ -281,7 +257,7 @@ export const questions: Question[] = [
       { id: 'q12-g', label: 'G', text: '3', isCorrect: false },
       { id: 'q12-h', label: 'H', text: '4', isCorrect: true },
     ],
-    tags: [mathTags[0], mathTags[0]], // Linear equations
+    tags: [tag('NUM-INT')],
     timeToSolve: 90,
     userAttempted: false,
     createdAt: '2024-01-15T10:11:00Z'
@@ -298,7 +274,7 @@ export const questions: Question[] = [
       { id: 'q13-c', label: 'C', text: '89', isCorrect: false },
       { id: 'q13-d', label: 'D', text: '91', isCorrect: false },
     ],
-    tags: [mathTags[10], mathTags[10], mathTags[0]], // One-variable data, Linear equations
+    tags: [tag('DAT-STA')],
     timeToSolve: 90,
     userAttempted: false,
     createdAt: '2024-01-15T10:12:00Z'
@@ -316,7 +292,7 @@ export const questions: Question[] = [
       { id: 'q14-d', label: 'D', text: 'x = −2', isCorrect: false },
       { id: 'q14-e', label: 'E', text: 'x = 6', isCorrect: false },
     ],
-    tags: [mathTags[7]], // Equivalent expressions / nonlinear equations
+    tags: [tag('ALG-EXP')],
     timeToSolve: 120,
     userAttempted: false,
     createdAt: '2024-01-15T10:13:00Z'
@@ -348,7 +324,7 @@ export const questions: Question[] = [
         'q15-z1': 'q15-d4',
       },
     },
-    tags: [mathTags[10]],
+    tags: [tag('DAT-STA')],
     timeToSolve: 120,
     userAttempted: false,
     createdAt: '2024-01-15T10:14:00Z'
@@ -366,7 +342,7 @@ export const questions: Question[] = [
       solutionExplanation:
         'The subtotal is 22 + 38 = 60 dollars. Sales tax is 8% of 60, which is 4.80 dollars. The total is 60 + 4.80 = 64.80 dollars.',
     },
-    tags: [mathTags[9]],
+    tags: [tag('APP-PCT')],
     timeToSolve: 120,
     userAttempted: false,
     createdAt: '2024-01-15T10:15:00Z'
@@ -399,7 +375,7 @@ export const questions: Question[] = [
       { id: 'q17-c', label: 'C', text: 'Chen', isCorrect: true },
       { id: 'q17-d', label: 'D', text: 'Dana', isCorrect: false },
     ],
-    tags: [mathTags[10]],
+    tags: [tag('DAT-GR')],
     timeToSolve: 90,
     userAttempted: false,
     createdAt: '2024-01-15T10:16:00Z'
@@ -421,7 +397,7 @@ export const questions: Question[] = [
       { id: 'q18-c', label: 'C', text: '180 miles', isCorrect: true },
       { id: 'q18-d', label: 'D', text: '192 miles', isCorrect: false },
     ],
-    tags: [mathTags[9]],
+    tags: [tag('APP-RTD')],
     timeToSolve: 120,
     userAttempted: false,
     createdAt: '2024-01-15T10:17:00Z'
@@ -455,7 +431,7 @@ export const questions: Question[] = [
       },
       solutionExplanation: 'Divide both sides of 3x = 18 by 3 to get x = 6.',
     },
-    tags: [mathTags[0]],
+    tags: [tag('ALG-LIN')],
     timeToSolve: 90,
     userAttempted: false,
     createdAt: '2024-01-15T10:18:00Z'
@@ -484,16 +460,205 @@ export const questions: Question[] = [
       solutionExplanation:
         'The ordered pair (3, 4) is located 3 units to the right of the origin and 4 units up.',
     },
-    tags: [mathTags[11]],
+    tags: [tag('GEO-COO')],
     timeToSolve: 120,
     userAttempted: false,
     createdAt: '2024-01-15T10:21:00Z'
-  }
+  },
+
+  // ELA — School Gardening Clubs passage (Revising & Editing)
+  {
+    id: 'q-ela-garden-com',
+    subject: 'ELA',
+    subtype: 'INDY-IC',
+    difficulty: 'medium',
+    stem: 'In the passage, choose the punctuation that correctly completes sentence 5.',
+    passageId: 'passage-ela-001',
+    ic: {
+      instruction: 'Select the punctuation mark that belongs in the blank.',
+      segments: [
+        { type: 'text', value: 'In addition ' },
+        { type: 'slot', slotId: 'garden-com-s1' },
+        { type: 'text', value: ' many schools donate extra vegetables from the gardens to local food pantries.' },
+      ],
+      slots: [
+        {
+          slotId: 'garden-com-s1',
+          options: [
+            { id: 'garden-com-o-dash', text: '—' },
+            { id: 'garden-com-o-comma', text: ',' },
+            { id: 'garden-com-o-semicolon', text: ';' },
+            { id: 'garden-com-o-colon', text: ':' },
+          ],
+        },
+      ],
+      correctMapping: {
+        'garden-com-s1': 'garden-com-o-comma',
+      },
+      solutionExplanation:
+        'The phrase “In addition” introduces the rest of the sentence, so it must be followed by a comma before the main clause. Without that comma, the sentence incorrectly runs the introductory words into the subject.',
+    },
+    tags: [tag('RE-COM')],
+    timeToSolve: 90,
+    createdAt: '2026-05-17T12:00:00Z',
+  },
+  {
+    id: 'q-ela-garden-org1',
+    subject: 'ELA',
+    subtype: 'INDY-DND',
+    difficulty: 'medium',
+    stem: 'Drag the sentence to the best location in the paragraph.',
+    passageId: 'passage-ela-001',
+    dnd: {
+      instruction: 'Drag the sentence into the box that shows where it fits best in the passage.',
+      singlePlacement: true,
+      pool: [
+        {
+          id: 'garden-org1-sentence',
+          text: 'Some schools also create compost bins near the gardens.',
+        },
+      ],
+      zones: [
+        { id: 'garden-org1-loc-1', prompt: 'After sentence 1' },
+        { id: 'garden-org1-loc-2', prompt: 'After sentence 2' },
+        { id: 'garden-org1-loc-3', prompt: 'After sentence 3' },
+        { id: 'garden-org1-loc-4', prompt: 'After sentence 4' },
+        { id: 'garden-org1-loc-5', prompt: 'After sentence 5' },
+        { id: 'garden-org1-loc-6', prompt: 'After sentence 6' },
+      ],
+      correctMapping: {
+        'garden-org1-loc-3': 'garden-org1-sentence',
+      },
+      solutionExplanation:
+        'Sentence 3 describes when gardens are maintained, and the compost-bin sentence naturally extends that idea by describing another way schools care for the gardens. Placing it earlier would interrupt the flow before maintenance is introduced.',
+    },
+    tags: [tag('RE-ORG')],
+    timeToSolve: 120,
+    createdAt: '2026-05-17T12:01:00Z',
+  },
+  {
+    id: 'q-ela-garden-cl',
+    subject: 'ELA',
+    subtype: 'INDY-MS',
+    difficulty: 'hard',
+    stem: 'Select TWO revisions that most improve sentence 2 in the passage.',
+    passageId: 'passage-ela-001',
+    ms: {
+      selectCount: 2,
+      instruction: 'Select exactly two answer choices.',
+      solutionExplanation:
+        'Strong revisions keep the original meaning while removing repetition and vague wording. The first and third options are concise and precise; the other options repeat “clubs” or use awkward phrasing such as “environmental things.”',
+    },
+    choices: [
+      {
+        id: 'garden-cl-a',
+        label: 'A',
+        text: 'Students in these clubs learn how to grow vegetables and flowers while learning about environmental responsibility.',
+        isCorrect: true,
+      },
+      {
+        id: 'garden-cl-b',
+        label: 'B',
+        text: 'These clubs are clubs where students learn many things involving gardens.',
+        isCorrect: false,
+      },
+      {
+        id: 'garden-cl-c',
+        label: 'C',
+        text: 'Students in these clubs learn gardening skills and environmental responsibility.',
+        isCorrect: true,
+      },
+      {
+        id: 'garden-cl-d',
+        label: 'D',
+        text: 'Students learn flowers, vegetables, and environmental things in the clubs.',
+        isCorrect: false,
+      },
+    ],
+    tags: [tag('RE-CL')],
+    timeToSolve: 120,
+    createdAt: '2026-05-17T12:02:00Z',
+  },
+  {
+    id: 'q-ela-garden-sva',
+    subject: 'ELA',
+    subtype: 'INDY-IC',
+    difficulty: 'medium',
+    stem: 'In the passage, choose the verb form that correctly completes sentence 6.',
+    passageId: 'passage-ela-001',
+    ic: {
+      instruction: 'Select the verb that agrees with the subject of the sentence.',
+      segments: [
+        { type: 'text', value: 'Gardening clubs ' },
+        { type: 'slot', slotId: 'garden-sva-s1' },
+        { type: 'text', value: ' become increasingly popular in urban schools over the past few years.' },
+      ],
+      slots: [
+        {
+          slotId: 'garden-sva-s1',
+          options: [
+            { id: 'garden-sva-o-has', text: 'has' },
+            { id: 'garden-sva-o-have', text: 'have' },
+            { id: 'garden-sva-o-becoming', text: 'becoming' },
+            { id: 'garden-sva-o-had', text: 'had' },
+          ],
+        },
+      ],
+      correctMapping: {
+        'garden-sva-s1': 'garden-sva-o-have',
+      },
+      solutionExplanation:
+        'The subject “Gardening clubs” is plural, so it needs the plural verb “have,” not “has.” “Becoming” would not form a complete predicate with “become,” and “had” does not match the present-time meaning of the sentence.',
+    },
+    tags: [tag('RE-SVA')],
+    timeToSolve: 90,
+    createdAt: '2026-05-17T12:03:00Z',
+  },
+  {
+    id: 'q-ela-garden-org2',
+    subject: 'ELA',
+    subtype: 'INDY-DND',
+    difficulty: 'hard',
+    stem: 'Drag the sentence to the best location in the paragraph.',
+    passageId: 'passage-ela-001',
+    dnd: {
+      instruction: 'Drag the sentence into the box that shows where it fits best in the passage.',
+      singlePlacement: true,
+      pool: [
+        {
+          id: 'garden-org2-sentence',
+          text: 'Many teachers say the clubs also encourage teamwork and responsibility.',
+        },
+      ],
+      zones: [
+        { id: 'garden-org2-loc-1', prompt: 'After sentence 1' },
+        { id: 'garden-org2-loc-2', prompt: 'After sentence 2' },
+        { id: 'garden-org2-loc-3', prompt: 'After sentence 3' },
+        { id: 'garden-org2-loc-4', prompt: 'After sentence 4' },
+        { id: 'garden-org2-loc-5', prompt: 'After sentence 5' },
+        { id: 'garden-org2-loc-6', prompt: 'After sentence 6' },
+      ],
+      correctMapping: {
+        'garden-org2-loc-2': 'garden-org2-sentence',
+      },
+      solutionExplanation:
+        'Sentence 2 explains what students learn in gardening clubs, and the teachers’ sentence adds another educational benefit. It belongs right after that learning focus, before the paragraph shifts to when gardens are maintained.',
+    },
+    tags: [tag('RE-ORG')],
+    timeToSolve: 120,
+    createdAt: '2026-05-17T12:04:00Z',
+  },
 ];
+
+export const questions: Question[] = rawQuestions.map((q) => ({
+  ...q,
+  tags: normalizeQuestionTags(q),
+}));
 
 // Update passages with their questions
 passages[0].questions = questions.filter(q => q.passageId === 'passage-1');
 passages[1].questions = questions.filter(q => q.passageId === 'passage-2');
+passages[2].questions = questions.filter(q => q.passageId === 'passage-ela-001');
 
 // Sample Forms
 export const forms: Form[] = [
@@ -501,7 +666,7 @@ export const forms: Form[] = [
     id: 'form-1',
     name: 'Ratios & Proportions Drill',
     description: 'Practice problems focusing on ratios, proportions, and percent calculations',
-    questions: questions.filter(q => q.tags.some(tag => tag.code === 'PS-PR')),
+    questions: questions.filter(q => q.tags.some(t => t.code === 'NUM-RAT')),
     timeLimit: 15
   },
   {
@@ -513,16 +678,19 @@ export const forms: Form[] = [
   }
 ];
 
-export const getFilteredQuestions = (filters: Partial<{
-  subjects: string[];
-  difficulties: Difficulty[];
-  tagCodes: string[];
-  subtypes: string[];
-  passageOnly: boolean;
-  searchQuery: string;
-  userStatus: string[];
-}>) => {
-  return questions.filter(question => {
+export const getFilteredQuestions = (
+  filters: Partial<{
+    subjects: string[];
+    difficulties: Difficulty[];
+    tagCodes: string[];
+    formatTagCodes: string[];
+    passageOnly: boolean;
+    searchQuery: string;
+    userStatus: string[];
+  }>,
+  catalog: Question[] = questions,
+) => {
+  return catalog.filter(question => {
     // Subject filter
     if (filters.subjects?.length && !filters.subjects.includes(question.subject)) {
       return false;
@@ -541,9 +709,12 @@ export const getFilteredQuestions = (filters: Partial<{
       }
     }
 
-    // Subtype filter
-    if (filters.subtypes?.length && !filters.subtypes.includes(question.subtype)) {
-      return false;
+    // Question format filter (INDY-* tags)
+    if (filters.formatTagCodes?.length) {
+      const questionTagCodes = question.tags.map((t) => t.code);
+      if (!filters.formatTagCodes.some((code) => questionTagCodes.includes(code))) {
+        return false;
+      }
     }
 
     // Passage only filter

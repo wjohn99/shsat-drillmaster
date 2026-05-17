@@ -1,0 +1,108 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function normalizedEmail(email) {
+      return email.lower();
+    }
+
+    function isTutorEmail(email) {
+      return exists(
+        /databases/$(database)/documents/tutor_whitelist/$(normalizedEmail(email))
+      );
+    }
+
+    function roleMatchesWhitelist(role, email) {
+      return role == 'tutor'
+        ? isTutorEmail(email)
+        : !isTutorEmail(email);
+    }
+
+    function isValidUserWrite(userId) {
+      let data = request.resource.data;
+      return data.uid == userId
+        && data.email == request.auth.token.email
+        && data.role in ['student', 'tutor']
+        && roleMatchesWhitelist(data.role, data.email);
+    }
+
+    function isTutor() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'tutor';
+    }
+
+    // Tutor emails — maintain via Firebase Console or Admin SDK only.
+    match /tutor_whitelist/{emailId} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
+
+    match /users/{userId} {
+      allow read: if isOwner(userId)
+        || (isTutor() && resource.data.role == 'student');
+
+      allow create: if isOwner(userId) && isValidUserWrite(userId);
+
+      allow update: if isOwner(userId)
+        && isValidUserWrite(userId)
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.createdAt == resource.data.createdAt;
+
+      match /bookmarks/{questionId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    match /assignments/{assignmentId} {
+      // Split read rules (no OR) so list queries work with security constraints.
+      allow read: if isSignedIn()
+        && resource.data.assignedToStudentUid == request.auth.uid;
+
+      allow read: if isSignedIn()
+        && resource.data.tutorUid == request.auth.uid;
+
+      allow create: if isTutor()
+        && request.resource.data.tutorUid == request.auth.uid
+        && request.resource.data.assignedToStudentUid is string
+        && request.resource.data.questionIds is list
+        && request.resource.data.questionIds.size() > 0
+        && request.resource.data.status == 'todo';
+
+      allow update: if isSignedIn()
+        && resource.data.assignedToStudentUid == request.auth.uid
+        && resource.data.status == 'todo'
+        && request.resource.data.status == 'completed'
+        && request.resource.data.tutorUid == resource.data.tutorUid
+        && request.resource.data.assignedToStudentUid == resource.data.assignedToStudentUid
+        && request.resource.data.questionIds == resource.data.questionIds
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['status', 'completedAt']);
+    }
+
+    match /practice_sessions/{sessionId} {
+      allow create: if isSignedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.sessionType in ['assignment', 'self', 'tutor-preview'];
+
+      // Students: own sessions only (query must use userId == auth.uid).
+      allow read: if isSignedIn()
+        && resource.data.userId == request.auth.uid;
+
+      // Tutors: assignment sessions for their class (query must use tutorUid + sessionType).
+      allow read: if isSignedIn()
+        && resource.data.tutorUid == request.auth.uid
+        && resource.data.sessionType == 'assignment'
+        && isTutor();
+    }
+  }
+}

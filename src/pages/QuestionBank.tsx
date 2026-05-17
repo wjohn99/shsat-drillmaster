@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
+import type { FilterOptions } from "@/types";
 import { Header } from "@/components/layout/Header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -6,23 +7,40 @@ import { Button } from "@/components/ui/button";
 import { FilterPanel } from "@/components/bank/FilterPanel";
 import { QuestionCard } from "@/components/question/QuestionCard";
 import { getFilteredQuestions, questions } from "@/data/mockData";
-import { Loader2, Grid3X3, List } from "lucide-react";
+import { applyBookmarksToQuestions } from "@/lib/questionBookmarkService";
+import { useQuestionBookmarks } from "@/contexts/QuestionBookmarksContext";
+import { Grid3X3, List } from "lucide-react";
 
 const QuestionBank = () => {
-  const [filters, setFilters] = useState({});
+  const { bookmarkedIds } = useQuestionBookmarks();
+  const [filters, setFilters] = useState<Partial<FilterOptions>>({});
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [isLoading, setIsLoading] = useState(false);
+
+  const questionsWithBookmarks = useMemo(
+    () => applyBookmarksToQuestions(questions, bookmarkedIds),
+    [bookmarkedIds],
+  );
 
   const filteredQuestions = useMemo(() => {
-    return getFilteredQuestions(filters);
-  }, [filters]);
+    return getFilteredQuestions(filters, questionsWithBookmarks);
+  }, [filters, questionsWithBookmarks]);
 
-  const handleFiltersChange = async (newFilters: any) => {
-    setIsLoading(true);
-    setFilters(newFilters);
-    // Simulate loading delay
-    setTimeout(() => setIsLoading(false), 300);
-  };
+  const subjectCounts = useMemo(
+    () => ({
+      MATH: questions.filter((q) => q.subject === "MATH").length,
+      ELA: questions.filter((q) => q.subject === "ELA").length,
+    }),
+    [],
+  );
+
+  const handleFiltersChange = useCallback((newFilters: Partial<FilterOptions>) => {
+    setFilters((prev) => {
+      if (JSON.stringify(prev) === JSON.stringify(newFilters)) {
+        return prev;
+      }
+      return newFilters;
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -32,9 +50,10 @@ const QuestionBank = () => {
         <div className="flex gap-6">
           {/* Sidebar */}
           <div className="w-80 flex-shrink-0">
-            <FilterPanel 
+            <FilterPanel
               totalCount={questions.length}
               filteredCount={filteredQuestions.length}
+              subjectCounts={subjectCounts}
               onFiltersChange={handleFiltersChange}
             />
           </div>
@@ -69,11 +88,7 @@ const QuestionBank = () => {
             </div>
 
             {/* Questions Grid/List */}
-            {isLoading ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              </div>
-            ) : filteredQuestions.length > 0 ? (
+            {filteredQuestions.length > 0 ? (
               <div className={
                 viewMode === 'grid' 
                   ? "grid grid-cols-1 lg:grid-cols-2 gap-6" 
@@ -97,7 +112,7 @@ const QuestionBank = () => {
             )}
 
             {/* Load More - only show when there are more questions to load (e.g. pagination) */}
-            {filteredQuestions.length > 0 && filteredQuestions.length < questions.length && !isLoading && (
+            {filteredQuestions.length > 0 && filteredQuestions.length < questions.length && (
               <div className="text-center mt-8">
                 <Button variant="outline">
                   Load More Questions

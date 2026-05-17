@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
@@ -9,40 +9,32 @@ import { Switch } from "@/components/ui/switch";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Search, Filter, RotateCcw, ChevronDown } from "lucide-react";
-import { Difficulty, FilterOptions, Subject, QuestionSubtype } from "@/types";
-import { allTags } from "@/data/mockData";
+import { Difficulty, FilterOptions, Subject } from "@/types";
+import { QUESTION_FORMAT_TAGS, TAG_CATEGORIES } from "@/data/taggingScheme";
 
 interface FilterPanelProps {
   totalCount: number;
   filteredCount: number;
+  subjectCounts: Record<Subject, number>;
   onFiltersChange: (filters: Partial<FilterOptions>) => void;
 }
 
-export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: FilterPanelProps) => {
+export const FilterPanel = ({
+  totalCount,
+  filteredCount,
+  subjectCounts,
+  onFiltersChange,
+}: FilterPanelProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSubjects, setSelectedSubjects] = useState<Subject[]>([]);
   const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [selectedSubtypes, setSelectedSubtypes] = useState<QuestionSubtype[]>([]);
+  const [selectedFormatTags, setSelectedFormatTags] = useState<string[]>([]);
   const [passageOnly, setPassageOnly] = useState(false);
   const [selectedUserStatus, setSelectedUserStatus] = useState<string[]>([]);
   const [tagSearchOpen, setTagSearchOpen] = useState(false);
 
   const subjects: Subject[] = ['MATH', 'ELA'];
-  const subtypes: QuestionSubtype[] = [
-    'MC4_A-D',
-    'MC4_E-H',
-    'GRID_IN',
-    'TEI_DRAG_DROP',
-    'TEI_MULTIPLE_SELECT',
-    'INDY-ATA',
-    'INDY-DND',
-    'INDY-EE',
-    'INDY-CGT',
-    'INDY-WP',
-    'INDY-IC',
-    'INDY-GIF',
-  ];
   const difficulties: Difficulty[] = ['easy', 'medium', 'hard'];
   const userStatusOptions = [
     { value: 'attempted', label: 'Attempted' },
@@ -50,32 +42,51 @@ export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: Filt
     { value: 'bookmarked', label: 'Bookmarked' }
   ];
 
-  const updateFilters = () => {
-    onFiltersChange({
+  const onFiltersChangeRef = useRef(onFiltersChange);
+  onFiltersChangeRef.current = onFiltersChange;
+  const lastSyncedFiltersRef = useRef("");
+
+  useEffect(() => {
+    const nextFilters: Partial<FilterOptions> = {
       subjects: selectedSubjects,
       difficulties: selectedDifficulties,
       tagCodes: selectedTags,
-      subtypes: selectedSubtypes,
+      formatTagCodes: selectedFormatTags,
       passageOnly,
       searchQuery,
-      userStatus: selectedUserStatus
-    });
-  };
+      userStatus: selectedUserStatus,
+    };
+    const serialized = JSON.stringify(nextFilters);
+    if (serialized === lastSyncedFiltersRef.current) {
+      return;
+    }
 
-  // Update filters whenever any filter changes
-  useState(() => {
-    updateFilters();
-  });
+    const debounceMs = searchQuery.trim() ? 300 : 0;
+    const timer = window.setTimeout(() => {
+      lastSyncedFiltersRef.current = serialized;
+      onFiltersChangeRef.current(nextFilters);
+    }, debounceMs);
+
+    return () => window.clearTimeout(timer);
+  }, [
+    selectedSubjects,
+    selectedDifficulties,
+    selectedTags,
+    selectedFormatTags,
+    passageOnly,
+    searchQuery,
+    selectedUserStatus,
+  ]);
 
   const resetFilters = () => {
     setSearchQuery("");
     setSelectedSubjects([]);
     setSelectedDifficulties([]);
     setSelectedTags([]);
-    setSelectedSubtypes([]);
+    setSelectedFormatTags([]);
     setPassageOnly(false);
     setSelectedUserStatus([]);
-    onFiltersChange({});
+    lastSyncedFiltersRef.current = "";
   };
 
   const toggleArraySelection = <T,>(array: T[], setArray: (arr: T[]) => void, item: T) => {
@@ -86,8 +97,6 @@ export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: Filt
     }
   };
 
-  const elaTags = allTags.filter(tag => tag.domain === 'ELA');
-  const mathTags = allTags.filter(tag => tag.domain === 'MATH');
 
   return (
     <div className="w-80 border-r bg-card p-6 h-full overflow-y-auto">
@@ -121,10 +130,7 @@ export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: Filt
             id="search"
             placeholder="Search questions..."
             value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setTimeout(updateFilters, 300); // Debounce
-            }}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
           />
         </div>
@@ -146,11 +152,10 @@ export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: Filt
                     ? "math"
                     : "ela"
               }
-              onClick={() => {
-                toggleArraySelection(selectedSubjects, setSelectedSubjects, subject);
-                setTimeout(updateFilters, 0);
-              }}
-              count={subject === 'MATH' ? 5 : 3} // Mock counts
+              onClick={() =>
+                toggleArraySelection(selectedSubjects, setSelectedSubjects, subject)
+              }
+              count={subjectCounts[subject]}
             >
               {subject}
             </Chip>
@@ -173,10 +178,9 @@ export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: Filt
             return (
               <button
                 key={d}
-                onClick={() => {
-                  toggleArraySelection(selectedDifficulties, setSelectedDifficulties, d);
-                  setTimeout(updateFilters, 0);
-                }}
+                onClick={() =>
+                  toggleArraySelection(selectedDifficulties, setSelectedDifficulties, d)
+                }
                 className={`
                   flex-1 h-8 rounded-full text-xs font-semibold text-white transition-all
                   ${selectedDifficulties.includes(d) ? 'ring-2 ring-ring ring-offset-2' : 'hover:opacity-90'}
@@ -192,61 +196,45 @@ export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: Filt
 
       {/* Tags filter */}
       <div className="mb-6">
-        <Label className="text-sm font-medium mb-3 block">Tags</Label>
+        <Label className="text-sm font-medium mb-3 block">Skill categories</Label>
         <Popover open={tagSearchOpen} onOpenChange={setTagSearchOpen}>
           <PopoverTrigger asChild>
             <Button variant="outline" className="w-full justify-between">
-              {selectedTags.length === 0 ? "Select tags..." : `${selectedTags.length} selected`}
+              {selectedTags.length === 0 ? "Select categories..." : `${selectedTags.length} selected`}
               <ChevronDown className="h-4 w-4" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-80 p-0" align="start">
             <Command>
-              <CommandInput placeholder="Search tags..." />
+              <CommandInput placeholder="Search categories..." />
               <CommandList>
-                <CommandEmpty>No tags found.</CommandEmpty>
-                <CommandGroup heading="ELA Tags">
-                  {elaTags.map((tag) => (
+                <CommandEmpty>No categories found.</CommandEmpty>
+                {TAG_CATEGORIES.filter((c) => c.id !== "indy").map((category) => (
+                  <CommandGroup key={category.id} heading={category.title}>
+                    {category.tags.map((tagDef) => (
                     <CommandItem
-                      key={tag.id}
-                      onSelect={() => {
-                        toggleArraySelection(selectedTags, setSelectedTags, tag.code);
-                        setTimeout(updateFilters, 0);
-                      }}
+                      key={tagDef.code}
+                      value={`${tagDef.label} ${tagDef.code}`}
+                      onSelect={() =>
+                        toggleArraySelection(selectedTags, setSelectedTags, tagDef.code)
+                      }
                     >
-                      <div className="flex items-center space-x-2">
-                        <div 
-                          className={`h-3 w-3 rounded-sm border ${
-                            selectedTags.includes(tag.code) ? 'bg-ela border-ela' : 'border-border'
-                          }`} 
+                      <div className="flex items-center space-x-2 w-full">
+                        <div
+                          className={`h-3 w-3 rounded-sm border shrink-0 ${
+                            selectedTags.includes(tagDef.code)
+                              ? category.subject === "MATH"
+                                ? "bg-math border-math"
+                                : "bg-ela border-ela"
+                              : "border-border"
+                          }`}
                         />
-                        <span className="text-sm">{tag.label}</span>
-                        <Badge variant="outline" className="ml-auto text-xs">{tag.code}</Badge>
+                        <span className="text-sm">{tagDef.label}</span>
                       </div>
                     </CommandItem>
-                  ))}
-                </CommandGroup>
-                <CommandGroup heading="Math Tags">
-                  {mathTags.map((tag) => (
-                    <CommandItem
-                      key={tag.id}
-                      onSelect={() => {
-                        toggleArraySelection(selectedTags, setSelectedTags, tag.code);
-                        setTimeout(updateFilters, 0);
-                      }}
-                    >
-                      <div className="flex items-center space-x-2">
-                        <div 
-                          className={`h-3 w-3 rounded-sm border ${
-                            selectedTags.includes(tag.code) ? 'bg-math border-math' : 'border-border'
-                          }`} 
-                        />
-                        <span className="text-sm">{tag.label}</span>
-                        <Badge variant="outline" className="ml-auto text-xs">{tag.code}</Badge>
-                      </div>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
+                    ))}
+                  </CommandGroup>
+                ))}
               </CommandList>
             </Command>
           </PopoverContent>
@@ -256,18 +244,21 @@ export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: Filt
         {selectedTags.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-2">
             {selectedTags.map((tagCode) => {
-              const tag = allTags.find(t => t.code === tagCode);
+              const category = TAG_CATEGORIES.find((c) =>
+                c.tags.some((t) => t.code === tagCode),
+              );
+              const label =
+                category?.tags.find((t) => t.code === tagCode)?.label ?? tagCode;
               return (
                 <Chip
                   key={tagCode}
-                  variant={tag?.domain === 'MATH' ? 'math' : 'ela'}
+                  variant={category?.subject === "MATH" ? "math" : "ela"}
                   size="sm"
-                  onRemove={() => {
-                    setSelectedTags(selectedTags.filter(t => t !== tagCode));
-                    setTimeout(updateFilters, 0);
-                  }}
+                  onRemove={() =>
+                    setSelectedTags(selectedTags.filter((t) => t !== tagCode))
+                  }
                 >
-                  {tag?.label}
+                  {label}
                 </Chip>
               );
             })}
@@ -280,19 +271,21 @@ export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: Filt
       {/* Question Type filter */}
       <div className="mb-6">
         <Label className="text-sm font-medium mb-3 block">Question Type</Label>
-        <div className="grid grid-cols-1 gap-2">
-          {subtypes.map((subtype) => (
+        <p className="text-xs text-muted-foreground mb-3">
+          Filter by how the question is presented (from the tagging scheme).
+        </p>
+        <div className="flex flex-col gap-2">
+          {QUESTION_FORMAT_TAGS.map((formatTag) => (
             <Chip
-              key={subtype}
-              variant={selectedSubtypes.includes(subtype) ? "selected" : "default"}
-              onClick={() => {
-                toggleArraySelection(selectedSubtypes, setSelectedSubtypes, subtype);
-                setTimeout(updateFilters, 0);
-              }}
-              className="justify-start"
+              key={formatTag.code}
+              variant={selectedFormatTags.includes(formatTag.code) ? "selected" : "secondary"}
+              onClick={() =>
+                toggleArraySelection(selectedFormatTags, setSelectedFormatTags, formatTag.code)
+              }
+              className="justify-start text-left h-auto min-h-7 py-1.5 whitespace-normal"
               size="sm"
             >
-              {subtype}
+              {formatTag.label}
             </Chip>
           ))}
         </div>
@@ -304,10 +297,7 @@ export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: Filt
           <Switch
             id="passage-only"
             checked={passageOnly}
-            onCheckedChange={(checked) => {
-              setPassageOnly(checked);
-              setTimeout(updateFilters, 0);
-            }}
+            onCheckedChange={setPassageOnly}
           />
           <Label htmlFor="passage-only" className="text-sm">Passage-based only</Label>
         </div>
@@ -323,10 +313,9 @@ export const FilterPanel = ({ totalCount, filteredCount, onFiltersChange }: Filt
             <Chip
               key={option.value}
               variant={selectedUserStatus.includes(option.value) ? "selected" : "default"}
-              onClick={() => {
-                toggleArraySelection(selectedUserStatus, setSelectedUserStatus, option.value);
-                setTimeout(updateFilters, 0);
-              }}
+              onClick={() =>
+                toggleArraySelection(selectedUserStatus, setSelectedUserStatus, option.value)
+              }
               className="justify-start"
               size="sm"
             >
