@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, Check, FileDown, Loader2, Search, Send } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
@@ -27,6 +28,8 @@ import {
 import { cn } from "@/lib/utils";
 import type { Tag } from "@/types";
 import type { StudentOption } from "@/types/assignment";
+import type { WorkspaceCard, WorkspaceList } from "@/types/workspace";
+import { WORKSPACE_NEW_CARD_ID } from "@/types/worksheetsNavigation";
 
 export type WorksheetBuilderVariant = "tutor" | "student";
 
@@ -45,6 +48,20 @@ interface CustomWorksheetBuilderProps {
   studentsLoading?: boolean;
   selectedStudentUid?: string;
   onStudentChange?: (uid: string) => void;
+  assignmentDueDate?: string;
+  onAssignmentDueDateChange?: (value: string) => void;
+  minAssignmentDueDate?: string;
+  showOnWorkspace?: boolean;
+  onShowOnWorkspaceChange?: (value: boolean) => void;
+  workspaceBoardExists?: boolean;
+  workspaceLists?: WorkspaceList[];
+  workspaceListsLoading?: boolean;
+  workspaceListId?: string;
+  onWorkspaceListIdChange?: (listId: string) => void;
+  workspaceCards?: WorkspaceCard[];
+  workspaceCardTarget?: string;
+  onWorkspaceCardTargetChange?: (target: string) => void;
+  workspacePlacementLocked?: boolean;
   assigning?: boolean;
   onAssign?: () => void;
 }
@@ -74,6 +91,20 @@ export function CustomWorksheetBuilder({
   studentsLoading = false,
   selectedStudentUid = "",
   onStudentChange,
+  assignmentDueDate = "",
+  onAssignmentDueDateChange,
+  minAssignmentDueDate,
+  showOnWorkspace = false,
+  onShowOnWorkspaceChange,
+  workspaceBoardExists = false,
+  workspaceLists = [],
+  workspaceListsLoading = false,
+  workspaceListId = "",
+  onWorkspaceListIdChange,
+  workspaceCards = [],
+  workspaceCardTarget = WORKSPACE_NEW_CARD_ID,
+  onWorkspaceCardTargetChange,
+  workspacePlacementLocked = false,
   assigning = false,
   onAssign,
 }: CustomWorksheetBuilderProps) {
@@ -146,40 +177,150 @@ export function CustomWorksheetBuilder({
             </p>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="assign-student">Student</Label>
-              {studentsLoading ? (
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Loading students…
-                </div>
-              ) : students.length === 0 ? (
-                <p className="text-sm text-muted-foreground">
-                  No students found yet. Ask students to sign in with Google first.
-                </p>
-              ) : (
-                <Select value={selectedStudentUid} onValueChange={onStudentChange}>
-                  <SelectTrigger id="assign-student">
-                    <SelectValue placeholder="Select a student" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {students.map((student) => (
-                      <SelectItem key={student.uid} value={student.uid}>
-                        {student.displayName}
-                        {student.email ? ` (${student.email})` : ""}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="assign-student">Student</Label>
+                {studentsLoading ? (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Loading students…
+                  </div>
+                ) : students.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">
+                    No students found yet. Ask students to sign in with Google first.
+                  </p>
+                ) : (
+                  <Select
+                    value={selectedStudentUid}
+                    onValueChange={onStudentChange}
+                    disabled={workspacePlacementLocked}
+                  >
+                    <SelectTrigger id="assign-student">
+                      <SelectValue placeholder="Select a student" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {students.map((student) => (
+                        <SelectItem key={student.uid} value={student.uid}>
+                          {student.displayName}
+                          {student.email ? ` (${student.email})` : ""}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="assign-due-date">Due date</Label>
+                <Input
+                  id="assign-due-date"
+                  type="date"
+                  value={assignmentDueDate}
+                  min={minAssignmentDueDate}
+                  onChange={(e) => onAssignmentDueDateChange?.(e.target.value)}
+                />
+              </div>
             </div>
+
+            {selectedStudentUid ? (
+              <div className="rounded-lg border bg-muted/30 p-3 space-y-3">
+                <div className="flex items-start gap-2">
+                  <Checkbox
+                    id="show-on-workspace"
+                    checked={showOnWorkspace}
+                    disabled={!workspaceBoardExists || workspacePlacementLocked}
+                    onCheckedChange={(v) => onShowOnWorkspaceChange?.(v === true)}
+                  />
+                  <div className="space-y-1">
+                    <Label htmlFor="show-on-workspace" className="font-medium cursor-pointer">
+                      Show on{" "}
+                      {students.find((s) => s.uid === selectedStudentUid)?.displayName ??
+                        "student"}
+                      &apos;s workspace
+                    </Label>
+                    {!workspaceBoardExists ? (
+                      <p className="text-xs text-muted-foreground">
+                        Create a workspace board for this student first (Workspace tab).
+                      </p>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">
+                        Also appears on a card on their board.
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {showOnWorkspace && workspaceBoardExists ? (
+                  <div className="grid gap-3 sm:grid-cols-2 pl-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="workspace-list">List</Label>
+                      {workspaceListsLoading ? (
+                        <p className="text-sm text-muted-foreground">Loading lists…</p>
+                      ) : (
+                        <Select
+                          value={workspaceListId}
+                          onValueChange={onWorkspaceListIdChange}
+                          disabled={workspacePlacementLocked}
+                        >
+                          <SelectTrigger id="workspace-list">
+                            <SelectValue placeholder="Select list" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {workspaceLists.map((list) => (
+                              <SelectItem key={list.id} value={list.id}>
+                                {list.title}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="workspace-card">Card</Label>
+                      <Select
+                        value={workspaceCardTarget}
+                        onValueChange={onWorkspaceCardTargetChange}
+                        disabled={
+                          workspacePlacementLocked &&
+                          workspaceCardTarget !== WORKSPACE_NEW_CARD_ID
+                        }
+                      >
+                        <SelectTrigger id="workspace-card">
+                          <SelectValue placeholder="Select card" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {!workspacePlacementLocked ? (
+                            <SelectItem value={WORKSPACE_NEW_CARD_ID}>New card</SelectItem>
+                          ) : null}
+                          {workspaceCards
+                            .filter((c) => c.listId === workspaceListId)
+                            .map((c) => (
+                              <SelectItem key={c.id} value={c.id}>
+                                {c.title}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+
+            <p className="text-xs text-muted-foreground">
+              Overdue assignments appear in your dashboard Needs attention section.
+            </p>
+
             <Button
               onClick={onAssign}
               disabled={
                 assigning ||
                 students.length === 0 ||
                 !selectedStudentUid ||
-                !canStart
+                !assignmentDueDate ||
+                !canStart ||
+                (showOnWorkspace &&
+                  workspaceBoardExists &&
+                  (!workspaceListId || !workspaceCardTarget))
               }
             >
               {assigning ? (
@@ -187,7 +328,7 @@ export function CustomWorksheetBuilder({
               ) : (
                 <Send className="h-4 w-4 mr-2" />
               )}
-              Assign to student
+              Assign
             </Button>
           </CardContent>
         </Card>

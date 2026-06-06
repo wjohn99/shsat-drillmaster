@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Eye, Loader2 } from "lucide-react";
 import { questions, allTags, passages } from "@/data/mockData";
 import type { Question } from "@/types";
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
@@ -15,12 +15,34 @@ import {
 } from "@/lib/worksheetTagCatalog";
 import { openWorksheetPdfInNewTab } from "@/lib/worksheetPdfExport";
 import {
+  assignmentDueDateInputToTimestamp,
   createAssignment,
+  defaultAssignmentDueDateInput,
   fetchStudents,
   markAssignmentCompleted,
   resolveQuestionsByIds,
+  setAssignmentWorkspaceCard,
+  toAssignmentDueDateInputValue,
 } from "@/lib/assignmentService";
-import { savePracticeSession } from "@/lib/practiceSessionService";
+import { logWorksheetAssignedToCard } from "@/lib/workspaceCardContentService";
+import {
+  fetchWorkspaceBoard,
+  fetchWorkspaceCards,
+  fetchWorkspaceLists,
+  linkAssignmentToWorkspace,
+  pickDefaultHomeworkListId,
+} from "@/lib/workspaceService";
+import type { WorkspaceCard, WorkspaceList } from "@/types/workspace";
+import {
+  WORKSPACE_NEW_CARD_ID,
+  type WorksheetsAssignToWorkspaceState,
+} from "@/types/worksheetsNavigation";
+import {
+  fetchLatestAssignmentSessionForStudent,
+  fetchLatestAssignmentSessionForTutor,
+  savePracticeSession,
+} from "@/lib/practiceSessionService";
+import { WorksheetSessionReview } from "@/components/worksheets/WorksheetSessionReview";
 import { SessionQuestionRunner } from "@/components/session/SessionQuestionRunner";
 import { SessionResultsDashboard } from "@/components/session/SessionResultsDashboard";
 import {
@@ -32,9 +54,13 @@ import { StudentWorksheetsHome } from "@/components/worksheets/StudentWorksheets
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import type { StudentOption } from "@/types/assignment";
-import type { WorksheetsLocationState } from "@/types/worksheetsNavigation";
+import type { PracticeSessionRecord } from "@/types/practiceSession";
+import type {
+  WorksheetsLocationState,
+  WorksheetsWorkspaceCompletionTarget,
+} from "@/types/worksheetsNavigation";
 
-type Mode = "home" | "build" | "runner" | "results";
+type Mode = "home" | "build" | "runner" | "results" | "review";
 type RunSource = "assignment" | "self" | "tutor-preview";
 
 const Worksheets = () => {
@@ -52,12 +78,29 @@ const Worksheets = () => {
   const [worksheetQuestions, setWorksheetQuestions] = useState<Question[]>([]);
   const [sessionEvents, setSessionEvents] = useState<SessionAnalyticsEvent[]>([]);
   const [activeAssignment, setActiveAssignment] = useState<WorksheetAssignment | null>(null);
+  const workspaceCompletionTargetRef = useRef<WorksheetsWorkspaceCompletionTarget | null>(
+    null,
+  );
 
   const [students, setStudents] = useState<StudentOption[]>([]);
   const [studentsLoading, setStudentsLoading] = useState(false);
   const [selectedStudentUid, setSelectedStudentUid] = useState("");
+  const [assignmentDueDate, setAssignmentDueDate] = useState(defaultAssignmentDueDateInput);
+  const minAssignmentDueDate = useMemo(() => toAssignmentDueDateInputValue(new Date()), []);
+  const [showOnWorkspace, setShowOnWorkspace] = useState(true);
+  const [workspaceBoardExists, setWorkspaceBoardExists] = useState(false);
+  const [workspaceLists, setWorkspaceLists] = useState<WorkspaceList[]>([]);
+  const [workspaceCards, setWorkspaceCards] = useState<WorkspaceCard[]>([]);
+  const [workspaceListsLoading, setWorkspaceListsLoading] = useState(false);
+  const [workspaceListId, setWorkspaceListId] = useState("");
+  const [workspaceCardTarget, setWorkspaceCardTarget] = useState(WORKSPACE_NEW_CARD_ID);
+  const [workspacePlacementLocked, setWorkspacePlacementLocked] = useState(false);
+  const [pendingAssignToWorkspace, setPendingAssignToWorkspace] =
+    useState<WorksheetsAssignToWorkspaceState | null>(null);
   const [assigning, setAssigning] = useState(false);
   const [assignmentsRefreshKey, setAssignmentsRefreshKey] = useState(0);
+  const [reviewSession, setReviewSession] = useState<PracticeSessionRecord | null>(null);
+  const [reviewSubtitle, setReviewSubtitle] = useState<string | undefined>();
 
   const tagCatalog = useMemo(() => buildWorksheetTagCatalog(allTags, questions), []);
 
@@ -115,6 +158,71 @@ const Worksheets = () => {
     };
   }, [role, mode, buildVariant]);
 
+  useEffect(() => {
+    if (role !== "tutor" || !selectedStudentUid) {
+      setWorkspaceBoardExists(false);
+      setWorkspaceLists([]);
+      setWorkspaceCards([]);
+      setWorkspaceListId("");
+      return;
+    }
+
+    let cancelled = false;
+    setWorkspaceListsLoading(true);
+
+    void (async () => {
+      try {
+        const board = await fetchWorkspaceBoard(selectedStudentUid);
+        if (cancelled) return;
+
+        if (!board) {
+          setWorkspaceBoardExists(false);
+          setWorkspaceLists([]);
+          setWorkspaceCards([]);
+          setWorkspaceListId("");
+          if (!workspacePlacementLocked) setShowOnWorkspace(false);
+          return;
+        }
+
+        setWorkspaceBoardExists(true);
+        const [lists, cards] = await Promise.all([
+          fetchWorkspaceLists(selectedStudentUid),
+          fetchWorkspaceCards(selectedStudentUid),
+        ]);
+        if (cancelled) return;
+
+        setWorkspaceLists(lists);
+        setWorkspaceCards(cards);
+
+        setWorkspaceListId((prev) => {
+          if (pendingAssignToWorkspace?.listId) return pendingAssignToWorkspace.listId;
+          if (prev && lists.some((l) => l.id === prev)) return prev;
+          return pickDefaultHomeworkListId(lists) ?? "";
+        });
+      } catch {
+        if (!cancelled) {
+          setWorkspaceBoardExists(false);
+          setWorkspaceLists([]);
+          setWorkspaceCards([]);
+        }
+      } finally {
+        if (!cancelled) setWorkspaceListsLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [role, selectedStudentUid, pendingAssignToWorkspace?.listId, workspacePlacementLocked]);
+
+  useEffect(() => {
+    if (pendingAssignToWorkspace?.cardId) {
+      setWorkspaceCardTarget(pendingAssignToWorkspace.cardId);
+    } else if (!workspacePlacementLocked) {
+      setWorkspaceCardTarget(WORKSPACE_NEW_CARD_ID);
+    }
+  }, [pendingAssignToWorkspace, workspaceListId, workspacePlacementLocked]);
+
   const openTutorBuild = () => {
     setBuildVariant("tutor");
     setActiveAssignment(null);
@@ -144,7 +252,54 @@ const Worksheets = () => {
     startWorksheetRun();
   };
 
-  const startAssignedWorksheet = (assignment: WorksheetAssignment) => {
+  const openReviewSession = (session: PracticeSessionRecord, subtitle?: string) => {
+    setReviewSession(session);
+    setReviewSubtitle(subtitle);
+    setMode("review");
+  };
+
+  const handleReviewAssignment = async (assignment: WorksheetAssignment) => {
+    try {
+      const session =
+        role === "tutor"
+          ? await fetchLatestAssignmentSessionForTutor(assignment.id)
+          : await fetchLatestAssignmentSessionForStudent(assignment.id);
+      if (!session) {
+        toast({
+          title: "No saved results yet",
+          description:
+            role === "tutor"
+              ? "The student has not completed this worksheet with saved results."
+              : "Complete this worksheet once to save results you can review later.",
+          variant: "destructive",
+        });
+        return;
+      }
+      const studentName =
+        "studentName" in assignment && typeof assignment.studentName === "string"
+          ? assignment.studentName
+          : undefined;
+      const subtitle =
+        role === "tutor"
+          ? studentName
+            ? `${studentName}'s saved attempt`
+            : "Student attempt on this assignment"
+          : "Your saved assignment attempt";
+      openReviewSession(session, subtitle);
+    } catch (err) {
+      toast({
+        title: "Could not load results",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const startAssignedWorksheet = (
+    assignment: WorksheetAssignment,
+    workspaceTarget?: WorksheetsWorkspaceCompletionTarget,
+  ) => {
+    workspaceCompletionTargetRef.current = workspaceTarget ?? null;
     const picked = resolveQuestionsByIds(questions, assignment.questionIds);
     if (picked.length === 0) {
       toast({
@@ -165,12 +320,28 @@ const Worksheets = () => {
     const navState = location.state as WorksheetsLocationState | null;
     if (!navState) return;
 
-    if (navState.openTutorBuild && role === "tutor") {
+    if (navState.assignToWorkspace && role === "tutor") {
+      const target = navState.assignToWorkspace;
+      setPendingAssignToWorkspace(target);
+      setSelectedStudentUid(target.boardId);
+      setWorkspacePlacementLocked(true);
+      setShowOnWorkspace(true);
+      setWorkspaceListId(target.listId);
+      setWorkspaceCardTarget(target.cardId ?? WORKSPACE_NEW_CARD_ID);
+      openTutorBuild();
+    } else if (navState.openTutorBuild && role === "tutor") {
       openTutorBuild();
     } else if (navState.openStudentBuild && role === "student") {
       openStudentBuild();
     } else if (navState.autoStartAssignment && role === "student") {
-      startAssignedWorksheet(navState.autoStartAssignment);
+      startAssignedWorksheet(
+        navState.autoStartAssignment,
+        navState.workspaceCompletionTarget,
+      );
+    } else if (navState.reviewSession) {
+      openReviewSession(navState.reviewSession);
+    } else if (navState.reviewAssignment) {
+      void handleReviewAssignment(navState.reviewAssignment);
     } else {
       return;
     }
@@ -192,6 +363,23 @@ const Worksheets = () => {
     const picked = pickCurrentQuestions();
     if (picked.length === 0) return;
 
+    if (!assignmentDueDate) {
+      toast({
+        title: "Due date required",
+        description: "Choose when this worksheet is due.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (assignmentDueDate < minAssignmentDueDate) {
+      toast({
+        title: "Due date must be today or later",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setAssigning(true);
     try {
       const title =
@@ -199,22 +387,65 @@ const Worksheets = () => {
           ? `Worksheet: ${selectedTagLabels.slice(0, 2).join(", ")}${selectedTagLabels.length > 2 ? "…" : ""}`
           : "Custom worksheet";
 
-      await createAssignment({
+      const dueAt = assignmentDueDateInputToTimestamp(assignmentDueDate);
+      const placeOnWorkspace =
+        showOnWorkspace && workspaceBoardExists && workspaceListId && workspaceCardTarget;
+
+      const assignmentId = await createAssignment({
         questionIds: picked.map((q) => q.id),
         tutorUid: profile.uid,
         assignedToStudentUid: selectedStudentUid,
         title,
         tagCodes: selectedCodes,
+        dueAt,
+        workspace: placeOnWorkspace
+          ? {
+              boardId: selectedStudentUid,
+              listId: workspaceListId,
+              existingCardId:
+                workspaceCardTarget !== WORKSPACE_NEW_CARD_ID
+                  ? workspaceCardTarget
+                  : undefined,
+              newCardTitle: title,
+            }
+          : undefined,
       });
+
+      const dueLabel = new Date(`${assignmentDueDate}T12:00:00`).toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+      });
+
+      if (placeOnWorkspace) {
+        const isExistingCard = workspaceCardTarget !== WORKSPACE_NEW_CARD_ID;
+        const cardId = await linkAssignmentToWorkspace({
+          boardId: selectedStudentUid,
+          listId: workspaceListId,
+          assignmentId,
+          dueAt,
+          existingCardId: isExistingCard ? workspaceCardTarget : undefined,
+          newCardTitle: isExistingCard ? undefined : title,
+        });
+        await setAssignmentWorkspaceCard(assignmentId, cardId);
+        await logWorksheetAssignedToCard(selectedStudentUid, cardId, title, dueLabel);
+      }
 
       const student = students.find((s) => s.uid === selectedStudentUid);
       toast({
         title: "Assignment sent",
         description: student
-          ? `${student.displayName} will see this in Active Assignments.`
-          : "The student will see this in Active Assignments.",
+          ? placeOnWorkspace
+            ? `${student.displayName} can start from Active Assignments or their workspace (due ${dueLabel}).`
+            : `${student.displayName} will see this in Active Assignments (due ${dueLabel}).`
+          : `The student will see this in Active Assignments (due ${dueLabel}).`,
       });
+      setAssignmentsRefreshKey((k) => k + 1);
       setSelectedStudentUid("");
+      setAssignmentDueDate(defaultAssignmentDueDateInput());
+      setShowOnWorkspace(true);
+      setWorkspacePlacementLocked(false);
+      setPendingAssignToWorkspace(null);
+      setWorkspaceCardTarget(WORKSPACE_NEW_CARD_ID);
     } catch (err) {
       toast({
         title: "Assignment failed",
@@ -264,6 +495,26 @@ const Worksheets = () => {
     }
   };
 
+  if (mode === "review" && reviewSession) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="container py-8">
+          <WorksheetSessionReview
+            session={reviewSession}
+            subtitle={reviewSubtitle}
+            viewerRole={role === "tutor" ? "tutor" : "student"}
+            onBack={() => {
+              setReviewSession(null);
+              setReviewSubtitle(undefined);
+              setMode("home");
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
   if (mode === "runner" && worksheetQuestions.length > 0) {
     return (
       <SessionQuestionRunner
@@ -305,7 +556,13 @@ const Worksheets = () => {
             activeAssignment.status === "todo"
           ) {
             try {
-              await markAssignmentCompleted(activeAssignment.id);
+              const correct = events.filter((e) => e.correct).length;
+              const workspaceTarget = workspaceCompletionTargetRef.current ?? undefined;
+              await markAssignmentCompleted(activeAssignment.id, {
+                score: { correct, total: events.length },
+                workspace: workspaceTarget,
+              });
+              workspaceCompletionTargetRef.current = null;
               setAssignmentsRefreshKey((k) => k + 1);
             } catch (err) {
               toast({
@@ -380,6 +637,17 @@ const Worksheets = () => {
                     </Button>
                     <Button onClick={startTutorOrSelfPreview}>Practice again</Button>
                   </>
+                ) : runSource === "assignment" && activeAssignment ? (
+                  <>
+                    <Button
+                      variant="outline"
+                      onClick={() => handleReviewAssignment(activeAssignment)}
+                    >
+                      <Eye className="h-4 w-4 mr-2" />
+                      Review saved results
+                    </Button>
+                    <Button onClick={backFromResults}>Back to worksheets</Button>
+                  </>
                 ) : (
                   <Button onClick={backFromResults}>Back to worksheets</Button>
                 )
@@ -430,6 +698,20 @@ const Worksheets = () => {
               studentsLoading={studentsLoading}
               selectedStudentUid={selectedStudentUid}
               onStudentChange={setSelectedStudentUid}
+              assignmentDueDate={assignmentDueDate}
+              onAssignmentDueDateChange={setAssignmentDueDate}
+              minAssignmentDueDate={minAssignmentDueDate}
+              showOnWorkspace={showOnWorkspace}
+              onShowOnWorkspaceChange={setShowOnWorkspace}
+              workspaceBoardExists={workspaceBoardExists}
+              workspaceLists={workspaceLists}
+              workspaceListsLoading={workspaceListsLoading}
+              workspaceListId={workspaceListId}
+              onWorkspaceListIdChange={setWorkspaceListId}
+              workspaceCards={workspaceCards}
+              workspaceCardTarget={workspaceCardTarget}
+              onWorkspaceCardTargetChange={setWorkspaceCardTarget}
+              workspacePlacementLocked={workspacePlacementLocked}
               assigning={assigning}
               onAssign={handleAssignToStudent}
             />
@@ -465,11 +747,20 @@ const Worksheets = () => {
                 </CardContent>
               </Card>
             ) : role === "tutor" ? (
-              <TutorWorksheetsHome onCreateCustom={openTutorBuild} />
+              <TutorWorksheetsHome
+                assignmentsRefreshKey={assignmentsRefreshKey}
+                onCreateCustom={openTutorBuild}
+                onReviewAssignment={handleReviewAssignment}
+                onReviewSession={(session) =>
+                  openReviewSession(session, "Student assignment attempt")
+                }
+              />
             ) : (
               <StudentWorksheetsHome
                 assignmentsRefreshKey={assignmentsRefreshKey}
                 onStartAssignment={startAssignedWorksheet}
+                onReviewAssignment={handleReviewAssignment}
+                onReviewSession={(session) => openReviewSession(session)}
                 onCreateCustomPractice={openStudentBuild}
               />
             )}

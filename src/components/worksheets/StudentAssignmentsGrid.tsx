@@ -1,19 +1,26 @@
 import { useEffect, useState } from "react";
-import { BookOpen, CheckCircle2, Circle, Loader2, Play } from "lucide-react";
+import { BookOpen, CheckCircle2, Circle, Eye, Loader2, Play } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchAssignmentsForStudent } from "@/lib/assignmentService";
+import {
+  formatAssignmentDueDate,
+  isAssignmentOverdue,
+} from "@/lib/dashboardStats";
 import type { WorksheetAssignment } from "@/types/assignment";
+import { cn } from "@/lib/utils";
 
 interface StudentAssignmentsGridProps {
   onStartAssignment: (assignment: WorksheetAssignment) => void;
+  onReviewAssignment?: (assignment: WorksheetAssignment) => void;
   refreshKey?: number;
 }
 
 export function StudentAssignmentsGrid({
   onStartAssignment,
+  onReviewAssignment,
   refreshKey = 0,
 }: StudentAssignmentsGridProps) {
   const { profile } = useAuth();
@@ -89,6 +96,8 @@ export function StudentAssignmentsGrid({
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
       {assignments.map((assignment) => {
         const isCompleted = assignment.status === "completed";
+        const overdue = isAssignmentOverdue(assignment);
+        const dueLabel = formatAssignmentDueDate(assignment);
         const createdLabel = assignment.createdAt?.toDate
           ? assignment.createdAt.toDate().toLocaleDateString()
           : "";
@@ -97,24 +106,33 @@ export function StudentAssignmentsGrid({
           <Card key={assignment.id} className="group hover:shadow-lg transition-all duration-300">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between gap-2 mb-2">
-                <Badge
-                  variant={isCompleted ? "secondary" : "default"}
-                  className="gap-1"
-                >
-                  {isCompleted ? (
-                    <>
-                      <CheckCircle2 className="h-3 w-3" />
-                      Completed
-                    </>
-                  ) : (
-                    <>
-                      <Circle className="h-3 w-3" />
-                      To Do
-                    </>
-                  )}
-                </Badge>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge
+                    variant={isCompleted ? "secondary" : overdue ? "destructive" : "default"}
+                    className="gap-1"
+                  >
+                    {isCompleted ? (
+                      <>
+                        <CheckCircle2 className="h-3 w-3" />
+                        Completed
+                      </>
+                    ) : overdue ? (
+                      "Overdue"
+                    ) : (
+                      <>
+                        <Circle className="h-3 w-3" />
+                        To Do
+                      </>
+                    )}
+                  </Badge>
+                  {dueLabel && !isCompleted ? (
+                    <span className={cn("text-xs", overdue ? "text-destructive font-medium" : "text-muted-foreground")}>
+                      Due {dueLabel}
+                    </span>
+                  ) : null}
+                </div>
                 {createdLabel && (
-                  <span className="text-xs text-muted-foreground">{createdLabel}</span>
+                  <span className="text-xs text-muted-foreground shrink-0">Assigned {createdLabel}</span>
                 )}
               </div>
               <p className="text-xs font-medium text-primary mb-1">From your tutor</p>
@@ -127,15 +145,27 @@ export function StudentAssignmentsGrid({
                 {assignment.tagCodes.length > 0 &&
                   ` · ${assignment.tagCodes.length} skill tag${assignment.tagCodes.length === 1 ? "" : "s"}`}
               </p>
-              <Button
-                className="w-full"
-                size="sm"
-                variant={isCompleted ? "outline" : "default"}
-                onClick={() => onStartAssignment(assignment)}
-              >
-                <Play className="h-4 w-4 mr-2" />
-                {isCompleted ? "Practice again" : "Start practice"}
-              </Button>
+              <div className="flex flex-col gap-2">
+                {isCompleted && onReviewAssignment ? (
+                  <Button
+                    className="w-full"
+                    size="sm"
+                    onClick={() => onReviewAssignment(assignment)}
+                  >
+                    <Eye className="h-4 w-4 mr-2" />
+                    Review results
+                  </Button>
+                ) : null}
+                <Button
+                  className="w-full"
+                  size="sm"
+                  variant={isCompleted ? "outline" : "default"}
+                  onClick={() => onStartAssignment(assignment)}
+                >
+                  <Play className="h-4 w-4 mr-2" />
+                  {isCompleted ? "Practice again" : "Start practice"}
+                </Button>
+              </div>
             </CardContent>
           </Card>
         );

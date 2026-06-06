@@ -11,7 +11,7 @@ import {
   CheckCircle,
   ArrowRight,
   Search,
-  FileText,
+  PlayCircle,
   BarChart3
 } from "lucide-react";
 import { AuthLink } from "@/components/auth/AuthLink";
@@ -56,17 +56,16 @@ const Index = () => {
                 Included with StepPrep Hub: full access to this platform, no extra cost
               </span>
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button asChild variant="hero" size="lg">
+            <div>
+              <Button
+                asChild
+                variant="hero"
+                size="lg"
+                className="h-14 px-10 text-lg font-semibold shadow-xl hover:shadow-2xl [&_svg]:size-6"
+              >
                 <AuthLink to="/practice">
-                  <Search className="h-5 w-5 mr-2" />
+                  <PlayCircle className="mr-2" />
                   Start Practice
-                </AuthLink>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="border-white/80 text-white bg-white/10 hover:bg-white hover:text-primary backdrop-blur-sm">
-                <AuthLink to="/question-bank">
-                  <FileText className="h-5 w-5 mr-2" />
-                  Browse Questions
                 </AuthLink>
               </Button>
             </div>
@@ -244,7 +243,7 @@ const Index = () => {
               </div>
               <div className="flex flex-col">
                 <span className="text-lg font-bold">StepPrep</span>
-                <span className="text-xs text-muted-foreground">SHSAT Practice</span>
+                <span className="text-xs text-muted-foreground">DrillMaster</span>
               </div>
             </div>
             <p className="text-sm text-muted-foreground">

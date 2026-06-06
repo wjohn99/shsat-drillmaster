@@ -1,6 +1,7 @@
 import { initializeApp, type FirebaseApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, type Auth } from "firebase/auth";
 import { getFirestore, type Firestore } from "firebase/firestore";
+import { getStorage, type FirebaseStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -21,11 +22,13 @@ export const isFirebaseConfigured = Boolean(
 let app: FirebaseApp | undefined;
 let auth: Auth | undefined;
 let db: Firestore | undefined;
+let storage: FirebaseStorage | undefined;
 
 if (isFirebaseConfigured) {
   app = initializeApp(firebaseConfig);
   auth = getAuth(app);
   db = getFirestore(app);
+  storage = getStorage(app);
 }
 
 export function getFirebaseAuth(): Auth {
@@ -44,6 +47,15 @@ export function getFirebaseDb(): Firestore {
     );
   }
   return db;
+}
+
+export function getFirebaseStorage(): FirebaseStorage {
+  if (!storage) {
+    throw new Error(
+      "Firebase Storage is not configured. Add VITE_FIREBASE_* variables to your .env file.",
+    );
+  }
+  return storage;
 }
 
 export const googleAuthProvider = new GoogleAuthProvider();

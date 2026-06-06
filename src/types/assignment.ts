@@ -10,6 +10,11 @@ export interface WorksheetAssignment {
   status: AssignmentStatus;
   createdAt: Timestamp;
   completedAt?: Timestamp;
+  /** End of the due date (local calendar day) in the tutor's timezone when assigned. */
+  dueAt?: Timestamp | null;
+  workspaceBoardId?: string | null;
+  workspaceListId?: string | null;
+  workspaceCardId?: string | null;
   title: string;
   tagCodes: string[];
 }

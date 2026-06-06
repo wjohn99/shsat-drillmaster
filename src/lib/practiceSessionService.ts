@@ -113,6 +113,22 @@ export async function fetchPracticeSessionsForStudent(
   );
 }
 
+/** Most recent saved attempt for an assignment (student — current user). */
+export async function fetchLatestAssignmentSessionForStudent(
+  assignmentId: string,
+): Promise<PracticeSessionRecord | null> {
+  const sessions = await fetchPracticeSessionsForStudent(["assignment"]);
+  return sessions.find((s) => s.assignmentId === assignmentId) ?? null;
+}
+
+/** Most recent student attempt on an assignment (tutor view). */
+export async function fetchLatestAssignmentSessionForTutor(
+  assignmentId: string,
+): Promise<PracticeSessionRecord | null> {
+  const sessions = await fetchPracticeSessionsForTutor();
+  return sessions.find((s) => s.assignmentId === assignmentId) ?? null;
+}
+
 export async function fetchPracticeSessionsForTutor(): Promise<PracticeSessionRecord[]> {
   const auth = getFirebaseAuth();
   const tutorUid = auth.currentUser?.uid;

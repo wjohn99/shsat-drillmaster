@@ -21,6 +21,9 @@ import TopicBrowser from "./pages/TopicBrowser";
 import TopicQuestions from "./pages/TopicQuestions";
 import NotFound from "./pages/NotFound";
 import BlitzMode from "./pages/BlitzMode";
+import Workspace from "./pages/Workspace";
+import QuestionSubmission from "./pages/QuestionSubmission";
+import { TutorRoute } from "@/components/auth/TutorRoute";
 
 const queryClient = new QueryClient();
 
@@ -132,6 +135,32 @@ const App = () => (
               element={
                 <RequireAuth>
                   <BlitzMode />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/workspace"
+              element={
+                <RequireAuth>
+                  <Workspace />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/workspace/:boardId"
+              element={
+                <RequireAuth>
+                  <Workspace />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/question-submission"
+              element={
+                <RequireAuth>
+                  <TutorRoute>
+                    <QuestionSubmission />
+                  </TutorRoute>
                 </RequireAuth>
               }
             />

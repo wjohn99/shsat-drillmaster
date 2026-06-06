@@ -38,7 +38,7 @@ export const Header = () => {
           </div>
           <div className="flex flex-col">
             <span className="text-lg font-bold">StepPrep</span>
-            <span className="text-xs text-muted-foreground -mt-1">SHSAT Practice</span>
+            <span className="text-xs text-muted-foreground -mt-1">DrillMaster</span>
           </div>
         </Link>
 
@@ -69,6 +69,18 @@ export const Header = () => {
             Worksheets
           </AuthLink>
           <AuthLink
+            to={
+              profile?.role === "student" && profile.uid
+                ? `/workspace/${profile.uid}`
+                : "/workspace"
+            }
+            className={`text-sm font-medium transition-colors hover:text-primary ${
+              location.pathname.startsWith('/workspace') ? 'text-primary' : 'text-muted-foreground'
+            }`}
+          >
+            Workspace
+          </AuthLink>
+          <AuthLink
             to="/practice"
             className={`text-sm font-medium transition-colors hover:text-primary ${
               isActive('/practice') ? 'text-primary' : 'text-muted-foreground'
@@ -76,13 +88,20 @@ export const Header = () => {
           >
             Practice
           </AuthLink>
+          {profile?.role === "tutor" && (
+            <AuthLink
+              to="/question-submission"
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                isActive('/question-submission') ? 'text-primary' : 'text-muted-foreground'
+              }`}
+            >
+              Question Submission
+            </AuthLink>
+          )}
         </nav>
 
         {/* Right side */}
         <div className="flex items-center space-x-3">
-          <Badge variant="secondary" className="text-xs hidden sm:inline-flex">
-            Beta
-          </Badge>
           {profile && isDashboard ? (
             <>
               <Badge

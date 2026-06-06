@@ -137,18 +137,26 @@ export function buildTutorDashboardAnalytics(
   for (const a of assignments) {
     if (a.status !== "todo") continue;
     const createdMs = toMillis(a.createdAt);
+    const dueMs = a.dueAt?.toMillis?.() ?? 0;
     const studentName =
       students.find((s) => s.uid === a.assignedToStudentUid)?.displayName ?? "Student";
 
-    if (createdMs > 0 && createdMs < staleCutoff) {
-      const daysOld = Math.floor((now - createdMs) / DAY_MS);
+    if (dueMs > 0 && dueMs < now) {
+      const dueLabel = new Date(dueMs).toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+      });
+      const daysOverdue = Math.max(1, Math.floor((now - dueMs) / DAY_MS));
       attentionItems.push({
         studentUid: a.assignedToStudentUid,
         studentName,
         assignmentId: a.id,
         assignmentTitle: a.title,
         reason: "overdue",
-        detail: `Assigned ${daysOld} days ago`,
+        detail:
+          daysOverdue === 1
+            ? `Due ${dueLabel} (1 day overdue)`
+            : `Due ${dueLabel} (${daysOverdue} days overdue)`,
       });
       continue;
     }

@@ -1,10 +1,20 @@
-import { FileText, Plus, ArrowRight, Clock, BookOpen } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { FileText, Plus, ArrowRight, Clock, BookOpen, History } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { TutorAssignmentsGrid } from "./TutorAssignmentsGrid";
+import { WorksheetHistoryList } from "./WorksheetHistoryList";
+import { fetchPracticeSessionsForTutor } from "@/lib/practiceSessionService";
+import { fetchStudents } from "@/lib/assignmentService";
+import type { TutorAssignmentRow } from "@/types/assignment";
+import type { PracticeSessionRecord } from "@/types/practiceSession";
 
 interface TutorWorksheetsHomeProps {
+  assignmentsRefreshKey: number;
   onCreateCustom: () => void;
+  onReviewAssignment: (assignment: TutorAssignmentRow) => void;
+  onReviewSession: (session: PracticeSessionRecord) => void;
 }
 
 const presetWorksheets = [
@@ -42,10 +52,53 @@ const presetWorksheets = [
   },
 ];
 
-export function TutorWorksheetsHome({ onCreateCustom }: TutorWorksheetsHomeProps) {
+export function TutorWorksheetsHome({
+  assignmentsRefreshKey,
+  onCreateCustom,
+  onReviewAssignment,
+  onReviewSession,
+}: TutorWorksheetsHomeProps) {
+  const [historySessions, setHistorySessions] = useState<PracticeSessionRecord[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(true);
+  const [studentNameByUid, setStudentNameByUid] = useState<Map<string, string>>(new Map());
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setHistoryLoading(true);
+      try {
+        const [rows, students] = await Promise.all([
+          fetchPracticeSessionsForTutor(),
+          fetchStudents(),
+        ]);
+        if (cancelled) return;
+        setHistorySessions(rows);
+        setStudentNameByUid(new Map(students.map((s) => [s.uid, s.displayName])));
+      } catch {
+        if (!cancelled) {
+          setHistorySessions([]);
+          setStudentNameByUid(new Map());
+        }
+      } finally {
+        if (!cancelled) setHistoryLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [assignmentsRefreshKey]);
+
+  const sessionStudentDetail = useMemo(
+    () => (session: PracticeSessionRecord) => {
+      const name = studentNameByUid.get(session.userId);
+      return name ? `Student: ${name}` : undefined;
+    },
+    [studentNameByUid],
+  );
+
   return (
-    <>
-      <div className="grid md:grid-cols-2 gap-8 mb-12">
+    <div className="space-y-14 max-w-6xl mx-auto">
+      <div className="grid md:grid-cols-2 gap-8">
         <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-2 hover:border-primary/50">
           <CardHeader className="text-center">
             <div className="h-16 w-16 rounded-full bg-gradient-primary flex items-center justify-center mx-auto mb-4">
@@ -82,6 +135,38 @@ export function TutorWorksheetsHome({ onCreateCustom }: TutorWorksheetsHomeProps
           </CardContent>
         </Card>
       </div>
+
+      <section>
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold">Your assignments</h2>
+          <p className="text-muted-foreground mt-1">
+            Track worksheets you sent and review saved results when students finish.
+          </p>
+        </div>
+        <TutorAssignmentsGrid
+          refreshKey={assignmentsRefreshKey}
+          onReviewAssignment={onReviewAssignment}
+        />
+      </section>
+
+      <section>
+        <div className="mb-6 flex items-center gap-2">
+          <History className="h-6 w-6 text-primary" />
+          <div>
+            <h2 className="text-2xl font-bold">Student attempt history</h2>
+            <p className="text-muted-foreground mt-1">
+              Every completed assigned worksheet is saved here for you to review anytime.
+            </p>
+          </div>
+        </div>
+        <WorksheetHistoryList
+          sessions={historySessions}
+          loading={historyLoading}
+          emptyMessage="When a student finishes an assigned worksheet, their results will appear here."
+          getSessionDetail={sessionStudentDetail}
+          onReview={onReviewSession}
+        />
+      </section>
 
       <section>
         <div className="flex items-center justify-between mb-8">
@@ -123,6 +208,6 @@ export function TutorWorksheetsHome({ onCreateCustom }: TutorWorksheetsHomeProps
           ))}
         </div>
       </section>
-    </>
+    </div>
   );
 }

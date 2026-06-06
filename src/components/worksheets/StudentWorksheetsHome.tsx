@@ -1,20 +1,49 @@
-import { ArrowRight, BookOpen, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowRight, BookOpen, History, Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StudentAssignmentsGrid } from "./StudentAssignmentsGrid";
+import { WorksheetHistoryList } from "./WorksheetHistoryList";
+import { fetchPracticeSessionsForStudent } from "@/lib/practiceSessionService";
 import type { WorksheetAssignment } from "@/types/assignment";
+import type { PracticeSessionRecord } from "@/types/practiceSession";
 
 interface StudentWorksheetsHomeProps {
   assignmentsRefreshKey: number;
   onStartAssignment: (assignment: WorksheetAssignment) => void;
+  onReviewAssignment: (assignment: WorksheetAssignment) => void;
+  onReviewSession: (session: PracticeSessionRecord) => void;
   onCreateCustomPractice: () => void;
 }
 
 export function StudentWorksheetsHome({
   assignmentsRefreshKey,
   onStartAssignment,
+  onReviewAssignment,
+  onReviewSession,
   onCreateCustomPractice,
 }: StudentWorksheetsHomeProps) {
+  const [historySessions, setHistorySessions] = useState<PracticeSessionRecord[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setHistoryLoading(true);
+      try {
+        const rows = await fetchPracticeSessionsForStudent(["assignment"]);
+        if (!cancelled) setHistorySessions(rows);
+      } catch {
+        if (!cancelled) setHistorySessions([]);
+      } finally {
+        if (!cancelled) setHistoryLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [assignmentsRefreshKey]);
+
   return (
     <div className="space-y-14 max-w-6xl mx-auto">
       <section>
@@ -27,6 +56,25 @@ export function StudentWorksheetsHome({
         <StudentAssignmentsGrid
           refreshKey={assignmentsRefreshKey}
           onStartAssignment={onStartAssignment}
+          onReviewAssignment={onReviewAssignment}
+        />
+      </section>
+
+      <section>
+        <div className="mb-6 flex items-center gap-2">
+          <History className="h-6 w-6 text-primary" />
+          <div>
+            <h2 className="text-2xl font-bold">Assignment history</h2>
+            <p className="text-muted-foreground mt-1">
+              Review your saved results from completed tutor worksheets anytime.
+            </p>
+          </div>
+        </div>
+        <WorksheetHistoryList
+          sessions={historySessions}
+          loading={historyLoading}
+          emptyMessage="When you finish an assigned worksheet, your results will appear here."
+          onReview={onReviewSession}
         />
       </section>
 

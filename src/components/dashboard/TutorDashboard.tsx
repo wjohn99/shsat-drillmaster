@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   AlertTriangle,
   CheckCircle2,
   Circle,
   ClipboardList,
+  Eye,
   Loader2,
   Tags,
   TrendingDown,
@@ -34,10 +36,13 @@ import {
 } from "@/lib/dashboardStats";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type { StudentOption, TutorAssignmentRow } from "@/types/assignment";
+import type { WorksheetsLocationState } from "@/types/worksheetsNavigation";
+import { Button } from "@/components/ui/button";
 
 const RECENT_LIMIT = 10;
 
 export function TutorDashboard() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [students, setStudents] = useState<StudentOption[]>([]);
@@ -214,7 +219,7 @@ export function TutorDashboard() {
               Needs attention
             </CardTitle>
             <CardDescription>
-              Overdue or stale To Do assignments (no recent practice)
+              Past-due assignments and open work with no recent practice
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -332,19 +337,37 @@ export function TutorDashboard() {
                         {formatAssignmentDate(row) ? ` · ${formatAssignmentDate(row)}` : ""}
                       </p>
                     </div>
-                    <Badge variant={row.status === "completed" ? "secondary" : "default"}>
+                    <div className="flex flex-col items-end gap-2 shrink-0">
+                      <Badge variant={row.status === "completed" ? "secondary" : "default"}>
+                        {row.status === "completed" ? (
+                          <>
+                            <CheckCircle2 className="h-3 w-3 mr-1" />
+                            Done
+                          </>
+                        ) : (
+                          <>
+                            <Circle className="h-3 w-3 mr-1" />
+                            To Do
+                          </>
+                        )}
+                      </Badge>
                       {row.status === "completed" ? (
-                        <>
-                          <CheckCircle2 className="h-3 w-3 mr-1" />
-                          Done
-                        </>
-                      ) : (
-                        <>
-                          <Circle className="h-3 w-3 mr-1" />
-                          To Do
-                        </>
-                      )}
-                    </Badge>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() =>
+                            navigate("/worksheets", {
+                              state: {
+                                reviewAssignment: row,
+                              } satisfies WorksheetsLocationState,
+                            })
+                          }
+                        >
+                          <Eye className="h-3 w-3 mr-1" />
+                          Review
+                        </Button>
+                      ) : null}
+                    </div>
                   </li>
                 ))}
               </ul>

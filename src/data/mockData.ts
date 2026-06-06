@@ -164,23 +164,6 @@ const rawQuestions: Question[] = [
     createdAt: '2024-01-15T10:05:00Z'
   },
   {
-    id: 'q7',
-    subject: 'MATH',
-    subtype: 'MC4_A-D',
-    difficulty: scoreBandToDifficulty(8),
-    stem: 'The system of equations 2x + 3y = 12 and 4x - y = 10 has a solution (x, y). What is the value of x + y?',
-    choices: [
-      { id: 'q7-a', label: 'A', text: '2', isCorrect: false },
-      { id: 'q7-b', label: 'B', text: '4', isCorrect: true },
-      { id: 'q7-c', label: 'C', text: '6', isCorrect: false },
-      { id: 'q7-d', label: 'D', text: '8', isCorrect: false },
-    ],
-    tags: [tag('ALG-SYS')],
-    timeToSolve: 240,
-    userAttempted: false,
-    createdAt: '2024-01-15T10:06:00Z'
-  },
-  {
     id: 'q8',
     subject: 'MATH',
     subtype: 'MC4_E-H',
@@ -346,39 +329,6 @@ const rawQuestions: Question[] = [
     timeToSolve: 120,
     userAttempted: false,
     createdAt: '2024-01-15T10:15:00Z'
-  },
-  {
-    id: 'q17',
-    subject: 'MATH',
-    subtype: 'INDY-CGT',
-    difficulty: scoreBandToDifficulty(3),
-    stem: 'The table shows the number of books read by four students last month. Which student read the greatest number of books?',
-    cgt: {
-      visual: {
-        type: 'table',
-        caption: 'Books read by student',
-        headers: ['Student', 'Books read'],
-        rows: [
-          ['Ana', '7'],
-          ['Ben', '5'],
-          ['Chen', '9'],
-          ['Dana', '4'],
-        ],
-      },
-      sourceNote: 'Each student read only whole books.',
-      solutionExplanation:
-        'Compare the numbers in the second column: 9 is the greatest value, so Chen read the most books.',
-    },
-    choices: [
-      { id: 'q17-a', label: 'A', text: 'Ana', isCorrect: false },
-      { id: 'q17-b', label: 'B', text: 'Ben', isCorrect: false },
-      { id: 'q17-c', label: 'C', text: 'Chen', isCorrect: true },
-      { id: 'q17-d', label: 'D', text: 'Dana', isCorrect: false },
-    ],
-    tags: [tag('DAT-GR')],
-    timeToSolve: 90,
-    userAttempted: false,
-    createdAt: '2024-01-15T10:16:00Z'
   },
   {
     id: 'q18',

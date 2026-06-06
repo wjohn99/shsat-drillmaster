@@ -48,8 +48,10 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      allow read: if isOwner(userId)
-        || (isTutor() && resource.data.role == 'student');
+      allow read: if isOwner(userId);
+
+      // Tutors loading the student roster (query must filter role == 'student').
+      allow read: if isTutor() && resource.data.role == 'student';
 
       allow create: if isOwner(userId) && isValidUserWrite(userId);
 
@@ -76,7 +78,19 @@ service cloud.firestore {
         && request.resource.data.assignedToStudentUid is string
         && request.resource.data.questionIds is list
         && request.resource.data.questionIds.size() > 0
-        && request.resource.data.status == 'todo';
+        && request.resource.data.status == 'todo'
+        && request.resource.data.dueAt is timestamp;
+
+      // Tutor links assignment to a workspace card after create.
+      allow update: if isTutor()
+        && resource.data.tutorUid == request.auth.uid
+        && request.resource.data.tutorUid == resource.data.tutorUid
+        && request.resource.data.assignedToStudentUid == resource.data.assignedToStudentUid
+        && request.resource.data.questionIds == resource.data.questionIds
+        && request.resource.data.status == resource.data.status
+        && request.resource.data.dueAt == resource.data.dueAt
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['workspaceCardId']);
 
       allow update: if isSignedIn()
         && resource.data.assignedToStudentUid == request.auth.uid
@@ -87,6 +101,117 @@ service cloud.firestore {
         && request.resource.data.questionIds == resource.data.questionIds
         && request.resource.data.diff(resource.data).affectedKeys()
             .hasOnly(['status', 'completedAt']);
+    }
+
+    function workspaceBoardIdMatchesStudent(boardId) {
+      return isSignedIn() && boardId == request.auth.uid;
+    }
+
+    function canAccessWorkspaceBoard(boardId) {
+      return isTutor()
+        || workspaceBoardIdMatchesStudent(boardId);
+    }
+
+    function workspaceBoardNotDeleted() {
+      return resource == null
+        || !('deletedAt' in resource.data)
+        || resource.data.deletedAt == null;
+    }
+
+    match /workspace_boards/{boardId} {
+      // Tutors: list all boards, or get a board that does not exist yet (resource == null).
+      allow read: if isTutor() && workspaceBoardNotDeleted();
+
+      // Students: only their own existing board.
+      allow read: if resource != null
+        && workspaceBoardIdMatchesStudent(boardId)
+        && resource.data.studentUid == request.auth.uid
+        && workspaceBoardNotDeleted();
+
+      allow create: if isTutor()
+        && request.resource.data.studentUid == boardId
+        && request.resource.data.createdByUid == request.auth.uid
+        && request.resource.data.studentName is string
+        && request.resource.data.studentEmail is string
+        && !('deletedAt' in request.resource.data);
+
+      allow update: if isTutor()
+        && request.resource.data.studentUid == resource.data.studentUid
+        && request.resource.data.createdByUid == resource.data.createdByUid
+        && request.resource.data.createdAt == resource.data.createdAt;
+
+      allow delete: if false;
+
+      match /lists/{listId} {
+        allow read: if canAccessWorkspaceBoard(boardId);
+        allow create, update: if isTutor();
+        allow delete: if false;
+      }
+
+      match /cards/{cardId} {
+        allow read: if canAccessWorkspaceBoard(boardId);
+        allow create, update: if isTutor();
+        allow delete: if false;
+
+        match /attachments/{attachmentId} {
+          allow read: if canAccessWorkspaceBoard(boardId)
+            && (!('deletedAt' in resource.data) || resource.data.deletedAt == null);
+
+          allow create: if isTutor()
+            && request.resource.data.uploadedByUid == request.auth.uid
+            && request.resource.data.fileName is string
+            && !('deletedAt' in request.resource.data)
+            && (!('dueAt' in request.resource.data) || request.resource.data.dueAt is timestamp)
+            && (
+              (request.resource.data.kind == 'link'
+                && request.resource.data.externalUrl is string
+                && request.resource.data.externalUrl.size() > 0)
+              || (request.resource.data.kind == 'file'
+                && request.resource.data.storagePath is string)
+            );
+
+          allow update: if isTutor()
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['deletedAt']);
+
+          allow delete: if false;
+
+          match /submissions/{submissionId} {
+            allow read: if canAccessWorkspaceBoard(boardId);
+
+            allow create: if workspaceBoardIdMatchesStudent(boardId)
+              && request.resource.data.submittedByUid == request.auth.uid
+              && request.resource.data.submissionUrl is string
+              && request.resource.data.submissionUrl.size() > 0
+              && request.resource.data.submittedByName is string;
+
+            allow update, delete: if false;
+          }
+        }
+
+        match /comments/{commentId} {
+          allow read: if canAccessWorkspaceBoard(boardId)
+            && (!('deletedAt' in resource.data) || resource.data.deletedAt == null);
+
+          allow create: if canAccessWorkspaceBoard(boardId)
+            && request.resource.data.authorUid == request.auth.uid
+            && request.resource.data.body is string
+            && request.resource.data.body.size() > 0
+            && !('deletedAt' in request.resource.data);
+
+          allow update: if isTutor()
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['deletedAt']);
+
+          allow delete: if false;
+        }
+
+        match /activity/{activityId} {
+          allow read: if canAccessWorkspaceBoard(boardId);
+          allow create: if canAccessWorkspaceBoard(boardId)
+            && request.resource.data.actorUid == request.auth.uid
+            && request.resource.data.message is string;
+          allow update, delete: if false;
+        }
+      }
     }
 
     match /practice_sessions/{sessionId} {
