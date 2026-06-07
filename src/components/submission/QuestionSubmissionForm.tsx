@@ -86,7 +86,7 @@ const emptyForm = {
   module: "" as QuestionModule | "",
   type: "" as QuestionSubmissionType | "",
   format: "INDY-MCQ" as QuestionFormatCode,
-  skillTagCode: "",
+  skillTagCodes: [] as string[],
   author: "",
   passageId: "",
   question: "",
@@ -150,7 +150,7 @@ export function QuestionSubmissionForm() {
       ...prev,
       section,
       type: "",
-      skillTagCode: "",
+      skillTagCodes: [],
     }));
     setError(null);
     setSuccess(null);
@@ -160,7 +160,7 @@ export function QuestionSubmissionForm() {
     setForm((prev) => ({
       ...prev,
       type,
-      skillTagCode: "",
+      skillTagCodes: [],
     }));
     setError(null);
     setSuccess(null);
@@ -180,15 +180,31 @@ export function QuestionSubmissionForm() {
     setSuccess(null);
   };
 
+  const toggleSkillTag = (code: string) => {
+    setForm((prev) => ({
+      ...prev,
+      skillTagCodes: prev.skillTagCodes.includes(code)
+        ? prev.skillTagCodes.filter((entry) => entry !== code)
+        : [...prev.skillTagCodes, code],
+    }));
+    setError(null);
+    setSuccess(null);
+  };
+
   const validate = (): string | null => {
     if (!form.section) return "Select a section.";
     if (!form.module) return "Select a module.";
     if (!form.type) return "Select a question type.";
     if (!form.format) return "Select a question format.";
-    if (!form.skillTagCode) return "Select a skill tag.";
+    if (form.skillTagCodes.length === 0) return "Select at least one skill tag.";
     if (!form.author.trim()) return "Enter your name.";
     if (!form.question.trim()) return "Enter the question or passage.";
     if (!form.explanation.trim()) return "Enter a step-by-step explanation.";
+    if (!form.commonTrap.trim()) return "Enter the common trap.";
+
+    if (form.type === "RC" && !form.passageId.trim()) {
+      return "Enter a Passage ID for Reading Comprehension questions.";
+    }
 
     if (choicesRequired) {
       if (!form.choiceA.trim() || !form.choiceB.trim() || !form.choiceC.trim() || !form.choiceD.trim()) {
@@ -231,7 +247,7 @@ export function QuestionSubmissionForm() {
         module: form.module as QuestionModule,
         type: form.type as QuestionSubmissionType,
         format: form.format,
-        skillTagCode: form.skillTagCode,
+        skillTagCodes: form.skillTagCodes,
         author: form.author,
         passageId: form.passageId,
         question: form.question,
@@ -248,7 +264,7 @@ export function QuestionSubmissionForm() {
 
       setSuccess(
         result.pending
-          ? "Submitted for review! Your question was sent to the tracker — refresh the sheet to see the assigned Question ID."
+          ? "Submitted for review! Refresh the Google Sheet to confirm the new row appeared. If nothing shows up, redeploy the Apps Script (see scripts/question-submission-sheet.gs)."
           : `Submitted! Question ID: ${result.questionId}. It has been added to the question bank tracker for review.`,
       );
       setForm({
@@ -256,9 +272,9 @@ export function QuestionSubmissionForm() {
         author: profile.displayName || "",
         section: form.section as Subject,
         module: form.module as QuestionModule,
+        type: form.type as QuestionSubmissionType,
         format: form.format,
       });
-      setPreviewId(null);
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Failed to submit question.";
@@ -317,53 +333,60 @@ export function QuestionSubmissionForm() {
           </div>
         </div>
 
-        <div className="mb-5 grid gap-3 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="question-type" className="text-xs uppercase tracking-wide text-muted-foreground">
-              Question type
-            </Label>
-            <Select
-              value={form.type || undefined}
-              onValueChange={(value) => handleTypeChange(value as QuestionSubmissionType)}
-              disabled={!form.section}
-            >
-              <SelectTrigger id="question-type">
-                <SelectValue placeholder={form.section ? "Select type" : "Select section first"} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>{form.section === "MATH" ? "Math" : "ELA"}</SelectLabel>
-                  {typeOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="skill-tag" className="text-xs uppercase tracking-wide text-muted-foreground">
-              Skill Tag
-            </Label>
-            <Select
-              value={form.skillTagCode || undefined}
-              onValueChange={(value) => updateField("skillTagCode", value)}
-              disabled={!form.type}
-            >
-              <SelectTrigger id="skill-tag">
-                <SelectValue placeholder={form.type ? "Select skill" : "Select type first"} />
-              </SelectTrigger>
-              <SelectContent>
-                {skillOptions.map((option) => (
-                  <SelectItem key={option.code} value={option.code}>
+        <div className="mb-5 space-y-2">
+          <Label htmlFor="question-type" className="text-xs uppercase tracking-wide text-muted-foreground">
+            Question type
+          </Label>
+          <Select
+            value={form.type || undefined}
+            onValueChange={(value) => handleTypeChange(value as QuestionSubmissionType)}
+            disabled={!form.section}
+          >
+            <SelectTrigger id="question-type">
+              <SelectValue placeholder={form.section ? "Select type" : "Select section first"} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>{form.section === "MATH" ? "Math" : "ELA"}</SelectLabel>
+                {typeOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
                     {option.label}
                   </SelectItem>
                 ))}
-              </SelectContent>
-            </Select>
-          </div>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="mb-5 space-y-2">
+          <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+            Skill Tags
+          </Label>
+          <p className="text-xs text-muted-foreground">Select all that apply.</p>
+          {!form.type ? (
+            <p className="text-sm text-muted-foreground">Select a question type first.</p>
+          ) : (
+            <div className="flex flex-wrap gap-1.5">
+              {skillOptions.map((option) => {
+                const active = form.skillTagCodes.includes(option.code);
+                return (
+                  <button
+                    key={option.code}
+                    type="button"
+                    onClick={() => toggleSkillTag(option.code)}
+                    className={cn(
+                      "inline-flex items-center rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
+                      active
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border bg-background text-muted-foreground hover:bg-muted",
+                    )}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         <div className="mb-5 space-y-2">
@@ -402,7 +425,10 @@ export function QuestionSubmissionForm() {
 
           <div className="space-y-2">
             <Label htmlFor="passage-id" className="text-xs uppercase tracking-wide text-muted-foreground">
-              Passage ID <span className="font-normal normal-case text-muted-foreground">(optional)</span>
+              Passage ID
+              {form.type !== "RC" && (
+                <span className="font-normal normal-case text-muted-foreground"> (optional)</span>
+              )}
             </Label>
             <Input
               id="passage-id"
@@ -533,7 +559,7 @@ export function QuestionSubmissionForm() {
 
         <div className="mb-5 space-y-2">
           <Label htmlFor="common-trap" className="text-xs uppercase tracking-wide text-muted-foreground">
-            Common Trap <span className="font-normal normal-case text-muted-foreground">(optional)</span>
+            Common Trap
           </Label>
           <Textarea
             id="common-trap"

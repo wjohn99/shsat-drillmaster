@@ -46,8 +46,8 @@ export interface QuestionTypeOption {
 
 export const QUESTION_TYPE_OPTIONS: QuestionTypeOption[] = [
   { value: "RC", label: "Reading Comprehension", section: "ELA", categoryId: "rc" },
-  { value: "RE", label: "Revising/Editing Part A", section: "ELA", categoryId: "re" },
-  { value: "REB", label: "Revising/Editing Part B", section: "ELA", categoryId: "re" },
+  { value: "RE", label: "Revising/Editing Part A (passage)", section: "ELA", categoryId: "re" },
+  { value: "REB", label: "Revising/Editing Part B (standalone)", section: "ELA", categoryId: "re" },
   { value: "ALG", label: "Algebra", section: "MATH", categoryId: "alg" },
   { value: "GEO", label: "Geometry", section: "MATH", categoryId: "geo" },
   { value: "NUM", label: "Number Properties", section: "MATH", categoryId: "num" },

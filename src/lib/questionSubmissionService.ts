@@ -21,7 +21,7 @@ function buildSubmissionPayload(input: QuestionSubmissionInput): QuestionSubmiss
     author: input.author.trim(),
     section: formatSectionForSheet(input.section),
     module: formatModuleForSheet(input.module),
-    skillTag: getTagLabel(input.skillTagCode),
+    skillTag: input.skillTagCodes.map(getTagLabel).join("; "),
     format: getTagLabel(input.format),
     question: input.question.trim(),
     choiceA: input.choiceA.trim(),
@@ -53,37 +53,27 @@ function parseSheetResponse(text: string): QuestionSubmissionResult {
 async function postToSheet(body: string): Promise<QuestionSubmissionResult> {
   const url = SHEET_WEBHOOK_URL!.trim();
 
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      redirect: "follow",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body,
-    });
+  // text/plain avoids CORS preflight; GAS reads e.postData.contents as JSON.
+  const response = await fetch(url, {
+    method: "POST",
+    redirect: "follow",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body,
+  });
 
-    const text = await response.text();
+  const text = await response.text();
 
-    if (!response.ok) {
-      throw new Error(`Submission failed (${response.status}). Please try again.`);
-    }
-
+  // GAS may return JSON on success, or HTML if the redirect chain breaks.
+  if (text.trim().startsWith("{")) {
     return parseSheetResponse(text);
-  } catch (error) {
-    // GAS web apps often block reading the response (CORS). The row may still
-    // have been written — retry with no-cors so the POST at least reaches the sheet.
-    if (error instanceof TypeError || error instanceof SyntaxError) {
-      await fetch(url, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body,
-      });
-
-      return { questionId: "", pending: true };
-    }
-
-    throw error;
   }
+
+  if (!response.ok) {
+    throw new Error(`Submission failed (${response.status}). Please try again.`);
+  }
+
+  // Redirect succeeded but response body wasn't JSON — row may still have been written.
+  return { questionId: "", pending: true };
 }
 
 export async function submitQuestion(
@@ -96,7 +86,17 @@ export async function submitQuestion(
   }
 
   const payload = buildSubmissionPayload(input);
-  return postToSheet(JSON.stringify(payload));
+
+  try {
+    return await postToSheet(JSON.stringify(payload));
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new Error(
+        "Could not reach the question bank tracker. Confirm the Apps Script is deployed, SPREADSHEET_ID is set, and you redeployed after the latest script update.",
+      );
+    }
+    throw error;
+  }
 }
 
 export function isSheetExportConfigured(): boolean {

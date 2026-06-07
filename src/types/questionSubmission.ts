@@ -32,7 +32,7 @@ export interface QuestionSubmissionInput {
   module: QuestionModule;
   type: QuestionSubmissionType;
   format: QuestionFormatCode;
-  skillTagCode: string;
+  skillTagCodes: string[];
   author: string;
   passageId: string;
   question: string;

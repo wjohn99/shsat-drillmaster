@@ -51,6 +51,7 @@ export const TAG_CATEGORIES: TagCategory[] = [
     tags: [
       { code: 'RE-WC', label: 'Word Choice' },
       { code: 'RE-SEN', label: 'Sentence Structure' },
+      { code: 'RE-MOD', label: 'Modifier/Construction Error' },
       { code: 'RE-TEN', label: 'Verb Tense Consistency' },
       { code: 'RE-RUN', label: 'Run-on Sentences' },
       { code: 'RE-SVA', label: 'Subject-Verb Agreement' },
