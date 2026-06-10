@@ -35,6 +35,7 @@ export interface QuestionSubmissionInput {
   skillTagCodes: string[];
   author: string;
   passageId: string;
+  passage: string;
   question: string;
   choiceA: string;
   choiceB: string;
@@ -47,26 +48,40 @@ export interface QuestionSubmissionInput {
 
 /**
  * Payload sent to the Google Sheet webhook.
- * Column order: A Question ID (assigned by script) through Q Status.
+ * Maps to columns B–R (A Question ID is assigned by Apps Script).
+ * S Error and T Suggested Change are manual-only — not written by the form.
  */
 export interface QuestionSubmissionPayload {
-  /** Used for Question ID generation only — not written to a column. */
+  /** D Type — RC, RE, REB, ALG, etc. Also used for Question ID generation. */
   type: QuestionSubmissionType;
+  /** B Passage ID */
   passageId: string;
+  /** C Author */
   author: string;
-  section: string;
+  /** E Module */
   module: string;
+  /** F Skill Tag — canonical codes, e.g. RC-INF; RE-SEN */
   skillTag: string;
+  /** G Format */
   format: string;
+  /** H Passage */
+  passage: string;
+  /** I Question */
   question: string;
+  /** J–M Choice A–D */
   choiceA: string;
   choiceB: string;
   choiceC: string;
   choiceD: string;
+  /** N Correct Answer */
   correctAnswer: string;
+  /** O Explanation */
   explanation: string;
+  /** P Common Trap */
   commonTrap: string;
+  /** Q Reviewer — always blank from form */
   reviewer: string;
+  /** R Status */
   status: QuestionSubmissionStatus;
 }
 

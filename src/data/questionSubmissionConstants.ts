@@ -102,3 +102,8 @@ export function formatSectionForSheet(section: Subject): string {
 export function formatModuleForSheet(module: QuestionModule): string {
   return module === "2" ? "Module 2" : "Module 1";
 }
+
+/** ELA types with a shared passage separate from the question stem. */
+export function isPassageBasedType(type: QuestionSubmissionType): boolean {
+  return type === "RC" || type === "RE";
+}

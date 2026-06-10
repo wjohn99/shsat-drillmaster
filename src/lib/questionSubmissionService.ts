@@ -1,8 +1,9 @@
 import { getTagLabel } from "@/data/taggingScheme";
 import {
   formatModuleForSheet,
-  formatSectionForSheet,
+  isPassageBasedType,
 } from "@/data/questionSubmissionConstants";
+import { savePassage } from "@/lib/passageLibrary";
 import type {
   QuestionSubmissionInput,
   QuestionSubmissionPayload,
@@ -19,10 +20,10 @@ function buildSubmissionPayload(input: QuestionSubmissionInput): QuestionSubmiss
     type: input.type,
     passageId: input.passageId.trim(),
     author: input.author.trim(),
-    section: formatSectionForSheet(input.section),
     module: formatModuleForSheet(input.module),
-    skillTag: input.skillTagCodes.map(getTagLabel).join("; "),
+    skillTag: input.skillTagCodes.join("; "),
     format: getTagLabel(input.format),
+    passage: isPassageBasedType(input.type) ? input.passage.trim() : "",
     question: input.question.trim(),
     choiceA: input.choiceA.trim(),
     choiceB: input.choiceB.trim(),
@@ -83,6 +84,10 @@ export async function submitQuestion(
     throw new Error(
       "The question bank tracker is not linked yet. Submissions are not available until the Google Sheet is configured.",
     );
+  }
+
+  if (isPassageBasedType(input.type)) {
+    savePassage(input.passageId, input.passage);
   }
 
   const payload = buildSubmissionPayload(input);

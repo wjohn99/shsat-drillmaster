@@ -21,9 +21,12 @@ import {
   getFormatAnswerMode,
   getSkillOptionsForType,
   getTypesForSection,
+  isPassageBasedType,
   MODULE_OPTIONS,
   SECTION_OPTIONS,
 } from "@/data/questionSubmissionConstants";
+import { PassageIdCombobox } from "@/components/submission/PassageIdCombobox";
+import { getPassageText, listPassageIds } from "@/lib/passageLibrary";
 import {
   isSheetExportConfigured,
   submitQuestion,
@@ -89,6 +92,7 @@ const emptyForm = {
   skillTagCodes: [] as string[],
   author: "",
   passageId: "",
+  passage: "",
   question: "",
   choiceA: "",
   choiceB: "",
@@ -107,7 +111,9 @@ export function QuestionSubmissionForm() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [previewId, setPreviewId] = useState<string | null>(null);
+  const [passageIds, setPassageIds] = useState<string[]>(() => listPassageIds());
 
+  const isPassageBased = form.type ? isPassageBasedType(form.type) : false;
   const answerMode = getFormatAnswerMode(form.format);
   const showChoices = formatRequiresChoices(form.format) || formatChoicesOptional(form.format);
   const choicesRequired = formatRequiresChoices(form.format);
@@ -161,6 +167,19 @@ export function QuestionSubmissionForm() {
       ...prev,
       type,
       skillTagCodes: [],
+      passageId: isPassageBasedType(type) ? prev.passageId : "",
+      passage: isPassageBasedType(type) ? prev.passage : "",
+    }));
+    setError(null);
+    setSuccess(null);
+  };
+
+  const handlePassageIdChange = (value: string) => {
+    const stored = getPassageText(value);
+    setForm((prev) => ({
+      ...prev,
+      passageId: value,
+      passage: stored ?? prev.passage,
     }));
     setError(null);
     setSuccess(null);
@@ -198,12 +217,15 @@ export function QuestionSubmissionForm() {
     if (!form.format) return "Select a question format.";
     if (form.skillTagCodes.length === 0) return "Select at least one skill tag.";
     if (!form.author.trim()) return "Enter your name.";
-    if (!form.question.trim()) return "Enter the question or passage.";
     if (!form.explanation.trim()) return "Enter a step-by-step explanation.";
     if (!form.commonTrap.trim()) return "Enter the common trap.";
 
-    if (form.type === "RC" && !form.passageId.trim()) {
-      return "Enter a Passage ID for Reading Comprehension questions.";
+    if (isPassageBased) {
+      if (!form.passageId.trim()) return "Enter or select a Passage ID.";
+      if (!form.passage.trim()) return "Enter the passage text.";
+      if (!form.question.trim()) return "Enter the question stem.";
+    } else if (!form.question.trim()) {
+      return "Enter the question.";
     }
 
     if (choicesRequired) {
@@ -250,6 +272,7 @@ export function QuestionSubmissionForm() {
         skillTagCodes: form.skillTagCodes,
         author: form.author,
         passageId: form.passageId,
+        passage: form.passage,
         question: form.question,
         choiceA: form.choiceA,
         choiceB: form.choiceB,
@@ -261,6 +284,10 @@ export function QuestionSubmissionForm() {
       };
 
       const result = await submitQuestion(input);
+
+      if (isPassageBased) {
+        setPassageIds(listPassageIds());
+      }
 
       setSuccess(
         result.pending
@@ -373,15 +400,16 @@ export function QuestionSubmissionForm() {
                   <button
                     key={option.code}
                     type="button"
+                    title={option.label}
                     onClick={() => toggleSkillTag(option.code)}
                     className={cn(
-                      "inline-flex items-center rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
+                      "inline-flex items-center rounded-full border px-3 py-1.5 font-mono text-xs font-medium transition-colors",
                       active
                         ? "border-primary bg-primary/10 text-primary"
                         : "border-border bg-background text-muted-foreground hover:bg-muted",
                     )}
                   >
-                    {option.label}
+                    {option.code}
                   </button>
                 );
               })}
@@ -410,33 +438,16 @@ export function QuestionSubmissionForm() {
           </Select>
         </div>
 
-        <div className="mb-5 grid gap-3 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="author" className="text-xs uppercase tracking-wide text-muted-foreground">
-              Author
-            </Label>
-            <Input
-              id="author"
-              value={form.author}
-              onChange={(event) => updateField("author", event.target.value)}
-              placeholder="Your name"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="passage-id" className="text-xs uppercase tracking-wide text-muted-foreground">
-              Passage ID
-              {form.type !== "RC" && (
-                <span className="font-normal normal-case text-muted-foreground"> (optional)</span>
-              )}
-            </Label>
-            <Input
-              id="passage-id"
-              value={form.passageId}
-              onChange={(event) => updateField("passageId", event.target.value)}
-              placeholder="e.g. RE-PASS-001"
-            />
-          </div>
+        <div className="mb-5 space-y-2">
+          <Label htmlFor="author" className="text-xs uppercase tracking-wide text-muted-foreground">
+            Author
+          </Label>
+          <Input
+            id="author"
+            value={form.author}
+            onChange={(event) => updateField("author", event.target.value)}
+            placeholder="Your name"
+          />
         </div>
 
         <p className="mb-5 min-h-4 font-mono text-[11px] text-muted-foreground">
@@ -451,16 +462,52 @@ export function QuestionSubmissionForm() {
           Question content
         </p>
 
+        {isPassageBased && (
+          <>
+            <div className="mb-5 space-y-2">
+              <Label htmlFor="passage-id" className="text-xs uppercase tracking-wide text-muted-foreground">
+                Passage ID
+              </Label>
+              <p className="text-xs text-muted-foreground">
+                Select a saved passage or type a new ID. New passages are saved for reuse on this device.
+              </p>
+              <PassageIdCombobox
+                value={form.passageId}
+                options={passageIds}
+                onChange={handlePassageIdChange}
+                placeholder="e.g. RC-PASS-001"
+              />
+            </div>
+
+            <div className="mb-5 space-y-2">
+              <Label htmlFor="passage" className="text-xs uppercase tracking-wide text-muted-foreground">
+                Passage
+              </Label>
+              <Textarea
+                id="passage"
+                rows={6}
+                value={form.passage}
+                onChange={(event) => updateField("passage", event.target.value)}
+                placeholder="Paste the reading passage here."
+              />
+            </div>
+          </>
+        )}
+
         <div className="mb-5 space-y-2">
           <Label htmlFor="question" className="text-xs uppercase tracking-wide text-muted-foreground">
-            Question / passage
+            Question
           </Label>
           <Textarea
             id="question"
-            rows={5}
+            rows={isPassageBased ? 3 : 5}
             value={form.question}
             onChange={(event) => updateField("question", event.target.value)}
-            placeholder="Type the question stem here, or paste the reading passage."
+            placeholder={
+              isPassageBased
+                ? "Enter the question stem (without the passage)."
+                : "Type the question stem here."
+            }
           />
         </div>
 

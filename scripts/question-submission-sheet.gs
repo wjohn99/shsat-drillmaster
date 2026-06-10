@@ -13,36 +13,60 @@
  *   https://docs.google.com/spreadsheets/d/PASTE_THIS_PART/edit
  *
  * DEBUG: Run testWrite() from the Apps Script editor to verify sheet access.
+ *
+ * Column layout (must match tracker template v4):
+ * A Question ID      — auto
+ * B Passage ID       — form
+ * C Author           — form
+ * D Type             — form (RC, RE, REB, ALG, etc.)
+ * E Module           — form
+ * F Skill Tag        — form (canonical codes, e.g. RC-INF; RE-SEN)
+ * G Format           — form
+ * H Passage          — form (RC / RE Part A only)
+ * I Question         — form
+ * J Choice A         — form
+ * K Choice B         — form
+ * L Choice C         — form
+ * M Choice D         — form
+ * N Correct Answer   — form
+ * O Explanation      — form
+ * P Common Trap      — form
+ * Q Reviewer         — manual (left blank)
+ * R Status           — form (default "In Review")
+ * S Error            — manual
+ * T Suggested Change — manual
  */
 
 const SPREADSHEET_ID = ""; // Required — paste your spreadsheet ID here
 const SHEET_NAME = "SHSAT Question Bank Tracker";
 const DATA_START_ROW = 2; // Row 1 is the header
+const SUBMISSION_COLUMN_COUNT = 18; // A through R — do not include manual S/T columns
 
 function doPost(e) {
   try {
     const payload = parsePayload_(e);
     const sheet = getSheet_();
-    const questionId = allocateQuestionId_(sheet, payload.section, payload.type);
+    const questionId = allocateQuestionId_(sheet, payload.type);
 
     writeSubmissionRow_(sheet, [
-      questionId,
-      payload.passageId || "",
-      payload.author || "",
-      payload.section || "",
-      payload.module || "",
-      payload.skillTag || "",
-      payload.format || "",
-      payload.question || "",
-      payload.choiceA || "",
-      payload.choiceB || "",
-      payload.choiceC || "",
-      payload.choiceD || "",
-      payload.correctAnswer || "",
-      payload.explanation || "",
-      payload.commonTrap || "",
-      "",
-      payload.status || "In Review",
+      questionId,                        // A Question ID
+      payload.passageId || "",           // B Passage ID
+      payload.author || "",              // C Author
+      payload.type || "",                // D Type
+      payload.module || "",              // E Module
+      payload.skillTag || "",            // F Skill Tag
+      payload.format || "",              // G Format
+      payload.passage || "",             // H Passage
+      payload.question || "",            // I Question
+      payload.choiceA || "",             // J Choice A
+      payload.choiceB || "",             // K Choice B
+      payload.choiceC || "",             // L Choice C
+      payload.choiceD || "",             // M Choice D
+      payload.correctAnswer || "",       // N Correct Answer
+      payload.explanation || "",         // O Explanation
+      payload.commonTrap || "",          // P Common Trap
+      "",                                // Q Reviewer
+      payload.status || "In Review",     // R Status
     ]);
 
     return ContentService.createTextOutput(
@@ -76,11 +100,11 @@ function parsePayload_(e) {
   throw new Error("No submission payload received.");
 }
 
-function normalizeIdSection_(section) {
-  var s = String(section || "").toUpperCase();
-  if (s === "MATH") return "MATH";
-  if (s === "ELA") return "ELA";
-  return s || "UNK";
+function sectionForQuestionType_(questionType) {
+  var t = String(questionType || "").toUpperCase();
+  if (t === "RC" || t === "RE" || t === "REB") return "ELA";
+  if (t === "ALG" || t === "GEO" || t === "NUM" || t === "APP" || t === "DAT") return "MATH";
+  return "UNK";
 }
 
 /** First row with a blank Question ID (column A), scanning from the top down. */
@@ -100,14 +124,19 @@ function getNextEmptyRow_(sheet) {
 }
 
 function writeSubmissionRow_(sheet, values) {
+  if (values.length !== SUBMISSION_COLUMN_COUNT) {
+    throw new Error(
+      "Expected " + SUBMISSION_COLUMN_COUNT + " columns (A–R), got " + values.length,
+    );
+  }
   var targetRow = getNextEmptyRow_(sheet);
   sheet.getRange(targetRow, 1, 1, values.length).setValues([values]);
   return targetRow;
 }
 
-function allocateQuestionId_(sheet, section, type) {
-  const idSection = normalizeIdSection_(section);
-  const prefix = idSection + "-" + (type || "UNK") + "-";
+function allocateQuestionId_(sheet, questionType) {
+  const idSection = sectionForQuestionType_(questionType);
+  const prefix = idSection + "-" + (questionType || "UNK") + "-";
   const data = sheet.getDataRange().getValues();
   var max = 0;
 
@@ -173,13 +202,14 @@ function testWrite() {
   const questionId = allocateQuestionId_(sheet, "ELA", "RC");
   var row = writeSubmissionRow_(sheet, [
     questionId,
-    "",
+    "TEST-PASS-001",
     "Apps Script test",
     "ELA",
     "Module 1",
     "Test tag",
     "Multiple Choice Question",
-    "If you see this row, sheet access works.",
+    "Sample passage text for testing.",
+    "What is the main idea?",
     "A",
     "B",
     "C",
