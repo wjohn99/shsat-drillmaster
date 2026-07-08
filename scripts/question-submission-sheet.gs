@@ -41,6 +41,9 @@ const SPREADSHEET_ID = ""; // Required — paste your spreadsheet ID here
 const SHEET_NAME = "SHSAT Question Bank Tracker";
 const DATA_START_ROW = 2; // Row 1 is the header
 const SUBMISSION_COLUMN_COUNT = 18; // A through R — do not include manual S/T columns
+/** J–N: choice A–D + correct answer — force plain text so "12" / "3.5" aren't shown as $12.00. */
+const TEXT_FORMAT_COLUMN_START = 10;
+const TEXT_FORMAT_COLUMN_COUNT = 5;
 
 function doPost(e) {
   try {
@@ -130,7 +133,13 @@ function writeSubmissionRow_(sheet, values) {
     );
   }
   var targetRow = getNextEmptyRow_(sheet);
-  sheet.getRange(targetRow, 1, 1, values.length).setValues([values]);
+  var range = sheet.getRange(targetRow, 1, 1, values.length);
+  // Apply before setValues — inherited Currency format on the tracker template
+  // turns math MC options like "12" or "0.75" into $12.00 / $0.75.
+  sheet
+    .getRange(targetRow, TEXT_FORMAT_COLUMN_START, 1, TEXT_FORMAT_COLUMN_COUNT)
+    .setNumberFormat("@");
+  range.setValues([values]);
   return targetRow;
 }
 
