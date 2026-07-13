@@ -84,6 +84,11 @@ export default {
 				warning: {
 					DEFAULT: 'hsl(var(--warning))',
 					foreground: 'hsl(var(--warning-foreground))'
+				},
+				brand: {
+					cream: 'hsl(var(--brand-cream))',
+					'cream-foreground': 'hsl(var(--brand-cream-foreground))',
+					navy: 'hsl(var(--brand-navy))'
 				}
 			},
 			backgroundImage: {
