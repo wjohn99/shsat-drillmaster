@@ -1,10 +1,10 @@
-import type { Difficulty, Question } from "@/types";
+import type { Question, QuestionModule } from "@/types";
 
 /** Normalized row for session analytics (Blitz, worksheets, etc.). */
 export interface SessionAnalyticsEvent {
   questionId: string;
   subject: Question["subject"];
-  difficulty: Difficulty;
+  module: QuestionModule;
   correct: boolean;
   elapsedSeconds: number;
   tags: string[];

@@ -17,7 +17,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { AuthLink } from "@/components/auth/AuthLink";
-import { questions } from "@/data/mockData";
+import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
+import { useQuestions } from "@/contexts/QuestionsContext";
 import { allTags, isFormatTagCode } from "@/data/taggingScheme";
 import { useHeroParallax } from "@/hooks/useScrollReveal";
 import heroImage from "@/assets/hero-education.jpg";
@@ -33,7 +34,7 @@ const FEATURES: {
     icon: Search,
     title: "Advanced Filtering",
     description:
-      "Find exactly what you need with powerful filters by subject, difficulty, question type, and skill tags.",
+      "Find exactly what you need with powerful filters by subject, module, question type, and skill tags.",
     iconClass: "bg-gradient-math",
   },
   {
@@ -75,6 +76,7 @@ const FEATURES: {
 
 const Index = () => {
   const heroRef = useHeroParallax<HTMLElement>();
+  const { questions } = useQuestions();
   const stats = {
     totalQuestions: questions.length,
     skillsTested: allTags.filter((tag) => !isFormatTagCode(tag.code)).length,
@@ -146,6 +148,7 @@ const Index = () => {
       <div aria-hidden className="section-wave" />
 
       {/* Stats Section */}
+      <QuestionsStatus quiet>
       <section className="bg-brand-navy pt-8 pb-12 md:pt-10 md:pb-16">
         <div className="container px-4">
           <ScrollReveal variant="clip" className="mb-10 text-center md:mb-12">
@@ -174,6 +177,7 @@ const Index = () => {
           </div>
         </div>
       </section>
+      </QuestionsStatus>
 
       {/* Features Section */}
       <section className="bg-background py-24 md:py-32">

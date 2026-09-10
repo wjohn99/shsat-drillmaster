@@ -10,6 +10,7 @@ import {
   getTagLabel,
   isFormatTagCode,
 } from "@/data/taggingScheme";
+import { ModuleBadge } from "@/components/question/ModuleBadge";
 
 interface QuestionCardProps {
   question: Question;
@@ -30,7 +31,7 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
   };
 
   return (
-    <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+    <Card className="group relative flex h-full flex-col overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
       {/* Status indicators */}
       <div className="absolute top-3 right-3 flex gap-1">
         {question.userBookmarked && (
@@ -48,33 +49,14 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
         )}
       </div>
 
-      <CardContent className="p-4">
+      <CardContent className="flex flex-1 flex-col p-4">
         {/* Header */}
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">
             <Chip variant={subjectVariant} size="sm">
               {question.subject}
             </Chip>
-            <div
-              className="flex h-5 items-center justify-center rounded-full px-2 text-[10px] font-bold text-white"
-              style={{
-                backgroundColor:
-                  question.difficulty === 'easy'
-                    ? `hsl(var(--difficulty-easy))`
-                    : question.difficulty === 'medium'
-                      ? `hsl(var(--difficulty-medium))`
-                      : `hsl(var(--difficulty-hard))`,
-              }}
-              title={`Difficulty: ${
-                question.difficulty === 'easy'
-                  ? 'Easy'
-                  : question.difficulty === 'medium'
-                    ? 'Medium'
-                    : 'Hard'
-              }`}
-            >
-              {question.difficulty.toUpperCase()}
-            </div>
+            <ModuleBadge module={question.module} className="h-5 px-2 text-[10px]" />
           </div>
         </div>
 
@@ -117,7 +99,7 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
         </div>
       </CardContent>
 
-      <CardFooter className="p-4 pt-0">
+      <CardFooter className="mt-auto p-4 pt-0">
         <Button asChild size="sm" className="w-full" variant={subjectVariant === 'math' ? 'default' : 'default'}>
           <Link to={`/question/${question.id}?practice=true`}>Practice</Link>
         </Button>

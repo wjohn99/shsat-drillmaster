@@ -7,6 +7,8 @@ export interface WorkspaceBoard {
   studentUid: string;
   studentName: string;
   studentEmail: string;
+  /** Hex accent (e.g. #0ea5e9) — set when the board is created. */
+  color?: string;
   createdByUid: string;
   createdAt: Timestamp;
   archivedAt?: Timestamp | null;
@@ -55,8 +57,9 @@ export interface WorkspaceCardAttachment {
   cardId: string;
   kind: WorkspaceAttachmentKind;
   fileName: string;
-  /** Google Drive, Dropbox, etc. — stored in Firestore only (no Storage billing). */
+  /** External share link (Google Drive, Dropbox, etc.). */
   externalUrl?: string | null;
+  /** Firebase Storage path for uploaded PDFs (`workspace/...`). */
   storagePath?: string | null;
   contentType: string;
   sizeBytes: number;

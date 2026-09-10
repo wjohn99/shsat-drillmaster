@@ -160,14 +160,24 @@ service cloud.firestore {
           allow create: if isTutor()
             && request.resource.data.uploadedByUid == request.auth.uid
             && request.resource.data.fileName is string
+            && request.resource.data.fileName.size() > 0
+            && request.resource.data.fileName.size() <= 200
             && !('deletedAt' in request.resource.data)
             && (!('dueAt' in request.resource.data) || request.resource.data.dueAt is timestamp)
             && (
               (request.resource.data.kind == 'link'
                 && request.resource.data.externalUrl is string
-                && request.resource.data.externalUrl.size() > 0)
+                && request.resource.data.externalUrl.size() > 0
+                && request.resource.data.externalUrl.size() <= 2048)
               || (request.resource.data.kind == 'file'
-                && request.resource.data.storagePath is string)
+                && request.resource.data.storagePath is string
+                && request.resource.data.storagePath.matches(
+                  'workspace/' + boardId + '/cards/' + cardId + '/[A-Za-z0-9._-]+'
+                )
+                && request.resource.data.contentType == 'application/pdf'
+                && request.resource.data.sizeBytes is int
+                && request.resource.data.sizeBytes > 0
+                && request.resource.data.sizeBytes <= 25 * 1024 * 1024)
             );
 
           allow update: if isTutor()

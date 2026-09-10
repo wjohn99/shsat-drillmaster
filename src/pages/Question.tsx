@@ -21,7 +21,11 @@ import {
   Play,
   StopCircle
 } from "lucide-react";
-import { questions, passages } from "@/data/mockData";
+import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
+import { useQuestions } from "@/contexts/QuestionsContext";
+import { ChoiceExplanationLine } from "@/components/question/ChoiceExplanationLine";
+import { ModuleBadge } from "@/components/question/ModuleBadge";
+import { QuestionSolutionPanel } from "@/components/question/QuestionSolutionPanel";
 import { useQuestionBookmarks } from "@/contexts/QuestionBookmarksContext";
 import { toast } from "@/hooks/use-toast";
 import { isAtaAnswerCorrect, isIndyCheckboxMultiSubtype, serializeAtaAnswer } from "@/lib/indyAta";
@@ -54,6 +58,7 @@ import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
 const NOTES_STORAGE_KEY = "question-notes";
 
 export default function Question() {
+  const { questions, passages, getQuestionById, loading } = useQuestions();
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const isPracticeMode = searchParams.get('practice') === 'true';
@@ -72,7 +77,7 @@ export default function Question() {
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(isPracticeMode);
 
-  const question = questions.find(q => q.id === id);
+  const question = id ? getQuestionById(id) : undefined;
   const passage = question?.passageId ? passages.find(p => p.id === question.passageId) : null;
   const currentIndex = question ? questions.findIndex(q => q.id === question.id) : -1;
   const nextQuestion = currentIndex >= 0 && currentIndex < questions.length - 1
@@ -116,6 +121,15 @@ export default function Question() {
 
     return () => clearInterval(interval);
   }, [isTimerRunning]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <QuestionsStatus />
+      </div>
+    );
+  }
 
   if (!question) {
     return (
@@ -322,26 +336,7 @@ export default function Question() {
                     <Badge variant={subjectVariant === 'math' ? 'default' : 'secondary'}>
                       {question.subject}
                     </Badge>
-                    <div
-                      className="flex h-6 items-center justify-center rounded-full px-2 text-xs font-bold text-white"
-                      style={{
-                        backgroundColor:
-                          question.difficulty === 'easy'
-                            ? `hsl(var(--difficulty-easy))`
-                            : question.difficulty === 'medium'
-                              ? `hsl(var(--difficulty-medium))`
-                              : `hsl(var(--difficulty-hard))`,
-                      }}
-                      title={`Difficulty: ${
-                        question.difficulty === 'easy'
-                          ? 'Easy'
-                          : question.difficulty === 'medium'
-                            ? 'Medium'
-                            : 'Hard'
-                      }`}
-                    >
-                      {question.difficulty.toUpperCase()}
-                    </div>
+                    <ModuleBadge module={question.module} />
                     <Badge variant="outline">{question.subtype}</Badge>
                   </div>
                   
@@ -461,29 +456,32 @@ export default function Question() {
                         const showWrongPick = showSolution && checked && !choice.isCorrect;
                         const showMissed = showSolution && !checked && choice.isCorrect;
                         return (
-                          <div key={choice.id} className="flex items-start space-x-3">
-                            <Checkbox
-                              id={choice.id}
-                              checked={checked}
-                              onCheckedChange={() => toggleAtaChoice(choice.id)}
-                              disabled={showSolution}
-                              className="mt-1"
-                            />
-                            <Label
-                              htmlFor={choice.id}
-                              className={`flex-1 cursor-pointer text-sm leading-relaxed ${
-                                showSolution && choice.isCorrect ? "text-success font-medium" : ""
-                              } ${showWrongPick ? "text-destructive" : ""} ${showMissed ? "text-warning" : ""}`}
-                            >
-                              <span className="font-medium mr-2">{choice.label}.</span>
-                              {choice.text}
-                            </Label>
-                            {showSolution && choice.isCorrect && (
-                              <CheckCircle className="h-4 w-4 shrink-0 text-success mt-1" />
-                            )}
-                            {showWrongPick && (
-                              <XCircle className="h-4 w-4 shrink-0 text-destructive mt-1" />
-                            )}
+                          <div key={choice.id} className="space-y-1.5">
+                            <div className="flex items-start space-x-3">
+                              <Checkbox
+                                id={choice.id}
+                                checked={checked}
+                                onCheckedChange={() => toggleAtaChoice(choice.id)}
+                                disabled={showSolution}
+                                className="mt-1"
+                              />
+                              <Label
+                                htmlFor={choice.id}
+                                className={`flex-1 cursor-pointer text-sm leading-relaxed ${
+                                  showSolution && choice.isCorrect ? "text-success font-medium" : ""
+                                } ${showWrongPick ? "text-destructive" : ""} ${showMissed ? "text-warning" : ""}`}
+                              >
+                                <span className="font-medium mr-2">{choice.label}.</span>
+                                {choice.text}
+                              </Label>
+                              {showSolution && choice.isCorrect && (
+                                <CheckCircle className="h-4 w-4 shrink-0 text-success mt-1" />
+                              )}
+                              {showWrongPick && (
+                                <XCircle className="h-4 w-4 shrink-0 text-destructive mt-1" />
+                              )}
+                            </div>
+                            <ChoiceExplanationLine choice={choice} showSolution={showSolution} />
                           </div>
                         );
                       })}
@@ -511,25 +509,28 @@ export default function Question() {
                       disabled={showSolution}
                     >
                       {question.choices.map((choice) => (
-                        <div key={choice.id} className="flex items-start space-x-3">
-                          <RadioGroupItem value={choice.id} id={choice.id} className="mt-1" />
-                          <Label 
-                            htmlFor={choice.id} 
-                            className={`flex-1 cursor-pointer text-sm leading-relaxed ${
-                              showSolution && choice.isCorrect ? 'text-success font-medium' : ''
-                            } ${
-                              showSolution && selectedAnswer === choice.id && !choice.isCorrect ? 'text-destructive' : ''
-                            }`}
-                          >
-                            <span className="font-medium mr-2">{choice.label}.</span>
-                            {choice.text}
-                          </Label>
-                          {showSolution && choice.isCorrect && (
-                            <CheckCircle className="h-4 w-4 text-success mt-1" />
-                          )}
-                          {showSolution && selectedAnswer === choice.id && !choice.isCorrect && (
-                            <XCircle className="h-4 w-4 text-destructive mt-1" />
-                          )}
+                        <div key={choice.id} className="space-y-1.5">
+                          <div className="flex items-start space-x-3">
+                            <RadioGroupItem value={choice.id} id={choice.id} className="mt-1" />
+                            <Label 
+                              htmlFor={choice.id} 
+                              className={`flex-1 cursor-pointer text-sm leading-relaxed ${
+                                showSolution && choice.isCorrect ? 'text-success font-medium' : ''
+                              } ${
+                                showSolution && selectedAnswer === choice.id && !choice.isCorrect ? 'text-destructive' : ''
+                              }`}
+                            >
+                              <span className="font-medium mr-2">{choice.label}.</span>
+                              {choice.text}
+                            </Label>
+                            {showSolution && choice.isCorrect && (
+                              <CheckCircle className="h-4 w-4 text-success mt-1" />
+                            )}
+                            {showSolution && selectedAnswer === choice.id && !choice.isCorrect && (
+                              <XCircle className="h-4 w-4 text-destructive mt-1" />
+                            )}
+                          </div>
+                          <ChoiceExplanationLine choice={choice} showSolution={showSolution} />
                         </div>
                       ))}
                     </RadioGroup>
@@ -585,49 +586,11 @@ export default function Question() {
                   </Button>
                 )}
 
-                {/* Solution */}
                 {showSolution && (
-                  <div className="border-t pt-6">
-                    <h4 className="font-semibold mb-3 flex items-center gap-2">
-                      {isAnswerCorrect() ? (
-                        <CheckCircle className="h-5 w-5 text-success" />
-                      ) : (
-                        <XCircle className="h-5 w-5 text-destructive" />
-                      )}
-                      {isAnswerCorrect() ? 'Correct!' : 'Solution'}
-                    </h4>
-                    <div className="prose prose-sm max-w-none">
-                      <p>
-                        {question.subtype === 'GRID_IN' 
-                          ? "To solve this ratio problem, set up a proportion: 2/3 cup flour : 1/4 cup sugar = 1.5 cups flour : x cups sugar. Cross multiply: (2/3) × x = (1/4) × 1.5. Solving: x = (1/4 × 1.5) ÷ (2/3) = (3/8) ÷ (2/3) = (3/8) × (3/2) = 9/16 cups sugar."
-                          : question.subtype === 'INDY-MS' && question.ms?.solutionExplanation
-                            ? question.ms.solutionExplanation
-                            : question.subtype === 'INDY-MS'
-                              ? "A number is a multiple of 3 if it is divisible by 3 with no remainder: 12, 15, and 18 are multiples of 3; 20 is not. Select A, B, and C only."
-                            : question.subtype === 'INDY-ATA'
-                              ? "Set each factor equal to zero: x − 2 = 0 gives x = 2, and x + 3 = 0 gives x = −3. The correct selections are A and B only."
-                            : question.subtype === 'INDY-DND' && question.dnd?.solutionExplanation
-                              ? question.dnd.solutionExplanation
-                              : question.subtype === 'INDY-DND'
-                                ? "The sum of the four given numbers is 9 + 14 + 7 + 12 = 42. For the mean of five numbers to be 11, the total must be 5 × 11 = 55, so the fifth number is 55 − 42 = 13."
-                              : question.subtype === 'INDY-EE' && question.ee?.solutionExplanation
-                              ? question.ee.solutionExplanation
-                              : question.subtype === 'INDY-CGT' && question.cgt?.solutionExplanation
-                                ? question.cgt.solutionExplanation
-                                : question.subtype === 'INDY-WP' && question.wp?.solutionExplanation
-                                  ? question.wp.solutionExplanation
-                                  : question.subtype === 'INDY-IC' && question.ic?.solutionExplanation
-                                    ? question.ic.solutionExplanation
-                                    : question.subtype === 'INDY-HS' && question.hs?.solutionExplanation
-                                      ? question.hs.solutionExplanation
-                                      : question.subtype === 'INDY-GIF' &&
-                                          question.gif?.solutionExplanation
-                                        ? question.gif.solutionExplanation
-                                        : "This question tests your ability to identify the main cause of urban planning changes during the Industrial Revolution. The passage clearly states that 'rapid urbanization created new challenges' and 'Cities grew exponentially, often without adequate infrastructure to support their populations.'"
-                        }
-                      </p>
-                    </div>
-                  </div>
+                  <QuestionSolutionPanel
+                    question={question}
+                    isCorrect={isAnswerCorrect()}
+                  />
                 )}
 
                 {/* Practice navigation */}

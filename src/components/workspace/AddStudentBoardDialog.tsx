@@ -15,8 +15,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import {
+  DEFAULT_WORKSPACE_BOARD_COLOR,
+  WORKSPACE_BOARD_COLORS,
+} from "@/lib/workspaceBoardColors";
 import { createWorkspaceBoard, fetchStudentsWithoutBoard } from "@/lib/workspaceService";
 import type { StudentOption } from "@/types/assignment";
+import { cn } from "@/lib/utils";
 
 interface AddStudentBoardDialogProps {
   open: boolean;
@@ -33,6 +39,7 @@ export function AddStudentBoardDialog({
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [selectedUid, setSelectedUid] = useState("");
+  const [boardColor, setBoardColor] = useState(DEFAULT_WORKSPACE_BOARD_COLOR);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -43,6 +50,7 @@ export function AddStudentBoardDialog({
       setLoading(true);
       setError(null);
       setSelectedUid("");
+      setBoardColor(DEFAULT_WORKSPACE_BOARD_COLOR);
       try {
         const rows = await fetchStudentsWithoutBoard();
         if (!cancelled) setStudents(rows);
@@ -67,7 +75,7 @@ export function AddStudentBoardDialog({
     setSubmitting(true);
     setError(null);
     try {
-      const boardId = await createWorkspaceBoard(student);
+      const boardId = await createWorkspaceBoard(student, { color: boardColor });
       onCreated(boardId);
       onOpenChange(false);
     } catch (err) {
@@ -112,6 +120,32 @@ export function AddStudentBoardDialog({
                 ))}
               </SelectContent>
             </Select>
+
+            <div className="space-y-2">
+              <Label>Board color</Label>
+              <div className="flex flex-wrap gap-2">
+                {WORKSPACE_BOARD_COLORS.map((swatch) => (
+                  <button
+                    key={swatch.id}
+                    type="button"
+                    title={swatch.label}
+                    aria-label={`${swatch.label} board color`}
+                    aria-pressed={boardColor === swatch.hex}
+                    onClick={() => setBoardColor(swatch.hex)}
+                    className={cn(
+                      "h-8 w-8 rounded-full border-2 transition-transform hover:scale-105",
+                      boardColor === swatch.hex
+                        ? "border-foreground ring-2 ring-offset-2 ring-foreground/30"
+                        : "border-transparent",
+                    )}
+                    style={{ backgroundColor: swatch.hex }}
+                  />
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Helps you spot this student&apos;s board at a glance.
+              </p>
+            </div>
 
             {error ? <p className="text-sm text-destructive">{error}</p> : null}
 

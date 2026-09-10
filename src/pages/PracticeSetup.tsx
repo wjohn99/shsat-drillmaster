@@ -16,21 +16,23 @@ import {
   Brain,
   Target
 } from "lucide-react";
-import { Difficulty, Subject } from "@/types";
-import { getFilteredQuestions } from "@/data/mockData";
+import { QuestionModule, Subject } from "@/types";
+import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
+import { useQuestions } from "@/contexts/QuestionsContext";
+import { moduleBadgeColor, moduleLabel, QUESTION_MODULES } from "@/lib/questionModule";
 import { TAG_CATEGORIES } from "@/data/taggingScheme";
 
 export default function PracticeSetup() {
+  const { getFilteredQuestions } = useQuestions();
   const navigate = useNavigate();
   
   const [selectedSubjects, setSelectedSubjects] = useState<Subject[]>([]);
-  const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
+  const [selectedModules, setSelectedModules] = useState<QuestionModule[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [questionsCount, setQuestionsCount] = useState(20);
   const [timedMode, setTimedMode] = useState(true);
 
   const subjects: Subject[] = ['MATH', 'ELA'];
-  const difficulties: Difficulty[] = ['easy', 'medium', 'hard'];
 
   const toggleArraySelection = <T,>(array: T[], setArray: (arr: T[]) => void, item: T) => {
     if (array.includes(item)) {
@@ -43,7 +45,7 @@ export default function PracticeSetup() {
   const getAvailableQuestions = () => {
     return getFilteredQuestions({
       subjects: selectedSubjects,
-      difficulties: selectedDifficulties,
+      modules: selectedModules,
       tagCodes: selectedTags
     });
   };
@@ -53,7 +55,7 @@ export default function PracticeSetup() {
   const startPractice = () => {
     const params = new URLSearchParams();
     if (selectedSubjects.length > 0) params.set('subjects', selectedSubjects.join(','));
-    if (selectedDifficulties.length > 0) params.set('difficulties', selectedDifficulties.join(','));
+    if (selectedModules.length > 0) params.set('modules', selectedModules.join(','));
     if (selectedTags.length > 0) params.set('tagCodes', selectedTags.join(','));
     params.set('count', questionsCount.toString());
     params.set('timed', timedMode.toString());
@@ -67,7 +69,7 @@ export default function PracticeSetup() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+      <QuestionsStatus>
       <div className="container py-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
@@ -111,38 +113,29 @@ export default function PracticeSetup() {
                 </CardContent>
               </Card>
 
-              {/* Difficulty Selection */}
+              {/* Module Selection */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Difficulty</CardTitle>
+                  <CardTitle>Module</CardTitle>
                   <p className="text-sm text-muted-foreground">
-                    Select easy, medium, and/or hard questions
+                    Filter by SHSAT adaptive module
                   </p>
                 </CardHeader>
                 <CardContent>
                   <div className="flex gap-3">
-                    {difficulties.map((d) => {
-                      const label = d === 'easy' ? 'Easy' : d === 'medium' ? 'Medium' : 'Hard';
-                      const bg =
-                        d === 'easy'
-                          ? `hsl(var(--difficulty-easy))`
-                          : d === 'medium'
-                            ? `hsl(var(--difficulty-medium))`
-                            : `hsl(var(--difficulty-hard))`;
-                      return (
-                        <button
-                          key={d}
-                          onClick={() => toggleArraySelection(selectedDifficulties, setSelectedDifficulties, d)}
-                          className={`
-                            flex-1 h-12 rounded-full text-sm font-bold text-white transition-all
-                            ${selectedDifficulties.includes(d) ? 'ring-2 ring-ring ring-offset-2 scale-[1.02]' : 'hover:opacity-90'}
-                          `}
-                          style={{ backgroundColor: bg }}
-                        >
-                          {label}
-                        </button>
-                      );
-                    })}
+                    {QUESTION_MODULES.map((module) => (
+                      <button
+                        key={module}
+                        onClick={() => toggleArraySelection(selectedModules, setSelectedModules, module)}
+                        className={`
+                          flex-1 h-12 rounded-full text-sm font-bold text-white transition-all
+                          ${selectedModules.includes(module) ? 'ring-2 ring-ring ring-offset-2 scale-[1.02]' : 'hover:opacity-90'}
+                        `}
+                        style={{ backgroundColor: moduleBadgeColor(module) }}
+                      >
+                        {moduleLabel(module)}
+                      </button>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
@@ -313,6 +306,7 @@ export default function PracticeSetup() {
           </div>
         </div>
       </div>
+      </QuestionsStatus>
     </div>
   );
 }

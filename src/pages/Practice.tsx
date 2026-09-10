@@ -22,7 +22,7 @@ const Practice = () => {
       description: 'Adaptive practice with reading passages from various subjects',
       icon: BookOpen,
       color: 'bg-gradient-ela',
-      features: ['8 Different Passages', 'Adaptive Difficulty', 'Instant Feedback'],
+      features: ['8 Different Passages', 'Module 1 & 2 Practice', 'Instant Feedback'],
       estimatedTime: '45-60 min'
     },
     {
@@ -129,7 +129,7 @@ const Practice = () => {
               <div className="h-12 w-12 rounded-full bg-gradient-primary flex items-center justify-center mx-auto mb-4">
                 <Target className="h-6 w-6 text-white" />
               </div>
-              <h3 className="font-semibold mb-2">Personalized Difficulty</h3>
+              <h3 className="font-semibold mb-2">Module-Based Practice</h3>
               <p className="text-sm text-muted-foreground">
                 Questions adapt to your skill level, providing the right challenge at the right time.
               </p>

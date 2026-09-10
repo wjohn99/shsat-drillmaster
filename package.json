@@ -8,6 +8,7 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "deploy": "npm run build && rm -rf docs && mkdir docs && cp -R dist/* docs/",
+    "storage:provision": "node scripts/provision-firebase-storage.mjs drillmaster-cee20 us-central1",
     "lint": "eslint .",
     "preview": "vite preview"
   },

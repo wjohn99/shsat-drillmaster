@@ -6,31 +6,33 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FilterPanel } from "@/components/bank/FilterPanel";
 import { QuestionCard } from "@/components/question/QuestionCard";
-import { getFilteredQuestions, questions } from "@/data/mockData";
+import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
+import { useQuestions } from "@/contexts/QuestionsContext";
 import { applyBookmarksToQuestions } from "@/lib/questionBookmarkService";
 import { useQuestionBookmarks } from "@/contexts/QuestionBookmarksContext";
 import { Grid3X3, List } from "lucide-react";
 
 const QuestionBank = () => {
+  const { questions, getFilteredQuestions } = useQuestions();
   const { bookmarkedIds } = useQuestionBookmarks();
   const [filters, setFilters] = useState<Partial<FilterOptions>>({});
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   const questionsWithBookmarks = useMemo(
     () => applyBookmarksToQuestions(questions, bookmarkedIds),
-    [bookmarkedIds],
+    [questions, bookmarkedIds],
   );
 
   const filteredQuestions = useMemo(() => {
     return getFilteredQuestions(filters, questionsWithBookmarks);
-  }, [filters, questionsWithBookmarks]);
+  }, [filters, questionsWithBookmarks, getFilteredQuestions]);
 
   const subjectCounts = useMemo(
     () => ({
       MATH: questions.filter((q) => q.subject === "MATH").length,
       ELA: questions.filter((q) => q.subject === "ELA").length,
     }),
-    [],
+    [questions],
   );
 
   const handleFiltersChange = useCallback((newFilters: Partial<FilterOptions>) => {
@@ -45,10 +47,9 @@ const QuestionBank = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+      <QuestionsStatus>
       <div className="container py-6">
         <div className="flex gap-6">
-          {/* Sidebar */}
           <div className="w-80 flex-shrink-0">
             <FilterPanel
               totalCount={questions.length}
@@ -58,9 +59,7 @@ const QuestionBank = () => {
             />
           </div>
 
-          {/* Main Content */}
           <div className="flex-1">
-            {/* Toolbar */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <h1 className="text-2xl font-bold">Question Bank</h1>
@@ -87,7 +86,6 @@ const QuestionBank = () => {
               </div>
             </div>
 
-            {/* Questions Grid/List */}
             {filteredQuestions.length > 0 ? (
               <div className={
                 viewMode === 'grid' 
@@ -111,7 +109,6 @@ const QuestionBank = () => {
               </Card>
             )}
 
-            {/* Load More - only show when there are more questions to load (e.g. pagination) */}
             {filteredQuestions.length > 0 && filteredQuestions.length < questions.length && (
               <div className="text-center mt-8">
                 <Button variant="outline">
@@ -122,6 +119,7 @@ const QuestionBank = () => {
           </div>
         </div>
       </div>
+      </QuestionsStatus>
     </div>
   );
 };

@@ -1,6 +1,6 @@
-import type { Subject } from "@/types";
+import type { QuestionModule, Subject } from "@/types";
 
-export type QuestionModule = "1" | "2";
+export type { QuestionModule };
 
 export type QuestionSubmissionType =
   | "RC"

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { LayoutGrid, Loader2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { workspaceBoardAccentColor } from "@/lib/workspaceBoardColors";
 import { fetchAllWorkspaceBoards } from "@/lib/workspaceService";
 import type { WorkspaceBoard } from "@/types/workspace";
 import { AddStudentBoardDialog } from "./AddStudentBoardDialog";
@@ -73,11 +74,21 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
         </Card>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {boards.map((board) => (
+          {boards.map((board) => {
+            const accent = workspaceBoardAccentColor(board.color);
+            return (
             <Link key={board.id} to={`/workspace/${board.id}`}>
-              <Card className="h-full hover:shadow-md hover:border-primary/40 transition-all">
+              <Card className="h-full overflow-hidden hover:shadow-md hover:border-primary/40 transition-all">
+                <div className="h-1.5 w-full" style={{ backgroundColor: accent }} />
                 <CardHeader>
-                  <CardTitle className="text-lg">{board.studentName}</CardTitle>
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span
+                      className="h-3 w-3 shrink-0 rounded-full"
+                      style={{ backgroundColor: accent }}
+                      aria-hidden
+                    />
+                    <CardTitle className="text-lg truncate">{board.studentName}</CardTitle>
+                  </div>
                   {board.studentEmail ? (
                     <p className="text-sm text-muted-foreground truncate">{board.studentEmail}</p>
                   ) : null}
@@ -87,7 +98,8 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
                 </CardContent>
               </Card>
             </Link>
-          ))}
+            );
+          })}
         </div>
       )}
 

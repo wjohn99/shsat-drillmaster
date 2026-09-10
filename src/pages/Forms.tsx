@@ -3,14 +3,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Clock, BookOpen, Play } from "lucide-react";
-import { forms } from "@/data/mockData";
+import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
+import { useQuestions } from "@/contexts/QuestionsContext";
 import { Link } from "react-router-dom";
 
 export default function Forms() {
+  const { forms } = useQuestions();
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+      <QuestionsStatus>
       <div className="container py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Practice Forms</h1>
@@ -67,6 +70,7 @@ export default function Forms() {
           </p>
         </div>
       </div>
+      </QuestionsStatus>
     </div>
   );
 }

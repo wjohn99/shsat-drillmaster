@@ -8,8 +8,11 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, ArrowRight, BookOpen, Flag } from "lucide-react";
-import { passages } from "@/data/mockData";
+import { ArrowLeft, ArrowRight, BookOpen, CheckCircle, Flag, XCircle } from "lucide-react";
+import { useQuestions } from "@/contexts/QuestionsContext";
+import { ChoiceExplanationLine } from "@/components/question/ChoiceExplanationLine";
+import { ModuleBadge } from "@/components/question/ModuleBadge";
+import { QuestionSolutionPanel } from "@/components/question/QuestionSolutionPanel";
 import type { Question } from "@/types";
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
 import { isIndyCheckboxMultiSubtype, parseAtaAnswer, serializeAtaAnswer } from "@/lib/indyAta";
@@ -42,10 +45,12 @@ export function SessionQuestionRunner({
   onComplete,
   storageKeyPrefix,
 }: SessionQuestionRunnerProps) {
+  const { passages } = useQuestions();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [flaggedQuestions, setFlaggedQuestions] = useState<Set<string>>(new Set());
   const [feedback, setFeedback] = useState<null | { correct: boolean }>(null);
+  const [reviewingAnswer, setReviewingAnswer] = useState(false);
 
   const questionStartMsRef = useRef(Date.now());
   const eventsByQuestionId = useRef<Map<string, SessionAnalyticsEvent>>(new Map());
@@ -61,6 +66,7 @@ export function SessionQuestionRunner({
   useEffect(() => {
     questionStartMsRef.current = Date.now();
     setFeedback(null);
+    setReviewingAnswer(false);
   }, [currentQuestionIndex]);
 
   const handleAnswerChange = (questionId: string, answer: string) => {
@@ -86,8 +92,26 @@ export function SessionQuestionRunner({
     setCurrentQuestionIndex(index);
   };
 
+  const advanceAfterReview = () => {
+    const isLast = currentQuestionIndex >= questions.length - 1;
+    if (isLast) {
+      const ordered = questions
+        .map((q) => eventsByQuestionId.current.get(q.id))
+        .filter((e): e is SessionAnalyticsEvent => Boolean(e));
+      onComplete(ordered);
+      return;
+    }
+    setCurrentQuestionIndex((i) => i + 1);
+  };
+
   const recordCurrentAndAdvance = () => {
     if (!currentQuestion) return;
+
+    if (reviewingAnswer) {
+      advanceAfterReview();
+      return;
+    }
+
     const raw = answers[currentQuestion.id];
     if (!canSubmitQuestionAnswer(currentQuestion, raw)) return;
 
@@ -97,26 +121,14 @@ export function SessionQuestionRunner({
     const evt: SessionAnalyticsEvent = {
       questionId: currentQuestion.id,
       subject: currentQuestion.subject,
-      difficulty: currentQuestion.difficulty,
+      module: currentQuestion.module,
       correct,
       elapsedSeconds,
       tags: currentQuestion.tags.map((t) => t.code),
     };
     eventsByQuestionId.current.set(currentQuestion.id, evt);
     setFeedback({ correct });
-
-    const isLast = currentQuestionIndex >= questions.length - 1;
-    window.setTimeout(() => {
-      setFeedback(null);
-      if (isLast) {
-        const ordered = questions
-          .map((q) => eventsByQuestionId.current.get(q.id))
-          .filter((e): e is SessionAnalyticsEvent => Boolean(e));
-        onComplete(ordered);
-      } else {
-        setCurrentQuestionIndex((i) => i + 1);
-      }
-    }, 450);
+    setReviewingAnswer(true);
   };
 
   const prevQuestion = () => {
@@ -149,6 +161,7 @@ export function SessionQuestionRunner({
   }
 
   const raw = answers[currentQuestion.id];
+  const showSolution = reviewingAnswer;
 
   return (
     <div className="min-h-screen bg-background">
@@ -197,20 +210,7 @@ export function SessionQuestionRunner({
                     <Badge variant={currentQuestion.subject === "MATH" ? "default" : "secondary"}>
                       {currentQuestion.subject}
                     </Badge>
-                    <div
-                      className="flex h-6 items-center justify-center rounded-full px-2 text-xs font-bold text-white"
-                      style={{
-                        backgroundColor:
-                          currentQuestion.difficulty === "easy"
-                            ? `hsl(var(--difficulty-easy))`
-                            : currentQuestion.difficulty === "medium"
-                              ? `hsl(var(--difficulty-medium))`
-                              : `hsl(var(--difficulty-hard))`,
-                      }}
-                      title={`Difficulty: ${currentQuestion.difficulty}`}
-                    >
-                      {currentQuestion.difficulty.toUpperCase()}
-                    </div>
+                    <ModuleBadge module={currentQuestion.module} />
                   </div>
                   <div className="text-sm text-muted-foreground">Question #{currentQuestionIndex + 1}</div>
                 </div>
@@ -295,6 +295,8 @@ export function SessionQuestionRunner({
                     spec={currentQuestion.hs}
                     selectedId={raw || null}
                     onSelect={(id) => handleAnswerChange(currentQuestion.id, id)}
+                    disabled={showSolution}
+                    showSolution={showSolution}
                   />
                 )}
                 {currentQuestion.subtype === "INDY-GIF" && currentQuestion.gif?.mode === "plotPoint" && (
@@ -302,6 +304,8 @@ export function SessionQuestionRunner({
                     spec={currentQuestion.gif}
                     value={raw || null}
                     onChange={(s) => handleAnswerChange(currentQuestion.id, s)}
+                    disabled={showSolution}
+                    showSolution={showSolution}
                   />
                 )}
                 {currentQuestion.subtype === "INDY-IC" && currentQuestion.ic && (
@@ -311,6 +315,8 @@ export function SessionQuestionRunner({
                     onChange={(next) =>
                       handleAnswerChange(currentQuestion.id, serializeIcSelections(next))
                     }
+                    disabled={showSolution}
+                    showSolution={showSolution}
                   />
                 )}
                 {currentQuestion.subtype === "INDY-DND" && currentQuestion.dnd && (
@@ -320,6 +326,8 @@ export function SessionQuestionRunner({
                     onChange={(next) =>
                       handleAnswerChange(currentQuestion.id, serializeDndPlacements(next))
                     }
+                    disabled={showSolution}
+                    showSolution={showSolution}
                   />
                 )}
                 {currentQuestion.subtype === "INDY-EE" && currentQuestion.ee && (
@@ -328,6 +336,7 @@ export function SessionQuestionRunner({
                     spec={currentQuestion.ee}
                     value={raw || ""}
                     onChange={(v) => handleAnswerChange(currentQuestion.id, v)}
+                    disabled={showSolution}
                   />
                 )}
 
@@ -340,21 +349,36 @@ export function SessionQuestionRunner({
                     </p>
                     {currentQuestion.choices.map((choice) => {
                       const selected = parseAtaAnswer(raw);
+                      const checked = selected.includes(choice.id);
+                      const showWrongPick = showSolution && checked && !choice.isCorrect;
+                      const showMissed = showSolution && !checked && choice.isCorrect;
                       return (
-                        <div key={choice.id} className="flex items-start space-x-3">
-                          <Checkbox
-                            id={`${currentQuestion.id}-${choice.id}`}
-                            checked={selected.includes(choice.id)}
-                            onCheckedChange={() => toggleAtaAnswer(currentQuestion.id, choice.id)}
-                            className="mt-1"
-                          />
-                          <Label
-                            htmlFor={`${currentQuestion.id}-${choice.id}`}
-                            className="flex-1 cursor-pointer text-sm leading-relaxed"
-                          >
-                            <span className="font-medium mr-2">{choice.label}.</span>
-                            {choice.text}
-                          </Label>
+                        <div key={choice.id} className="space-y-1.5">
+                          <div className="flex items-start space-x-3">
+                            <Checkbox
+                              id={`${currentQuestion.id}-${choice.id}`}
+                              checked={checked}
+                              onCheckedChange={() => toggleAtaAnswer(currentQuestion.id, choice.id)}
+                              disabled={showSolution}
+                              className="mt-1"
+                            />
+                            <Label
+                              htmlFor={`${currentQuestion.id}-${choice.id}`}
+                              className={`flex-1 cursor-pointer text-sm leading-relaxed ${
+                                showSolution && choice.isCorrect ? "text-success font-medium" : ""
+                              } ${showWrongPick ? "text-destructive" : ""} ${showMissed ? "text-warning" : ""}`}
+                            >
+                              <span className="font-medium mr-2">{choice.label}.</span>
+                              {choice.text}
+                            </Label>
+                            {showSolution && choice.isCorrect && (
+                              <CheckCircle className="h-4 w-4 shrink-0 text-success mt-1" />
+                            )}
+                            {showWrongPick && (
+                              <XCircle className="h-4 w-4 shrink-0 text-destructive mt-1" />
+                            )}
+                          </div>
+                          <ChoiceExplanationLine choice={choice} showSolution={showSolution} />
                         </div>
                       );
                     })}
@@ -372,17 +396,33 @@ export function SessionQuestionRunner({
                       <RadioGroup
                         value={raw || ""}
                         onValueChange={(value) => handleAnswerChange(currentQuestion.id, value)}
+                        disabled={showSolution}
                       >
                         {currentQuestion.choices.map((choice) => (
-                          <div key={choice.id} className="flex items-start space-x-3">
-                            <RadioGroupItem value={choice.id} id={choice.id} className="mt-1" />
-                            <Label
-                              htmlFor={choice.id}
-                              className="flex-1 cursor-pointer text-sm leading-relaxed"
-                            >
-                              <span className="font-medium mr-2">{choice.label}.</span>
-                              {choice.text}
-                            </Label>
+                          <div key={choice.id} className="space-y-1.5">
+                            <div className="flex items-start space-x-3">
+                              <RadioGroupItem value={choice.id} id={choice.id} className="mt-1" />
+                              <Label
+                                htmlFor={choice.id}
+                                className={`flex-1 cursor-pointer text-sm leading-relaxed ${
+                                  showSolution && choice.isCorrect ? "text-success font-medium" : ""
+                                } ${
+                                  showSolution && raw === choice.id && !choice.isCorrect
+                                    ? "text-destructive"
+                                    : ""
+                                }`}
+                              >
+                                <span className="font-medium mr-2">{choice.label}.</span>
+                                {choice.text}
+                              </Label>
+                              {showSolution && choice.isCorrect && (
+                                <CheckCircle className="h-4 w-4 text-success mt-1" />
+                              )}
+                              {showSolution && raw === choice.id && !choice.isCorrect && (
+                                <XCircle className="h-4 w-4 text-destructive mt-1" />
+                              )}
+                            </div>
+                            <ChoiceExplanationLine choice={choice} showSolution={showSolution} />
                           </div>
                         ))}
                       </RadioGroup>
@@ -398,11 +438,19 @@ export function SessionQuestionRunner({
                       onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
                       placeholder="Enter fraction or decimal"
                       className="max-w-md"
+                      disabled={showSolution}
                     />
                     <p className="text-xs text-muted-foreground">
                       Grid-in answers are not auto-graded yet; they count as incorrect for statistics.
                     </p>
                   </div>
+                )}
+
+                {showSolution && feedback && (
+                  <QuestionSolutionPanel
+                    question={currentQuestion}
+                    isCorrect={feedback.correct}
+                  />
                 )}
               </CardContent>
             </Card>
@@ -415,9 +463,13 @@ export function SessionQuestionRunner({
 
               <Button
                 onClick={recordCurrentAndAdvance}
-                disabled={!canSubmitQuestionAnswer(currentQuestion, raw) || Boolean(feedback)}
+                disabled={!reviewingAnswer && !canSubmitQuestionAnswer(currentQuestion, raw)}
               >
-                {currentQuestionIndex === questions.length - 1 ? "Finish worksheet" : "Next"}
+                {reviewingAnswer
+                  ? currentQuestionIndex === questions.length - 1
+                    ? "Finish worksheet"
+                    : "Continue"
+                  : "Check answer"}
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
             </div>

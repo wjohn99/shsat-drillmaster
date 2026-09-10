@@ -18,12 +18,22 @@ service firebase.storage {
         && (board.data.studentUid == request.auth.uid || isTutor());
     }
 
+    // Workspace PDFs only — no uploads anywhere else in the bucket.
     match /workspace/{boardId}/cards/{cardId}/{fileName} {
       allow read: if canAccessWorkspaceBoard(boardId);
 
       allow write: if isTutor()
         && canAccessWorkspaceBoard(boardId)
-        && request.resource.size < 25 * 1024 * 1024;
+        && request.resource.size > 0
+        && request.resource.size <= 25 * 1024 * 1024
+        && request.resource.contentType == 'application/pdf'
+        && fileName.matches('.*\\.pdf$');
+
+      allow delete: if isTutor() && canAccessWorkspaceBoard(boardId);
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
     }
   }
 }

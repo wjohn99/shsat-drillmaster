@@ -4,7 +4,9 @@ import { Header } from "@/components/layout/Header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Eye, Loader2 } from "lucide-react";
-import { questions, allTags, passages } from "@/data/mockData";
+import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
+import { useQuestions } from "@/contexts/QuestionsContext";
+import { allTags } from "@/data/taggingScheme";
 import type { Question } from "@/types";
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
 import type { WorksheetAssignment } from "@/types/assignment";
@@ -64,6 +66,7 @@ type Mode = "home" | "build" | "runner" | "results" | "review";
 type RunSource = "assignment" | "self" | "tutor-preview";
 
 const Worksheets = () => {
+  const { questions, passages, loading: questionsLoading } = useQuestions();
   const location = useLocation();
   const navigate = useNavigate();
   const { profile, loading: authLoading } = useAuth();
@@ -102,7 +105,7 @@ const Worksheets = () => {
   const [reviewSession, setReviewSession] = useState<PracticeSessionRecord | null>(null);
   const [reviewSubtitle, setReviewSubtitle] = useState<string | undefined>();
 
-  const tagCatalog = useMemo(() => buildWorksheetTagCatalog(allTags, questions), []);
+  const tagCatalog = useMemo(() => buildWorksheetTagCatalog(allTags, questions), [questions]);
 
   const toggleTag = (code: string) => {
     setSelectedCodes((prev) =>
@@ -119,7 +122,7 @@ const Worksheets = () => {
       if (q.tags.some((t) => selectedSet.has(t.code))) ids.add(q.id);
     }
     return ids.size;
-  }, [selectedCodes, selectedSet]);
+  }, [selectedCodes, selectedSet, questions]);
 
   const selectedTagLabels = useMemo(() => {
     return selectedCodes.map((code) => {
@@ -494,6 +497,15 @@ const Worksheets = () => {
       setMode("build");
     }
   };
+
+  if (questionsLoading && mode !== "review") {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <QuestionsStatus />
+      </div>
+    );
+  }
 
   if (mode === "review" && reviewSession) {
     return (

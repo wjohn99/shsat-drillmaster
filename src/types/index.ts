@@ -1,5 +1,8 @@
 export type Subject = 'MATH' | 'ELA';
 
+/** SHSAT adaptive module (1 or 2), aligned with tracker column E. */
+export type QuestionModule = '1' | '2';
+
 export type QuestionSubtype =
   | 'MC4_A-D'
   | 'MC4_E-H'
@@ -15,8 +18,6 @@ export type QuestionSubtype =
   | 'INDY-MS'
   | 'INDY-HS'
   | 'INDY-GIF';
-
-export type Difficulty = 'easy' | 'medium' | 'hard';
 
 /** Draggable label in the pool (may include distractors unused in the correct mapping). */
 export interface DndDraggableItem {
@@ -206,14 +207,21 @@ export interface Choice {
   label: string;
   text: string;
   isCorrect: boolean;
+  /** Why this option is correct or a common reason students pick it (tracker per-choice column). */
+  explanation?: string;
 }
 
 export interface Question {
   id: string;
   subject: Subject;
+  /** Adaptive SHSAT module (tracker column E). */
+  module: QuestionModule;
   subtype: QuestionSubtype;
-  difficulty: Difficulty;
   stem: string;
+  /** Tutor-facing note on the wrong-answer lure (tracker column P). */
+  commonTrap?: string;
+  /** Step-by-step solution (tracker explanation column); TEI subtypes may also use spec.solutionExplanation. */
+  solutionExplanation?: string;
   choices?: Choice[];
   /** Present when subtype is INDY-DND */
   dnd?: DndSpec;
@@ -259,7 +267,7 @@ export interface Form {
 
 export interface FilterOptions {
   subjects: Subject[];
-  difficulties: Difficulty[];
+  modules: QuestionModule[];
   /** Content skill tag codes (RC-*, RE-*, NUM-*, etc.; excludes INDY format tags). */
   tagCodes: string[];
   /** Question format tag codes (INDY-* from tagging scheme). */

@@ -15,6 +15,7 @@ import {
 } from "firebase/firestore";
 import { fetchStudents } from "@/lib/assignmentService";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase";
+import { DEFAULT_WORKSPACE_BOARD_COLOR } from "@/lib/workspaceBoardColors";
 import {
   DEFAULT_WORKSPACE_LISTS,
   type WorkspaceBoard,
@@ -36,6 +37,7 @@ function parseBoard(
     studentUid: data.studentUid as string,
     studentName: (data.studentName as string) ?? "Student",
     studentEmail: (data.studentEmail as string) ?? "",
+    color: (data.color as string | undefined) ?? undefined,
     createdByUid: data.createdByUid as string,
     createdAt: data.createdAt,
     archivedAt: data.archivedAt ?? null,
@@ -101,7 +103,10 @@ export async function fetchStudentsWithoutBoard(): Promise<StudentOption[]> {
   return students.filter((s) => !boardStudentUids.has(s.uid));
 }
 
-export async function createWorkspaceBoard(student: StudentOption): Promise<string> {
+export async function createWorkspaceBoard(
+  student: StudentOption,
+  opts?: { color?: string },
+): Promise<string> {
   const auth = getFirebaseAuth();
   const tutorUid = auth.currentUser?.uid;
   if (!tutorUid) {
@@ -120,6 +125,7 @@ export async function createWorkspaceBoard(student: StudentOption): Promise<stri
     studentUid: student.uid,
     studentName: student.displayName,
     studentEmail: student.email,
+    color: opts?.color ?? DEFAULT_WORKSPACE_BOARD_COLOR,
     createdByUid: tutorUid,
     createdAt: serverTimestamp(),
   });
@@ -208,6 +214,22 @@ function stripUndefinedFields<T extends Record<string, unknown>>(obj: T): Partia
     }
   }
   return out;
+}
+
+/** Persist a new top-to-bottom order for cards (typically within one list). */
+export async function reorderWorkspaceCards(
+  boardId: string,
+  orderedCardIds: string[],
+): Promise<void> {
+  const db = getFirebaseDb();
+  await Promise.all(
+    orderedCardIds.map((cardId, index) =>
+      updateDoc(doc(db, BOARDS_COLLECTION, boardId, "cards", cardId), {
+        position: index,
+        updatedAt: serverTimestamp(),
+      }),
+    ),
+  );
 }
 
 export async function updateWorkspaceCard(

@@ -3,6 +3,7 @@ import { ArrowLeft, Loader2, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { workspaceBoardAccentColor } from "@/lib/workspaceBoardColors";
 import {
   createWorkspaceList,
   fetchWorkspaceBoard,
@@ -93,6 +94,8 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
     );
   }
 
+  const boardAccent = workspaceBoardAccentColor(board.color);
+
   return (
     <>
       <div className="flex items-center justify-between gap-4 mb-4 px-1">
@@ -105,6 +108,11 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
               </Link>
             </Button>
           ) : null}
+          <div
+            className="h-9 w-1.5 shrink-0 rounded-full"
+            style={{ backgroundColor: boardAccent }}
+            aria-hidden
+          />
           <div className="min-w-0">
             <h1 className="text-xl font-bold truncate">{board.studentName}</h1>
             {board.studentEmail ? (

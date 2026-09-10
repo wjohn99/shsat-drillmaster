@@ -8,7 +8,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Clock, BookOpen } from "lucide-react";
-import { navigationData, getQuestionsForTopic } from "@/data/navigationData";
+import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
+import { useQuestions } from "@/contexts/QuestionsContext";
 import { isIndyCheckboxMultiSubtype, parseAtaAnswer, serializeAtaAnswer } from "@/lib/indyAta";
 import { parseDndPlacementsForQuestion, serializeDndPlacements } from "@/lib/indyDnd";
 import { DndBlock } from "@/components/question/DndBlock";
@@ -21,10 +22,11 @@ import { GraphFigureBlock } from "@/components/question/GraphFigureBlock";
 import { parseIcSelectionsForQuestion, serializeIcSelections } from "@/lib/indyIc";
 import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
 import { HighlightableText } from "@/components/exam/HighlightableText";
-import { passages } from "@/data/mockData";
+import { ModuleBadge } from "@/components/question/ModuleBadge";
 import { useState } from "react";
 
 export default function TopicQuestions() {
+  const { navigationData, getQuestionsForTopic, passages, loading } = useQuestions();
   const { topicId } = useParams<{ topicId: string }>();
   const navigate = useNavigate();
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -39,6 +41,15 @@ export default function TopicQuestions() {
     .find(group => group.id === topicId);
 
   const questions = getQuestionsForTopic(topicId);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <QuestionsStatus />
+      </div>
+    );
+  }
 
   if (!topic) {
     return (
@@ -119,26 +130,7 @@ export default function TopicQuestions() {
                     <Badge variant={question.subject === 'MATH' ? 'default' : 'secondary'}>
                       {question.subject}
                     </Badge>
-                    <div
-                      className="flex h-6 items-center justify-center rounded-full px-2 text-xs font-bold text-white"
-                      style={{
-                        backgroundColor:
-                          question.difficulty === 'easy'
-                            ? `hsl(var(--difficulty-easy))`
-                            : question.difficulty === 'medium'
-                              ? `hsl(var(--difficulty-medium))`
-                              : `hsl(var(--difficulty-hard))`,
-                      }}
-                      title={`Difficulty: ${
-                        question.difficulty === 'easy'
-                          ? 'Easy'
-                          : question.difficulty === 'medium'
-                            ? 'Medium'
-                            : 'Hard'
-                      }`}
-                    >
-                      {question.difficulty.toUpperCase()}
-                    </div>
+                    <ModuleBadge module={question.module} />
                   </div>
                   <div className="text-sm text-muted-foreground">
                     Question #{index + 1}

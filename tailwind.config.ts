@@ -72,10 +72,9 @@ export default {
 					secondary: 'hsl(var(--ela-secondary))',
 					foreground: 'hsl(var(--ela-foreground))'
 				},
-				difficulty: {
-					easy: 'hsl(var(--difficulty-easy))',
-					medium: 'hsl(var(--difficulty-medium))',
-					hard: 'hsl(var(--difficulty-hard))'
+				module: {
+					1: 'hsl(var(--module-1))',
+					2: 'hsl(var(--module-2))'
 				},
 				success: {
 					DEFAULT: 'hsl(var(--success))',

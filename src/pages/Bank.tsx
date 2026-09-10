@@ -6,22 +6,24 @@ import { QuestionCard } from "@/components/question/QuestionCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Grid3X3, List } from "lucide-react";
-import { questions, getFilteredQuestions } from "@/data/mockData";
+import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
+import { useQuestions } from "@/contexts/QuestionsContext";
 
 export default function Bank() {
+  const { questions, getFilteredQuestions } = useQuestions();
   const [filters, setFilters] = useState<Partial<FilterOptions>>({});
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   const filteredQuestions = useMemo(() => {
     return getFilteredQuestions(filters);
-  }, [filters]);
+  }, [filters, getFilteredQuestions]);
 
   const subjectCounts = useMemo(
     () => ({
       MATH: questions.filter((q) => q.subject === "MATH").length,
       ELA: questions.filter((q) => q.subject === "ELA").length,
     }),
-    [],
+    [questions],
   );
 
   const handleFiltersChange = useCallback((newFilters: Partial<FilterOptions>) => {
@@ -36,7 +38,7 @@ export default function Bank() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+      <QuestionsStatus>
       <div className="flex h-[calc(100vh-4rem)]">
         {/* Filter Panel */}
         <FilterPanel
@@ -111,6 +113,7 @@ export default function Bank() {
           </div>
         </div>
       </div>
+      </QuestionsStatus>
     </div>
   );
 }

@@ -39,10 +39,9 @@
     --ela-secondary: 280 85% 95%;
     --ela-foreground: 280 85% 30%;
 
-    /* Difficulty indicators */
-    --difficulty-easy: 142 76% 36%;
-    --difficulty-medium: 45 93% 47%;
-    --difficulty-hard: 0 84% 60%;
+    /* SHSAT module indicators */
+    --module-1: 217 71% 45%;
+    --module-2: 280 65% 48%;
 
     /* Status colors */
     --success: 142 76% 36%;

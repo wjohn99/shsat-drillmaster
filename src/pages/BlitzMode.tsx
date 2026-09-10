@@ -9,8 +9,11 @@ import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Zap, Timer, XCircle } from "lucide-react";
-import type { Difficulty, Question } from "@/types";
-import { questions as allQuestions, passages } from "@/data/mockData";
+import type { Question, QuestionModule } from "@/types";
+import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
+import { useQuestions } from "@/contexts/QuestionsContext";
+import { ModuleBadge } from "@/components/question/ModuleBadge";
+import { moduleLabel } from "@/lib/questionModule";
 import { Chip } from "@/components/ui/chip";
 import { isIndyCheckboxMultiSubtype, parseAtaAnswer, serializeAtaAnswer } from "@/lib/indyAta";
 import { DndBlock } from "@/components/question/DndBlock";
@@ -28,6 +31,7 @@ import { canSubmitQuestionAnswer, isQuestionAnswerCorrect } from "@/lib/sessionG
 import { SessionResultsDashboard } from "@/components/session/SessionResultsDashboard";
 
 export default function BlitzMode() {
+  const { questions: allQuestions, passages } = useQuestions();
   const WARM_START_SECONDS = 3;
   const DURATION_CHOICES = [30, 60, 90] as const;
   const STRIKE_CHOICES = [1, 2, 3] as const;
@@ -35,7 +39,7 @@ export default function BlitzMode() {
   type BlitzEvent = {
     questionId: string;
     subject: Question["subject"];
-    difficulty: Difficulty;
+    module: QuestionModule;
     correct: boolean;
     elapsedSeconds: number;
     bonusSeconds: number;
@@ -86,24 +90,23 @@ export default function BlitzMode() {
       return Boolean(q.choices?.length && q.choices.some((c) => c.isCorrect));
     };
     return allQuestions.filter(isGradable);
-  }, []);
+  }, [allQuestions]);
 
   const sessionQuestions = useMemo(() => {
     const set = new Set(selectedSubjects);
     return gradableQuestions.filter((q) => set.has(q.subject));
   }, [gradableQuestions, selectedSubjects]);
 
-  const ladderDifficulty: Difficulty = useMemo(() => {
-    if (currentStreak >= 8) return "hard";
-    if (currentStreak >= 4) return "medium";
-    return "easy";
+  const ladderModule: QuestionModule = useMemo(() => {
+    if (currentStreak >= 4) return "2";
+    return "1";
   }, [currentStreak]);
 
-  const pickNextQuestion = (opts: { used: Set<string>; preferred: Difficulty }): Question | null => {
+  const pickNextQuestion = (opts: { used: Set<string>; preferred: QuestionModule }): Question | null => {
     const notUsed = sessionQuestions.filter((q) => !opts.used.has(q.id));
     if (notUsed.length === 0) return null;
 
-    const preferredPool = notUsed.filter((q) => q.difficulty === opts.preferred);
+    const preferredPool = notUsed.filter((q) => q.module === opts.preferred);
     const pool = preferredPool.length > 0 ? preferredPool : notUsed;
     return pool[Math.floor(Math.random() * pool.length)];
   };
@@ -124,7 +127,7 @@ export default function BlitzMode() {
   const startSession = () => {
     stopTimer();
     const used = new Set<string>();
-    const first = pickNextQuestion({ used, preferred: "easy" });
+    const first = pickNextQuestion({ used, preferred: "1" });
     if (!first) return;
 
     used.add(first.id);
@@ -191,8 +194,7 @@ export default function BlitzMode() {
   const advance = (afterStreak: number) => {
     setUsedIds((prev) => {
       const nextUsed = new Set(prev);
-      const preferred: Difficulty =
-        afterStreak >= 8 ? "hard" : afterStreak >= 4 ? "medium" : "easy";
+      const preferred: QuestionModule = afterStreak >= 4 ? "2" : "1";
       const nextQ = pickNextQuestion({ used: nextUsed, preferred });
       if (!nextQ) {
         setCurrentQuestion(null);
@@ -229,7 +231,7 @@ export default function BlitzMode() {
           {
             questionId: currentQuestion.id,
             subject: currentQuestion.subject,
-            difficulty: currentQuestion.difficulty,
+            module: currentQuestion.module,
             correct: true,
             elapsedSeconds,
             bonusSeconds: bonus,
@@ -254,7 +256,7 @@ export default function BlitzMode() {
       {
         questionId: currentQuestion.id,
         subject: currentQuestion.subject,
-        difficulty: currentQuestion.difficulty,
+        module: currentQuestion.module,
         correct: false,
         elapsedSeconds,
         bonusSeconds: 0,
@@ -440,7 +442,7 @@ export default function BlitzMode() {
   const analyticsEvents = events.map((e) => ({
     questionId: e.questionId,
     subject: e.subject,
-    difficulty: e.difficulty,
+    module: e.module,
     correct: e.correct,
     elapsedSeconds: e.elapsedSeconds,
     tags: e.tags,
@@ -449,7 +451,7 @@ export default function BlitzMode() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-
+      <QuestionsStatus>
       <div className="container py-8">
         <div className="mx-auto max-w-5xl">
           <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
@@ -482,7 +484,7 @@ export default function BlitzMode() {
             <div className="flex items-center justify-between text-xs text-muted-foreground">
               <span>Time remaining</span>
               {phase === "running" ? (
-                <span>Difficulty ladder: {ladderDifficulty.toUpperCase()}</span>
+                <span>Module ladder: {moduleLabel(ladderModule)}</span>
               ) : (
                 <span>Available questions: {sessionQuestions.length}</span>
               )}
@@ -589,20 +591,7 @@ export default function BlitzMode() {
                     <Badge variant={currentQuestion.subject === "MATH" ? "default" : "secondary"}>
                       {currentQuestion.subject}
                     </Badge>
-                    <Badge
-                      variant="outline"
-                      className="text-xs"
-                      style={{
-                        borderColor:
-                          currentQuestion.difficulty === "easy"
-                            ? `hsl(var(--difficulty-easy))`
-                            : currentQuestion.difficulty === "medium"
-                              ? `hsl(var(--difficulty-medium))`
-                              : `hsl(var(--difficulty-hard))`,
-                      }}
-                    >
-                      {currentQuestion.difficulty.toUpperCase()}
-                    </Badge>
+                    <ModuleBadge module={currentQuestion.module} className="h-5 px-2 text-[10px]" />
                     <Badge variant="outline" className="text-xs">
                       {currentQuestion.subtype}
                     </Badge>
@@ -659,20 +648,7 @@ export default function BlitzMode() {
                     <Badge variant={currentQuestion.subject === "MATH" ? "default" : "secondary"}>
                       {currentQuestion.subject}
                     </Badge>
-                    <Badge
-                      variant="outline"
-                      className="text-xs"
-                      style={{
-                        borderColor:
-                          currentQuestion.difficulty === "easy"
-                            ? `hsl(var(--difficulty-easy))`
-                            : currentQuestion.difficulty === "medium"
-                              ? `hsl(var(--difficulty-medium))`
-                              : `hsl(var(--difficulty-hard))`,
-                      }}
-                    >
-                      {currentQuestion.difficulty.toUpperCase()}
-                    </Badge>
+                    <ModuleBadge module={currentQuestion.module} className="h-5 px-2 text-[10px]" />
                     <Badge variant="outline" className="text-xs">
                       {currentQuestion.subtype}
                     </Badge>
@@ -723,6 +699,7 @@ export default function BlitzMode() {
           )}
         </div>
       </div>
+      </QuestionsStatus>
     </div>
   );
 }

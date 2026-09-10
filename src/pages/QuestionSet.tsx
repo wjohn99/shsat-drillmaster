@@ -19,8 +19,11 @@ import {
   RotateCcw,
   BookOpen
 } from "lucide-react";
-import { getFilteredQuestions, passages } from "@/data/mockData";
-import { Difficulty, Question } from "@/types";
+import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
+import { useQuestions } from "@/contexts/QuestionsContext";
+import { Question, QuestionModule } from "@/types";
+import { ModuleBadge } from "@/components/question/ModuleBadge";
+import { isQuestionModule } from "@/lib/questionModule";
 import { isIndyCheckboxMultiSubtype, parseAtaAnswer, serializeAtaAnswer } from "@/lib/indyAta";
 import { parseDndPlacementsForQuestion, serializeDndPlacements } from "@/lib/indyDnd";
 import { DndBlock } from "@/components/question/DndBlock";
@@ -35,19 +38,20 @@ import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
 import { HighlightableText } from "@/components/exam/HighlightableText";
 
 export default function QuestionSet() {
+  const { getFilteredQuestions, passages, loading } = useQuestions();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   
   // Get questions based on URL parameters
   const filters = {
     subjects: searchParams.get('subjects')?.split(',') || [],
-    difficulties: (searchParams.get('difficulties')?.split(',') || []).filter(
-      (d): d is Difficulty => d === 'easy' || d === 'medium' || d === 'hard'
-    ),
+    modules: (searchParams.get('modules')?.split(',') || searchParams.get('difficulties')?.split(',') || [])
+      .map((value) => (value === 'hard' ? '2' : value === 'easy' || value === 'medium' ? '1' : value))
+      .filter((d): d is QuestionModule => isQuestionModule(d)),
     tagCodes: searchParams.get('tagCodes')?.split(',') || []
   };
   
-  const questions = getFilteredQuestions(filters).slice(0, 20); // Limit to 20 questions per set
+  const questionSet = getFilteredQuestions(filters).slice(0, 20); // Limit to 20 questions per set
   
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -55,7 +59,16 @@ export default function QuestionSet() {
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [showResults, setShowResults] = useState(false);
 
-  if (questions.length === 0) {
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <QuestionsStatus />
+      </div>
+    );
+  }
+
+  if (questionSet.length === 0) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
@@ -73,12 +86,12 @@ export default function QuestionSet() {
     );
   }
 
-  const currentQuestion = questions[currentQuestionIndex];
+  const currentQuestion = questionSet[currentQuestionIndex];
   const passage = currentQuestion.passageId
     ? passages.find((p) => p.id === currentQuestion.passageId)
     : null;
   const showElaHighlighter = shouldShowElaHighlighter(currentQuestion);
-  const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+  const progress = ((currentQuestionIndex + 1) / questionSet.length) * 100;
 
   const handleAnswerChange = (questionId: string, answer: string) => {
     setAnswers(prev => ({ ...prev, [questionId]: answer }));
@@ -109,7 +122,7 @@ export default function QuestionSet() {
   };
 
   const nextQuestion = () => {
-    if (currentQuestionIndex < questions.length - 1) {
+    if (currentQuestionIndex < questionSet.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
   };
@@ -153,7 +166,7 @@ export default function QuestionSet() {
             <div>
               <h1 className="text-2xl font-bold">Practice Set</h1>
               <p className="text-muted-foreground">
-                Question {currentQuestionIndex + 1} of {questions.length}
+                Question {currentQuestionIndex + 1} of {questionSet.length}
               </p>
             </div>
           </div>
@@ -192,26 +205,7 @@ export default function QuestionSet() {
                     <Badge variant={currentQuestion.subject === 'MATH' ? 'default' : 'secondary'}>
                       {currentQuestion.subject}
                     </Badge>
-                    <div
-                      className="flex h-6 items-center justify-center rounded-full px-2 text-xs font-bold text-white"
-                      style={{
-                        backgroundColor:
-                          currentQuestion.difficulty === 'easy'
-                            ? `hsl(var(--difficulty-easy))`
-                            : currentQuestion.difficulty === 'medium'
-                              ? `hsl(var(--difficulty-medium))`
-                              : `hsl(var(--difficulty-hard))`,
-                      }}
-                      title={`Difficulty: ${
-                        currentQuestion.difficulty === 'easy'
-                          ? 'Easy'
-                          : currentQuestion.difficulty === 'medium'
-                            ? 'Medium'
-                            : 'Hard'
-                      }`}
-                    >
-                      {currentQuestion.difficulty.toUpperCase()}
-                    </div>
+                    <ModuleBadge module={currentQuestion.module} />
                   </div>
                   <div className="text-sm text-muted-foreground">
                     Question #{currentQuestionIndex + 1}
@@ -406,7 +400,7 @@ export default function QuestionSet() {
               
               <Button 
                 onClick={nextQuestion}
-                disabled={currentQuestionIndex === questions.length - 1}
+                disabled={currentQuestionIndex === questionSet.length - 1}
               >
                 Next
                 <ArrowRight className="h-4 w-4 ml-2" />
@@ -433,7 +427,7 @@ export default function QuestionSet() {
               
               <CardContent>
                 <div className="grid grid-cols-5 gap-2">
-                  {questions.map((question, index) => {
+                  {questionSet.map((question, index) => {
                     const status = index === currentQuestionIndex ? 'current' : getQuestionStatus(question);
                     return (
                       <button
@@ -454,7 +448,7 @@ export default function QuestionSet() {
                   <div className="text-sm">
                     <div className="flex justify-between">
                       <span>Answered:</span>
-                      <span>{Object.keys(answers).length}/{questions.length}</span>
+                      <span>{Object.keys(answers).length}/{questionSet.length}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Flagged:</span>

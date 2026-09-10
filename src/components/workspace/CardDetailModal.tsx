@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   AlignLeft,
@@ -44,15 +44,22 @@ import { updateWorkspaceCard } from "@/lib/workspaceService";
 import type { WorksheetAssignment } from "@/types/assignment";
 import {
   addCardLinkAttachment,
+  addCardPdfAttachment,
   createCardComment,
   fetchCardAttachments,
   fetchLatestSubmissionsForAttachments,
-  getAttachmentHref,
+  resolveAttachmentDownloadUrl,
   softDeleteCardAttachment,
   softDeleteCardComment,
   submitAttachmentWork,
   subscribeCardFeed,
 } from "@/lib/workspaceCardContentService";
+import {
+  activeAttachments,
+  MAX_ATTACHMENTS_PER_CARD,
+  MAX_PDFS_PER_CARD,
+  WORKSPACE_PDF_MAX_BYTES,
+} from "@/lib/workspaceUploadLimits";
 import type {
   CardFeedItem,
   WorkspaceCard,
@@ -122,6 +129,8 @@ export function CardDetailModal({
   const [linkSetDueDate, setLinkSetDueDate] = useState(false);
   const [linkDueDate, setLinkDueDate] = useState(defaultAssignmentDueDateInput);
   const [savingLink, setSavingLink] = useState(false);
+  const [uploadingPdf, setUploadingPdf] = useState(false);
+  const pdfInputRef = useRef<HTMLInputElement>(null);
   const [submissionsByAttachmentId, setSubmissionsByAttachmentId] = useState<
     Record<string, WorkspaceAttachmentSubmission | null>
   >({});
@@ -154,6 +163,19 @@ export function CardDetailModal({
 
   const isStudentView = profile?.role === "student";
   const minLinkDueDate = defaultAssignmentDueDateInput();
+
+  const attachmentCounts = useMemo(() => {
+    const active = activeAttachments(attachments);
+    return {
+      total: active.length,
+      pdfs: active.filter((a) => a.kind === "file").length,
+    };
+  }, [attachments]);
+
+  const pdfUploadBlocked =
+    attachmentCounts.pdfs >= MAX_PDFS_PER_CARD ||
+    attachmentCounts.total >= MAX_ATTACHMENTS_PER_CARD;
+  const linkAddBlocked = attachmentCounts.total >= MAX_ATTACHMENTS_PER_CARD;
 
   const reloadSubmissions = async (rows: WorkspaceCardAttachment[]) => {
     if (!card || rows.length === 0) {
@@ -283,6 +305,29 @@ export function CardDetailModal({
     }
   };
 
+  const handlePdfSelected = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file || !card || readOnly) return;
+
+    setUploadingPdf(true);
+    try {
+      await addCardPdfAttachment(boardId, card.id, file);
+      const rows = await fetchCardAttachments(boardId, card.id);
+      setAttachments(rows);
+      await reloadSubmissions(rows);
+      toast({ title: "PDF attached" });
+    } catch (err) {
+      toast({
+        title: "Could not upload PDF",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setUploadingPdf(false);
+    }
+  };
+
   const handleAddLink = async () => {
     if (!card || readOnly) return;
     if (linkSetDueDate && linkDueDate < minLinkDueDate) {
@@ -319,7 +364,13 @@ export function CardDetailModal({
   const handleRemoveAttachment = async (attachment: WorkspaceCardAttachment) => {
     if (!card || readOnly) return;
     try {
-      await softDeleteCardAttachment(boardId, card.id, attachment.id, attachment.fileName);
+      await softDeleteCardAttachment(
+        boardId,
+        card.id,
+        attachment.id,
+        attachment.fileName,
+        attachment.storagePath,
+      );
       setAttachments((prev) => prev.filter((a) => a.id !== attachment.id));
     } catch (err) {
       toast({
@@ -463,12 +514,12 @@ export function CardDetailModal({
                       </div>
                     </div>
                     <div className="space-y-1.5">
-                      <Label className="font-semibold">Concepts covered</Label>
+                      <Label className="font-semibold">Session Summary</Label>
                       <Textarea
                         value={concepts}
                         onChange={(e) => setConcepts(e.target.value)}
                         rows={10}
-                        placeholder="Bullet points for topics discussed in this session…"
+                        placeholder="Summary of what was covered in this session…"
                         className="font-mono text-sm"
                       />
                     </div>
@@ -574,7 +625,7 @@ export function CardDetailModal({
                     Attachments
                   </div>
                   {!readOnly ? (
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 flex-wrap justify-end">
                       {!card.assignmentId ? (
                         <Button variant="ghost" size="sm" onClick={handleOpenWorksheetAssign}>
                           <ClipboardList className="h-4 w-4 mr-1" />
@@ -584,6 +635,32 @@ export function CardDetailModal({
                       <Button
                         variant="ghost"
                         size="sm"
+                        disabled={uploadingPdf || pdfUploadBlocked}
+                        title={
+                          pdfUploadBlocked
+                            ? `Limit reached (${MAX_PDFS_PER_CARD} PDFs or ${MAX_ATTACHMENTS_PER_CARD} attachments per card)`
+                            : undefined
+                        }
+                        onClick={() => pdfInputRef.current?.click()}
+                      >
+                        {uploadingPdf ? (
+                          <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                        ) : (
+                          <Upload className="h-4 w-4 mr-1" />
+                        )}
+                        Upload PDF
+                      </Button>
+                      <input
+                        ref={pdfInputRef}
+                        type="file"
+                        accept="application/pdf,.pdf"
+                        className="hidden"
+                        onChange={(e) => void handlePdfSelected(e)}
+                      />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        disabled={linkAddBlocked}
                         onClick={() => setAddingLink((v) => !v)}
                       >
                         <Link2 className="h-4 w-4 mr-1" />
@@ -592,6 +669,14 @@ export function CardDetailModal({
                     </div>
                   ) : null}
                 </div>
+
+                {!readOnly ? (
+                  <p className="text-xs text-muted-foreground mb-3">
+                    PDFs only · max {Math.round(WORKSPACE_PDF_MAX_BYTES / (1024 * 1024))} MB each ·{" "}
+                    {attachmentCounts.pdfs}/{MAX_PDFS_PER_CARD} PDFs on this card · tutors only
+                    can upload
+                  </p>
+                ) : null}
 
                 {!readOnly && addingLink ? (
                   <div className="mb-4 rounded-lg border bg-muted/30 p-3 space-y-3">
@@ -642,7 +727,7 @@ export function CardDetailModal({
                     <div className="flex gap-2">
                       <Button
                         size="sm"
-                        disabled={savingLink || !linkUrl.trim()}
+                        disabled={savingLink || !linkUrl.trim() || linkAddBlocked}
                         onClick={() => void handleAddLink()}
                       >
                         {savingLink ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : null}
@@ -670,10 +755,13 @@ export function CardDetailModal({
                     <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
                   </div>
                 ) : attachments.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No links attached yet.</p>
+                  <p className="text-sm text-muted-foreground">
+                    {readOnly
+                      ? "No attachments yet."
+                      : "Upload a PDF or add a link (max 25 MB per PDF)."}
+                  </p>
                 ) : (
                   <div className="space-y-2">
-                    <p className="text-xs font-medium text-muted-foreground">Links</p>
                     {attachments.map((attachment) => (
                       <AttachmentRow
                         key={attachment.id}
@@ -781,7 +869,7 @@ function buildDescriptionPreview(
   if (location) lines.push(`Location: ${location}`);
   if (lines.length > 0 && concepts.trim()) lines.push("");
   if (concepts.trim()) {
-    lines.push("Concepts Covered");
+    lines.push("Session Summary");
     lines.push(concepts.trim());
   }
   return lines.join("\n");
@@ -806,8 +894,34 @@ function AttachmentRow({
   onRemove: () => void;
   onSubmissionUpdated: () => Promise<void>;
 }) {
-  const href = getAttachmentHref(attachment);
   const isLink = attachment.kind === "link";
+  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  const [urlLoading, setUrlLoading] = useState(false);
+  const [showSubmitForm, setShowSubmitForm] = useState(false);
+  const [submitUrl, setSubmitUrl] = useState("");
+  const [submitNotes, setSubmitNotes] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    setUrlLoading(true);
+    setDownloadUrl(null);
+
+    void resolveAttachmentDownloadUrl(attachment)
+      .then((url) => {
+        if (!cancelled) setDownloadUrl(url);
+      })
+      .catch(() => {
+        if (!cancelled) setDownloadUrl(null);
+      })
+      .finally(() => {
+        if (!cancelled) setUrlLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [attachment.id, attachment.kind, attachment.externalUrl, attachment.storagePath]);
   const isPdf =
     !isLink &&
     (attachment.contentType.includes("pdf") ||
@@ -816,23 +930,22 @@ function AttachmentRow({
   const hasSubmission = Boolean(submission);
   const overdue = isAttachmentOverdue(attachment, hasSubmission);
 
-  const [showSubmitForm, setShowSubmitForm] = useState(false);
-  const [submitUrl, setSubmitUrl] = useState("");
-  const [submitNotes, setSubmitNotes] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-
   const openHref = (url: string) => {
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
   const openAttachment = () => {
-    if (href) {
-      openHref(href);
+    if (downloadUrl) {
+      openHref(downloadUrl);
+      return;
+    }
+    if (urlLoading) {
+      toast({ title: "Loading file…" });
       return;
     }
     toast({
-      title: "File upload not available",
-      description: "Add a Google Drive or Dropbox link instead.",
+      title: "Could not open attachment",
+      description: "The file may have been removed or Storage is not configured.",
       variant: "destructive",
     });
   };
@@ -897,9 +1010,9 @@ function AttachmentRow({
             variant="ghost"
             size="icon"
             className="h-8 w-8"
-            disabled={!href && attachment.kind === "file"}
+            disabled={urlLoading || (!downloadUrl && attachment.kind === "file")}
             onClick={openAttachment}
-            title="Open assignment link"
+            title={isLink ? "Open link" : "Open PDF"}
           >
             <ExternalLink className="h-4 w-4" />
           </Button>

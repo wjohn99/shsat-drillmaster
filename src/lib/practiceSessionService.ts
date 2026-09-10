@@ -15,16 +15,17 @@ import type {
   PracticeSessionType,
   SavePracticeSessionInput,
 } from "@/types/practiceSession";
+import { moduleFromLegacyAnalytics } from "@/lib/questionModule";
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
 
 const PRACTICE_SESSIONS_COLLECTION = "practice_sessions";
 
 function parseEvent(raw: unknown): SessionAnalyticsEvent {
-  const e = raw as SessionAnalyticsEvent;
+  const e = raw as Record<string, unknown>;
   return {
-    questionId: e.questionId,
-    subject: e.subject,
-    difficulty: e.difficulty,
+    questionId: String(e.questionId),
+    subject: e.subject as SessionAnalyticsEvent["subject"],
+    module: moduleFromLegacyAnalytics(e.module ?? e.difficulty),
     correct: Boolean(e.correct),
     elapsedSeconds: Number(e.elapsedSeconds) || 0,
     tags: Array.isArray(e.tags) ? e.tags.map(String) : [],

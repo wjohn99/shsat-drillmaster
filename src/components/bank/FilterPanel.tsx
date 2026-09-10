@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { Input } from "@/components/ui/input";
@@ -9,8 +8,9 @@ import { Switch } from "@/components/ui/switch";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Search, Filter, RotateCcw, ChevronDown } from "lucide-react";
-import { Difficulty, FilterOptions, Subject } from "@/types";
+import { FilterOptions, QuestionModule, Subject } from "@/types";
 import { QUESTION_FORMAT_TAGS, TAG_CATEGORIES } from "@/data/taggingScheme";
+import { moduleBadgeColor, moduleLabel, QUESTION_MODULES } from "@/lib/questionModule";
 
 interface FilterPanelProps {
   totalCount: number;
@@ -27,7 +27,7 @@ export const FilterPanel = ({
 }: FilterPanelProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSubjects, setSelectedSubjects] = useState<Subject[]>([]);
-  const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
+  const [selectedModules, setSelectedModules] = useState<QuestionModule[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedFormatTags, setSelectedFormatTags] = useState<string[]>([]);
   const [passageOnly, setPassageOnly] = useState(false);
@@ -35,7 +35,6 @@ export const FilterPanel = ({
   const [tagSearchOpen, setTagSearchOpen] = useState(false);
 
   const subjects: Subject[] = ['MATH', 'ELA'];
-  const difficulties: Difficulty[] = ['easy', 'medium', 'hard'];
   const userStatusOptions = [
     { value: 'attempted', label: 'Attempted' },
     { value: 'correct', label: 'Correct' },
@@ -49,7 +48,7 @@ export const FilterPanel = ({
   useEffect(() => {
     const nextFilters: Partial<FilterOptions> = {
       subjects: selectedSubjects,
-      difficulties: selectedDifficulties,
+      modules: selectedModules,
       tagCodes: selectedTags,
       formatTagCodes: selectedFormatTags,
       passageOnly,
@@ -70,7 +69,7 @@ export const FilterPanel = ({
     return () => window.clearTimeout(timer);
   }, [
     selectedSubjects,
-    selectedDifficulties,
+    selectedModules,
     selectedTags,
     selectedFormatTags,
     passageOnly,
@@ -81,7 +80,7 @@ export const FilterPanel = ({
   const resetFilters = () => {
     setSearchQuery("");
     setSelectedSubjects([]);
-    setSelectedDifficulties([]);
+    setSelectedModules([]);
     setSelectedTags([]);
     setSelectedFormatTags([]);
     setPassageOnly(false);
@@ -163,34 +162,25 @@ export const FilterPanel = ({
         </div>
       </div>
 
-      {/* Difficulty filter */}
+      {/* Module filter */}
       <div className="mb-6">
-        <Label className="text-sm font-medium mb-3 block">Difficulty</Label>
+        <Label className="text-sm font-medium mb-3 block">Module</Label>
         <div className="flex gap-2">
-          {difficulties.map((d) => {
-            const label = d === 'easy' ? 'Easy' : d === 'medium' ? 'Medium' : 'Hard';
-            const bg =
-              d === 'easy'
-                ? `hsl(var(--difficulty-easy))`
-                : d === 'medium'
-                  ? `hsl(var(--difficulty-medium))`
-                  : `hsl(var(--difficulty-hard))`;
-            return (
-              <button
-                key={d}
-                onClick={() =>
-                  toggleArraySelection(selectedDifficulties, setSelectedDifficulties, d)
-                }
-                className={`
-                  flex-1 h-8 rounded-full text-xs font-semibold text-white transition-all
-                  ${selectedDifficulties.includes(d) ? 'ring-2 ring-ring ring-offset-2' : 'hover:opacity-90'}
-                `}
-                style={{ backgroundColor: bg }}
-              >
-                {label}
-              </button>
-            );
-          })}
+          {QUESTION_MODULES.map((module) => (
+            <button
+              key={module}
+              onClick={() =>
+                toggleArraySelection(selectedModules, setSelectedModules, module)
+              }
+              className={`
+                flex-1 h-8 rounded-full text-xs font-semibold text-white transition-all
+                ${selectedModules.includes(module) ? 'ring-2 ring-ring ring-offset-2' : 'hover:opacity-90'}
+              `}
+              style={{ backgroundColor: moduleBadgeColor(module) }}
+            >
+              {moduleLabel(module)}
+            </button>
+          ))}
         </div>
       </div>
 

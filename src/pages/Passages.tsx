@@ -3,14 +3,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BookOpen, FileText, Clock } from "lucide-react";
-import { passages } from "@/data/mockData";
+import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
+import { useQuestions } from "@/contexts/QuestionsContext";
 import { Link } from "react-router-dom";
 
 export default function Passages() {
+  const { passages } = useQuestions();
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+      <QuestionsStatus>
       <div className="container py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Reading Passages</h1>
@@ -69,6 +72,7 @@ export default function Passages() {
           </p>
         </div>
       </div>
+      </QuestionsStatus>
     </div>
   );
 }

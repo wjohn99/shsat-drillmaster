@@ -8,6 +8,7 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  setDoc,
   updateDoc,
   type DocumentData,
   type QueryDocumentSnapshot,
@@ -15,6 +16,17 @@ import {
   type Unsubscribe,
 } from "firebase/firestore";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase";
+import {
+  buildWorkspaceAttachmentStoragePath,
+  deleteWorkspaceStorageObject,
+  uploadWorkspacePdf,
+} from "@/lib/workspaceAttachmentStorage";
+import {
+  summarizeBoardPdfUsage,
+  validateLinkAttachment,
+  validatePdfUpload,
+} from "@/lib/workspaceUploadLimits";
+import { fetchWorkspaceCards } from "@/lib/workspaceService";
 import type {
   CardFeedItem,
   WorkspaceAttachmentKind,
@@ -153,6 +165,8 @@ export function getAttachmentHref(attachment: WorkspaceCardAttachment): string |
   return null;
 }
 
+export { resolveAttachmentDownloadUrl } from "@/lib/workspaceAttachmentStorage";
+
 async function logCardActivity(
   boardId: string,
   cardId: string,
@@ -215,6 +229,14 @@ export async function logWorksheetCompletedOnCard(
   );
 }
 
+export async function fetchBoardPdfUsage(boardId: string) {
+  const cards = await fetchWorkspaceCards(boardId);
+  const attachmentsByCard = await Promise.all(
+    cards.map((card) => fetchCardAttachments(boardId, card.id)),
+  );
+  return summarizeBoardPdfUsage(attachmentsByCard);
+}
+
 export async function addCardLinkAttachment(
   boardId: string,
   cardId: string,
@@ -225,6 +247,12 @@ export async function addCardLinkAttachment(
   const auth = getFirebaseAuth();
   const user = auth.currentUser;
   if (!user) throw new Error("You must be signed in to add a link.");
+
+  const existing = await fetchCardAttachments(boardId, cardId);
+  const linkCheck = validateLinkAttachment(existing);
+  if (!linkCheck.ok) {
+    throw new Error(linkCheck.message);
+  }
 
   const fileName = title.trim() || "Link";
   const externalUrl = normalizeAttachmentUrl(url);
@@ -255,6 +283,81 @@ export async function addCardLinkAttachment(
   );
 
   return docRef.id;
+}
+
+/** Upload a PDF to Firebase Storage and register it on the card. */
+export async function addCardPdfAttachment(
+  boardId: string,
+  cardId: string,
+  file: File,
+  opts?: { displayName?: string; dueAt?: Timestamp | null },
+): Promise<string> {
+  const auth = getFirebaseAuth();
+  const user = auth.currentUser;
+  if (!user) throw new Error("You must be signed in to upload a file.");
+
+  const [existing, boardUsage] = await Promise.all([
+    fetchCardAttachments(boardId, cardId),
+    fetchBoardPdfUsage(boardId),
+  ]);
+  const uploadCheck = validatePdfUpload(file, existing, boardUsage);
+  if (!uploadCheck.ok) {
+    throw new Error(uploadCheck.message);
+  }
+
+  const fileName = opts?.displayName?.trim() || file.name.trim() || "Document.pdf";
+  const attachmentsRef = cardCollection(boardId, cardId, "attachments");
+  const attachmentRef = doc(attachmentsRef);
+  const storagePath = buildWorkspaceAttachmentStoragePath(
+    boardId,
+    cardId,
+    attachmentRef.id,
+    fileName,
+  );
+
+  try {
+    await uploadWorkspacePdf(storagePath, file);
+  } catch (err) {
+    throw new Error(
+      err instanceof Error ? err.message : "Could not upload PDF. Check Storage is enabled.",
+    );
+  }
+
+  const payload: Record<string, unknown> = {
+    kind: "file",
+    fileName,
+    storagePath,
+    contentType: "application/pdf",
+    sizeBytes: file.size,
+    uploadedByUid: user.uid,
+    uploadedByName: user.displayName || user.email || "Tutor",
+    createdAt: serverTimestamp(),
+  };
+  if (opts?.dueAt) payload.dueAt = opts.dueAt;
+
+  try {
+    await setDoc(attachmentRef, payload);
+  } catch (err) {
+    try {
+      await deleteWorkspaceStorageObject(storagePath);
+    } catch {
+      // Orphan cleanup best-effort
+    }
+    throw err instanceof Error ? err : new Error("Could not save attachment metadata.");
+  }
+
+  const dueLabel = opts?.dueAt?.toDate
+    ? opts.dueAt.toDate().toLocaleDateString(undefined, { month: "short", day: "numeric" })
+    : "";
+  const duePart = dueLabel ? ` (due ${dueLabel})` : "";
+  await logCardActivity(
+    boardId,
+    cardId,
+    "attachment_added",
+    `added PDF "${fileName}"${duePart} to this card`,
+  );
+
+  return attachmentRef.id;
 }
 
 export async function fetchLatestSubmissionForAttachment(
@@ -328,11 +431,21 @@ export async function softDeleteCardAttachment(
   cardId: string,
   attachmentId: string,
   fileName: string,
+  storagePath?: string | null,
 ): Promise<void> {
   await updateDoc(
     doc(getFirebaseDb(), BOARDS_COLLECTION, boardId, "cards", cardId, "attachments", attachmentId),
     { deletedAt: serverTimestamp() },
   );
+
+  if (storagePath) {
+    try {
+      await deleteWorkspaceStorageObject(storagePath);
+    } catch {
+      // Metadata is already hidden; orphaned objects can be cleaned from the console.
+    }
+  }
+
   await logCardActivity(
     boardId,
     cardId,

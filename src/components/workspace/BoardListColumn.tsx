@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Check, ClipboardList, MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Check, ClipboardList, GripVertical, MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -29,6 +29,7 @@ import { Label } from "@/components/ui/label";
 import {
   createWorkspaceCard,
   deleteWorkspaceList,
+  reorderWorkspaceCards,
   updateWorkspaceCard,
   updateWorkspaceList,
 } from "@/lib/workspaceService";
@@ -63,15 +64,51 @@ export function BoardListColumn({
   const [renaming, setRenaming] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [draggingCardId, setDraggingCardId] = useState<string | null>(null);
+  const [dragOverCardId, setDragOverCardId] = useState<string | null>(null);
+  const [reordering, setReordering] = useState(false);
 
-  const listCards = cards
-    .filter((c) => c.listId === list.id)
-    .sort((a, b) => {
-      const aMs = a.createdAt?.toMillis?.() ?? 0;
-      const bMs = b.createdAt?.toMillis?.() ?? 0;
-      if (bMs !== aMs) return bMs - aMs;
-      return b.position - a.position;
-    });
+  const listCards = useMemo(
+    () =>
+      cards
+        .filter((c) => c.listId === list.id)
+        .sort((a, b) => {
+          if (a.position !== b.position) return a.position - b.position;
+          const aMs = a.createdAt?.toMillis?.() ?? 0;
+          const bMs = b.createdAt?.toMillis?.() ?? 0;
+          return aMs - bMs;
+        }),
+    [cards, list.id],
+  );
+
+  const handleReorder = async (targetCardId: string) => {
+    if (!draggingCardId || draggingCardId === targetCardId || readOnly || reordering) return;
+
+    const ids = listCards.map((c) => c.id);
+    const fromIndex = ids.indexOf(draggingCardId);
+    const toIndex = ids.indexOf(targetCardId);
+    if (fromIndex < 0 || toIndex < 0) return;
+
+    const nextIds = [...ids];
+    nextIds.splice(fromIndex, 1);
+    nextIds.splice(toIndex, 0, draggingCardId);
+
+    setReordering(true);
+    try {
+      await reorderWorkspaceCards(boardId, nextIds);
+      onCardsChanged();
+    } catch (err) {
+      toast({
+        title: "Could not reorder cards",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setDraggingCardId(null);
+      setDragOverCardId(null);
+      setReordering(false);
+    }
+  };
 
   const handleAddCard = async () => {
     const title = newTitle.trim();
@@ -178,64 +215,120 @@ export function BoardListColumn({
           ) : null}
         </div>
 
-        <div className="flex-1 overflow-y-auto p-2 space-y-2 min-h-[120px]">
+        <div
+          className="flex-1 overflow-y-auto p-2 space-y-2 min-h-[120px]"
+          onDragOver={(e) => {
+            if (readOnly || !draggingCardId) return;
+            e.preventDefault();
+          }}
+        >
           {listCards.map((card) => (
-            <button
+            <div
               key={card.id}
-              type="button"
-              onClick={() => onCardClick(card)}
+              onDragOver={(e) => {
+                if (readOnly || !draggingCardId) return;
+                e.preventDefault();
+                e.dataTransfer.dropEffect = "move";
+                setDragOverCardId(card.id);
+              }}
+              onDragLeave={() => {
+                if (dragOverCardId === card.id) setDragOverCardId(null);
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                void handleReorder(card.id);
+              }}
               className={cn(
-                "w-full text-left rounded-lg px-3 py-2.5 text-sm shadow-sm transition-colors",
-                "bg-card border border-border hover:bg-accent/50",
-                card.completed && "opacity-80",
+                "rounded-lg transition-shadow",
+                dragOverCardId === card.id && draggingCardId !== card.id && "ring-2 ring-primary/60",
+                draggingCardId === card.id && "opacity-50",
               )}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-stretch">
+                {!readOnly ? (
+                  <div
+                    draggable
+                    onDragStart={(e) => {
+                      setDraggingCardId(card.id);
+                      e.dataTransfer.effectAllowed = "move";
+                      e.dataTransfer.setData("text/plain", card.id);
+                    }}
+                    onDragEnd={() => {
+                      setDraggingCardId(null);
+                      setDragOverCardId(null);
+                    }}
+                    className={cn(
+                      "flex items-center px-1 shrink-0 touch-none",
+                      "cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground",
+                    )}
+                    aria-label={`Drag to reorder ${card.title}`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <GripVertical className="h-4 w-4" />
+                  </div>
+                ) : null}
                 <button
                   type="button"
-                  aria-label={card.completed ? "Mark incomplete" : "Mark complete"}
+                  onClick={() => onCardClick(card)}
                   className={cn(
-                    "h-4 w-4 shrink-0 rounded-full flex items-center justify-center",
-                    "outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0",
+                    "flex-1 min-w-0 text-left rounded-lg px-3 py-2.5 text-sm shadow-sm transition-colors",
+                    "bg-card border border-border hover:bg-accent/50",
+                    card.completed && "opacity-80",
                   )}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (readOnly) return;
-                    void (async () => {
-                      try {
-                        await updateWorkspaceCard(boardId, card.id, { completed: !card.completed });
-                        onCardsChanged();
-                      } catch {
-                        toast({ title: "Could not update status", variant: "destructive" });
-                      }
-                    })();
-                  }}
                 >
-                  {card.completed ? (
-                    <span className="h-4 w-4 rounded-full bg-primary flex items-center justify-center">
-                      <Check className="h-2.5 w-2.5 text-primary-foreground" strokeWidth={3} />
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      aria-label={card.completed ? "Mark incomplete" : "Mark complete"}
+                      className={cn(
+                        "h-4 w-4 shrink-0 rounded-full flex items-center justify-center",
+                        "outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0",
+                      )}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (readOnly) return;
+                        void (async () => {
+                          try {
+                            await updateWorkspaceCard(boardId, card.id, { completed: !card.completed });
+                            onCardsChanged();
+                          } catch {
+                            toast({ title: "Could not update status", variant: "destructive" });
+                          }
+                        })();
+                      }}
+                    >
+                      {card.completed ? (
+                        <span className="h-4 w-4 rounded-full bg-primary flex items-center justify-center">
+                          <Check className="h-2.5 w-2.5 text-primary-foreground" strokeWidth={3} />
+                        </span>
+                      ) : (
+                        <span className="h-4 w-4 rounded-full border border-muted-foreground/50" />
+                      )}
+                    </button>
+                    <span
+                      className={cn(
+                        "font-medium leading-snug",
+                        card.completed && "text-muted-foreground",
+                      )}
+                    >
+                      {card.title}
                     </span>
-                  ) : (
-                    <span className="h-4 w-4 rounded-full border border-muted-foreground/50" />
-                  )}
+                  </div>
+                  {card.assignmentId ? (
+                    <p className="text-xs text-muted-foreground mt-1 pl-6 flex items-center gap-1">
+                      <ClipboardList className="h-3 w-3 shrink-0" />
+                      Worksheet attached
+                    </p>
+                  ) : null}
+                  {card.description ? (
+                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2 pl-6">
+                      {card.description}
+                    </p>
+                  ) : null}
                 </button>
-                <span className={cn("font-medium leading-snug", card.completed && "line-through")}>
-                  {card.title}
-                </span>
               </div>
-              {card.assignmentId ? (
-                <p className="text-xs text-muted-foreground mt-1 pl-6 flex items-center gap-1">
-                  <ClipboardList className="h-3 w-3 shrink-0" />
-                  Worksheet attached
-                </p>
-              ) : null}
-              {card.description ? (
-                <p className="text-xs text-muted-foreground mt-1 line-clamp-2 pl-6">
-                  {card.description}
-                </p>
-              ) : null}
-            </button>
+            </div>
           ))}
 
           {adding && !readOnly ? (

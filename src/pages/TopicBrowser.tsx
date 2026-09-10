@@ -5,10 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Search } from "lucide-react";
-import { navigationData } from "@/data/navigationData";
+import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
+import { useQuestions } from "@/contexts/QuestionsContext";
 import { SubjectNavigation } from "@/types/navigation";
 
 export default function TopicBrowser() {
+  const { navigationData } = useQuestions();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSubject, setSelectedSubject] = useState<'ELA' | 'MATH' | 'ALL'>('ALL');
   const navigate = useNavigate();
@@ -30,7 +32,7 @@ export default function TopicBrowser() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+      <QuestionsStatus>
       <div className="container py-8">
         {/* Header */}
         <div className="mb-8">
@@ -130,6 +132,7 @@ export default function TopicBrowser() {
           </div>
         )}
       </div>
+      </QuestionsStatus>
     </div>
   );
 }
