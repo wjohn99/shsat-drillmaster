@@ -10,6 +10,8 @@ import {
 import type { AppUserProfile } from "@/types/auth";
 import { isFirebaseConfigured } from "@/lib/firebase";
 import {
+  authErrorMessage,
+  completeGoogleRedirect,
   signInWithGoogle as authSignInWithGoogle,
   signOut as authSignOut,
   subscribeToAuthState,
@@ -39,26 +41,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
 
+    let cancelled = false;
+    const bootTimeout = window.setTimeout(() => {
+      if (!cancelled) {
+        setLoading(false);
+      }
+    }, 8000);
+
+    void completeGoogleRedirect()
+      .then((redirected) => {
+        if (!cancelled && redirected) {
+          setProfile(redirected);
+        }
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        setError(authErrorMessage(err));
+      });
+
     const unsubscribe = subscribeToAuthState(
       async (firebaseUser) => {
-        setLoading(true);
-        setError(null);
-
         try {
           if (!firebaseUser) {
             setProfile(null);
             return;
           }
 
+          setError(null);
           const synced = await syncUserProfile(firebaseUser);
-          setProfile(synced);
+          if (!cancelled) setProfile(synced);
         } catch (err) {
-          const message =
-            err instanceof Error ? err.message : "Failed to restore your session.";
-          setError(message);
+          if (cancelled) return;
+          setError(authErrorMessage(err));
           setProfile(null);
         } finally {
-          setLoading(false);
+          window.clearTimeout(bootTimeout);
+          if (!cancelled) setLoading(false);
         }
       },
       (err) => {
@@ -68,22 +86,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
     );
 
-    return unsubscribe;
+    return () => {
+      cancelled = true;
+      window.clearTimeout(bootTimeout);
+      unsubscribe();
+    };
   }, []);
 
   const signInWithGoogle = useCallback(async () => {
     setError(null);
-    setLoading(true);
     try {
       const userProfile = await authSignInWithGoogle();
       setProfile(userProfile);
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Sign-in failed. Please try again.";
-      setError(message);
+      setError(authErrorMessage(err));
       throw err;
-    } finally {
-      setLoading(false);
     }
   }, []);
 

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, ClipboardList, GripVertical, MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -65,8 +65,15 @@ export function BoardListColumn({
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [draggingCardId, setDraggingCardId] = useState<string | null>(null);
-  const [dragOverCardId, setDragOverCardId] = useState<string | null>(null);
+  const [dropLineTop, setDropLineTop] = useState<number | null>(null);
   const [reordering, setReordering] = useState(false);
+  const dragImageRef = useRef<HTMLElement | null>(null);
+  const listBodyRef = useRef<HTMLDivElement | null>(null);
+  const listCardsRef = useRef<WorkspaceCard[]>([]);
+  const draggingCardIdRef = useRef<string | null>(null);
+  const fromIndexRef = useRef(-1);
+  const dropIndexRef = useRef<number | null>(null);
+  const reorderingRef = useRef(false);
 
   const listCards = useMemo(
     () =>
@@ -80,22 +87,86 @@ export function BoardListColumn({
         }),
     [cards, list.id],
   );
+  listCardsRef.current = listCards;
 
-  const handleReorder = async (targetCardId: string) => {
-    if (!draggingCardId || draggingCardId === targetCardId || readOnly || reordering) return;
+  useEffect(() => {
+    return () => {
+      dragImageRef.current?.remove();
+      dragImageRef.current = null;
+    };
+  }, []);
 
-    const ids = listCards.map((c) => c.id);
-    const fromIndex = ids.indexOf(draggingCardId);
-    const toIndex = ids.indexOf(targetCardId);
-    if (fromIndex < 0 || toIndex < 0) return;
+  const clearDragState = () => {
+    dragImageRef.current?.remove();
+    dragImageRef.current = null;
+    draggingCardIdRef.current = null;
+    fromIndexRef.current = -1;
+    dropIndexRef.current = null;
+    setDraggingCardId(null);
+    setDropLineTop(null);
+  };
 
-    const nextIds = [...ids];
-    nextIds.splice(fromIndex, 1);
-    nextIds.splice(toIndex, 0, draggingCardId);
+  const updateDropFromPointer = (clientY: number) => {
+    const root = listBodyRef.current;
+    if (!root) return;
 
+    const cardEls = Array.from(root.querySelectorAll<HTMLElement>("[data-workspace-card]"));
+    const rootRect = root.getBoundingClientRect();
+    let nextIndex = cardEls.length;
+    let nextTop = root.scrollHeight - 8;
+
+    for (let i = 0; i < cardEls.length; i += 1) {
+      const rect = cardEls[i].getBoundingClientRect();
+      if (clientY < rect.top + rect.height / 2) {
+        nextIndex = i;
+        nextTop = rect.top - rootRect.top + root.scrollTop;
+        break;
+      }
+    }
+
+    if (nextIndex === cardEls.length && cardEls.length > 0) {
+      const lastRect = cardEls[cardEls.length - 1].getBoundingClientRect();
+      nextTop = lastRect.bottom - rootRect.top + root.scrollTop;
+    } else if (cardEls.length === 0) {
+      nextTop = 12;
+    }
+
+    if (dropIndexRef.current === nextIndex) return;
+    dropIndexRef.current = nextIndex;
+    setDropLineTop(nextTop);
+  };
+
+  const commitReorder = async () => {
+    if (readOnly || reorderingRef.current) return;
+
+    const currentCards = listCardsRef.current;
+    const fromIndex = fromIndexRef.current;
+    const insertAt = dropIndexRef.current;
+    if (!draggingCardIdRef.current || fromIndex < 0 || insertAt == null) return;
+
+    let toIndex = insertAt;
+    if (fromIndex < toIndex) toIndex -= 1;
+    toIndex = Math.max(0, Math.min(toIndex, currentCards.length - 1));
+    if (toIndex === fromIndex) {
+      clearDragState();
+      return;
+    }
+
+    const next = [...currentCards];
+    const [dragged] = next.splice(fromIndex, 1);
+    if (!dragged) {
+      clearDragState();
+      return;
+    }
+    next.splice(toIndex, 0, dragged);
+
+    reorderingRef.current = true;
     setReordering(true);
     try {
-      await reorderWorkspaceCards(boardId, nextIds);
+      await reorderWorkspaceCards(
+        boardId,
+        next.map((card) => card.id),
+      );
       onCardsChanged();
     } catch (err) {
       toast({
@@ -104,9 +175,38 @@ export function BoardListColumn({
         variant: "destructive",
       });
     } finally {
-      setDraggingCardId(null);
-      setDragOverCardId(null);
+      reorderingRef.current = false;
+      clearDragState();
       setReordering(false);
+    }
+  };
+
+  const startCardDrag = (event: React.DragEvent<HTMLElement>, cardId: string, cardIndex: number) => {
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", cardId);
+
+    const cardEl = event.currentTarget.closest("[data-workspace-card]") as HTMLElement | null;
+    if (cardEl) {
+      const clone = cardEl.cloneNode(true) as HTMLElement;
+      clone.style.position = "absolute";
+      clone.style.top = "-9999px";
+      clone.style.left = "-9999px";
+      clone.style.width = `${cardEl.offsetWidth}px`;
+      clone.style.pointerEvents = "none";
+      clone.style.boxShadow = "0 12px 28px rgba(15, 23, 42, 0.2)";
+      document.body.appendChild(clone);
+      dragImageRef.current = clone;
+      event.dataTransfer.setDragImage(clone, 24, 16);
+    }
+
+    draggingCardIdRef.current = cardId;
+    fromIndexRef.current = cardIndex;
+    dropIndexRef.current = cardIndex;
+    setDraggingCardId(cardId);
+    if (cardEl && listBodyRef.current) {
+      const rootRect = listBodyRef.current.getBoundingClientRect();
+      const cardRect = cardEl.getBoundingClientRect();
+      setDropLineTop(cardRect.top - rootRect.top + listBodyRef.current.scrollTop);
     }
   };
 
@@ -167,7 +267,19 @@ export function BoardListColumn({
 
   return (
     <>
-      <div className="w-72 shrink-0 flex flex-col max-h-full rounded-xl bg-muted/80 border border-border">
+      <div
+        className="w-72 shrink-0 flex flex-col max-h-[calc(100vh-10rem)] rounded-xl bg-muted/80 border border-border"
+        onDragOver={(e) => {
+          if (readOnly || !draggingCardIdRef.current) return;
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+          updateDropFromPointer(e.clientY);
+        }}
+        onDrop={(e) => {
+          e.preventDefault();
+          void commitReorder();
+        }}
+      >
         <div className="px-3 py-2.5 flex items-center gap-2 border-b border-border">
           <h3 className="font-semibold text-sm truncate flex-1 min-w-0">{list.title}</h3>
           <span className="text-xs text-muted-foreground tabular-nums shrink-0">
@@ -216,120 +328,134 @@ export function BoardListColumn({
         </div>
 
         <div
-          className="flex-1 overflow-y-auto p-2 space-y-2 min-h-[120px]"
-          onDragOver={(e) => {
-            if (readOnly || !draggingCardId) return;
-            e.preventDefault();
-          }}
+          ref={listBodyRef}
+          className={cn(
+            "relative overflow-y-auto p-2 min-h-[120px]",
+            draggingCardId && "bg-primary/5 ring-1 ring-inset ring-primary/20 rounded-b-xl",
+          )}
         >
-          {listCards.map((card) => (
+          {draggingCardId && dropLineTop != null ? (
             <div
-              key={card.id}
-              onDragOver={(e) => {
-                if (readOnly || !draggingCardId) return;
-                e.preventDefault();
-                e.dataTransfer.dropEffect = "move";
-                setDragOverCardId(card.id);
-              }}
-              onDragLeave={() => {
-                if (dragOverCardId === card.id) setDragOverCardId(null);
-              }}
-              onDrop={(e) => {
-                e.preventDefault();
-                void handleReorder(card.id);
-              }}
-              className={cn(
-                "rounded-lg transition-shadow",
-                dragOverCardId === card.id && draggingCardId !== card.id && "ring-2 ring-primary/60",
-                draggingCardId === card.id && "opacity-50",
-              )}
+              className="pointer-events-none absolute left-2 right-2 z-10"
+              style={{ top: dropLineTop }}
             >
-              <div className="flex items-stretch">
-                {!readOnly ? (
-                  <div
-                    draggable
-                    onDragStart={(e) => {
-                      setDraggingCardId(card.id);
-                      e.dataTransfer.effectAllowed = "move";
-                      e.dataTransfer.setData("text/plain", card.id);
-                    }}
-                    onDragEnd={() => {
-                      setDraggingCardId(null);
-                      setDragOverCardId(null);
-                    }}
-                    className={cn(
-                      "flex items-center px-1 shrink-0 touch-none",
-                      "cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground",
-                    )}
-                    aria-label={`Drag to reorder ${card.title}`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <GripVertical className="h-4 w-4" />
-                  </div>
-                ) : null}
-                <button
-                  type="button"
-                  onClick={() => onCardClick(card)}
+              <div className="h-1.5 -translate-y-1/2 rounded-full bg-primary ring-4 ring-primary/20" />
+              <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary-foreground">
+                Drop here
+              </span>
+            </div>
+          ) : null}
+
+          {listCards.map((card, index) => {
+            const isDraggingThis = draggingCardId === card.id;
+
+            return (
+              <div key={card.id} className="mb-2 last:mb-0">
+                <div
+                  data-workspace-card
                   className={cn(
-                    "flex-1 min-w-0 text-left rounded-lg px-3 py-2.5 text-sm shadow-sm transition-colors",
-                    "bg-card border border-border hover:bg-accent/50",
-                    card.completed && "opacity-80",
+                    "rounded-lg",
+                    isDraggingThis && "opacity-40 ring-2 ring-primary/40",
                   )}
                 >
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-stretch">
+                    {!readOnly ? (
+                      <div
+                        draggable
+                        onDragStart={(e) => startCardDrag(e, card.id, index)}
+                        onDragEnd={() => {
+                          dragImageRef.current?.remove();
+                          dragImageRef.current = null;
+                          window.setTimeout(() => {
+                            if (!reorderingRef.current) clearDragState();
+                          }, 0);
+                        }}
+                        className={cn(
+                          "flex items-center px-1.5 shrink-0 touch-none",
+                          "cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground",
+                        )}
+                        aria-label={`Drag to reorder ${card.title}`}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <GripVertical className="h-4 w-4" />
+                      </div>
+                    ) : null}
                     <button
                       type="button"
-                      aria-label={card.completed ? "Mark incomplete" : "Mark complete"}
+                      onClick={() => onCardClick(card)}
                       className={cn(
-                        "h-4 w-4 shrink-0 rounded-full flex items-center justify-center",
-                        "outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0",
+                        "flex-1 min-w-0 text-left rounded-lg px-3 py-2.5 text-sm shadow-sm transition-colors",
+                        "bg-card border border-border hover:bg-accent/50",
+                        card.completed && "opacity-80",
                       )}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        if (readOnly) return;
-                        void (async () => {
-                          try {
-                            await updateWorkspaceCard(boardId, card.id, { completed: !card.completed });
-                            onCardsChanged();
-                          } catch {
-                            toast({ title: "Could not update status", variant: "destructive" });
-                          }
-                        })();
-                      }}
                     >
-                      {card.completed ? (
-                        <span className="h-4 w-4 rounded-full bg-primary flex items-center justify-center">
-                          <Check className="h-2.5 w-2.5 text-primary-foreground" strokeWidth={3} />
+                      <div className="flex items-center gap-2">
+                        <span
+                          role="button"
+                          tabIndex={readOnly ? -1 : 0}
+                          aria-label={card.completed ? "Mark incomplete" : "Mark complete"}
+                          className={cn(
+                            "h-4 w-4 shrink-0 rounded-full flex items-center justify-center",
+                            "outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0",
+                          )}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (readOnly) return;
+                            void (async () => {
+                              try {
+                                await updateWorkspaceCard(boardId, card.id, { completed: !card.completed });
+                                onCardsChanged();
+                              } catch {
+                                toast({ title: "Could not update status", variant: "destructive" });
+                              }
+                            })();
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key !== "Enter" && e.key !== " ") return;
+                            e.preventDefault();
+                            e.stopPropagation();
+                            (e.currentTarget as HTMLElement).click();
+                          }}
+                        >
+                          {card.completed ? (
+                            <span className="h-4 w-4 rounded-full bg-primary flex items-center justify-center">
+                              <Check className="h-2.5 w-2.5 text-primary-foreground" strokeWidth={3} />
+                            </span>
+                          ) : (
+                            <span className="h-4 w-4 rounded-full border border-muted-foreground/50" />
+                          )}
                         </span>
-                      ) : (
-                        <span className="h-4 w-4 rounded-full border border-muted-foreground/50" />
-                      )}
+                        <span
+                          className={cn(
+                            "font-medium leading-snug",
+                            card.completed && "text-muted-foreground",
+                          )}
+                        >
+                          {card.title}
+                        </span>
+                      </div>
+                      {card.assignmentId ? (
+                        <p className="text-xs text-muted-foreground mt-1 pl-6 flex items-center gap-1">
+                          <ClipboardList className="h-3 w-3 shrink-0" />
+                          Worksheet attached
+                        </p>
+                      ) : null}
+                      {card.description ? (
+                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2 pl-6">
+                          {card.description}
+                        </p>
+                      ) : null}
                     </button>
-                    <span
-                      className={cn(
-                        "font-medium leading-snug",
-                        card.completed && "text-muted-foreground",
-                      )}
-                    >
-                      {card.title}
-                    </span>
                   </div>
-                  {card.assignmentId ? (
-                    <p className="text-xs text-muted-foreground mt-1 pl-6 flex items-center gap-1">
-                      <ClipboardList className="h-3 w-3 shrink-0" />
-                      Worksheet attached
-                    </p>
-                  ) : null}
-                  {card.description ? (
-                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2 pl-6">
-                      {card.description}
-                    </p>
-                  ) : null}
-                </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
+
+          {listCards.length === 0 ? (
+            <p className="px-2 py-6 text-center text-xs text-muted-foreground">No cards yet</p>
+          ) : null}
 
           {adding && !readOnly ? (
             <div className="space-y-2 p-1">

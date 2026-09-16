@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Component, useEffect, useState, type ErrorInfo, type ReactNode } from "react";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { TutorWorkspaceHome } from "@/components/workspace/TutorWorkspaceHome";
 import { WorkspaceBoard } from "@/components/workspace/WorkspaceBoard";
@@ -74,11 +75,13 @@ export default function Workspace() {
 
     if (boardId) {
       return (
-        <WorkspaceBoard
-          boardId={boardId}
-          readOnly={isStudent}
-          showBackLink={isTutor}
-        />
+        <BoardCrashGuard>
+          <WorkspaceBoard
+            boardId={boardId}
+            readOnly={isStudent}
+            showBackLink={isTutor}
+          />
+        </BoardCrashGuard>
       );
     }
 
@@ -99,6 +102,33 @@ export default function Workspace() {
       </main>
     </div>
   );
+}
+
+class BoardCrashGuard extends Component<{ children: ReactNode }, { message: string | null }> {
+  state = { message: null as string | null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { message: error.message || "Something went wrong while opening this board." };
+  }
+
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error("Workspace board failed to render", error, info);
+  }
+
+  render() {
+    if (this.state.message) {
+      return (
+        <div className="max-w-lg mx-auto text-center space-y-4 py-16">
+          <h1 className="text-xl font-bold">Couldn’t open this board</h1>
+          <p className="text-sm text-muted-foreground">{this.state.message}</p>
+          <Button variant="outline" asChild>
+            <Link to="/workspace">Back to workspaces</Link>
+          </Button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
 }
 
 function StudentWorkspacePlaceholder() {

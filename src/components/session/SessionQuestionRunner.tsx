@@ -10,9 +10,9 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, ArrowRight, BookOpen, CheckCircle, Flag, XCircle } from "lucide-react";
 import { useQuestions } from "@/contexts/QuestionsContext";
-import { ChoiceExplanationLine } from "@/components/question/ChoiceExplanationLine";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
 import { QuestionSolutionPanel } from "@/components/question/QuestionSolutionPanel";
+import { getSelectedChoiceIds } from "@/lib/questionExplanation";
 import type { Question } from "@/types";
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
 import { isIndyCheckboxMultiSubtype, parseAtaAnswer, serializeAtaAnswer } from "@/lib/indyAta";
@@ -378,7 +378,6 @@ export function SessionQuestionRunner({
                               <XCircle className="h-4 w-4 shrink-0 text-destructive mt-1" />
                             )}
                           </div>
-                          <ChoiceExplanationLine choice={choice} showSolution={showSolution} />
                         </div>
                       );
                     })}
@@ -422,7 +421,6 @@ export function SessionQuestionRunner({
                                 <XCircle className="h-4 w-4 text-destructive mt-1" />
                               )}
                             </div>
-                            <ChoiceExplanationLine choice={choice} showSolution={showSolution} />
                           </div>
                         ))}
                       </RadioGroup>
@@ -450,6 +448,7 @@ export function SessionQuestionRunner({
                   <QuestionSolutionPanel
                     question={currentQuestion}
                     isCorrect={feedback.correct}
+                    selectedChoiceIds={getSelectedChoiceIds(currentQuestion, raw)}
                   />
                 )}
               </CardContent>

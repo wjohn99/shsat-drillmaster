@@ -23,9 +23,9 @@ import {
 } from "lucide-react";
 import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
 import { useQuestions } from "@/contexts/QuestionsContext";
-import { ChoiceExplanationLine } from "@/components/question/ChoiceExplanationLine";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
 import { QuestionSolutionPanel } from "@/components/question/QuestionSolutionPanel";
+import { getSelectedChoiceIds } from "@/lib/questionExplanation";
 import { useQuestionBookmarks } from "@/contexts/QuestionBookmarksContext";
 import { toast } from "@/hooks/use-toast";
 import { isAtaAnswerCorrect, isIndyCheckboxMultiSubtype, serializeAtaAnswer } from "@/lib/indyAta";
@@ -481,7 +481,6 @@ export default function Question() {
                                 <XCircle className="h-4 w-4 shrink-0 text-destructive mt-1" />
                               )}
                             </div>
-                            <ChoiceExplanationLine choice={choice} showSolution={showSolution} />
                           </div>
                         );
                       })}
@@ -530,7 +529,6 @@ export default function Question() {
                               <XCircle className="h-4 w-4 text-destructive mt-1" />
                             )}
                           </div>
-                          <ChoiceExplanationLine choice={choice} showSolution={showSolution} />
                         </div>
                       ))}
                     </RadioGroup>
@@ -590,6 +588,7 @@ export default function Question() {
                   <QuestionSolutionPanel
                     question={question}
                     isCorrect={isAnswerCorrect()}
+                    selectedChoiceIds={getSelectedChoiceIds(question, getUserAnswer())}
                   />
                 )}
 

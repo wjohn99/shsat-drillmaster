@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, Navigate, useLocation } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -7,30 +7,28 @@ import { useAuth } from "@/contexts/AuthContext";
 import logoIcon from "@/assets/logo-icon.png";
 
 export default function Login() {
-  const { profile, loading, error, isConfigured, signInWithGoogle, clearError } = useAuth();
+  const { profile, error, isConfigured, signInWithGoogle } = useAuth();
   const location = useLocation();
   const [signingIn, setSigningIn] = useState(false);
 
   const redirectTo =
     (location.state as { from?: { pathname: string } } | null)?.from?.pathname ?? "/dashboard";
 
-  useEffect(() => {
-    clearError();
-  }, [clearError]);
-
-  if (!loading && profile) {
+  if (profile) {
     return <Navigate to={redirectTo} replace />;
   }
 
-  const handleSignIn = async () => {
-    setSigningIn(true);
-    try {
-      await signInWithGoogle();
-    } catch {
-      // Error surfaced via context
-    } finally {
-      setSigningIn(false);
-    }
+  const handleSignIn = () => {
+    void (async () => {
+      setSigningIn(true);
+      try {
+        await signInWithGoogle();
+      } catch {
+        // Error surfaced via context
+      } finally {
+        setSigningIn(false);
+      }
+    })();
   };
 
   return (
@@ -71,8 +69,8 @@ export default function Login() {
 
             <GoogleSignInButton
               onClick={handleSignIn}
-              loading={signingIn || loading}
-              disabled={!isConfigured}
+              loading={signingIn}
+              disabled={!isConfigured || signingIn}
             />
 
             <p className="text-center text-sm text-muted-foreground pt-2">
