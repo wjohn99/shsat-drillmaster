@@ -19,10 +19,26 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-# Env files
+# Env / secrets — never commit real credentials
 .env
 .env.*
+!.env.example
+!.env.*.example
+*.pem
+*.p12
+*.pfx
+*.key
+!src/**/*.key.ts
+id_rsa*
+id_ed25519*
+*.keystore
+credentials.json
+**/serviceAccount*.json
+**/firebase-adminsdk*.json
+**/google-services.json
+**/GoogleService-Info.plist
+secrets/
+.secrets/
 
 # MacOS
 .DS_Store
-

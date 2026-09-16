@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
-    "deploy": "npm run build && rm -rf docs && mkdir docs && cp -R dist/* docs/",
+    "check:secrets": "node scripts/check-no-secrets.mjs",
+    "deploy": "npm run build && node scripts/copy-docs-if-no-secrets.mjs",
     "storage:provision": "node scripts/provision-firebase-storage.mjs drillmaster-cee20 us-central1",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -47,6 +48,7 @@
     "cmdk": "^1.1.1",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.6.0",
+    "firebase": "^12.19.0",
     "input-otp": "^1.4.2",
     "jspdf": "^4.2.1",
     "lucide-react": "^0.462.0",
