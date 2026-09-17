@@ -1,160 +1,194 @@
+import { Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
 import { Header } from "@/components/layout/Header";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  BookOpen, 
-  FileEdit, 
-  Calculator, 
-  Target,
-  TrendingUp,
-  Clock,
-  ArrowRight,
-  Edit3
-} from "lucide-react";
-import { Link } from "react-router-dom";
+import { Clock, ArrowRight } from "lucide-react";
+import { SHSAT_DIAGNOSTIC_SPEC } from "@/data/shsatDiagnosticForm";
+import { assembleDiagnosticExam } from "@/lib/shsatDiagnostic";
+import { useAuth } from "@/contexts/AuthContext";
+import { fetchPracticeSessionsForStudent } from "@/lib/practiceSessionService";
+import { assignToStudentNavState } from "@/types/worksheetsNavigation";
+import type { PracticeSessionRecord } from "@/types/practiceSession";
 
 const Practice = () => {
+  const { profile } = useAuth();
+  const isTutor = profile?.role === "tutor";
+  const diagnostic = useMemo(() => assembleDiagnosticExam(), []);
+  const [diagnosticSessions, setDiagnosticSessions] = useState<PracticeSessionRecord[]>([]);
+
+  useEffect(() => {
+    if (!profile) return;
+    let cancelled = false;
+    void fetchPracticeSessionsForStudent(["diagnostic"])
+      .then((rows) => {
+        if (!cancelled) setDiagnosticSessions(rows);
+      })
+      .catch(() => {
+        if (!cancelled) setDiagnosticSessions([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [profile]);
+
   const practiceTypes = [
     {
-      id: 'reading-comprehension',
-      title: 'Reading Comprehension',
-      description: 'Adaptive practice with reading passages from various subjects',
-      icon: BookOpen,
-      color: 'bg-gradient-ela',
-      features: ['8 Different Passages', 'Module 1 & 2 Practice', 'Instant Feedback'],
-      estimatedTime: '45-60 min'
+      id: "reading-comprehension",
+      title: "Reading Comprehension",
+      description: "Adaptive practice with reading passages from various subjects",
+      subject: "ELA",
+      features: ["8 Different Passages", "Module 1 & 2 Practice", "Instant Feedback"],
+      estimatedTime: "45–60 min",
     },
     {
-      id: 'revising-editing-a',
-      title: 'Revising & Editing Part A',
-      description: 'Grammar, punctuation, and sentence structure practice',
-      icon: FileEdit,
-      color: 'bg-gradient-primary',
-      features: ['Grammar Rules', 'Punctuation', 'Sentence Structure'],
-      estimatedTime: '30-40 min'
+      id: "revising-editing-a",
+      title: "Revising & Editing Part A",
+      description: "Grammar, punctuation, and sentence structure practice",
+      subject: "ELA",
+      features: ["Grammar Rules", "Punctuation", "Sentence Structure"],
+      estimatedTime: "30–40 min",
     },
     {
-      id: 'revising-editing-b',
-      title: 'Revising & Editing Part B',
-      description: 'Organization, clarity, and writing improvement',
-      icon: FileEdit,
-      color: 'bg-gradient-primary',
-      features: ['Text Organization', 'Clarity & Style', 'Writing Flow', 'Sentence Structure'],
-      estimatedTime: '35-45 min'
+      id: "revising-editing-b",
+      title: "Revising & Editing Part B",
+      description: "Organization, clarity, and writing improvement",
+      subject: "ELA",
+      features: ["Text Organization", "Clarity & Style", "Writing Flow", "Sentence Structure"],
+      estimatedTime: "35–45 min",
     },
     {
-      id: 'math',
-      title: 'Math',
-      description: 'Comprehensive math practice across all SHSAT topics',
-      icon: Calculator,
-      color: 'bg-gradient-math',
-      features: ['Algebra', 'Geometry', 'Data Analysis', 'Applied Math'],
-      estimatedTime: '50-70 min'
-    }
+      id: "math",
+      title: "Math",
+      description: "Comprehensive math practice across all SHSAT topics",
+      subject: "MATH",
+      features: ["Algebra", "Geometry", "Data Analysis", "Applied Math"],
+      estimatedTime: "50–70 min",
+    },
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
-      
+
       <div className="container py-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">Adaptive Practice</h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Take adaptive practice sessions that adjust to your skill level 
-            and focus on areas where you need the most improvement.
-          </p>
-        </div>
+        <PageHeader
+          title="Practice"
+          description="Start with a full SHSAT diagnostic, then drill weaker skills in shorter sessions."
+          actions={
+            isTutor ? (
+              <Button asChild>
+                <Link to="/worksheets" state={assignToStudentNavState()}>
+                  Assign to student
+                </Link>
+              </Button>
+            ) : null
+          }
+        />
 
-        {/* Practice Types */}
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
-          {practiceTypes.map((type) => {
-            const IconComponent = type.icon;
-            return (
-              <Card key={type.id} className="group flex h-full flex-col hover:shadow-lg transition-all duration-300 border-2 hover:border-primary/50">
-                <CardHeader>
-                  <div className={`h-16 w-16 rounded-xl ${type.color} flex items-center justify-center mb-4`}>
-                    {IconComponent && <IconComponent className="h-8 w-8 text-white" />}
-                    {!IconComponent && <FileEdit className="h-8 w-8 text-white" />}
-                  </div>
-                  <CardTitle className="text-xl mb-2">{type.title}</CardTitle>
-                  <p className="text-muted-foreground">{type.description}</p>
-                </CardHeader>
-                <CardContent className="flex flex-1 flex-col">
-                  <div className="flex flex-1 flex-col gap-4">
-                    {/* Practice areas — grows so footer aligns across cards in a row */}
-                    <div className="flex min-h-0 flex-1 flex-col">
-                      <h4 className="font-medium mb-2">Practice Areas:</h4>
-                      <div className="flex flex-wrap content-start gap-2">
-                        {type.features.map((feature, index) => (
-                          <Badge key={index} variant="outline" className="text-xs">
-                            {feature}
-                          </Badge>
-                        ))}
-                      </div>
+        <Card className="mb-10">
+          <CardHeader className="gap-6 md:flex-row md:items-start md:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                {SHSAT_DIAGNOSTIC_SPEC.testSeason}
+              </p>
+              <CardTitle className="mt-1 text-xl">{SHSAT_DIAGNOSTIC_SPEC.name}</CardTitle>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                50 ELA + 50 Math · {SHSAT_DIAGNOSTIC_SPEC.standardMinutes} minutes · choose your
+                first section · no answers until you submit. Matches Fall 2026 timing and navigation.
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Form loaded: {diagnostic.elaReady}/{SHSAT_DIAGNOSTIC_SPEC.elaCount} ELA ·{" "}
+                {diagnostic.mathReady}/{SHSAT_DIAGNOSTIC_SPEC.mathCount} Math
+                {diagnostic.isComplete
+                  ? " · ready to launch"
+                  : " · preview until the full form is imported"}
+              </p>
+            </div>
+            <div className="flex shrink-0 flex-col gap-2">
+              <Button asChild>
+                <Link to="/practice/diagnostic">
+                  Open diagnostic
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              {diagnosticSessions.length === 1 ? (
+                <Button variant="outline" asChild>
+                  <Link to="/practice/diagnostic" state={{ reviewSession: diagnosticSessions[0] }}>
+                    View results
+                  </Link>
+                </Button>
+              ) : diagnosticSessions.length > 1 ? (
+                <>
+                  <Button variant="outline" asChild>
+                    <Link
+                      to="/practice/diagnostic"
+                      state={{
+                        reviewSession: [...diagnosticSessions].sort(
+                          (a, b) =>
+                            (a.completedAt?.toMillis?.() ?? 0) - (b.completedAt?.toMillis?.() ?? 0),
+                        )[0],
+                      }}
+                    >
+                      View first diagnostic
+                    </Link>
+                  </Button>
+                  <Button variant="outline" asChild>
+                    <Link
+                      to="/practice/diagnostic"
+                      state={{ reviewSession: diagnosticSessions[0] }}
+                    >
+                      View latest results
+                    </Link>
+                  </Button>
+                </>
+              ) : null}
+            </div>
+          </CardHeader>
+        </Card>
+
+        <h2 className="mb-4 font-serif text-xl font-semibold">Skill practice</h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          {practiceTypes.map((type) => (
+            <Card key={type.id} className="flex h-full flex-col">
+              <CardHeader>
+                <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                  {type.subject}
+                </p>
+                <CardTitle className="mt-1 text-lg">{type.title}</CardTitle>
+                <p className="text-sm leading-relaxed text-muted-foreground">{type.description}</p>
+              </CardHeader>
+              <CardContent className="flex flex-1 flex-col">
+                <div className="flex flex-1 flex-col gap-4">
+                  <div className="flex min-h-0 flex-1 flex-col">
+                    <h4 className="mb-2 text-sm font-medium">Practice areas</h4>
+                    <div className="flex flex-wrap content-start gap-2">
+                      {type.features.map((feature, index) => (
+                        <Badge key={index} variant="outline" className="text-xs">
+                          {feature}
+                        </Badge>
+                      ))}
                     </div>
-
-                    <div className="mt-auto flex flex-col gap-4">
-                      {/* Time estimate */}
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <Clock className="h-4 w-4 mr-2 shrink-0" />
-                        Estimated time: {type.estimatedTime}
-                      </div>
-
-                      {/* Action button */}
-                      <Button className="w-full" asChild>
-                        <Link to={`/practice/${type.id}`}>
-                          Start Practice
-                          <ArrowRight className="h-4 w-4 ml-2" />
-                        </Link>
-                      </Button>
-                    </div>
                   </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
 
-        {/* Features Section */}
-        <div className="bg-secondary/50 rounded-lg p-8">
-          <h2 className="text-2xl font-bold text-center mb-8">
-            Why Choose Adaptive Practice?
-          </h2>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="h-12 w-12 rounded-full bg-gradient-primary flex items-center justify-center mx-auto mb-4">
-                <Target className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="font-semibold mb-2">Module-Based Practice</h3>
-              <p className="text-sm text-muted-foreground">
-                Questions adapt to your skill level, providing the right challenge at the right time.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="h-12 w-12 rounded-full bg-gradient-ela flex items-center justify-center mx-auto mb-4">
-                <TrendingUp className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="font-semibold mb-2">Track Progress</h3>
-              <p className="text-sm text-muted-foreground">
-                Monitor your improvement over time with detailed analytics and insights.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="h-12 w-12 rounded-full bg-gradient-math flex items-center justify-center mx-auto mb-4">
-                <BookOpen className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="font-semibold mb-2">Focused Learning</h3>
-              <p className="text-sm text-muted-foreground">
-                Concentrate on your weak areas while maintaining your strengths.
-              </p>
-            </div>
-          </div>
+                  <div className="mt-auto flex flex-col gap-4">
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <Clock className="mr-2 h-4 w-4 shrink-0" />
+                      Estimated time: {type.estimatedTime}
+                    </div>
+                    <Button className="w-full" asChild>
+                      <Link to={`/practice/${type.id}`}>
+                        Start practice
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     </div>

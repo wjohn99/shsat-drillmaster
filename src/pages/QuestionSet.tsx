@@ -61,7 +61,7 @@ export default function QuestionSet() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <Header />
         <QuestionsStatus />
       </div>
@@ -70,7 +70,7 @@ export default function QuestionSet() {
 
   if (questionSet.length === 0) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <Header />
         <div className="container py-8 text-center">
           <h1 className="text-2xl font-bold mb-4">No Questions Found</h1>
@@ -152,7 +152,7 @@ export default function QuestionSet() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
       
       <div className="container py-6">
@@ -247,7 +247,7 @@ export default function QuestionSet() {
                     </CardHeader>
                     <CardContent className="pt-0 prose prose-sm max-w-none">
                       {passage.body.split("\n\n").map((para, i) => (
-                        <p key={i} className="mb-4 last:mb-0 leading-relaxed">
+                        <p key={i} className="mb-4 last:mb-0 leading-relaxed whitespace-pre-wrap">
                           {para}
                         </p>
                       ))}
@@ -265,11 +265,11 @@ export default function QuestionSet() {
                   </div>
                 ) : (
                   <div className="prose prose-sm max-w-none">
-                    <p className="text-base leading-relaxed">{currentQuestion.stem}</p>
+                    <p className="text-base leading-relaxed whitespace-pre-wrap">{currentQuestion.stem}</p>
                   </div>
                 )}
 
-                {currentQuestion.subtype === 'INDY-CGT' && currentQuestion.cgt && (
+                {currentQuestion.cgt && (
                   <CgtBlock spec={currentQuestion.cgt} />
                 )}
 

@@ -46,6 +46,34 @@ export function isAssignmentOverdue(assignment: WorksheetAssignment): boolean {
   return dueMs > 0 && dueMs < Date.now();
 }
 
+export type WorksheetProgressStatus = "assigned" | "due" | "done";
+
+export const WORKSHEET_PROGRESS_LABEL: Record<WorksheetProgressStatus, string> = {
+  assigned: "Assigned",
+  due: "Due",
+  done: "Done",
+};
+
+export function worksheetProgressStatus(
+  assignment: WorksheetAssignment,
+): WorksheetProgressStatus {
+  if (assignment.status === "completed") return "done";
+  if (isAssignmentOverdue(assignment)) return "due";
+  return "assigned";
+}
+
+export function pickLatestCompletedAssignment<T extends WorksheetAssignment>(
+  assignments: T[],
+): T | null {
+  const completed = assignments.filter((a) => a.status === "completed");
+  if (completed.length === 0) return null;
+  return [...completed].sort((a, b) => {
+    const aMs = a.completedAt?.toMillis?.() ?? a.createdAt?.toMillis?.() ?? 0;
+    const bMs = b.completedAt?.toMillis?.() ?? b.createdAt?.toMillis?.() ?? 0;
+    return bMs - aMs;
+  })[0];
+}
+
 export function formatAttachmentDueDate(attachment: WorkspaceCardAttachment): string {
   if (!attachment.dueAt?.toDate) return "";
   return attachment.dueAt.toDate().toLocaleDateString(undefined, {

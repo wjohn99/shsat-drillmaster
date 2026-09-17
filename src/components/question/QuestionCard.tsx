@@ -31,7 +31,7 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
   };
 
   return (
-    <Card className="group relative flex h-full flex-col overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+    <Card className="group relative flex h-full flex-col overflow-hidden">
       {/* Status indicators */}
       <div className="absolute top-3 right-3 flex gap-1">
         {question.userBookmarked && (

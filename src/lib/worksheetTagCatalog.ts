@@ -1,4 +1,5 @@
 import type { Question, Tag } from '@/types';
+import { DIAGNOSTIC_RESERVED_QUESTION_IDS } from '@/data/shsatDiagnosticForm';
 import {
   TAG_CATEGORIES,
   WORKSHEET_CONTENT_SECTIONS,
@@ -69,6 +70,10 @@ export function shuffleArray<T>(items: T[]): T[] {
   return a;
 }
 
+function practicePool(questions: Question[]): Question[] {
+  return questions.filter((q) => !DIAGNOSTIC_RESERVED_QUESTION_IDS.has(q.id));
+}
+
 /** Random questions for a single subject (self-practice quick drills). */
 export function pickWorksheetQuestionsBySubject(
   questions: Question[],
@@ -76,7 +81,7 @@ export function pickWorksheetQuestionsBySubject(
   limit: number,
 ): Question[] {
   if (limit <= 0) return [];
-  const matched = questions.filter((q) => q.subject === subject);
+  const matched = practicePool(questions).filter((q) => q.subject === subject);
   return shuffleArray(matched).slice(0, Math.min(limit, matched.length));
 }
 
@@ -87,7 +92,9 @@ export function pickWorksheetQuestions(
   limit: number,
 ): Question[] {
   if (selectedTagCodes.size === 0 || limit <= 0) return [];
-  const matched = questions.filter((q) => q.tags.some((t) => selectedTagCodes.has(t.code)));
+  const matched = practicePool(questions).filter((q) =>
+    q.tags.some((t) => selectedTagCodes.has(t.code)),
+  );
   const byId = new Map<string, Question>();
   for (const q of matched) {
     if (!byId.has(q.id)) byId.set(q.id, q);

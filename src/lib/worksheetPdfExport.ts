@@ -120,18 +120,18 @@ function appendQuestionContent(ctx: PdfContext, q: Question) {
     return;
   }
 
+  if (q.cgt) {
+    for (const line of cgtVisualLines(q.cgt.visual)) {
+      addParagraph(ctx, line, 9);
+    }
+    if (q.cgt.sourceNote) addParagraph(ctx, q.cgt.sourceNote, 8, "italic");
+  }
+
   if (q.subtype === "INDY-EE" && q.ee) {
     if (q.ee.instruction) addParagraph(ctx, q.ee.instruction, 9, "italic");
     const prefix = q.ee.inputPrefix ? stripHtml(q.ee.inputPrefix) + " " : "";
     addParagraph(ctx, `${prefix}_______________________________`, 10);
     return;
-  }
-
-  if (q.subtype === "INDY-CGT" && q.cgt) {
-    for (const line of cgtVisualLines(q.cgt.visual)) {
-      addParagraph(ctx, line, 9);
-    }
-    if (q.cgt.sourceNote) addParagraph(ctx, q.cgt.sourceNote, 8, "italic");
   }
 
   if (q.subtype === "INDY-WP" && q.wp?.instruction) {

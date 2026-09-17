@@ -227,7 +227,7 @@ service cloud.firestore {
     match /practice_sessions/{sessionId} {
       allow create: if isSignedIn()
         && request.resource.data.userId == request.auth.uid
-        && request.resource.data.sessionType in ['assignment', 'self', 'tutor-preview'];
+        && request.resource.data.sessionType in ['assignment', 'self', 'tutor-preview', 'diagnostic'];
 
       // Students: own sessions only (query must use userId == auth.uid).
       allow read: if isSignedIn()
@@ -237,6 +237,11 @@ service cloud.firestore {
       allow read: if isSignedIn()
         && resource.data.tutorUid == request.auth.uid
         && resource.data.sessionType == 'assignment'
+        && isTutor();
+
+      // Tutors: diagnostic reports for any student (query must use sessionType == diagnostic).
+      allow read: if isSignedIn()
+        && resource.data.sessionType == 'diagnostic'
         && isTutor();
     }
   }

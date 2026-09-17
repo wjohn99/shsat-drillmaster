@@ -67,15 +67,17 @@ export default function PracticeSetup() {
   const mathCategories = TAG_CATEGORIES.filter((c) => c.subject === "MATH");
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
       <QuestionsStatus>
       <div className="container py-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold mb-2">Create Practice Set</h1>
-            <p className="text-muted-foreground">
+          <div className="mb-8">
+            <h1 className="mb-1.5 font-serif text-[1.75rem] font-semibold tracking-tight">
+              Create practice set
+            </h1>
+            <p className="text-[15px] text-muted-foreground">
               Customize your practice session with targeted questions
             </p>
           </div>
@@ -248,7 +250,7 @@ export default function PracticeSetup() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-primary mb-2">
+                    <div className="mb-2 font-serif text-3xl font-semibold text-primary">
                       {Math.min(availableQuestions.length, questionsCount)}
                     </div>
                     <div className="text-sm text-muted-foreground">

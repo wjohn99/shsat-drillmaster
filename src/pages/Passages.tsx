@@ -11,12 +11,12 @@ export default function Passages() {
   const { passages } = useQuestions();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
       <QuestionsStatus>
       <div className="container py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Reading Passages</h1>
+          <h1 className="mb-2 font-serif text-2xl font-semibold">Reading Passages</h1>
           <p className="text-muted-foreground">
             Explore reading passages with their associated questions for comprehensive ELA practice.
           </p>
@@ -24,7 +24,7 @@ export default function Passages() {
 
         <div className="grid md:grid-cols-2 gap-6">
           {passages.map((passage) => (
-            <Card key={passage.id} className="group hover:shadow-lg transition-all duration-300">
+            <Card key={passage.id}>
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <CardTitle className="text-lg">{passage.title}</CardTitle>

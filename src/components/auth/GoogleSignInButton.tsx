@@ -44,7 +44,7 @@ export function GoogleSignInButton({
       variant="outline"
       size="lg"
       className={cn(
-        "w-full h-12 bg-white text-foreground border-border/80 shadow-md hover:bg-white/95 hover:shadow-lg",
+        "h-11 w-full rounded-xl",
         className,
       )}
       onClick={onClick}

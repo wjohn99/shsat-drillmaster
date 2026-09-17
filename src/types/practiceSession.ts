@@ -1,7 +1,9 @@
 import type { Timestamp } from "firebase/firestore";
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
 
-export type PracticeSessionType = "assignment" | "self" | "tutor-preview";
+export type PracticeSessionType = "assignment" | "self" | "tutor-preview" | "diagnostic";
+
+export type DiagnosticEndReason = "submit" | "time";
 
 export interface PracticeSessionRecord {
   id: string;
@@ -18,6 +20,9 @@ export interface PracticeSessionRecord {
   totalTimeSeconds: number;
   events: SessionAnalyticsEvent[];
   completedAt: Timestamp;
+  endedReason?: DiagnosticEndReason;
+  attemptNumber?: number;
+  isBaseline?: boolean;
 }
 
 export interface SavePracticeSessionInput {
@@ -28,4 +33,7 @@ export interface SavePracticeSessionInput {
   events: SessionAnalyticsEvent[];
   assignmentId?: string | null;
   tutorUid?: string | null;
+  endedReason?: DiagnosticEndReason;
+  attemptNumber?: number;
+  isBaseline?: boolean;
 }

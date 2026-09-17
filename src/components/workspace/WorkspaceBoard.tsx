@@ -5,14 +5,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { workspaceBoardAccentColor } from "@/lib/workspaceBoardColors";
 import {
+  fetchAssignmentsForStudent,
+  fetchAssignmentsForTutor,
+} from "@/lib/assignmentService";
+import { pickLatestCompletedAssignment } from "@/lib/dashboardStats";
+import { firstAndLatestDiagnostic } from "@/lib/diagnosticReport";
+import { fetchPracticeSessionsForStudent, fetchPracticeSessionsForTutor } from "@/lib/practiceSessionService";
+import {
   createWorkspaceList,
   fetchWorkspaceBoard,
   fetchWorkspaceCards,
   fetchWorkspaceLists,
 } from "@/lib/workspaceService";
+import type { WorksheetAssignment } from "@/types/assignment";
+import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type { WorkspaceBoard as WorkspaceBoardType, WorkspaceCard, WorkspaceList } from "@/types/workspace";
+import { WORKSPACE_HOME_PATH } from "@/types/worksheetsNavigation";
 import { BoardListColumn } from "./BoardListColumn";
 import { CardDetailModal } from "./CardDetailModal";
+import { StudentQuickActions } from "./StudentQuickActions";
 
 interface WorkspaceBoardProps {
   boardId: string;
@@ -31,24 +42,48 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
   const [selectedListTitle, setSelectedListTitle] = useState<string | undefined>();
   const [addingList, setAddingList] = useState(false);
   const [newListTitle, setNewListTitle] = useState("");
+  const [assignmentById, setAssignmentById] = useState<Map<string, WorksheetAssignment>>(
+    () => new Map(),
+  );
+  const [lastSession, setLastSession] = useState<PracticeSessionRecord | null>(null);
+  const [firstDiagnostic, setFirstDiagnostic] = useState<PracticeSessionRecord | null>(null);
+  const [latestDiagnostic, setLatestDiagnostic] = useState<PracticeSessionRecord | null>(null);
+  const [lastCompletedAssignment, setLastCompletedAssignment] =
+    useState<WorksheetAssignment | null>(null);
 
   const loadBoard = useCallback(async (opts?: { silent?: boolean }) => {
     const silent = opts?.silent ?? false;
     if (!silent) setLoading(true);
     setError(null);
     try {
-      const [boardRow, listRows, cardRows] = await Promise.all([
+      const [boardRow, listRows, cardRows, assignmentRows, sessionRows] = await Promise.all([
         fetchWorkspaceBoard(boardId),
         fetchWorkspaceLists(boardId),
         fetchWorkspaceCards(boardId),
+        readOnly
+          ? fetchAssignmentsForStudent().catch(() => [] as WorksheetAssignment[])
+          : fetchAssignmentsForTutor().catch(() => [] as WorksheetAssignment[]),
+        readOnly
+          ? fetchPracticeSessionsForStudent().catch(() => [] as PracticeSessionRecord[])
+          : fetchPracticeSessionsForTutor().catch(() => [] as PracticeSessionRecord[]),
       ]);
       if (!boardRow) {
         setError("Workspace board not found.");
         return;
       }
+      const studentAssignments = readOnly
+        ? assignmentRows
+        : assignmentRows.filter((a) => a.assignedToStudentUid === boardRow.studentUid);
+      const map = new Map(studentAssignments.map((a) => [a.id, a]));
       setBoard(boardRow);
       setLists(listRows);
       setCards(cardRows);
+      setAssignmentById(map);
+      setLastSession(sessionRows.find((s) => s.userId === boardRow.studentUid) ?? null);
+      const diagnosticPair = firstAndLatestDiagnostic(sessionRows, boardRow.studentUid);
+      setFirstDiagnostic(diagnosticPair.first);
+      setLatestDiagnostic(diagnosticPair.latest);
+      setLastCompletedAssignment(pickLatestCompletedAssignment(studentAssignments));
       setSelectedCard((prev) => {
         if (!prev) return prev;
         return cardRows.find((c) => c.id === prev.id) ?? prev;
@@ -58,7 +93,7 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
     } finally {
       if (!silent) setLoading(false);
     }
-  }, [boardId]);
+  }, [boardId, readOnly]);
 
   useEffect(() => {
     void loadBoard();
@@ -87,7 +122,7 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
         <p>{error ?? "Board not found."}</p>
         {showBackLink ? (
           <Button variant="outline" className="mt-4" asChild>
-            <Link to="/workspace">Back to workspaces</Link>
+            <Link to="/workspace">Back to Workspace</Link>
           </Button>
         ) : null}
       </div>
@@ -98,13 +133,13 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
 
   return (
     <>
-      <div className="flex items-center justify-between gap-4 mb-4 px-1">
+      <div className="flex items-start justify-between gap-4 mb-4 px-1 flex-wrap">
         <div className="flex items-center gap-3 min-w-0">
           {showBackLink ? (
             <Button variant="ghost" size="sm" className="shrink-0" asChild>
               <Link to="/workspace">
                 <ArrowLeft className="h-4 w-4 mr-1" />
-                All boards
+                Workspace
               </Link>
             </Button>
           ) : null}
@@ -120,6 +155,18 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
             ) : null}
           </div>
         </div>
+        {!readOnly ? (
+          <StudentQuickActions
+            className="shrink-0 justify-end"
+            studentUid={board.studentUid}
+            lastSession={lastSession}
+            lastCompletedAssignment={lastCompletedAssignment}
+            firstDiagnostic={firstDiagnostic}
+            latestDiagnostic={latestDiagnostic}
+            showOpenBoard={false}
+            returnTo={WORKSPACE_HOME_PATH}
+          />
+        ) : null}
       </div>
 
       <div className="flex gap-4 overflow-x-auto pb-6 min-h-[calc(100vh-12rem)] items-start">
@@ -129,6 +176,7 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
             boardId={boardId}
             list={list}
             cards={cards}
+            assignmentById={assignmentById}
             readOnly={readOnly}
             onCardClick={(card) => {
               setSelectedCard(card);

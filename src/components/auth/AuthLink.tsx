@@ -1,5 +1,6 @@
 import { Link, type LinkProps } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useExamLock } from "@/contexts/ExamLockContext";
 
 type AuthLinkProps = LinkProps & {
   to: string;
@@ -7,13 +8,29 @@ type AuthLinkProps = LinkProps & {
 
 /**
  * Routes authenticated users to `to`; sends guests to `/login` with a return path.
+ * During a locked diagnostic, clicks open the same leave-exam warning instead of navigating.
  */
-export function AuthLink({ to, state, ...props }: AuthLinkProps) {
+export function AuthLink({ to, state, onClick, ...props }: AuthLinkProps) {
   const { profile } = useAuth();
+  const { locked, requestLeave } = useExamLock();
 
-  if (profile) {
-    return <Link to={to} state={state} {...props} />;
+  if (locked) {
+    return (
+      <a
+        href={to}
+        {...props}
+        onClick={(event) => {
+          event.preventDefault();
+          onClick?.(event);
+          requestLeave();
+        }}
+      />
+    );
   }
 
-  return <Link to="/login" state={{ from: { pathname: to } }} {...props} />;
+  if (profile) {
+    return <Link to={to} state={state} onClick={onClick} {...props} />;
+  }
+
+  return <Link to="/login" state={{ from: { pathname: to } }} onClick={onClick} {...props} />;
 }

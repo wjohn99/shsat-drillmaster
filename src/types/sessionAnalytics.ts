@@ -8,4 +8,6 @@ export interface SessionAnalyticsEvent {
   correct: boolean;
   elapsedSeconds: number;
   tags: string[];
+  /** Student's submitted response, when stored (diagnostic review). */
+  answer?: string;
 }

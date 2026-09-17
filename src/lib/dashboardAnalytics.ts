@@ -1,4 +1,5 @@
 import { getTagLabel } from "@/data/taggingScheme";
+import { pickLatestCompletedAssignment } from "@/lib/dashboardStats";
 import type {
   StudentOption,
   TutorAssignmentRow,
@@ -55,6 +56,10 @@ export interface StudentProgressRow {
   openAssignments: number;
   lastActiveLabel: string;
   avgAccuracy: number | null;
+  lastSession: PracticeSessionRecord | null;
+  lastCompletedAssignment: TutorAssignmentRow | null;
+  firstDiagnostic: PracticeSessionRecord | null;
+  latestDiagnostic: PracticeSessionRecord | null;
 }
 
 export interface AttentionItem {
@@ -121,6 +126,11 @@ export function buildTutorDashboardAnalytics(
           )
         : null;
 
+    const diagnosticSessions = studentSessions.filter((s) => s.sessionType === "diagnostic");
+    const diagnosticOldestFirst = [...diagnosticSessions].sort(
+      (a, b) => (a.completedAt?.toMillis?.() ?? 0) - (b.completedAt?.toMillis?.() ?? 0),
+    );
+
     return {
       studentUid: student.uid,
       name: student.displayName,
@@ -128,6 +138,10 @@ export function buildTutorDashboardAnalytics(
       openAssignments,
       lastActiveLabel: formatLastActiveLabel(lastMs),
       avgAccuracy,
+      lastSession: studentSessions[0] ?? null,
+      lastCompletedAssignment: pickLatestCompletedAssignment(studentAssignments),
+      firstDiagnostic: diagnosticOldestFirst[0] ?? null,
+      latestDiagnostic: diagnosticOldestFirst[diagnosticOldestFirst.length - 1] ?? null,
     };
   });
 
@@ -234,7 +248,7 @@ export interface AccuracyTrendPoint {
 }
 
 export interface RecentActivityItem {
-  kind: "assignment" | "self";
+  kind: "assignment" | "self" | "diagnostic";
   title: string;
   accuracyPct: number;
   questionsAnswered: number;
@@ -282,6 +296,7 @@ export function buildStudentDashboardAnalytics(
   selfSessions: PracticeSessionRecord[],
   assignmentSessions: PracticeSessionRecord[],
   completedAssignments: WorksheetAssignment[],
+  diagnosticSessions: PracticeSessionRecord[] = [],
 ): StudentDashboardAnalytics {
   const now = Date.now();
   const weekCutoff = now - WEEK_MS;
@@ -302,6 +317,17 @@ export function buildStudentDashboardAnalytics(
     }));
 
   const recentActivity: RecentActivityItem[] = [];
+
+  const lastDiagnostic = diagnosticSessions[0];
+  if (lastDiagnostic) {
+    recentActivity.unshift({
+      kind: "diagnostic",
+      title: lastDiagnostic.title,
+      accuracyPct: lastDiagnostic.accuracyPct,
+      questionsAnswered: lastDiagnostic.questionsAnswered,
+      dateLabel: formatRelativeDate(toMillis(lastDiagnostic.completedAt)),
+    });
+  }
 
   const lastAssignmentSession = assignmentSessions[0];
   const lastCompletedAssignment = completedAssignments.find((a) => a.status === "completed");

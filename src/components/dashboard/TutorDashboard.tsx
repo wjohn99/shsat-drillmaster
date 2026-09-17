@@ -33,10 +33,14 @@ import {
   countCompletedThisWeek,
   countOpenAssignments,
   formatAssignmentDate,
+  worksheetProgressStatus,
+  WORKSHEET_PROGRESS_LABEL,
 } from "@/lib/dashboardStats";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type { StudentOption, TutorAssignmentRow } from "@/types/assignment";
-import type { WorksheetsLocationState } from "@/types/worksheetsNavigation";
+import { StudentQuickActions } from "@/components/workspace/StudentQuickActions";
+import { WorksheetEmptyState } from "@/components/worksheets/WorksheetEmptyState";
+import { assignToStudentNavState, type WorksheetsLocationState } from "@/types/worksheetsNavigation";
 import { Button } from "@/components/ui/button";
 
 const RECENT_LIMIT = 10;
@@ -116,7 +120,7 @@ export function TutorDashboard() {
   if (loading) {
     return (
       <DashboardShell
-        title="Tutor Dashboard"
+        title="Dashboard"
         subtitle="Manage worksheets and track student progress."
       >
         <div className="flex justify-center py-20">
@@ -129,7 +133,7 @@ export function TutorDashboard() {
   if (error) {
     return (
       <DashboardShell
-        title="Tutor Dashboard"
+        title="Dashboard"
         subtitle="Manage worksheets and track student progress."
       >
         <Card className="border-destructive/30">
@@ -141,7 +145,7 @@ export function TutorDashboard() {
 
   return (
     <DashboardShell
-      title="Tutor Dashboard"
+      title="Dashboard"
       subtitle="Manage worksheets and track student progress."
     >
       <div className="space-y-8">
@@ -184,6 +188,9 @@ export function TutorDashboard() {
                     <TableHead className="text-right">Open</TableHead>
                     <TableHead>Last active</TableHead>
                     <TableHead className="text-right">Avg accuracy</TableHead>
+                    <TableHead className="text-right">
+                      <span className="sr-only">Actions</span>
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -203,6 +210,16 @@ export function TutorDashboard() {
                       <TableCell>{row.lastActiveLabel}</TableCell>
                       <TableCell className="text-right tabular-nums">
                         {row.avgAccuracy !== null ? `${row.avgAccuracy}%` : "—"}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <StudentQuickActions
+                          className="justify-end"
+                          studentUid={row.studentUid}
+                          lastSession={row.lastSession}
+                          lastCompletedAssignment={row.lastCompletedAssignment}
+                          firstDiagnostic={row.firstDiagnostic}
+                          latestDiagnostic={row.latestDiagnostic}
+                        />
                       </TableCell>
                     </TableRow>
                   ))}
@@ -320,12 +337,17 @@ export function TutorDashboard() {
           </CardHeader>
           <CardContent>
             {recentAssignments.length === 0 ? (
-              <p className="text-sm text-muted-foreground py-4 text-center">
-                No assignments yet. Create one and assign it to a student.
-              </p>
+              <WorksheetEmptyState
+                role="tutor"
+                onCreate={() =>
+                  navigate("/worksheets", { state: assignToStudentNavState() })
+                }
+              />
             ) : (
               <ul className="divide-y">
-                {recentAssignments.map((row) => (
+                {recentAssignments.map((row) => {
+                  const progress = worksheetProgressStatus(row);
+                  return (
                   <li
                     key={row.id}
                     className="py-3 flex items-start justify-between gap-3 first:pt-0 last:pb-0"
@@ -338,18 +360,21 @@ export function TutorDashboard() {
                       </p>
                     </div>
                     <div className="flex flex-col items-end gap-2 shrink-0">
-                      <Badge variant={row.status === "completed" ? "secondary" : "default"}>
-                        {row.status === "completed" ? (
-                          <>
-                            <CheckCircle2 className="h-3 w-3 mr-1" />
-                            Done
-                          </>
+                      <Badge
+                        variant={
+                          progress === "done"
+                            ? "secondary"
+                            : progress === "due"
+                              ? "destructive"
+                              : "default"
+                        }
+                      >
+                        {progress === "done" ? (
+                          <CheckCircle2 className="h-3 w-3 mr-1" />
                         ) : (
-                          <>
-                            <Circle className="h-3 w-3 mr-1" />
-                            To Do
-                          </>
+                          <Circle className="h-3 w-3 mr-1" />
                         )}
+                        {WORKSHEET_PROGRESS_LABEL[progress]}
                       </Badge>
                       {row.status === "completed" ? (
                         <Button
@@ -364,12 +389,13 @@ export function TutorDashboard() {
                           }
                         >
                           <Eye className="h-3 w-3 mr-1" />
-                          Review
+                          View last results
                         </Button>
                       ) : null}
                     </div>
                   </li>
-                ))}
+                  );
+                })}
               </ul>
             )}
           </CardContent>

@@ -4,27 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { ArrowLeft, ArrowRight, BookOpen, CheckCircle, Flag, XCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Flag } from "lucide-react";
 import { useQuestions } from "@/contexts/QuestionsContext";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
+import { QuestionResponseFields } from "@/components/question/QuestionResponseFields";
 import { QuestionSolutionPanel } from "@/components/question/QuestionSolutionPanel";
 import { getSelectedChoiceIds } from "@/lib/questionExplanation";
 import type { Question } from "@/types";
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
-import { isIndyCheckboxMultiSubtype, parseAtaAnswer, serializeAtaAnswer } from "@/lib/indyAta";
-import { parseDndPlacementsForQuestion, serializeDndPlacements } from "@/lib/indyDnd";
-import { parseIcSelectionsForQuestion, serializeIcSelections } from "@/lib/indyIc";
-import { DndBlock } from "@/components/question/DndBlock";
-import { EquationEditorBlock } from "@/components/question/EquationEditorBlock";
-import { CgtBlock } from "@/components/question/CgtBlock";
-import { WpBlock } from "@/components/question/WpBlock";
-import { InlineChoiceBlock } from "@/components/question/InlineChoiceBlock";
-import { HotSpotBlock } from "@/components/question/HotSpotBlock";
-import { GraphFigureBlock } from "@/components/question/GraphFigureBlock";
+import { parseAtaAnswer, serializeAtaAnswer } from "@/lib/indyAta";
 import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
 import { HighlightableText } from "@/components/exam/HighlightableText";
 import { canSubmitQuestionAnswer, isQuestionAnswerCorrect } from "@/lib/sessionGrading";
@@ -164,7 +152,7 @@ export function SessionQuestionRunner({
   const showSolution = reviewingAnswer;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
 
       <div className="container py-6">
@@ -262,7 +250,7 @@ export function SessionQuestionRunner({
                     </CardHeader>
                     <CardContent className="pt-0 prose prose-sm max-w-none">
                       {passage.body.split("\n\n").map((para, i) => (
-                        <p key={i} className="mb-4 last:mb-0 leading-relaxed">
+                        <p key={i} className="mb-4 last:mb-0 leading-relaxed whitespace-pre-wrap">
                           {para}
                         </p>
                       ))}
@@ -280,169 +268,18 @@ export function SessionQuestionRunner({
                   </div>
                 ) : (
                   <div className="prose prose-sm max-w-none">
-                    <p className="text-base leading-relaxed">{currentQuestion.stem}</p>
+                    <p className="text-base leading-relaxed whitespace-pre-wrap">{currentQuestion.stem}</p>
                   </div>
                 )}
 
-                {currentQuestion.subtype === "INDY-CGT" && currentQuestion.cgt && (
-                  <CgtBlock spec={currentQuestion.cgt} />
-                )}
-                {currentQuestion.subtype === "INDY-WP" && (
-                  <WpBlock spec={currentQuestion.wp ?? {}} />
-                )}
-                {currentQuestion.subtype === "INDY-HS" && currentQuestion.hs && (
-                  <HotSpotBlock
-                    spec={currentQuestion.hs}
-                    selectedId={raw || null}
-                    onSelect={(id) => handleAnswerChange(currentQuestion.id, id)}
-                    disabled={showSolution}
-                    showSolution={showSolution}
-                  />
-                )}
-                {currentQuestion.subtype === "INDY-GIF" && currentQuestion.gif?.mode === "plotPoint" && (
-                  <GraphFigureBlock
-                    spec={currentQuestion.gif}
-                    value={raw || null}
-                    onChange={(s) => handleAnswerChange(currentQuestion.id, s)}
-                    disabled={showSolution}
-                    showSolution={showSolution}
-                  />
-                )}
-                {currentQuestion.subtype === "INDY-IC" && currentQuestion.ic && (
-                  <InlineChoiceBlock
-                    spec={currentQuestion.ic}
-                    selections={parseIcSelectionsForQuestion(currentQuestion.ic, raw)}
-                    onChange={(next) =>
-                      handleAnswerChange(currentQuestion.id, serializeIcSelections(next))
-                    }
-                    disabled={showSolution}
-                    showSolution={showSolution}
-                  />
-                )}
-                {currentQuestion.subtype === "INDY-DND" && currentQuestion.dnd && (
-                  <DndBlock
-                    spec={currentQuestion.dnd}
-                    placements={parseDndPlacementsForQuestion(currentQuestion.dnd, raw)}
-                    onChange={(next) =>
-                      handleAnswerChange(currentQuestion.id, serializeDndPlacements(next))
-                    }
-                    disabled={showSolution}
-                    showSolution={showSolution}
-                  />
-                )}
-                {currentQuestion.subtype === "INDY-EE" && currentQuestion.ee && (
-                  <EquationEditorBlock
-                    key={currentQuestion.id}
-                    spec={currentQuestion.ee}
-                    value={raw || ""}
-                    onChange={(v) => handleAnswerChange(currentQuestion.id, v)}
-                    disabled={showSolution}
-                  />
-                )}
-
-                {isIndyCheckboxMultiSubtype(currentQuestion.subtype) && currentQuestion.choices && (
-                  <div className="space-y-3">
-                    <p className="text-sm text-muted-foreground">
-                      {currentQuestion.subtype === "INDY-MS"
-                        ? "Select all answers that apply."
-                        : "Select all that apply."}
-                    </p>
-                    {currentQuestion.choices.map((choice) => {
-                      const selected = parseAtaAnswer(raw);
-                      const checked = selected.includes(choice.id);
-                      const showWrongPick = showSolution && checked && !choice.isCorrect;
-                      const showMissed = showSolution && !checked && choice.isCorrect;
-                      return (
-                        <div key={choice.id} className="space-y-1.5">
-                          <div className="flex items-start space-x-3">
-                            <Checkbox
-                              id={`${currentQuestion.id}-${choice.id}`}
-                              checked={checked}
-                              onCheckedChange={() => toggleAtaAnswer(currentQuestion.id, choice.id)}
-                              disabled={showSolution}
-                              className="mt-1"
-                            />
-                            <Label
-                              htmlFor={`${currentQuestion.id}-${choice.id}`}
-                              className={`flex-1 cursor-pointer text-sm leading-relaxed ${
-                                showSolution && choice.isCorrect ? "text-success font-medium" : ""
-                              } ${showWrongPick ? "text-destructive" : ""} ${showMissed ? "text-warning" : ""}`}
-                            >
-                              <span className="font-medium mr-2">{choice.label}.</span>
-                              {choice.text}
-                            </Label>
-                            {showSolution && choice.isCorrect && (
-                              <CheckCircle className="h-4 w-4 shrink-0 text-success mt-1" />
-                            )}
-                            {showWrongPick && (
-                              <XCircle className="h-4 w-4 shrink-0 text-destructive mt-1" />
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-
-                {currentQuestion.choices &&
-                  !isIndyCheckboxMultiSubtype(currentQuestion.subtype) &&
-                  currentQuestion.subtype !== "INDY-DND" &&
-                  currentQuestion.subtype !== "INDY-EE" &&
-                  currentQuestion.subtype !== "INDY-IC" &&
-                  currentQuestion.subtype !== "INDY-HS" &&
-                  currentQuestion.subtype !== "INDY-GIF" && (
-                    <div className="space-y-3">
-                      <RadioGroup
-                        value={raw || ""}
-                        onValueChange={(value) => handleAnswerChange(currentQuestion.id, value)}
-                        disabled={showSolution}
-                      >
-                        {currentQuestion.choices.map((choice) => (
-                          <div key={choice.id} className="space-y-1.5">
-                            <div className="flex items-start space-x-3">
-                              <RadioGroupItem value={choice.id} id={choice.id} className="mt-1" />
-                              <Label
-                                htmlFor={choice.id}
-                                className={`flex-1 cursor-pointer text-sm leading-relaxed ${
-                                  showSolution && choice.isCorrect ? "text-success font-medium" : ""
-                                } ${
-                                  showSolution && raw === choice.id && !choice.isCorrect
-                                    ? "text-destructive"
-                                    : ""
-                                }`}
-                              >
-                                <span className="font-medium mr-2">{choice.label}.</span>
-                                {choice.text}
-                              </Label>
-                              {showSolution && choice.isCorrect && (
-                                <CheckCircle className="h-4 w-4 text-success mt-1" />
-                              )}
-                              {showSolution && raw === choice.id && !choice.isCorrect && (
-                                <XCircle className="h-4 w-4 text-destructive mt-1" />
-                              )}
-                            </div>
-                          </div>
-                        ))}
-                      </RadioGroup>
-                    </div>
-                  )}
-
-                {currentQuestion.subtype === "GRID_IN" && (
-                  <div className="space-y-3">
-                    <Label htmlFor={`grid-${currentQuestion.id}`}>Enter your answer:</Label>
-                    <Input
-                      id={`grid-${currentQuestion.id}`}
-                      value={raw || ""}
-                      onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
-                      placeholder="Enter fraction or decimal"
-                      className="max-w-md"
-                      disabled={showSolution}
-                    />
-                    <p className="text-xs text-muted-foreground">
-                      Grid-in answers are not auto-graded yet; they count as incorrect for statistics.
-                    </p>
-                  </div>
-                )}
+                <QuestionResponseFields
+                  question={currentQuestion}
+                  raw={raw}
+                  disabled={showSolution}
+                  showSolution={showSolution}
+                  onChange={(value) => handleAnswerChange(currentQuestion.id, value)}
+                  onToggleAta={(choiceId) => toggleAtaAnswer(currentQuestion.id, choiceId)}
+                />
 
                 {showSolution && feedback && (
                   <QuestionSolutionPanel

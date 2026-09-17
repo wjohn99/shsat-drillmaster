@@ -45,7 +45,7 @@ const QuestionBank = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
       <QuestionsStatus>
       <div className="container py-6">
@@ -62,7 +62,7 @@ const QuestionBank = () => {
           <div className="flex-1">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold">Question Bank</h1>
+                <h1 className="text-2xl font-semibold">Question Bank</h1>
                 <Badge variant="secondary" className="text-sm">
                   {filteredQuestions.length} questions
                 </Badge>

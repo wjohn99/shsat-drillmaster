@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Eye, Loader2 } from "lucide-react";
@@ -84,6 +85,7 @@ const Worksheets = () => {
   const workspaceCompletionTargetRef = useRef<WorksheetsWorkspaceCompletionTarget | null>(
     null,
   );
+  const returnToRef = useRef<string | null>(null);
 
   const [students, setStudents] = useState<StudentOption[]>([]);
   const [studentsLoading, setStudentsLoading] = useState(false);
@@ -104,6 +106,19 @@ const Worksheets = () => {
   const [assignmentsRefreshKey, setAssignmentsRefreshKey] = useState(0);
   const [reviewSession, setReviewSession] = useState<PracticeSessionRecord | null>(null);
   const [reviewSubtitle, setReviewSubtitle] = useState<string | undefined>();
+
+  const leaveWorksheets = (fallback: Mode = "home") => {
+    const to = returnToRef.current;
+    if (to) {
+      returnToRef.current = null;
+      navigate(to);
+      return;
+    }
+    if (fallback === "home") {
+      setActiveAssignment(null);
+    }
+    setMode(fallback);
+  };
 
   const tagCatalog = useMemo(() => buildWorksheetTagCatalog(allTags, questions), [questions]);
 
@@ -323,6 +338,10 @@ const Worksheets = () => {
     const navState = location.state as WorksheetsLocationState | null;
     if (!navState) return;
 
+    if (navState.returnTo) {
+      returnToRef.current = navState.returnTo;
+    }
+
     if (navState.assignToWorkspace && role === "tutor") {
       const target = navState.assignToWorkspace;
       setPendingAssignToWorkspace(target);
@@ -332,7 +351,13 @@ const Worksheets = () => {
       setWorkspaceListId(target.listId);
       setWorkspaceCardTarget(target.cardId ?? WORKSPACE_NEW_CARD_ID);
       openTutorBuild();
-    } else if (navState.openTutorBuild && role === "tutor") {
+    } else if (
+      (navState.openTutorBuild || navState.assignToStudentUid) &&
+      role === "tutor"
+    ) {
+      if (navState.assignToStudentUid) {
+        setSelectedStudentUid(navState.assignToStudentUid);
+      }
       openTutorBuild();
     } else if (navState.openStudentBuild && role === "student") {
       openStudentBuild();
@@ -449,6 +474,12 @@ const Worksheets = () => {
       setWorkspacePlacementLocked(false);
       setPendingAssignToWorkspace(null);
       setWorkspaceCardTarget(WORKSPACE_NEW_CARD_ID);
+
+      if (returnToRef.current) {
+        const to = returnToRef.current;
+        returnToRef.current = null;
+        navigate(to);
+      }
     } catch (err) {
       toast({
         title: "Assignment failed",
@@ -491,16 +522,15 @@ const Worksheets = () => {
 
   const exitRunner = () => {
     if (runSource === "assignment") {
-      setActiveAssignment(null);
-      setMode("home");
+      leaveWorksheets("home");
     } else {
-      setMode("build");
+      leaveWorksheets("build");
     }
   };
 
   if (questionsLoading && mode !== "review") {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <Header />
         <QuestionsStatus />
       </div>
@@ -509,7 +539,7 @@ const Worksheets = () => {
 
   if (mode === "review" && reviewSession) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <Header />
         <div className="container py-8">
           <WorksheetSessionReview
@@ -519,7 +549,7 @@ const Worksheets = () => {
             onBack={() => {
               setReviewSession(null);
               setReviewSubtitle(undefined);
-              setMode("home");
+              leaveWorksheets("home");
             }}
           />
         </div>
@@ -599,19 +629,14 @@ const Worksheets = () => {
 
   const backFromResults = () => {
     if (runSource === "assignment") {
-      setActiveAssignment(null);
-      setMode("home");
-    } else if (runSource === "self") {
-      setActiveAssignment(null);
-      setMode("build");
+      leaveWorksheets("home");
     } else {
-      setActiveAssignment(null);
-      setMode("build");
+      leaveWorksheets("build");
     }
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
 
       <div className="container py-8">
@@ -619,7 +644,11 @@ const Worksheets = () => {
           <div className="max-w-5xl mx-auto space-y-6">
             <Button variant="ghost" onClick={backFromResults}>
               <ArrowLeft className="h-4 w-4 mr-2" />
-              {runSource === "assignment" ? "Back to worksheets" : "Back to builder"}
+              {returnToRef.current
+                ? "Back to workspace"
+                : runSource === "assignment"
+                  ? "Back to worksheets"
+                  : "Back to builder"}
             </Button>
             <SessionResultsDashboard
               title={resultsTitle}
@@ -644,8 +673,8 @@ const Worksheets = () => {
                   </>
                 ) : runSource === "self" ? (
                   <>
-                    <Button variant="outline" onClick={() => setMode("home")}>
-                      Back to worksheets
+                    <Button variant="outline" onClick={() => leaveWorksheets("home")}>
+                      {returnToRef.current ? "Back to workspace" : "Back to worksheets"}
                     </Button>
                     <Button onClick={startTutorOrSelfPreview}>Practice again</Button>
                   </>
@@ -658,10 +687,14 @@ const Worksheets = () => {
                       <Eye className="h-4 w-4 mr-2" />
                       Review saved results
                     </Button>
-                    <Button onClick={backFromResults}>Back to worksheets</Button>
+                    <Button onClick={backFromResults}>
+                      {returnToRef.current ? "Back to workspace" : "Back to worksheets"}
+                    </Button>
                   </>
                 ) : (
-                  <Button onClick={backFromResults}>Back to worksheets</Button>
+                  <Button onClick={backFromResults}>
+                    {returnToRef.current ? "Back to workspace" : "Back to worksheets"}
+                  </Button>
                 )
               }
             />
@@ -674,16 +707,15 @@ const Worksheets = () => {
               variant="ghost"
               className="mb-6"
               onClick={() => {
-                setActiveAssignment(null);
-                setMode("home");
+                leaveWorksheets("home");
               }}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
+              {returnToRef.current ? "Back to workspace" : "Back"}
             </Button>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold mb-2">
+              <h2 className="mb-2 font-serif text-2xl font-semibold">
                 {buildVariant === "student"
                   ? "Create your own practice"
                   : "Create custom worksheet"}
@@ -732,16 +764,15 @@ const Worksheets = () => {
 
         {mode === "home" && (
           <>
-            <div className="text-center mb-12">
-              <h1 className="text-4xl font-bold mb-4">Worksheets</h1>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                {role === "tutor"
-                  ? "Create and assign focused practice sessions for your students."
-                  : role === "student"
-                    ? "Complete tutor assignments and build your own practice anytime."
-                    : "Sign in to create or receive assigned worksheets."}
-              </p>
-            </div>
+            <PageHeader
+              title="Worksheets"
+              description="Focused SHSAT practice sets — complete them here, or build your own."
+              actions={
+                role === "tutor" ? (
+                  <Button onClick={openTutorBuild}>Assign to student</Button>
+                ) : null
+              }
+            />
 
             {authLoading ? (
               <div className="flex justify-center py-16">

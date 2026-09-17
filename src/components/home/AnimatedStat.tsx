@@ -22,7 +22,7 @@ export function AnimatedStat({
 
   return (
     <div ref={ref} className={cn(className, "text-center")}>
-      <div className="mb-2 text-4xl font-bold text-brand-cream md:text-5xl">
+      <div className="mb-2 font-serif text-4xl font-semibold text-brand-cream md:text-5xl">
         <CountUp end={value} suffix={suffix} active={visible} />
       </div>
       <div className="text-sm text-white/75 md:text-base">{label}</div>

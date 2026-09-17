@@ -1,4 +1,5 @@
 import { Header } from "@/components/layout/Header";
+import { PageHeader } from "@/components/layout/PageHeader";
 
 interface DashboardShellProps {
   title: string;
@@ -12,14 +13,11 @@ export function DashboardShell({
   children,
 }: DashboardShellProps) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
 
-      <main className="container py-10 md:py-14">
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight">{title}</h1>
-          <p className="mt-2 text-lg text-muted-foreground">{subtitle}</p>
-        </div>
+      <main className="container py-8">
+        <PageHeader title={title} description={subtitle} />
         {children}
       </main>
     </div>

@@ -31,6 +31,7 @@ import {
 import type { WorksheetAssignment } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type { WorksheetsLocationState } from "@/types/worksheetsNavigation";
+import { WorksheetEmptyState } from "@/components/worksheets/WorksheetEmptyState";
 
 const PREVIEW_LIMIT = 3;
 
@@ -41,6 +42,7 @@ export function StudentDashboard() {
   const [assignments, setAssignments] = useState<WorksheetAssignment[]>([]);
   const [selfSessions, setSelfSessions] = useState<PracticeSessionRecord[]>([]);
   const [assignmentSessions, setAssignmentSessions] = useState<PracticeSessionRecord[]>([]);
+  const [diagnosticSessions, setDiagnosticSessions] = useState<PracticeSessionRecord[]>([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -58,6 +60,7 @@ export function StudentDashboard() {
         setAssignments(assignmentRows);
         setSelfSessions(allSessions.filter((s) => s.sessionType === "self"));
         setAssignmentSessions(allSessions.filter((s) => s.sessionType === "assignment"));
+        setDiagnosticSessions(allSessions.filter((s) => s.sessionType === "diagnostic"));
       } catch (err) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : "Could not load dashboard.");
@@ -78,8 +81,9 @@ export function StudentDashboard() {
         selfSessions,
         assignmentSessions,
         assignments.filter((a) => a.status === "completed"),
+        diagnosticSessions,
       ),
-    [selfSessions, assignmentSessions, assignments],
+    [selfSessions, assignmentSessions, assignments, diagnosticSessions],
   );
 
   const nextAssignment = useMemo(() => getNextTodoAssignment(assignments), [assignments]);
@@ -99,7 +103,7 @@ export function StudentDashboard() {
   if (loading) {
     return (
       <DashboardShell
-        title="Student Dashboard"
+        title="Dashboard"
         subtitle="Your assigned practice and performance at a glance."
       >
         <div className="flex justify-center py-20">
@@ -112,7 +116,7 @@ export function StudentDashboard() {
   if (error) {
     return (
       <DashboardShell
-        title="Student Dashboard"
+        title="Dashboard"
         subtitle="Your assigned practice and performance at a glance."
       >
         <Card className="border-destructive/30">
@@ -124,17 +128,17 @@ export function StudentDashboard() {
 
   return (
     <DashboardShell
-      title="Student Dashboard"
+      title="Dashboard"
       subtitle="Your assigned practice and performance at a glance."
     >
       <div className="space-y-8">
         {nextAssignment ? (
-          <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent shadow-md">
+          <Card className="border-border">
             <CardHeader>
               <p className="text-xs font-medium text-primary uppercase tracking-wide">
                 Up next
               </p>
-              <CardTitle className="text-2xl">{nextAssignment.title}</CardTitle>
+              <CardTitle>{nextAssignment.title}</CardTitle>
               <CardDescription>
                 From your tutor · {nextAssignment.questionIds.length} questions
                 {formatAssignmentDate(nextAssignment)
@@ -143,23 +147,69 @@ export function StudentDashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button size="lg" onClick={() => startAssignment(nextAssignment)}>
+              <Button onClick={() => startAssignment(nextAssignment)}>
                 <Play className="h-5 w-5 mr-2" />
                 Start assignment
               </Button>
             </CardContent>
           </Card>
-        ) : (
-          <Card className="border-dashed">
-            <CardContent className="py-8 text-center">
-              <CheckCircle2 className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
-              <p className="font-medium">You&apos;re all caught up!</p>
-              <p className="text-sm text-muted-foreground mt-1">
-                No open assignments — practice on your own or check back later.
-              </p>
-            </CardContent>
-          </Card>
-        )}
+        ) : null}
+
+        <Card className="border-primary/20">
+          <CardHeader>
+            <p className="text-xs font-medium text-primary uppercase tracking-wide">
+              Full exam
+            </p>
+            <CardTitle className="text-2xl">SHSAT diagnostic</CardTitle>
+            <CardDescription>
+              50 ELA · 50 Math · 180 minutes · scored after you submit
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-2">
+            <Button size="lg" asChild>
+              <Link to="/practice/diagnostic">
+                <Play className="h-5 w-5 mr-2" />
+                Open diagnostic
+              </Link>
+            </Button>
+            {diagnosticSessions.length === 1 ? (
+              <Button size="lg" variant="outline" asChild>
+                <Link
+                  to="/practice/diagnostic"
+                  state={{ reviewSession: diagnosticSessions[0] }}
+                >
+                  View results
+                </Link>
+              </Button>
+            ) : diagnosticSessions.length > 1 ? (
+              <>
+                <Button size="lg" variant="outline" asChild>
+                  <Link
+                    to="/practice/diagnostic"
+                    state={{
+                      reviewSession: [...diagnosticSessions].sort(
+                        (a, b) =>
+                          (a.completedAt?.toMillis?.() ?? 0) - (b.completedAt?.toMillis?.() ?? 0),
+                      )[0],
+                    }}
+                  >
+                    View first diagnostic
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild>
+                  <Link
+                    to="/practice/diagnostic"
+                    state={{ reviewSession: diagnosticSessions[0] }}
+                  >
+                    View latest results
+                  </Link>
+                </Button>
+              </>
+            ) : null}
+          </CardContent>
+        </Card>
+
+        {!nextAssignment ? <WorksheetEmptyState role="student" /> : null}
 
         <section className="grid sm:grid-cols-2 gap-4">
           <StatTile
@@ -245,9 +295,12 @@ export function StudentDashboard() {
           </CardHeader>
           <CardContent>
             {analytics.recentActivity.length === 0 ? (
-              <p className="text-sm text-muted-foreground py-2">
-                Finish a worksheet to see your activity here.
-              </p>
+              <div className="py-2 text-center space-y-1">
+                <p className="font-medium">No results yet</p>
+                <p className="text-sm text-muted-foreground">
+                  Finish a worksheet to see them here.
+                </p>
+              </div>
             ) : (
               <ul className="divide-y">
                 {analytics.recentActivity.map((item, i) => (
@@ -257,8 +310,20 @@ export function StudentDashboard() {
                   >
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">
-                        <Badge variant={item.kind === "assignment" ? "default" : "secondary"}>
-                          {item.kind === "assignment" ? "Assignment" : "Self-practice"}
+                        <Badge
+                          variant={
+                            item.kind === "assignment"
+                              ? "default"
+                              : item.kind === "diagnostic"
+                                ? "default"
+                                : "secondary"
+                          }
+                        >
+                          {item.kind === "assignment"
+                            ? "Assignment"
+                            : item.kind === "diagnostic"
+                              ? "Diagnostic"
+                              : "Self-practice"}
                         </Badge>
                         <span className="text-xs text-muted-foreground">{item.dateLabel}</span>
                       </div>
@@ -305,7 +370,7 @@ export function StudentDashboard() {
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       <Badge variant={row.status === "completed" ? "secondary" : "default"}>
-                        {row.status === "completed" ? "Done" : "To Do"}
+                        {row.status === "completed" ? "Done" : "Assigned"}
                       </Badge>
                       {row.status === "todo" && (
                         <Button size="sm" variant="outline" onClick={() => startAssignment(row)}>

@@ -44,7 +44,7 @@ export default function TopicQuestions() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <Header />
         <QuestionsStatus />
       </div>
@@ -53,7 +53,7 @@ export default function TopicQuestions() {
 
   if (!topic) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <Header />
         <div className="container py-8 text-center">
           <h1 className="text-2xl font-bold mb-4">Topic Not Found</h1>
@@ -79,7 +79,7 @@ export default function TopicQuestions() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
       
       <div className="container py-6">
@@ -172,7 +172,7 @@ export default function TopicQuestions() {
                     </CardHeader>
                     <CardContent className="pt-0 prose prose-sm max-w-none">
                       {passage.body.split("\n\n").map((para, i) => (
-                        <p key={i} className="mb-4 last:mb-0 leading-relaxed">
+                        <p key={i} className="mb-4 last:mb-0 leading-relaxed whitespace-pre-wrap">
                           {para}
                         </p>
                       ))}
@@ -190,11 +190,11 @@ export default function TopicQuestions() {
                   </div>
                 ) : (
                   <div className="prose prose-sm max-w-none">
-                    <p className="text-base leading-relaxed">{question.stem}</p>
+                    <p className="text-base leading-relaxed whitespace-pre-wrap">{question.stem}</p>
                   </div>
                 )}
 
-                {question.subtype === 'INDY-CGT' && question.cgt && (
+                {question.cgt && (
                   <CgtBlock spec={question.cgt} />
                 )}
 

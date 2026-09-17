@@ -37,8 +37,9 @@ import {
 import {
   formatAssignmentDueDate,
   formatAttachmentDueDate,
-  isAssignmentOverdue,
   isAttachmentOverdue,
+  worksheetProgressStatus,
+  WORKSHEET_PROGRESS_LABEL,
 } from "@/lib/dashboardStats";
 import { updateWorkspaceCard } from "@/lib/workspaceService";
 import type { WorksheetAssignment } from "@/types/assignment";
@@ -70,6 +71,7 @@ import type {
 } from "@/types/workspace";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
+import { WORKSPACE_HOME_PATH } from "@/types/worksheetsNavigation";
 
 interface CardDetailModalProps {
   boardId: string;
@@ -239,6 +241,7 @@ export function CardDetailModal({
           listId: card.listId,
           cardId: card.id,
         },
+        returnTo: WORKSPACE_HOME_PATH,
       },
     });
   };
@@ -250,6 +253,7 @@ export function CardDetailModal({
       state: {
         autoStartAssignment: linkedAssignment,
         workspaceCompletionTarget: { boardId, cardId: card.id },
+        returnTo: WORKSPACE_HOME_PATH,
       },
     });
   };
@@ -416,7 +420,7 @@ export function CardDetailModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-6xl w-[96vw] h-[min(92vh,900px)] p-0 gap-0 flex flex-col overflow-hidden [&>button]:z-20">
+      <DialogContent className="glass-modal max-w-6xl w-[96vw] h-[min(92vh,900px)] p-0 gap-0 flex flex-col overflow-hidden bg-card text-card-foreground [&>button]:z-20">
         <DialogTitle className="sr-only">{card.title}</DialogTitle>
 
         <div className="flex flex-1 min-h-0 flex-col lg:flex-row">
@@ -453,7 +457,7 @@ export function CardDetailModal({
                   onChange={(e) => setTitle(e.target.value)}
                   onBlur={() => void handleSaveTitle()}
                   readOnly={readOnly}
-                  className="text-xl font-semibold border-none shadow-none px-0 py-0 h-auto leading-tight focus-visible:ring-0"
+                  className="h-auto rounded-none border-0 bg-transparent px-0 py-1 text-xl font-semibold leading-tight shadow-none hover:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 [background-color:transparent] hover:[background-color:transparent]"
                 />
               </div>
             </div>
@@ -590,7 +594,7 @@ export function CardDetailModal({
                       <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
                     </div>
                   ) : linkedAssignment ? (
-                    <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
+                    <div className="rounded-lg border bg-background p-4 space-y-3">
                       <div>
                         <p className="font-medium">{linkedAssignment.title}</p>
                         <p className="text-sm text-muted-foreground mt-1">
@@ -598,18 +602,30 @@ export function CardDetailModal({
                           {formatAssignmentDueDate(linkedAssignment)
                             ? ` · Due ${formatAssignmentDueDate(linkedAssignment)}`
                             : ""}
-                          {linkedAssignment.status === "completed"
-                            ? " · Completed"
-                            : isAssignmentOverdue(linkedAssignment)
-                              ? " · Overdue"
-                              : " · To do"}
+                          {` · ${WORKSHEET_PROGRESS_LABEL[worksheetProgressStatus(linkedAssignment)]}`}
                         </p>
                       </div>
-                      {profile?.role === "student" && linkedAssignment.status === "todo" ? (
-                        <Button size="sm" onClick={handleStartLinkedWorksheet}>
-                          Start worksheet
-                        </Button>
-                      ) : null}
+                      <div className="flex flex-wrap gap-2">
+                        {profile?.role === "student" && linkedAssignment.status === "todo" ? (
+                          <Button size="sm" onClick={handleStartLinkedWorksheet}>
+                            Start worksheet
+                          </Button>
+                        ) : null}
+                        {linkedAssignment.status === "completed" ? (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              onOpenChange(false);
+                              navigate("/worksheets", {
+                                state: { reviewAssignment: linkedAssignment, returnTo: WORKSPACE_HOME_PATH },
+                              });
+                            }}
+                          >
+                            View last results
+                          </Button>
+                        ) : null}
+                      </div>
                     </div>
                   ) : (
                     <p className="text-sm text-muted-foreground">Worksheet not found.</p>

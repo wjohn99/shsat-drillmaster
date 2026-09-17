@@ -30,13 +30,15 @@ export default function TopicBrowser() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
       <QuestionsStatus>
       <div className="container py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Browse by Topic</h1>
+          <h1 className="mb-1.5 font-serif text-[1.75rem] font-semibold tracking-tight">
+            Browse by topic
+          </h1>
           <p className="text-muted-foreground">
             Choose a subject and topic to practice specific skills
           </p>
@@ -53,14 +55,14 @@ export default function TopicBrowser() {
           </Badge>
           <Badge 
             variant={selectedSubject === 'ELA' ? 'default' : 'outline'}
-            className="cursor-pointer px-6 py-2 text-sm bg-purple-500 hover:bg-purple-600"
+            className="cursor-pointer px-4 py-1.5 text-sm"
             onClick={() => setSelectedSubject('ELA')}
           >
             English
           </Badge>
           <Badge 
             variant={selectedSubject === 'MATH' ? 'default' : 'outline'}
-            className="cursor-pointer px-6 py-2 text-sm bg-blue-500 hover:bg-blue-600"
+            className="cursor-pointer px-4 py-1.5 text-sm"
             onClick={() => setSelectedSubject('MATH')}
           >
             Math

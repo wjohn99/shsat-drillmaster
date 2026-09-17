@@ -87,7 +87,7 @@ export default function Workspace() {
 
     if (isTutor) {
       return (
-        <TutorWorkspaceHome onBoardCreated={(id) => navigate(`/workspace/${id}`)} />
+        <TutorWorkspaceHome />
       );
     }
 
@@ -122,7 +122,7 @@ class BoardCrashGuard extends Component<{ children: ReactNode }, { message: stri
           <h1 className="text-xl font-bold">Couldn’t open this board</h1>
           <p className="text-sm text-muted-foreground">{this.state.message}</p>
           <Button variant="outline" asChild>
-            <Link to="/workspace">Back to workspaces</Link>
+            <Link to="/workspace">Back to Workspace</Link>
           </Button>
         </div>
       );
@@ -134,9 +134,9 @@ class BoardCrashGuard extends Component<{ children: ReactNode }, { message: stri
 function StudentWorkspacePlaceholder() {
   return (
     <div className="max-w-lg mx-auto text-center space-y-4 py-16">
-      <h1 className="text-2xl font-bold">Your workspace</h1>
+      <h1 className="text-2xl font-bold">Workspace</h1>
       <p className="text-muted-foreground">
-        Your tutor has not set up a workspace board for you yet.
+        Your tutor has not set up a workspace for you yet.
       </p>
       <p className="text-sm text-muted-foreground">
         When ready, you will see session notes, practice tests, and info here.

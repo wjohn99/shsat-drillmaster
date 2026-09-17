@@ -1,17 +1,20 @@
 /**
- * Runtime question catalog — single load path for the application.
+ * Runtime question catalog — single load path for Practice, Worksheets, Bank, and Blitz.
  *
- * Source hierarchy (do not merge at runtime):
- * 1. **Tracker spreadsheet** — source of truth; Jed Approved rows are imported into
- *    `trackerQuestions.ts` via scripts (not fetched live yet).
- * 2. **trackerQuestions.ts** — the only data file the app reads.
- * 3. **Legacy (not loaded):** `mockData.ts` (deprecated re-export), `converted_questions.json`
- *    (old ScoreSmart conversion artifact for scripts only).
+ * Source hierarchy:
+ * 1. **Tracker spreadsheet** — Jed Approved bank items in `trackerQuestions.ts`.
+ * 2. **Diagnostic holdback** — items/passages from Diagnostic_100_for_John.xlsx are
+ *    reserved for `/practice/diagnostic` and are never merged into this catalog,
+ *    including tracker rows that reuse a diagnostic form ID.
+ * 3. **Legacy (not loaded):** `mockData.ts`, `converted_questions.json`.
  */
 import type { Form, Passage, Question } from "@/types";
 import type { SubjectNavigation } from "@/types/navigation";
 import { normalizeQuestionTags } from "@/data/taggingScheme";
 import { buildNavigationData } from "@/data/navigationData";
+import { diagnosticPassages } from "@/data/diagnosticPassages";
+import { diagnosticQuestions } from "@/data/diagnosticQuestions";
+import { DIAGNOSTIC_RESERVED_QUESTION_IDS } from "@/data/shsatDiagnosticForm";
 import { trackerQuestions } from "@/data/trackerQuestions";
 import { filterQuestions, type QuestionFilterInput } from "@/lib/questionFilters";
 
@@ -41,16 +44,42 @@ function buildForms(questions: Question[]): Form[] {
   ];
 }
 
-export function buildQuestionCatalog(rawQuestions: Question[]): QuestionCatalog {
+function diagnosticHoldbackQuestionIds(): Set<string> {
+  const ids = new Set<string>(DIAGNOSTIC_RESERVED_QUESTION_IDS);
+  for (const question of diagnosticQuestions) {
+    ids.add(question.id);
+  }
+  return ids;
+}
+
+function diagnosticHoldbackPassageIds(): Set<string> {
+  return new Set(diagnosticPassages.map((passage) => passage.id));
+}
+
+/** Tracker items students may practice — diagnostic form IDs and passages excluded. */
+function publicPracticeQuestions(): Question[] {
+  const reservedQuestions = diagnosticHoldbackQuestionIds();
+  const reservedPassages = diagnosticHoldbackPassageIds();
+  return trackerQuestions.filter((question) => {
+    if (reservedQuestions.has(question.id)) return false;
+    if (question.passageId && reservedPassages.has(question.passageId)) return false;
+    return true;
+  });
+}
+
+export function buildQuestionCatalog(
+  rawQuestions: Question[],
+  rawPassages: Passage[] = [],
+): QuestionCatalog {
   const questions = rawQuestions.map((q) => ({
     ...q,
     tags: normalizeQuestionTags(q),
   }));
 
-  const passages: Passage[] = [];
-  for (const passage of passages) {
-    passage.questions = questions.filter((q) => q.passageId === passage.id);
-  }
+  const passages: Passage[] = rawPassages.map((passage) => ({
+    ...passage,
+    questions: questions.filter((q) => q.passageId === passage.id),
+  }));
 
   return {
     questions,
@@ -60,13 +89,18 @@ export function buildQuestionCatalog(rawQuestions: Question[]): QuestionCatalog 
   };
 }
 
-/** Loads the catalog from tracker-approved imports. Async seam for future live sheet fetch. */
+/** Practice catalog only — diagnostic form items are omitted. */
 export async function loadQuestionCatalog(): Promise<QuestionCatalog> {
-  return buildQuestionCatalog(trackerQuestions);
+  return buildQuestionCatalog(publicPracticeQuestions(), []);
 }
 
 export function loadQuestionCatalogSync(): QuestionCatalog {
-  return buildQuestionCatalog(trackerQuestions);
+  return buildQuestionCatalog(publicPracticeQuestions(), []);
+}
+
+/** Diagnostic exam only. Do not pass this catalog into Practice, Worksheets, Bank, or Blitz. */
+export function loadDiagnosticQuestionCatalog(): QuestionCatalog {
+  return buildQuestionCatalog(diagnosticQuestions, diagnosticPassages);
 }
 
 export function getFilteredQuestions(

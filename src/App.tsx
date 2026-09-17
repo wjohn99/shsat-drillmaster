@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { QuestionBookmarksProvider } from "@/contexts/QuestionBookmarksContext";
 import { QuestionsProvider } from "@/contexts/QuestionsContext";
+import { ExamLockProvider } from "@/contexts/ExamLockContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
@@ -17,6 +18,7 @@ import Question from "./pages/Question";
 import QuestionSet from "./pages/QuestionSet";
 import PracticeSetup from "./pages/PracticeSetup";
 import Forms from "./pages/Forms";
+import DiagnosticExam from "./pages/DiagnosticExam";
 import Passages from "./pages/Passages";
 import TopicBrowser from "./pages/TopicBrowser";
 import TopicQuestions from "./pages/TopicQuestions";
@@ -37,6 +39,7 @@ const App = () => (
     <AuthProvider>
       <QuestionBookmarksProvider>
       <QuestionsProvider>
+      <ExamLockProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
@@ -73,6 +76,14 @@ const App = () => (
               element={
                 <RequireAuth>
                   <Practice />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/practice/diagnostic"
+              element={
+                <RequireAuth>
+                  <DiagnosticExam />
                 </RequireAuth>
               }
             />
@@ -178,6 +189,7 @@ const App = () => (
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
+      </ExamLockProvider>
       </QuestionsProvider>
       </QuestionBookmarksProvider>
     </AuthProvider>

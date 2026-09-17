@@ -124,7 +124,7 @@ export default function Question() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <Header />
         <QuestionsStatus />
       </div>
@@ -133,7 +133,7 @@ export default function Question() {
 
   if (!question) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <Header />
         <div className="container py-8">
           <div className="text-center">
@@ -261,7 +261,7 @@ export default function Question() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
       
       <div className="container py-6">
@@ -318,7 +318,7 @@ export default function Question() {
                   ) : (
                     <div className="prose prose-sm max-w-none">
                       {passage.body.split("\n\n").map((paragraph, index) => (
-                        <p key={index} className="mb-4 leading-relaxed">
+                        <p key={index} className="mb-4 leading-relaxed whitespace-pre-wrap">
                           {paragraph}
                         </p>
                       ))}
@@ -377,12 +377,12 @@ export default function Question() {
                   </div>
                 ) : (
                   <div className="prose prose-sm max-w-none">
-                    <p className="text-base leading-relaxed">{question.stem}</p>
+                    <p className="text-base leading-relaxed whitespace-pre-wrap">{question.stem}</p>
                   </div>
                 )}
 
                 {/* INDY-CGT — chart / graph / table + MCQ */}
-                {question.subtype === 'INDY-CGT' && question.cgt && (
+                {question.cgt && (
                   <CgtBlock spec={question.cgt} />
                 )}
 

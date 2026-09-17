@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Check, ClipboardList, GripVertical, MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
+import { Check, GripVertical, MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
@@ -34,6 +35,12 @@ import {
   updateWorkspaceList,
 } from "@/lib/workspaceService";
 import type { WorkspaceCard, WorkspaceList } from "@/types/workspace";
+import type { WorksheetAssignment } from "@/types/assignment";
+import {
+  formatAssignmentDueDate,
+  worksheetProgressStatus,
+  WORKSHEET_PROGRESS_LABEL,
+} from "@/lib/dashboardStats";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 
@@ -41,6 +48,7 @@ interface BoardListColumnProps {
   boardId: string;
   list: WorkspaceList;
   cards: WorkspaceCard[];
+  assignmentById?: Map<string, WorksheetAssignment>;
   readOnly?: boolean;
   onCardClick: (card: WorkspaceCard) => void;
   onCardsChanged: () => void;
@@ -51,6 +59,7 @@ export function BoardListColumn({
   boardId,
   list,
   cards,
+  assignmentById,
   readOnly = false,
   onCardClick,
   onCardsChanged,
@@ -436,10 +445,9 @@ export function BoardListColumn({
                         </span>
                       </div>
                       {card.assignmentId ? (
-                        <p className="text-xs text-muted-foreground mt-1 pl-6 flex items-center gap-1">
-                          <ClipboardList className="h-3 w-3 shrink-0" />
-                          Worksheet attached
-                        </p>
+                        <BoardCardAssignmentStatus
+                          assignment={assignmentById?.get(card.assignmentId) ?? null}
+                        />
                       ) : null}
                       {card.description ? (
                         <p className="text-xs text-muted-foreground mt-1 line-clamp-2 pl-6">
@@ -566,5 +574,32 @@ export function BoardListColumn({
         </AlertDialogContent>
       </AlertDialog>
     </>
+  );
+}
+
+function BoardCardAssignmentStatus({
+  assignment,
+}: {
+  assignment: WorksheetAssignment | null | undefined;
+}) {
+  const status = assignment ? worksheetProgressStatus(assignment) : "assigned";
+  const dueLabel = assignment && status !== "done" ? formatAssignmentDueDate(assignment) : "";
+  const variant = status === "done" ? "secondary" : status === "due" ? "destructive" : "default";
+
+  return (
+    <div className="mt-1.5 pl-6 flex flex-wrap items-center gap-1.5">
+      <Badge variant={variant} className="text-[10px] px-1.5 py-0">
+        {WORKSHEET_PROGRESS_LABEL[status]}
+      </Badge>
+      {dueLabel ? (
+        <span
+          className={
+            status === "due" ? "text-[10px] font-medium text-destructive" : "text-[10px] text-muted-foreground"
+          }
+        >
+          {dueLabel}
+        </span>
+      ) : null}
+    </div>
   );
 }

@@ -36,7 +36,7 @@ export default function Bank() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
       <QuestionsStatus>
       <div className="flex h-[calc(100vh-4rem)]">

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { FileText, Plus, ArrowRight, Clock, BookOpen, History } from "lucide-react";
+import { Plus, ArrowRight, Clock, BookOpen } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -97,48 +97,26 @@ export function TutorWorksheetsHome({
   );
 
   return (
-    <div className="space-y-14 max-w-6xl mx-auto">
-      <div className="grid md:grid-cols-2 gap-8">
-        <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-2 hover:border-primary/50">
-          <CardHeader className="text-center">
-            <div className="h-16 w-16 rounded-full bg-gradient-primary flex items-center justify-center mx-auto mb-4">
-              <FileText className="h-8 w-8 text-white" />
-            </div>
-            <CardTitle className="text-xl">Pre-set Worksheets</CardTitle>
-          </CardHeader>
-          <CardContent className="text-center">
-            <p className="text-muted-foreground mb-4">
-              Ready-made worksheets covering key SHSAT topics and skills.
-            </p>
-            <Button className="w-full">
-              Browse Pre-sets
-              <ArrowRight className="h-4 w-4 ml-2" />
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-2 hover:border-primary/50">
-          <CardHeader className="text-center">
-            <div className="h-16 w-16 rounded-full bg-gradient-ela flex items-center justify-center mx-auto mb-4">
-              <Plus className="h-8 w-8 text-white" />
-            </div>
-            <CardTitle className="text-xl">Customize</CardTitle>
-          </CardHeader>
-          <CardContent className="text-center">
-            <p className="text-muted-foreground mb-4">
-              Choose skill tags and assign a custom worksheet to a student.
-            </p>
-            <Button className="w-full" onClick={onCreateCustom}>
-              Create Custom
-              <ArrowRight className="h-4 w-4 ml-2" />
-            </Button>
-          </CardContent>
-        </Card>
+    <div className="mx-auto max-w-6xl space-y-12">
+      <div className="flex flex-col gap-3 border-b border-border pb-6 sm:flex-row sm:items-center sm:justify-between">
+        <p className="max-w-xl text-sm text-muted-foreground">
+          Assign a custom worksheet, or browse pre-sets when they are available.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline">
+            Browse pre-sets
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+          <Button onClick={onCreateCustom}>
+            Assign to student
+            <Plus className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
       </div>
 
       <section>
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold">Your assignments</h2>
+        <div className="mb-4">
+          <h2 className="font-serif text-xl font-semibold">Your assignments</h2>
           <p className="text-muted-foreground mt-1">
             Track worksheets you sent and review saved results when students finish.
           </p>
@@ -146,37 +124,37 @@ export function TutorWorksheetsHome({
         <TutorAssignmentsGrid
           refreshKey={assignmentsRefreshKey}
           onReviewAssignment={onReviewAssignment}
+          onCreate={onCreateCustom}
         />
       </section>
 
       <section>
-        <div className="mb-6 flex items-center gap-2">
-          <History className="h-6 w-6 text-primary" />
-          <div>
-            <h2 className="text-2xl font-bold">Student attempt history</h2>
-            <p className="text-muted-foreground mt-1">
-              Every completed assigned worksheet is saved here for you to review anytime.
-            </p>
-          </div>
+        <div className="mb-4">
+          <h2 className="font-serif text-xl font-semibold">Student attempt history</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Every completed assigned worksheet is saved here for you to review anytime.
+          </p>
         </div>
         <WorksheetHistoryList
           sessions={historySessions}
           loading={historyLoading}
-          emptyMessage="When a student finishes an assigned worksheet, their results will appear here."
+          role="tutor"
           getSessionDetail={sessionStudentDetail}
           onReview={onReviewSession}
         />
       </section>
 
       <section>
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-bold">Featured Pre-set Worksheets</h2>
-          <Button variant="outline">View All</Button>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="font-serif text-xl font-semibold">Featured pre-sets</h2>
+          <Button variant="outline" size="sm">
+            View all
+          </Button>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {presetWorksheets.map((worksheet) => (
-            <Card key={worksheet.id} className="group hover:shadow-lg transition-all duration-300">
+            <Card key={worksheet.id}>
               <CardHeader>
                 <div className="flex items-center justify-between mb-2">
                   <Badge

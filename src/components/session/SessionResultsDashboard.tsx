@@ -45,6 +45,8 @@ export interface SessionResultsDashboardProps {
   footerActions?: ReactNode;
   /** Shown under the charts (e.g. streak explanation for Blitz). */
   footnote?: ReactNode;
+  extraSections?: ReactNode;
+  tagTableTitle?: string;
 }
 
 type TagSortKey = keyof Pick<SessionTagTableRow, "tag" | "n" | "accuracy" | "avgTime">;
@@ -59,6 +61,8 @@ export function SessionResultsDashboard({
   summaryMetrics,
   footerActions,
   footnote,
+  extraSections,
+  tagTableTitle = "Tags & skills",
 }: SessionResultsDashboardProps) {
   const results = useMemo(() => computeSessionAnalytics(events), [events]);
   const [tagSort, setTagSort] = useState<{ key: TagSortKey; dir: "asc" | "desc" }>({
@@ -142,11 +146,12 @@ export function SessionResultsDashboard({
 
         {footnote ? <div className="text-sm text-muted-foreground">{footnote}</div> : null}
 
+        {extraSections}
 
         {results.tagTable.length > 0 ? (
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Tags & skills</CardTitle>
+              <CardTitle className="text-base">{tagTableTitle}</CardTitle>
               <p className="text-xs text-muted-foreground font-normal">
                 Each row counts every question that carried that tag. One question can appear in multiple rows.
               </p>

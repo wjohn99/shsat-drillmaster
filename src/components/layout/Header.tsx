@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sheet,
@@ -13,6 +12,7 @@ import { LogOut, User, Menu } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { AuthLink } from "@/components/auth/AuthLink";
 import { useAuth } from "@/contexts/AuthContext";
+import { useExamLock } from "@/contexts/ExamLockContext";
 import type { UserRole } from "@/types/auth";
 import logoIcon from "@/assets/logo-icon.png";
 import { cn } from "@/lib/utils";
@@ -25,15 +25,17 @@ const roleLabels: Record<UserRole, string> = {
 type NavItem = {
   to: string;
   label: string;
+  shortLabel: string;
   active: boolean;
 };
 
 export const Header = () => {
   const location = useLocation();
   const { profile, signOut } = useAuth();
+  const { locked, requestLeave } = useExamLock();
 
   const isActive = (path: string) => location.pathname === path;
-  const isDashboard = /\/dashboard\/?$/.test(location.pathname);
+  const homeTo = profile ? "/dashboard" : "/";
 
   const initials =
     profile?.displayName
@@ -47,20 +49,37 @@ export const Header = () => {
     profile?.role === "student" && profile.uid ? `/workspace/${profile.uid}` : "/workspace";
 
   const navItems: NavItem[] = [
-    { to: "/question-bank", label: "Question Bank", active: isActive("/question-bank") },
-    { to: "/blitz", label: "Blitz Mode", active: isActive("/blitz") },
-    { to: "/worksheets", label: "Worksheets", active: isActive("/worksheets") },
+    {
+      to: "/question-bank",
+      label: "Question Bank",
+      shortLabel: "Bank",
+      active: isActive("/question-bank"),
+    },
+    { to: "/blitz", label: "Blitz Mode", shortLabel: "Blitz", active: isActive("/blitz") },
+    {
+      to: "/worksheets",
+      label: "Worksheets",
+      shortLabel: "Worksheets",
+      active: isActive("/worksheets"),
+    },
     {
       to: workspacePath,
       label: "Workspace",
+      shortLabel: "Workspace",
       active: location.pathname.startsWith("/workspace"),
     },
-    { to: "/practice", label: "Practice", active: isActive("/practice") },
+    {
+      to: "/practice",
+      label: "Practice",
+      shortLabel: "Practice",
+      active: location.pathname === "/practice" || location.pathname.startsWith("/practice/"),
+    },
     ...(profile?.role === "tutor"
       ? [
           {
             to: "/question-submission",
             label: "Question Submission",
+            shortLabel: "Submit",
             active: isActive("/question-submission"),
           },
         ]
@@ -69,68 +88,100 @@ export const Header = () => {
 
   const navLinkClass = (active: boolean) =>
     cn(
-      "rounded-lg px-3 py-2 text-sm font-medium transition-colors glass-control-subtle",
-      active ? "glass-control border text-primary" : "text-muted-foreground hover:text-primary",
+      "flex items-center self-center rounded-full px-3 py-1.5 text-[13px] font-medium tracking-tight transition-colors",
+      active
+        ? "glass-control border text-foreground"
+        : "text-muted-foreground hover:text-foreground",
+    );
+
+  const sheetLinkClass = (active: boolean) =>
+    cn(
+      "rounded-xl px-3 py-2.5 text-sm font-medium",
+      active
+        ? "glass-control border text-foreground"
+        : "text-muted-foreground hover:text-foreground",
     );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b glass-chrome">
-      <div className="container flex h-[4.25rem] items-center justify-between px-4 md:h-[4.5rem]">
-        {/* Logo */}
-        <Link to="/" className="flex items-center space-x-2">
-          <div className="flex h-12 w-12 items-center justify-center">
-            <img src={logoIcon} alt="StepPrep Logo" className="h-12 w-12 object-contain" />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-lg font-bold">StepPrep</span>
-            <span className="text-xs text-muted-foreground -mt-1">DrillMaster</span>
+    <header className="sticky top-0 z-50">
+      <div className="container px-4 pt-3 pb-2">
+        <div className="glass-chrome flex h-14 items-stretch justify-between rounded-[1.35rem] border px-3">
+        {locked ? (
+          <button
+            type="button"
+            className="flex items-center gap-2.5 self-center text-left"
+            aria-label="Leave diagnostic"
+            onClick={requestLeave}
+          >
+            <img src={logoIcon} alt="" className="h-8 w-8 object-contain" />
+            <div className="flex flex-col leading-none">
+              <span className="font-serif text-[15px] font-semibold tracking-tight">StepPrep</span>
+              <span className="mt-0.5 text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+                DrillMaster
+              </span>
+            </div>
+          </button>
+        ) : (
+        <Link
+          to={homeTo}
+          className="flex items-center gap-2.5 self-center"
+          aria-label={profile ? "Go to Dashboard" : "Go to home"}
+        >
+          <img src={logoIcon} alt="StepPrep Logo" className="h-8 w-8 object-contain" />
+          <div className="flex flex-col leading-none">
+            <span className="font-serif text-[15px] font-semibold tracking-tight">StepPrep</span>
+            <span className="mt-0.5 text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+              DrillMaster
+            </span>
           </div>
         </Link>
+        )}
 
-        {/* Navigation */}
-        <nav className="hidden md:flex items-center space-x-6">
+        {!locked ? (
+        <nav className="hidden items-center gap-1 md:flex">
           {navItems.map((item) => (
             <AuthLink key={item.to} to={item.to} className={navLinkClass(item.active)}>
               {item.label}
             </AuthLink>
           ))}
         </nav>
+        ) : (
+          <p className="self-center text-xs text-muted-foreground">Exam in progress</p>
+        )}
 
         {/* Right side */}
-        <div className="flex items-center space-x-3">
-          {profile && isDashboard ? (
+        <div className="flex items-center gap-2.5 self-center">
+          {profile ? (
             <>
-              <Badge
-                variant={profile.role === "tutor" ? "default" : "secondary"}
-                className="hidden sm:inline-flex"
-              >
+              <span className="inline-flex items-center rounded-full border glass-control px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.14em] text-foreground/80">
                 {roleLabels[profile.role]}
-              </Badge>
-              <div className="hidden lg:flex items-center gap-2 text-sm">
+              </span>
+              <div className="hidden sm:flex items-center gap-2 text-sm">
                 <Avatar className="h-8 w-8">
                   <AvatarImage src={profile.photoURL ?? undefined} alt={profile.displayName} />
                   <AvatarFallback>{initials}</AvatarFallback>
                 </Avatar>
-                <span className="font-medium max-w-[140px] truncate">
+                <span className="hidden lg:inline font-medium max-w-[140px] truncate">
                   {profile.displayName || profile.email}
                 </span>
               </div>
-              <Button variant="outline" size="sm" onClick={() => signOut()}>
-                <LogOut className="h-4 w-4 sm:mr-1.5" />
-                <span className="hidden sm:inline">Sign Out</span>
-              </Button>
+              {!locked ? (
+                <Button variant="outline" size="sm" onClick={() => signOut()}>
+                  <LogOut className="h-4 w-4 sm:mr-1.5" />
+                  <span className="hidden sm:inline">Sign Out</span>
+                </Button>
+              ) : null}
             </>
-          ) : (
+          ) : locked ? null : (
             <Button variant="ghost" size="sm" asChild>
-              <Link to={profile ? "/dashboard" : "/login"}>
+              <Link to="/login">
                 <User className="h-4 w-4 mr-1.5" />
-                <span className="hidden sm:inline text-sm">
-                  {profile ? "Dashboard" : "Sign In"}
-                </span>
+                <span className="hidden sm:inline text-sm">Sign In</span>
               </Link>
             </Button>
           )}
 
+          {!locked ? (
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -146,11 +197,15 @@ export const Header = () => {
               <SheetHeader>
                 <SheetTitle>Menu</SheetTitle>
               </SheetHeader>
-              <nav className="mt-6 flex flex-col gap-4">
+              <nav className="mt-6 flex flex-col gap-1">
                 {navItems.map((item) => (
                   <SheetClose key={item.to} asChild>
-                    <AuthLink to={item.to} className={navLinkClass(item.active)}>
-                      {item.label}
+                    <AuthLink
+                      to={item.to}
+                      className={sheetLinkClass(item.active)}
+                      aria-label={item.label}
+                    >
+                      {item.shortLabel}
                     </AuthLink>
                   </SheetClose>
                 ))}
@@ -167,19 +222,11 @@ export const Header = () => {
                         <p className="text-sm font-medium truncate">
                           {profile.displayName || profile.email}
                         </p>
-                        <Badge
-                          variant={profile.role === "tutor" ? "default" : "secondary"}
-                          className="mt-1"
-                        >
+                        <span className="mt-1 inline-flex items-center rounded-full border glass-control px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.14em] text-foreground/80">
                           {roleLabels[profile.role]}
-                        </Badge>
+                        </span>
                       </div>
                     </div>
-                    <SheetClose asChild>
-                      <Button variant="outline" className="w-full" asChild>
-                        <Link to="/dashboard">Dashboard</Link>
-                      </Button>
-                    </SheetClose>
                     <SheetClose asChild>
                       <Button
                         variant="ghost"
@@ -201,6 +248,8 @@ export const Header = () => {
               </div>
             </SheetContent>
           </Sheet>
+          ) : null}
+        </div>
         </div>
       </div>
     </header>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BookOpen, CheckCircle2, Circle, Eye, Loader2, Play } from "lucide-react";
+import { CheckCircle2, Circle, Eye, Loader2, Play } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,9 +8,12 @@ import { fetchAssignmentsForStudent } from "@/lib/assignmentService";
 import {
   formatAssignmentDueDate,
   isAssignmentOverdue,
+  worksheetProgressStatus,
+  WORKSHEET_PROGRESS_LABEL,
 } from "@/lib/dashboardStats";
 import type { WorksheetAssignment } from "@/types/assignment";
 import { cn } from "@/lib/utils";
+import { WorksheetEmptyState } from "./WorksheetEmptyState";
 
 interface StudentAssignmentsGridProps {
   onStartAssignment: (assignment: WorksheetAssignment) => void;
@@ -79,17 +82,7 @@ export function StudentAssignmentsGrid({
   }
 
   if (assignments.length === 0) {
-    return (
-      <Card className="border-dashed">
-        <CardContent className="py-12 text-center">
-          <BookOpen className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
-          <p className="font-medium">No assignments yet</p>
-          <p className="text-sm text-muted-foreground mt-1">
-            When your tutor assigns a worksheet, it will appear here.
-          </p>
-        </CardContent>
-      </Card>
-    );
+    return <WorksheetEmptyState role="student" />;
   }
 
   return (
@@ -97,33 +90,27 @@ export function StudentAssignmentsGrid({
       {assignments.map((assignment) => {
         const isCompleted = assignment.status === "completed";
         const overdue = isAssignmentOverdue(assignment);
+        const progress = worksheetProgressStatus(assignment);
         const dueLabel = formatAssignmentDueDate(assignment);
         const createdLabel = assignment.createdAt?.toDate
           ? assignment.createdAt.toDate().toLocaleDateString()
           : "";
 
         return (
-          <Card key={assignment.id} className="group hover:shadow-lg transition-all duration-300">
+          <Card key={assignment.id}>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between gap-2 mb-2">
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge
-                    variant={isCompleted ? "secondary" : overdue ? "destructive" : "default"}
+                    variant={progress === "done" ? "secondary" : progress === "due" ? "destructive" : "default"}
                     className="gap-1"
                   >
-                    {isCompleted ? (
-                      <>
-                        <CheckCircle2 className="h-3 w-3" />
-                        Completed
-                      </>
-                    ) : overdue ? (
-                      "Overdue"
-                    ) : (
-                      <>
-                        <Circle className="h-3 w-3" />
-                        To Do
-                      </>
-                    )}
+                    {progress === "done" ? (
+                      <CheckCircle2 className="h-3 w-3" />
+                    ) : progress === "assigned" ? (
+                      <Circle className="h-3 w-3" />
+                    ) : null}
+                    {WORKSHEET_PROGRESS_LABEL[progress]}
                   </Badge>
                   {dueLabel && !isCompleted ? (
                     <span className={cn("text-xs", overdue ? "text-destructive font-medium" : "text-muted-foreground")}>
@@ -153,7 +140,7 @@ export function StudentAssignmentsGrid({
                     onClick={() => onReviewAssignment(assignment)}
                   >
                     <Eye className="h-4 w-4 mr-2" />
-                    Review results
+                    View last results
                   </Button>
                 ) : null}
                 <Button

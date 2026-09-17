@@ -3,11 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
+import { WorksheetEmptyState } from "./WorksheetEmptyState";
 
 interface WorksheetHistoryListProps {
   sessions: PracticeSessionRecord[];
   loading?: boolean;
-  emptyMessage?: string;
+  role: "tutor" | "student";
   getSessionDetail?: (session: PracticeSessionRecord) => string | undefined;
   onReview: (session: PracticeSessionRecord) => void;
 }
@@ -22,7 +23,7 @@ function formatCompletedAt(session: PracticeSessionRecord): string {
 export function WorksheetHistoryList({
   sessions,
   loading = false,
-  emptyMessage = "No completed attempts saved yet.",
+  role,
   getSessionDetail,
   onReview,
 }: WorksheetHistoryListProps) {
@@ -35,13 +36,7 @@ export function WorksheetHistoryList({
   }
 
   if (sessions.length === 0) {
-    return (
-      <Card className="border-dashed">
-        <CardContent className="py-10 text-center text-sm text-muted-foreground">
-          {emptyMessage}
-        </CardContent>
-      </Card>
-    );
+    return <WorksheetEmptyState kind="results" role={role} />;
   }
 
   return (
@@ -68,7 +63,7 @@ export function WorksheetHistoryList({
             </p>
             <Button className="w-full" size="sm" variant="outline" onClick={() => onReview(session)}>
               <Eye className="h-4 w-4 mr-2" />
-              Review results
+              View last results
             </Button>
           </CardContent>
         </Card>

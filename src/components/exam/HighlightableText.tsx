@@ -132,7 +132,7 @@ export function HighlightableText({
           "select-text cursor-text rounded-sm px-0.5 outline-none focus-visible:ring-1 focus-visible:ring-ring",
           variant === "passage"
             ? "prose prose-sm max-w-none whitespace-pre-wrap leading-relaxed"
-            : "text-base leading-relaxed"
+            : "text-base leading-relaxed whitespace-pre-wrap"
         )}
         tabIndex={0}
       >

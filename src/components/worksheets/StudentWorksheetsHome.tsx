@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, BookOpen, History, Plus } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StudentAssignmentsGrid } from "./StudentAssignmentsGrid";
 import { WorksheetHistoryList } from "./WorksheetHistoryList";
@@ -45,11 +44,11 @@ export function StudentWorksheetsHome({
   }, [assignmentsRefreshKey]);
 
   return (
-    <div className="space-y-14 max-w-6xl mx-auto">
+    <div className="mx-auto max-w-6xl space-y-12">
       <section>
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold">Active Assignments</h2>
-          <p className="text-muted-foreground mt-1">
+        <div className="mb-4">
+          <h2 className="font-serif text-xl font-semibold">Active assignments</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
             Worksheets from your tutor — complete these when assigned.
           </p>
         </div>
@@ -61,50 +60,41 @@ export function StudentWorksheetsHome({
       </section>
 
       <section>
-        <div className="mb-6 flex items-center gap-2">
-          <History className="h-6 w-6 text-primary" />
-          <div>
-            <h2 className="text-2xl font-bold">Assignment history</h2>
-            <p className="text-muted-foreground mt-1">
-              Review your saved results from completed tutor worksheets anytime.
-            </p>
-          </div>
+        <div className="mb-4">
+          <h2 className="font-serif text-xl font-semibold">Assignment history</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Review your saved results from completed tutor worksheets anytime.
+          </p>
         </div>
         <WorksheetHistoryList
           sessions={historySessions}
           loading={historyLoading}
-          emptyMessage="When you finish an assigned worksheet, your results will appear here."
+          role="student"
           onReview={onReviewSession}
         />
       </section>
 
       <section>
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold">Practice on your own</h2>
-          <p className="text-muted-foreground mt-1">
+        <div className="mb-4">
+          <h2 className="font-serif text-xl font-semibold">Practice on your own</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
             Build a custom worksheet anytime. Self-practice is private and not graded by your
             tutor.
           </p>
         </div>
 
-        <Card className="max-w-md border-2 hover:border-primary/40 transition-colors hover:shadow-md">
-          <CardHeader className="text-center pb-2">
-            <div className="h-14 w-14 rounded-full bg-gradient-ela flex items-center justify-center mx-auto mb-3">
-              <Plus className="h-7 w-7 text-white" />
-            </div>
-            <CardTitle className="text-xl">Create custom practice</CardTitle>
-          </CardHeader>
-          <CardContent className="text-center space-y-4">
-            <p className="text-sm text-muted-foreground">
+        <div className="glass-surface flex flex-col gap-3 rounded-2xl border p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="font-medium">Create custom practice</p>
+            <p className="mt-0.5 text-sm text-muted-foreground">
               Pick skill tags from all four SHSAT sections and practice at your own pace.
             </p>
-            <Button className="w-full" onClick={onCreateCustomPractice}>
-              <BookOpen className="h-4 w-4 mr-2" />
-              Build worksheet
-              <ArrowRight className="h-4 w-4 ml-2" />
-            </Button>
-          </CardContent>
-        </Card>
+          </div>
+          <Button className="shrink-0" onClick={onCreateCustomPractice}>
+            Build worksheet
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
       </section>
     </div>
   );

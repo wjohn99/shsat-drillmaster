@@ -8,8 +8,10 @@ import {
   type DocumentData,
   type QueryDocumentSnapshot,
 } from "firebase/firestore";
+import { fetchAssignmentsForStudent } from "@/lib/assignmentService";
 import { computeSessionAnalytics } from "@/lib/sessionAnalytics";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase";
+import { fetchWorkspaceBoard } from "@/lib/workspaceService";
 import type {
   PracticeSessionRecord,
   PracticeSessionType,
@@ -29,6 +31,7 @@ function parseEvent(raw: unknown): SessionAnalyticsEvent {
     correct: Boolean(e.correct),
     elapsedSeconds: Number(e.elapsedSeconds) || 0,
     tags: Array.isArray(e.tags) ? e.tags.map(String) : [],
+    ...(typeof e.answer === "string" && e.answer.length > 0 ? { answer: e.answer } : {}),
   };
 }
 
@@ -52,6 +55,9 @@ function parsePracticeSession(
     totalTimeSeconds: Number(data.totalTimeSeconds) || 0,
     events: rawEvents.map(parseEvent),
     completedAt: data.completedAt,
+    endedReason: data.endedReason === "time" || data.endedReason === "submit" ? data.endedReason : undefined,
+    attemptNumber: Number.isFinite(Number(data.attemptNumber)) ? Number(data.attemptNumber) : undefined,
+    isBaseline: data.isBaseline === true,
   };
 }
 
@@ -82,6 +88,9 @@ export async function savePracticeSession(
     totalTimeSeconds: Number(totalTimeSeconds.toFixed(1)),
     events: input.events,
     completedAt: serverTimestamp(),
+    ...(input.endedReason ? { endedReason: input.endedReason } : {}),
+    ...(input.attemptNumber ? { attemptNumber: input.attemptNumber } : {}),
+    ...(input.isBaseline ? { isBaseline: true } : {}),
   });
 
   return docRef.id;
@@ -138,15 +147,48 @@ export async function fetchPracticeSessionsForTutor(): Promise<PracticeSessionRe
   }
 
   const db = getFirebaseDb();
-  const sessionsQuery = query(
+  const assignmentQuery = query(
     collection(db, PRACTICE_SESSIONS_COLLECTION),
     where("tutorUid", "==", tutorUid),
     where("sessionType", "==", "assignment"),
   );
-  const snapshot = await getDocs(sessionsQuery);
-  return snapshot.docs
-    .map(parsePracticeSession)
-    .sort(
-      (a, b) => (b.completedAt?.toMillis?.() ?? 0) - (a.completedAt?.toMillis?.() ?? 0),
-    );
+  const diagnosticQuery = query(
+    collection(db, PRACTICE_SESSIONS_COLLECTION),
+    where("sessionType", "==", "diagnostic"),
+  );
+  const [assignmentSnap, diagnosticSnap] = await Promise.all([
+    getDocs(assignmentQuery),
+    getDocs(diagnosticQuery),
+  ]);
+  const byId = new Map<string, PracticeSessionRecord>();
+  for (const docSnap of [...assignmentSnap.docs, ...diagnosticSnap.docs]) {
+    byId.set(docSnap.id, parsePracticeSession(docSnap));
+  }
+  return [...byId.values()].sort(
+    (a, b) => (b.completedAt?.toMillis?.() ?? 0) - (a.completedAt?.toMillis?.() ?? 0),
+  );
+}
+
+/** Tutor linked to this student via workspace or an assignment, if any. */
+export async function resolveLinkedTutorUid(): Promise<string | null> {
+  const auth = getFirebaseAuth();
+  const uid = auth.currentUser?.uid;
+  if (!uid) return null;
+
+  try {
+    const board = await fetchWorkspaceBoard(uid);
+    if (board?.createdByUid) return board.createdByUid;
+  } catch {
+    // Board lookup is optional; fall through to assignments.
+  }
+
+  try {
+    const assignments = await fetchAssignmentsForStudent();
+    const tutorUid = assignments.find((a) => a.tutorUid)?.tutorUid;
+    if (tutorUid) return tutorUid;
+  } catch {
+    return null;
+  }
+
+  return null;
 }

@@ -1,4 +1,5 @@
 import { Header } from "@/components/layout/Header";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Zap, Timer, XCircle } from "lucide-react";
+import { Timer, XCircle } from "lucide-react";
 import type { Question, QuestionModule } from "@/types";
 import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
 import { useQuestions } from "@/contexts/QuestionsContext";
@@ -28,6 +29,7 @@ import { parseDndPlacementsForQuestion, serializeDndPlacements } from "@/lib/ind
 import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
 import { HighlightableText } from "@/components/exam/HighlightableText";
 import { canSubmitQuestionAnswer, isQuestionAnswerCorrect } from "@/lib/sessionGrading";
+import { DIAGNOSTIC_RESERVED_QUESTION_IDS } from "@/data/shsatDiagnosticForm";
 import { SessionResultsDashboard } from "@/components/session/SessionResultsDashboard";
 
 export default function BlitzMode() {
@@ -89,7 +91,9 @@ export default function BlitzMode() {
       if (q.subtype === "INDY-GIF") return Boolean(q.gif);
       return Boolean(q.choices?.length && q.choices.some((c) => c.isCorrect));
     };
-    return allQuestions.filter(isGradable);
+    return allQuestions.filter(
+      (q) => !DIAGNOSTIC_RESERVED_QUESTION_IDS.has(q.id) && isGradable(q),
+    );
   }, [allQuestions]);
 
   const sessionQuestions = useMemo(() => {
@@ -294,7 +298,7 @@ export default function BlitzMode() {
               ) : (
                 <div className="prose prose-sm max-w-none">
                   {passage.body.split("\n\n").map((para, i) => (
-                    <p key={i} className="mb-4 last:mb-0 leading-relaxed">
+                    <p key={i} className="mb-4 last:mb-0 leading-relaxed whitespace-pre-wrap">
                       {para}
                     </p>
                   ))}
@@ -314,11 +318,11 @@ export default function BlitzMode() {
           </div>
         ) : (
           <div className="prose prose-sm max-w-none">
-            <p className="text-base leading-relaxed">{q.stem}</p>
+            <p className="text-base leading-relaxed whitespace-pre-wrap">{q.stem}</p>
           </div>
         )}
 
-        {q.subtype === "INDY-CGT" && q.cgt && <CgtBlock spec={q.cgt} />}
+        {q.cgt && <CgtBlock spec={q.cgt} />}
         {q.subtype === "INDY-WP" && <WpBlock spec={q.wp ?? {}} />}
         {q.subtype === "INDY-HS" && q.hs && (
           <HotSpotBlock
@@ -449,23 +453,17 @@ export default function BlitzMode() {
   }));
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
       <QuestionsStatus>
       <div className="container py-8">
         <div className="mx-auto max-w-5xl">
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
-                <Zap className="h-6 w-6" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold leading-tight">Blitz Mode</h1>
-                <p className="text-muted-foreground">
-                  Pick settings, then sprint.
-                </p>
-              </div>
-            </div>
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+            <PageHeader
+              className="mb-0"
+              title="Blitz Mode"
+              description="Pick settings, then sprint."
+            />
 
             <div className="flex items-center gap-2">
               <Badge variant="outline" className="font-mono">
