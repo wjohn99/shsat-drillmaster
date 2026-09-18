@@ -218,7 +218,6 @@ export function openWorksheetPdfInNewTab(
       const p = passageById.get(q.passageId);
       if (p) {
         addParagraph(ctx, `Reading passage: ${p.title}`, 11, "bold");
-        if (p.sourceMeta) addParagraph(ctx, p.sourceMeta, 8, "italic");
         const body = stripHtml(p.body);
         ctx.doc.setFont("helvetica", "normal");
         ctx.doc.setFontSize(10);

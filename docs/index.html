@@ -28,6 +28,24 @@
       name="twitter:image"
       content="https://wjohn99.github.io/shsat-drillmaster/og-image.png"
     />
+    <script>
+      (function (l) {
+        if (l.search[1] === "/") {
+          var decoded = l.search
+            .slice(1)
+            .split("&")
+            .map(function (s) {
+              return s.replace(/~and~/g, "&");
+            })
+            .join("?");
+          window.history.replaceState(
+            null,
+            "",
+            l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      })(window.location);
+    </script>
     <script type="module" crossorigin src="/shsat-drillmaster/assets/index-BBDZ8sDh.js"></script>
     <link rel="stylesheet" crossorigin href="/shsat-drillmaster/assets/index-DsmDCfei.css">
   </head>

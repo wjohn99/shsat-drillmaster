@@ -224,9 +224,6 @@ export function SessionQuestionRunner({
                         <BookOpen className="h-4 w-4" />
                         {passage.title}
                       </CardTitle>
-                      {passage.sourceMeta && (
-                        <p className="text-sm text-muted-foreground">{passage.sourceMeta}</p>
-                      )}
                     </CardHeader>
                     <CardContent className="pt-0">
                       <HighlightableText
@@ -244,9 +241,6 @@ export function SessionQuestionRunner({
                         <BookOpen className="h-4 w-4" />
                         {passage.title}
                       </CardTitle>
-                      {passage.sourceMeta && (
-                        <p className="text-sm text-muted-foreground">{passage.sourceMeta}</p>
-                      )}
                     </CardHeader>
                     <CardContent className="pt-0 prose prose-sm max-w-none">
                       {passage.body.split("\n\n").map((para, i) => (

@@ -3,6 +3,8 @@ import { ArrowLeft, Loader2, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { workspaceBoardAccentColor } from "@/lib/workspaceBoardColors";
 import {
   fetchAssignmentsForStudent,
@@ -16,6 +18,7 @@ import {
   fetchWorkspaceBoard,
   fetchWorkspaceCards,
   fetchWorkspaceLists,
+  updateWorkspaceBoardDiagnosticExtendedTime,
 } from "@/lib/workspaceService";
 import type { WorksheetAssignment } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
@@ -50,6 +53,7 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
   const [latestDiagnostic, setLatestDiagnostic] = useState<PracticeSessionRecord | null>(null);
   const [lastCompletedAssignment, setLastCompletedAssignment] =
     useState<WorksheetAssignment | null>(null);
+  const [savingExtendedTime, setSavingExtendedTime] = useState(false);
 
   const loadBoard = useCallback(async (opts?: { silent?: boolean }) => {
     const silent = opts?.silent ?? false;
@@ -98,6 +102,20 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
   useEffect(() => {
     void loadBoard();
   }, [loadBoard]);
+
+  const handleToggleExtendedTime = async (enabled: boolean) => {
+    if (!board || readOnly || savingExtendedTime) return;
+    setSavingExtendedTime(true);
+    setError(null);
+    try {
+      await updateWorkspaceBoardDiagnosticExtendedTime(board.id, enabled);
+      setBoard({ ...board, diagnosticExtendedTime: enabled });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not update extended time.");
+    } finally {
+      setSavingExtendedTime(false);
+    }
+  };
 
   const handleAddList = async () => {
     const title = newListTitle.trim();
@@ -152,6 +170,22 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
             <h1 className="text-xl font-bold truncate">{board.studentName}</h1>
             {board.studentEmail ? (
               <p className="text-sm text-muted-foreground truncate">{board.studentEmail}</p>
+            ) : null}
+            {!readOnly ? (
+              <div className="mt-2 flex items-center gap-2">
+                <Switch
+                  id={`diagnostic-extended-time-${board.id}`}
+                  checked={Boolean(board.diagnosticExtendedTime)}
+                  onCheckedChange={(checked) => void handleToggleExtendedTime(checked)}
+                  disabled={savingExtendedTime}
+                />
+                <Label
+                  htmlFor={`diagnostic-extended-time-${board.id}`}
+                  className="text-xs font-normal text-muted-foreground"
+                >
+                  Extended time on diagnostic (360 min)
+                </Label>
+              </div>
             ) : null}
           </div>
         </div>

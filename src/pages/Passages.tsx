@@ -30,9 +30,6 @@ export default function Passages() {
                   <CardTitle className="text-lg">{passage.title}</CardTitle>
                   <Badge variant="secondary" className="text-xs bg-ela-secondary text-ela-foreground">ELA</Badge>
                 </div>
-                {passage.sourceMeta && (
-                  <p className="text-sm text-muted-foreground">{passage.sourceMeta}</p>
-                )}
               </CardHeader>
               
               <CardContent className="space-y-4">

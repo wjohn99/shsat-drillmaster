@@ -304,9 +304,6 @@ export default function Question() {
                       {passage.title}
                     </CardTitle>
                   </div>
-                  {passage.sourceMeta && (
-                    <p className="text-sm text-muted-foreground">{passage.sourceMeta}</p>
-                  )}
                 </CardHeader>
                 <CardContent>
                   {showElaHighlighter ? (

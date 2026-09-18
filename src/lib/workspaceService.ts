@@ -42,6 +42,7 @@ function parseBoard(
     createdAt: data.createdAt,
     archivedAt: data.archivedAt ?? null,
     deletedAt: data.deletedAt ?? null,
+    diagnosticExtendedTime: Boolean(data.diagnosticExtendedTime),
   };
 }
 
@@ -143,6 +144,16 @@ export async function createWorkspaceBoard(
   );
 
   return student.uid;
+}
+
+export async function updateWorkspaceBoardDiagnosticExtendedTime(
+  boardId: string,
+  enabled: boolean,
+): Promise<void> {
+  const db = getFirebaseDb();
+  await updateDoc(doc(db, BOARDS_COLLECTION, boardId), {
+    diagnosticExtendedTime: enabled,
+  });
 }
 
 export async function fetchWorkspaceLists(boardId: string): Promise<WorkspaceList[]> {

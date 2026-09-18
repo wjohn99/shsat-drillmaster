@@ -103,7 +103,7 @@ export const Header = () => {
     );
 
   return (
-    <header className="sticky top-0 z-50">
+    <header className={cn(locked ? "relative z-50 shrink-0" : "sticky top-0 z-50")}>
       <div className="container px-4 pt-3 pb-2">
         <div className="glass-chrome flex h-14 items-stretch justify-between rounded-[1.35rem] border px-3">
         {locked ? (

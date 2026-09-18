@@ -27,6 +27,7 @@ import {
   flattenSectionQuestions,
   locateUnitQuestion,
   passageForQuestion,
+  passageSetProgress,
   unitQuestions,
   buildDiagnosticCompletionEvents,
   type AssembledDiagnosticExam,
@@ -118,6 +119,10 @@ export function DiagnosticExamRunner({
   const raw = currentQuestion ? answers[currentQuestion.id] : undefined;
   const sectionQuestions = section ? flattenSectionQuestions(section) : [];
   const isPassageSet = unit?.kind === "passageSet";
+  const passageSet = useMemo(
+    () => passageSetProgress(units, unitIndex),
+    [units, unitIndex],
+  );
   const unitLocked = lockedUnitKeys.has(unitKey(sectionIndex, unitIndex));
   const answeredInSection = sectionQuestions.filter((q) =>
     canSubmitQuestionAnswer(q, answers[q.id]),
@@ -325,6 +330,18 @@ export function DiagnosticExamRunner({
     questionPaneRef.current?.scrollTo({ top: 0 });
   }, [currentQuestion?.id]);
 
+  useEffect(() => {
+    const html = document.documentElement;
+    const htmlOverflow = html.style.overflow;
+    const bodyOverflow = document.body.style.overflow;
+    html.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+    return () => {
+      html.style.overflow = htmlOverflow;
+      document.body.style.overflow = bodyOverflow;
+    };
+  }, []);
+
   if (!section || !unit || !currentQuestion) {
     return null;
   }
@@ -434,15 +451,22 @@ export function DiagnosticExamRunner({
 
   const questionStem = (
     <>
-      {showElaHighlighter && currentQuestion.subtype !== "INDY-IC" ? (
-        <HighlightableText
-          text={currentQuestion.stem}
-          storageKey={`diagnostic-stem-${currentQuestion.id}`}
-          variant="stem"
-        />
-      ) : (
-        <p className="text-base leading-relaxed whitespace-pre-wrap">{currentQuestion.stem}</p>
-      )}
+      <div className="flex gap-3">
+        <span className="mt-0.5 shrink-0 text-base font-semibold tabular-nums leading-relaxed">
+          {globalIndex}.
+        </span>
+        <div className="min-w-0 flex-1">
+          {showElaHighlighter && currentQuestion.subtype !== "INDY-IC" ? (
+            <HighlightableText
+              text={currentQuestion.stem}
+              storageKey={`diagnostic-stem-${currentQuestion.id}`}
+              variant="stem"
+            />
+          ) : (
+            <p className="text-base leading-relaxed whitespace-pre-wrap">{currentQuestion.stem}</p>
+          )}
+        </div>
+      </div>
       <QuestionResponseFields
         question={currentQuestion}
         raw={raw}
@@ -461,9 +485,9 @@ export function DiagnosticExamRunner({
       <Badge variant={currentQuestion.subject === "MATH" ? "default" : "secondary"}>
         {currentQuestion.subject}
       </Badge>
-      {isPassageSet ? (
+      {isPassageSet && passageSet ? (
         <span className="text-xs text-muted-foreground">
-          Passage set {questionIndexInUnit + 1} of {unitQs.length} — you can review until you
+          Passage set {passageSet.current} of {passageSet.total} — you can review until you
           submit this set
         </span>
       ) : (
@@ -494,9 +518,9 @@ export function DiagnosticExamRunner({
   );
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="flex h-dvh max-h-dvh flex-col overflow-hidden">
       <Header />
-      <div className="container flex min-h-0 flex-1 flex-col gap-4 py-4">
+      <div className="container flex min-h-0 flex-1 flex-col gap-3 overflow-hidden py-3">
         <div className="flex shrink-0 flex-wrap items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-3">
             <Button variant="ghost" onClick={() => setConfirmExit(true)}>
@@ -573,18 +597,15 @@ export function DiagnosticExamRunner({
             />
 
             {passage ? (
-              <div className="grid min-h-0 grid-cols-1 gap-4 md:flex-1 md:grid-cols-2 md:overflow-hidden">
-                <Card className="flex min-h-0 flex-col overflow-hidden max-md:max-h-[min(42vh,24rem)]">
+              <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden md:grid md:h-full md:grid-cols-2 md:grid-rows-1">
+                <Card className="flex h-full min-h-0 flex-col overflow-hidden max-md:h-[min(36vh,18rem)] max-md:max-h-[min(36vh,18rem)] max-md:shrink-0">
                   <CardHeader className="shrink-0 p-4 pb-2">
                     <CardTitle className="flex items-center gap-2 text-base">
                       <BookOpen className="h-4 w-4" />
                       {passage.title}
                     </CardTitle>
-                    {passage.sourceMeta ? (
-                      <p className="text-xs text-muted-foreground line-clamp-2">{passage.sourceMeta}</p>
-                    ) : null}
                   </CardHeader>
-                  <CardContent className="min-h-0 flex-1 overflow-y-auto p-4 pt-0">
+                  <CardContent className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 pt-0">
                     {showElaHighlighter ? (
                       <HighlightableText
                         text={passage.body}
@@ -603,12 +624,12 @@ export function DiagnosticExamRunner({
                   </CardContent>
                 </Card>
 
-                <div className="flex min-h-0 flex-col gap-3">
+                <div className="flex h-full min-h-0 flex-1 flex-col gap-3 overflow-hidden">
                   <Card className="flex min-h-0 flex-1 flex-col overflow-hidden">
                     <CardHeader className="shrink-0 p-4 pb-2">{questionMeta}</CardHeader>
                     <CardContent
                       ref={questionPaneRef}
-                      className="min-h-0 flex-1 space-y-6 overflow-y-auto p-4 pt-0"
+                      className="min-h-0 flex-1 space-y-6 overflow-y-auto overscroll-contain p-4 pt-0"
                     >
                       {questionStem}
                     </CardContent>
@@ -617,12 +638,12 @@ export function DiagnosticExamRunner({
                 </div>
               </div>
             ) : (
-              <div className="flex min-h-0 flex-col gap-3 md:flex-1 md:overflow-hidden">
+              <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden">
                 <Card className="flex min-h-0 flex-1 flex-col overflow-hidden">
                   <CardHeader className="shrink-0 p-4 pb-2">{questionMeta}</CardHeader>
                   <CardContent
                     ref={questionPaneRef}
-                    className="min-h-0 flex-1 space-y-6 overflow-y-auto p-4 pt-0"
+                    className="min-h-0 flex-1 space-y-6 overflow-y-auto overscroll-contain p-4 pt-0"
                   >
                     {questionStem}
                   </CardContent>

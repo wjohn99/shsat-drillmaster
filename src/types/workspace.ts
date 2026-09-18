@@ -13,6 +13,8 @@ export interface WorkspaceBoard {
   createdAt: Timestamp;
   archivedAt?: Timestamp | null;
   deletedAt?: Timestamp | null;
+  /** Tutor-assigned 2x diagnostic timing. Students cannot turn this on themselves. */
+  diagnosticExtendedTime?: boolean;
 }
 
 export interface WorkspaceList {

@@ -284,9 +284,6 @@ export default function BlitzMode() {
           <Card className="border-dashed bg-muted/20">
             <CardHeader className="pb-2">
               <CardTitle className="text-base">{passage.title}</CardTitle>
-              {passage.sourceMeta && (
-                <p className="text-sm text-muted-foreground">{passage.sourceMeta}</p>
-              )}
             </CardHeader>
             <CardContent className="pt-0">
               {showHl ? (

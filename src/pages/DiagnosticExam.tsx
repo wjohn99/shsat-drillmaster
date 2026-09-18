@@ -5,8 +5,6 @@ import { Header } from "@/components/layout/Header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,6 +41,7 @@ import {
   resolveLinkedTutorUid,
   savePracticeSession,
 } from "@/lib/practiceSessionService";
+import { fetchWorkspaceBoard } from "@/lib/workspaceService";
 import {
   assembleDiagnosticExam,
   buildDiagnosticCompletionEvents,
@@ -69,7 +68,7 @@ export default function DiagnosticExam() {
   const [firstSection, setFirstSection] = useState<DiagnosticSubject>(
     existingSave?.firstSection ?? "ELA",
   );
-  const [extendedTime, setExtendedTime] = useState(false);
+  const [assignedExtendedTime, setAssignedExtendedTime] = useState(false);
   const [deadlineAt, setDeadlineAt] = useState(existingSave?.deadlineAt ?? 0);
   const [events, setEvents] = useState<SessionAnalyticsEvent[]>(reviewFromNav?.events ?? []);
   const [endedReason, setEndedReason] = useState<DiagnosticEndReason | undefined>(
@@ -102,6 +101,21 @@ export default function DiagnosticExam() {
       : null,
   );
   const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    if (!profile) return;
+    let cancelled = false;
+    void fetchWorkspaceBoard(profile.uid)
+      .then((board) => {
+        if (!cancelled) setAssignedExtendedTime(Boolean(board?.diagnosticExtendedTime));
+      })
+      .catch(() => {
+        if (!cancelled) setAssignedExtendedTime(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [profile]);
 
   useEffect(() => {
     if (!profile || reviewFromNav) return;
@@ -252,7 +266,7 @@ export default function DiagnosticExam() {
     if (existingSave) clearDiagnosticSave(profile.uid);
     setConfirmRetake(false);
     setConfirmStartOver(false);
-    const minutes = extendedTime
+    const minutes = assignedExtendedTime
       ? SHSAT_DIAGNOSTIC_SPEC.extendedMinutes
       : SHSAT_DIAGNOSTIC_SPEC.standardMinutes;
     setDeadlineAt(Date.now() + minutes * 60 * 1000);
@@ -645,27 +659,19 @@ export default function DiagnosticExam() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between rounded-lg border p-3">
-                <div>
-                  <Label htmlFor="extended-time">Extended time (360 minutes)</Label>
-                  <p className="text-xs text-muted-foreground">
-                    Use only with an approved 2x accommodation.
-                  </p>
-                </div>
-                <Switch
-                  id="extended-time"
-                  checked={extendedTime}
-                  onCheckedChange={setExtendedTime}
-                  disabled={Boolean(existingSave)}
-                />
-              </div>
-
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Clock className="h-4 w-4" />
-                {extendedTime
-                  ? `${SHSAT_DIAGNOSTIC_SPEC.extendedMinutes} minutes`
+                {assignedExtendedTime
+                  ? profile?.role === "tutor"
+                    ? `${SHSAT_DIAGNOSTIC_SPEC.extendedMinutes} minutes (extended time)`
+                    : `${SHSAT_DIAGNOSTIC_SPEC.extendedMinutes} minutes (extended time assigned by your tutor)`
                   : `${SHSAT_DIAGNOSTIC_SPEC.standardMinutes} minutes`}
               </div>
+              {profile?.role === "tutor" ? (
+                <p className="text-xs text-muted-foreground">
+                  To give a student 360 minutes, turn on extended time on their workspace board.
+                </p>
+              ) : null}
 
               {!canStartOfficial ? (
                 <p className="text-sm text-muted-foreground">

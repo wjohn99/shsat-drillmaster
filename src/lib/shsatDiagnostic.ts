@@ -147,6 +147,22 @@ export function flattenSectionQuestions(section: DiagnosticSection): Question[] 
   return section.questions;
 }
 
+/** 1-based index among passage sets only (standalones are excluded). */
+export function passageSetProgress(
+  units: DiagnosticUnit[],
+  unitIndex: number,
+): { current: number; total: number } | null {
+  if (units[unitIndex]?.kind !== "passageSet") return null;
+  let current = 0;
+  let total = 0;
+  for (let i = 0; i < units.length; i += 1) {
+    if (units[i].kind !== "passageSet") continue;
+    total += 1;
+    if (i === unitIndex) current = total;
+  }
+  return current > 0 ? { current, total } : null;
+}
+
 export function elaPartLabel(part: ElaPart): string {
   if (part === "reading") return "Reading Comprehension";
   if (part === "revising-editing") return "Revising & Editing";
