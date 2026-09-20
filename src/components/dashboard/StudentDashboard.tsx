@@ -229,7 +229,7 @@ export function StudentDashboard() {
         <section>
           <h2 className="text-lg font-semibold mb-1">Personal practice</h2>
           <p className="text-sm text-muted-foreground mb-4">
-            Self-practice stats only — not shared with your tutor.
+            Self-practice stats only, not shared with your tutor.
           </p>
           <div className="grid sm:grid-cols-3 gap-4 mb-6">
             <StatTile
@@ -270,7 +270,7 @@ export function StudentDashboard() {
                 <Progress value={goalPct} className="h-2" />
                 <p className="text-xs text-muted-foreground">
                   {goalPct >= 100
-                    ? "Goal reached — great work!"
+                    ? "Goal reached, great work!"
                     : `${analytics.weeklyGoalTarget - analytics.weeklyGoalProgress} questions to go`}
                 </p>
               </CardContent>

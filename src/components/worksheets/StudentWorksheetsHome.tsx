@@ -49,7 +49,7 @@ export function StudentWorksheetsHome({
         <div className="mb-4">
           <h2 className="font-serif text-xl font-semibold">Active assignments</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Worksheets from your tutor — complete these when assigned.
+            Worksheets from your tutor, complete these when assigned.
           </p>
         </div>
         <StudentAssignmentsGrid

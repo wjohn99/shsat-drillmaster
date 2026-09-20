@@ -70,7 +70,7 @@ export function InlineChoiceBlock({
                   disabled && "cursor-not-allowed opacity-90"
                 )}
               >
-                <option value="">— Select —</option>
+                <option value="">Select</option>
                 {def.options.map((opt) => (
                   <option key={opt.id} value={opt.id}>
                     {opt.text}

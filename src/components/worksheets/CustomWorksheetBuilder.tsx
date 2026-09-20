@@ -337,7 +337,7 @@ export function CustomWorksheetBuilder({
       {!isTutor && (
         <Card className="mb-8 border-dashed bg-secondary/30">
           <CardContent className="py-4 text-sm text-muted-foreground">
-            This practice is just for you — it won&apos;t be sent to your tutor unless they
+            This practice is just for you, it won&apos;t be sent to your tutor unless they
             assign it separately.
           </CardContent>
         </Card>

@@ -111,7 +111,7 @@ export interface DiagnosticSubjectModuleStat {
 
 export function formatDiagnosticItemTime(seconds: number): string {
   const whole = Math.max(0, Math.round(Number(seconds) || 0));
-  if (whole <= 0) return "—";
+  if (whole <= 0) return "-";
   const hours = Math.floor(whole / 3600);
   const minutes = Math.floor((whole % 3600) / 60);
   const secs = whole % 60;

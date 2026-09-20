@@ -10,7 +10,7 @@ function StrandGrid({ title, rows }: { title: string; rows: DiagnosticStrandStat
           <div key={row.id} className="rounded-lg border p-3">
             <p className="text-sm text-muted-foreground">{row.label}</p>
             <p className="text-xl font-semibold tabular-nums">
-              {row.accuracyPct == null ? "—" : `${row.accuracyPct}%`}
+              {row.accuracyPct == null ? "-" : `${row.accuracyPct}%`}
             </p>
             <p className="text-xs text-muted-foreground tabular-nums">
               {row.correct}/{row.total} correct

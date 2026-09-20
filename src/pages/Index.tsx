@@ -99,7 +99,7 @@ const Index = () => {
               <span className="mt-2 block text-brand-cream">StepPrep Hub</span>
             </h1>
             <p className="mb-8 max-w-2xl text-base leading-relaxed text-white/80 md:text-lg">
-              Diagnose, drill, and track mastery with your students — a practice platform for the
+              Diagnose, drill, and track mastery with your students, a practice platform for the
               adaptive SHSAT, not just another pile of questions.
             </p>
             <p className="mb-8">

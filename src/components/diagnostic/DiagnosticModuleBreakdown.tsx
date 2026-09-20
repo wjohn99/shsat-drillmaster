@@ -16,7 +16,7 @@ function ModuleStatCard({ bucket }: { bucket: DiagnosticModuleBucket }) {
         </p>
       </div>
       <p className="text-2xl font-semibold tabular-nums">
-        {bucket.accuracyPct == null ? "—" : `${bucket.accuracyPct}%`}
+        {bucket.accuracyPct == null ? "-" : `${bucket.accuracyPct}%`}
       </p>
       <p className="text-xs text-muted-foreground tabular-nums">
         {bucket.correct}/{bucket.total} correct
@@ -44,7 +44,7 @@ export function DiagnosticModuleBreakdown({
         <CardTitle className="text-base">Module 1 vs Module 2</CardTitle>
         <CardDescription>
           The official adaptive SHSAT scores by the difficulty of items a student gets right, not
-          only how many. This form is fixed, so these are raw Module 1 and Module 2 counts — not a
+          only how many. This form is fixed, so these are raw Module 1 and Module 2 counts, not a
           scaled SHSAT score.
         </CardDescription>
       </CardHeader>

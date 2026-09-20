@@ -291,7 +291,7 @@ export function CardDetailModal({
     setSaving(true);
     try {
       await updateWorkspaceCard(boardId, card.id, {
-        // Firestore rejects `undefined` in map fields — use empty strings to clear.
+        // Firestore rejects `undefined` in map fields, use empty strings to clear.
         sessionMeta: {
           studentName: studentName.trim(),
           sessionDate: sessionDate.trim(),
@@ -780,7 +780,7 @@ export function CardDetailModal({
                   <div className="mb-4 rounded-lg border bg-muted/30 p-3 space-y-3">
                     <p className="text-xs text-muted-foreground">
                       Paste a Google Drive, Dropbox, or other share link. Stored in Drillmaster
-                      only — no file upload needed.
+                      only, no file upload needed.
                     </p>
                     <div className="space-y-1.5">
                       <Label htmlFor="link-title">Label</Label>

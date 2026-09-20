@@ -310,7 +310,7 @@ export default function DiagnosticExam() {
       const message = err instanceof Error ? err.message : "Could not save to your account.";
       setSaveError(message);
       toast({
-        title: "Saved on this device — retry to sync your account",
+        title: "Saved on this device, retry to sync your account",
         description: message,
         variant: "destructive",
       });
@@ -588,14 +588,14 @@ export default function DiagnosticExam() {
                 label: "Module 1",
                 value:
                   module1?.accuracyPct == null
-                    ? "—"
+                    ? "-"
                     : `${module1.accuracyPct}%`,
               },
               {
                 label: "Module 2",
                 value:
                   module2?.accuracyPct == null
-                    ? "—"
+                    ? "-"
                     : `${module2.accuracyPct}%`,
               },
               {
@@ -826,8 +826,8 @@ export default function DiagnosticExam() {
                   {completedAttempts.length === 1 ? "First diagnostic" : "Diagnostic sittings"}
                 </CardTitle>
                 <CardDescription>
-                  The first diagnostic stays the baseline. Later sittings are saved as new attempts
-                  — they do not replace it.
+                  The first diagnostic stays the baseline. Later sittings are saved as new attempts,
+                  they do not replace it.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">

@@ -41,6 +41,12 @@ def cell_text(value) -> str:
     return str(value).replace("\r\n", "\n").replace("\r", "\n").strip()
 
 
+def prose_commas_not_em_dashes(text: str) -> str:
+    """App copy uses commas, never em dashes. Do not run this on literary passages."""
+    text = text.replace(" — ", ", ")
+    return re.sub(r"(?<=\w)—(?=\w)", ", ", text)
+
+
 def js(value) -> str:
     return json.dumps(value, ensure_ascii=False)
 
@@ -329,10 +335,10 @@ def convert_questions(
             if any(not t for t in texts):
                 errors.append(f"{qid}: missing MC choice text")
             expls = [
-                cell_text(row["Explanation A"]),
-                cell_text(row["Explanation B"]),
-                cell_text(row["Explanation C"]),
-                cell_text(row["Explanation D"]),
+                prose_commas_not_em_dashes(cell_text(row["Explanation A"])),
+                prose_commas_not_em_dashes(cell_text(row["Explanation B"])),
+                prose_commas_not_em_dashes(cell_text(row["Explanation C"])),
+                prose_commas_not_em_dashes(cell_text(row["Explanation D"])),
             ]
             choices = []
             for i, label in enumerate(labels):
@@ -354,8 +360,12 @@ def convert_questions(
             "module": parse_module(cell_text(row["Module"])),
             "subtype": subtype,
             "stem": stem,
-            "solutionExplanation": convert_inline_markdown(cell_text(row["Explanation"])),
-            "commonTrap": convert_inline_markdown(cell_text(row["Common Trap"])),
+            "solutionExplanation": prose_commas_not_em_dashes(
+                convert_inline_markdown(cell_text(row["Explanation"]))
+            ),
+            "commonTrap": prose_commas_not_em_dashes(
+                convert_inline_markdown(cell_text(row["Common Trap"]))
+            ),
             "passageId": passage_id,
             "choices": choices,
             "cgt": cgt,

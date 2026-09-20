@@ -23,7 +23,7 @@ type EquationEditorBlockProps = {
 
 const MAX_HISTORY = 80;
 
-/** Improper fraction — stacked boxes, centered in keypad cell */
+/** Improper fraction, stacked boxes, centered in keypad cell */
 function FractionGlyph() {
   return (
     <span
@@ -37,7 +37,7 @@ function FractionGlyph() {
   );
 }
 
-/** Mixed number — whole + fraction, centered as a unit */
+/** Mixed number, whole + fraction, centered as a unit */
 function MixedGlyph() {
   return (
     <span
@@ -225,7 +225,7 @@ export function EquationEditorBlock({ spec, value, onChange, disabled }: Equatio
   const row2 = ["6", "7", "8", "9", "0"];
   const keyClass =
     "h-10 min-w-[2.5rem] rounded-md border border-foreground/25 bg-background px-2 font-medium shadow-sm hover:bg-muted/80";
-  /** Keypad cells that show a custom icon — full flex centering */
+  /** Keypad cells that show a custom icon, full flex centering */
   const iconKeyClass = cn(
     keyClass,
     "inline-flex items-center justify-center p-0 [&:active]:scale-[0.98]"
@@ -262,7 +262,7 @@ export function EquationEditorBlock({ spec, value, onChange, disabled }: Equatio
               !disabled && "pointer-events-none",
               disabled && "cursor-not-allowed"
             )}
-            aria-label="Answer field — use keypad and arrow buttons to edit; the mouse cannot move the cursor here"
+            aria-label="Answer field, use keypad and arrow buttons to edit; the mouse cannot move the cursor here"
           />
         </div>
 
@@ -358,7 +358,7 @@ export function EquationEditorBlock({ spec, value, onChange, disabled }: Equatio
               type="button"
               disabled={disabled}
               className={iconKeyClass}
-              title="Improper fraction: type inside each ( ) — numerator / denominator"
+              title="Improper fraction: type inside each ( ), numerator / denominator"
               onMouseDown={disabled ? undefined : retainInputFocus}
               onClick={() => insertAtCursor("( ) / ( )")}
             >
@@ -368,7 +368,7 @@ export function EquationEditorBlock({ spec, value, onChange, disabled }: Equatio
               type="button"
               disabled={disabled}
               className={iconKeyClass}
-              title="Mixed number: type inside each ( ) — whole + numerator / denominator"
+              title="Mixed number: type inside each ( ), whole + numerator / denominator"
               onMouseDown={disabled ? undefined : retainInputFocus}
               onClick={() => insertAtCursor("( ) + ( ) / ( )")}
             >

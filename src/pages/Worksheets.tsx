@@ -503,7 +503,7 @@ const Worksheets = () => {
     const tagPart =
       selectedTagLabels.length > 0 ? selectedTagLabels.join("; ") : "No tags";
     openWorksheetPdfInNewTab(picked, passages, {
-      tagSummaryLine: `${new Date().toLocaleString()} — Tags: ${tagPart}`,
+      tagSummaryLine: `${new Date().toLocaleString()}, Tags: ${tagPart}`,
     });
   };
 
@@ -666,7 +666,7 @@ const Worksheets = () => {
               ]}
               footnote={
                 runSource === "self"
-                  ? "Self-practice results are for your review only — not shared with your tutor."
+                  ? "Self-practice results are for your review only, not shared with your tutor."
                   : "Statistics use your answers and time on each question in this worksheet."
               }
               footerActions={
@@ -772,7 +772,7 @@ const Worksheets = () => {
           <>
             <PageHeader
               title="Worksheets"
-              description="Focused SHSAT practice sets — complete them here, or build your own."
+              description="Focused SHSAT practice sets, complete them here, or build your own."
               actions={
                 role === "tutor" ? (
                   <Button onClick={openTutorBuild}>Assign to student</Button>

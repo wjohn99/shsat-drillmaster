@@ -33,9 +33,9 @@ import { assignToStudentNavState } from "@/types/worksheetsNavigation";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 
 function subjectAccuracy(session: PracticeSessionRecord | null, subject: "ELA" | "MATH"): string {
-  if (!session) return "—";
+  if (!session) return "-";
   const rows = session.events.filter((event) => event.subject === subject);
-  if (rows.length === 0) return "—";
+  if (rows.length === 0) return "-";
   const pct = Math.round((rows.filter((event) => event.correct).length / rows.length) * 100);
   return `${pct}%`;
 }
@@ -174,11 +174,11 @@ export function StudentRoadmapPanel({
 
   const startingDisplay =
     draft.startingPoint.trim() ||
-    (snapshot.baselineAccuracy != null ? `${snapshot.baselineAccuracy}%` : "—");
+    (snapshot.baselineAccuracy != null ? `${snapshot.baselineAccuracy}%` : "-");
   const currentDisplay =
     draft.currentScores.trim() ||
-    (snapshot.currentAccuracy != null ? `${snapshot.currentAccuracy}%` : "—");
-  const targetDisplay = draft.targetComposite != null ? String(draft.targetComposite) : "—";
+    (snapshot.currentAccuracy != null ? `${snapshot.currentAccuracy}%` : "-");
+  const targetDisplay = draft.targetComposite != null ? String(draft.targetComposite) : "-";
   const testDateDisplay = draft.testDate ? formatIsoDateLabel(draft.testDate) || draft.testDate : "Not set";
   const startingHint = snapshot.baseline
     ? `First diagnostic · ELA ${subjectAccuracy(snapshot.baseline, "ELA")} · Math ${subjectAccuracy(snapshot.baseline, "MATH")}`
@@ -567,7 +567,7 @@ export function StudentRoadmapPanel({
             </Button>
             <span className="text-xs text-muted-foreground">
               {dirty
-                ? "Unsaved changes — auto-saves after you pause."
+                ? "Unsaved changes, auto-saves after you pause."
                 : saveState === "saved"
                   ? "All changes saved to this student's board."
                   : saveState === "error"

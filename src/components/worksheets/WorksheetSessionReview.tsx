@@ -62,8 +62,8 @@ export function WorksheetSessionReview({
         summaryMetrics={summaryMetrics}
         footnote={
           viewerRole === "tutor"
-            ? "Saved student attempt — answers and timing match what they submitted."
-            : "This is your saved attempt — question order and answers match what you submitted."
+            ? "Saved student attempt, answers and timing match what they submitted."
+            : "This is your saved attempt, question order and answers match what you submitted."
         }
         footerActions={
           <Badge variant="outline" className="text-xs font-normal">

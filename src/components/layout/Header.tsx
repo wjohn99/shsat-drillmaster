@@ -88,10 +88,10 @@ export const Header = () => {
 
   const navLinkClass = (active: boolean) =>
     cn(
-      "flex items-center self-center rounded-full px-3 py-1.5 text-[13px] font-medium tracking-tight transition-colors",
+      "flex items-center self-center rounded-full px-3 py-1.5 text-[13px] font-semibold tracking-tight transition-colors",
       active
-        ? "glass-control border text-foreground"
-        : "text-muted-foreground hover:text-foreground",
+        ? "glass-control border border-primary/20 bg-primary/10 text-primary"
+        : "text-primary hover:bg-primary/10",
     );
 
   const sheetLinkClass = (active: boolean) =>
@@ -105,7 +105,7 @@ export const Header = () => {
   return (
     <header className={cn(locked ? "relative z-50 shrink-0" : "sticky top-0 z-50")}>
       <div className="container px-4 pt-3 pb-2">
-        <div className="glass-chrome flex h-14 items-stretch justify-between rounded-[1.35rem] border px-3">
+        <div className="glass-chrome flex h-14 items-stretch justify-between rounded-[1.35rem] border border-foreground/20 bg-white/95 px-3 text-primary">
         {locked ? (
           <button
             type="button"
@@ -116,7 +116,7 @@ export const Header = () => {
             <img src={logoIcon} alt="" className="h-8 w-8 object-contain" />
             <div className="flex flex-col leading-none">
               <span className="font-serif text-[15px] font-semibold tracking-tight">StepPrep</span>
-              <span className="mt-0.5 text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+              <span className="mt-0.5 text-[10px] uppercase tracking-[0.16em] text-primary/80">
                 DrillMaster
               </span>
             </div>
@@ -130,7 +130,7 @@ export const Header = () => {
           <img src={logoIcon} alt="StepPrep Logo" className="h-8 w-8 object-contain" />
           <div className="flex flex-col leading-none">
             <span className="font-serif text-[15px] font-semibold tracking-tight">StepPrep</span>
-            <span className="mt-0.5 text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+            <span className="mt-0.5 text-[10px] uppercase tracking-[0.16em] text-primary/80">
               DrillMaster
             </span>
           </div>
@@ -173,7 +173,7 @@ export const Header = () => {
               ) : null}
             </>
           ) : locked ? null : (
-            <Button variant="ghost" size="sm" asChild>
+            <Button variant="ghost" size="sm" asChild className="text-primary hover:text-primary">
               <Link to="/login">
                 <User className="h-4 w-4 mr-1.5" />
                 <span className="hidden sm:inline text-sm">Sign In</span>

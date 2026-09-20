@@ -1,12 +1,12 @@
 /**
  * Jed Approved rows imported from the SHSAT Question Bank Tracker spreadsheet.
- * Update via import scripts — not loaded at runtime from mockData or converted_questions.json.
+ * Update via import scripts, not loaded at runtime from mockData or converted_questions.json.
  */
 import { Question } from '@/types';
 import { tag } from '@/data/taggingScheme';
 
 export const trackerQuestions: Question[] = [
-  // SHSAT Question Bank Tracker — Jed Approved imports (rows 2–8, 15)
+  // SHSAT Question Bank Tracker, Jed Approved imports (rows 2–8, 15)
   {
     id: 'ELA-REB-001',
     subject: 'ELA',
@@ -14,9 +14,9 @@ export const trackerQuestions: Question[] = [
     module: '1',
     stem: 'Which sentence contains an error in its construction and should be revised?\n\n1) Marcus had always wanted to visit the Museum of Natural History, so his parents surprised him with tickets for his birthday. (2) Rushing through the entrance, the dinosaur fossils were the first things Marcus noticed. (3) He spent nearly two hours in the fossil hall, sketching the bones in his notebook. (4) By the end of the day, Marcus had decided that paleontology was his favorite subject in science.',
     solutionExplanation:
-      'Sentence 2 opens with the participial phrase "Rushing through the entrance," which must describe Marcus—the person doing the rushing—not the fossils. Revise so Marcus is the subject immediately after the comma (e.g., "Rushing through the entrance, Marcus noticed the dinosaur fossils first.").',
+      'Sentence 2 opens with the participial phrase "Rushing through the entrance," which must describe Marcus, the person doing the rushing, not the fossils. Revise so Marcus is the subject immediately after the comma (e.g., "Rushing through the entrance, Marcus noticed the dinosaur fossils first.").',
     commonTrap:
-      'Students often skim for any sentence that "sounds odd" and pick sentence 1 because it is long, or sentence 4 because it shifts topic—without checking whether an introductory phrase clearly modifies the right noun.',
+      'Students often skim for any sentence that "sounds odd" and pick sentence 1 because it is long, or sentence 4 because it shifts topic, without checking whether an introductory phrase clearly modifies the right noun.',
     choices: [
       {
         id: 'ELA-REB-001-a',
@@ -188,7 +188,7 @@ export const trackerQuestions: Question[] = [
     createdAt: '2026-06-26T12:07:00Z',
   },
 
-  // SHSAT Question Bank Tracker — Jed Approved batch 2 (14 geometry/applied/num)
+  // SHSAT Question Bank Tracker, Jed Approved batch 2 (14 geometry/applied/num)
 
   {
     id: 'MATH-GEO-001',
@@ -240,7 +240,7 @@ export const trackerQuestions: Question[] = [
     stem: 'On a coordinate grid, point P is at (1, 3) and point Q is at (7, 11). Point R lies exactly halfway between P and Q. What are the coordinates of point R?',
     wp: {
       solutionExplanation:
-        'Choice A is incorrect. This results from finding half the distance between the points rather than the midpoint: (7−1)/2 = 3 and (11−3)/2 = 4, then reporting those values as coordinates instead of adding them to the starting point. Choice B is correct. Midpoint = ((1+7)/2, (3+11)/2) = (8/2, 14/2) = (4, 7). Choice C is incorrect. This results from correctly computing the x-coordinate (4) but misreading Q\'s y-coordinate as 13 instead of 11: (3+13)/2 = 8. Choice D is incorrect. This results from finding the distance between the points — (6, 8) — and reporting that as the midpoint, confusing displacement with location.',
+        'Choice A is incorrect. This results from finding half the distance between the points rather than the midpoint: (7−1)/2 = 3 and (11−3)/2 = 4, then reporting those values as coordinates instead of adding them to the starting point. Choice B is correct. Midpoint = ((1+7)/2, (3+11)/2) = (8/2, 14/2) = (4, 7). Choice C is incorrect. This results from correctly computing the x-coordinate (4) but misreading Q\'s y-coordinate as 13 instead of 11: (3+13)/2 = 8. Choice D is incorrect. This results from finding the distance between the points, (6, 8), and reporting that as the midpoint, confusing displacement with location.',
     },
     choices: [
       { id: 'MATH-GEO-003-a', label: 'A', text: '(3, 4)', isCorrect: false },
@@ -261,7 +261,7 @@ export const trackerQuestions: Question[] = [
     stem: 'A rectangular yard has a length that is 3 times its width. The yard is enclosed by 72 feet of fencing. What is the area of the yard?',
     wp: {
       solutionExplanation:
-        'Choice A is incorrect. This results from finding the width correctly (9 feet) but computing area as width × width: 9 × 9 = 81. Choice B is correct. Let width = w. Length = 3w. Perimeter: 2(w + 3w) = 72. 8w = 72. w = 9 feet. Length = 27 feet. Area = 9 × 27 = 243 sq ft. Choice C is incorrect. Instead of doing 8w=72, this uses 4w=72 and get w=18, resulting in an area of 972, forgetting to apply the dimensions of W and 3W on the opposite sides. Choice D is incorrect. This results from using the perimeter formula incorrectly — treating 72 as 2 × length only: length = 36, then computing 9 × 36 = 324.',
+        'Choice A is incorrect. This results from finding the width correctly (9 feet) but computing area as width × width: 9 × 9 = 81. Choice B is correct. Let width = w. Length = 3w. Perimeter: 2(w + 3w) = 72. 8w = 72. w = 9 feet. Length = 27 feet. Area = 9 × 27 = 243 sq ft. Choice C is incorrect. Instead of doing 8w=72, this uses 4w=72 and get w=18, resulting in an area of 972, forgetting to apply the dimensions of W and 3W on the opposite sides. Choice D is incorrect. This results from using the perimeter formula incorrectly, treating 72 as 2 × length only: length = 36, then computing 9 × 36 = 324.',
     },
     choices: [
       { id: 'MATH-GEO-004-a', label: 'A', text: '81 sq ft', isCorrect: false },
@@ -408,7 +408,7 @@ export const trackerQuestions: Question[] = [
     stem: 'A price is increased by 20%, and the new price is decreased by 20%. What is the overall percent change from the original price?',
     wp: {
       solutionExplanation:
-        'Choice A is incorrect. This is the most common misconception — students assume the increase and decrease cancel out, but they apply to different base amounts. Choice B is correct. Start with $100. After a 20% increase: $120. After a 20% decrease: $120 × 0.80 = $96. This is a 4% decrease from the original $100. Choice C is incorrect. This results from a sign error in computing the net change. Choice D is incorrect. This results from subtracting the percentages directly (20% + 20% = 40%) without applying them sequentially.',
+        'Choice A is incorrect. This is the most common misconception, students assume the increase and decrease cancel out, but they apply to different base amounts. Choice B is correct. Start with $100. After a 20% increase: $120. After a 20% decrease: $120 × 0.80 = $96. This is a 4% decrease from the original $100. Choice C is incorrect. This results from a sign error in computing the net change. Choice D is incorrect. This results from subtracting the percentages directly (20% + 20% = 40%) without applying them sequentially.',
     },
     choices: [
       { id: 'MATH-APP-013-a', label: 'A', text: 'No change', isCorrect: false },

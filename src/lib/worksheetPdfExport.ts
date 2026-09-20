@@ -141,7 +141,7 @@ function appendQuestionContent(ctx: PdfContext, q: Question) {
   if (q.subtype === "INDY-HS") {
     addParagraph(
       ctx,
-      "[Diagram not included in PDF — use the online item or sketch from class.]",
+      "[Diagram not included in PDF, use the online item or sketch from class.]",
       9,
       "italic"
     );
@@ -205,7 +205,7 @@ export function openWorksheetPdfInNewTab(
 
   addParagraph(ctx, "SHSAT practice worksheet", 16, "bold");
   addParagraph(ctx, options.tagSummaryLine, 9);
-  addParagraph(ctx, "Student copy — no answer key. For classroom or take-home use.", 9, "italic");
+  addParagraph(ctx, "Student copy, no answer key. For classroom or take-home use.", 9, "italic");
   ctx.y += 2;
 
   const printedPassages = new Set<string>();

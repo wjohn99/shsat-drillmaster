@@ -251,7 +251,7 @@ export function TutorDashboard() {
                       </TableCell>
                       <TableCell>{row.lastActiveLabel}</TableCell>
                       <TableCell className="text-right tabular-nums">
-                        {row.avgAccuracy !== null ? `${row.avgAccuracy}%` : "—"}
+                        {row.avgAccuracy !== null ? `${row.avgAccuracy}%` : "-"}
                       </TableCell>
                       <TableCell className="text-right">
                         <StudentQuickActions
@@ -284,7 +284,7 @@ export function TutorDashboard() {
           <CardContent>
             {analytics.attentionItems.length === 0 ? (
               <p className="text-sm text-muted-foreground py-2">
-                All students are on track — no overdue assignments right now.
+                All students are on track, no overdue assignments right now.
               </p>
             ) : (
               <ul className="divide-y">

@@ -581,7 +581,7 @@ export function DiagnosticExamRunner({
       </Badge>
       {isPassageSet && passageSet ? (
         <span className="text-xs text-muted-foreground">
-          Passage set {passageSet.current} of {passageSet.total} — you can review until you
+          Passage set {passageSet.current} of {passageSet.total}, you can review until you
           submit this set
         </span>
       ) : (

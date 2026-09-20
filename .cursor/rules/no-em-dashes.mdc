@@ -1,0 +1,22 @@
+---
+description: Never use em dashes in user-facing copy
+alwaysApply: true
+---
+
+# No em dashes
+
+Do not use em dashes (`—`, `&mdash;`, `&#8212;`) in UI copy, titles, toasts, tooltips, PDFs, or authored explanations.
+
+Use a comma instead.
+
+```
+# Bad
+Saved on this device — retry to sync your account
+
+# Good
+Saved on this device, retry to sync your account
+```
+
+Leave em dashes only in:
+- Literary source text (passages and quoted stems)
+- Visual fraction bars in the equation editor
