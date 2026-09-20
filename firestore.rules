@@ -138,9 +138,22 @@ service cloud.firestore {
       allow update: if isTutor()
         && request.resource.data.studentUid == resource.data.studentUid
         && request.resource.data.createdByUid == resource.data.createdByUid
-        && request.resource.data.createdAt == resource.data.createdAt;
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.roadmap is map
+        && (!('deletedAt' in request.resource.data)
+          || request.resource.data.deletedAt == resource.data.deletedAt)
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['studentName', 'studentEmail', 'color', 'archivedAt', 'roadmap', 'roadmapUpdatedAt', 'updatedAt', 'diagnosticExtendedTime']);
 
       allow delete: if false;
+
+      match /roadmap_revisions/{revId} {
+        allow read: if canAccessWorkspaceBoard(boardId);
+        allow create: if isTutor()
+          && request.resource.data.savedByUid == request.auth.uid
+          && request.resource.data.roadmap is map;
+        allow update, delete: if false;
+      }
 
       match /lists/{listId} {
         allow read: if canAccessWorkspaceBoard(boardId);
@@ -221,6 +234,13 @@ service cloud.firestore {
             && request.resource.data.message is string;
           allow update, delete: if false;
         }
+
+        match /revisions/{revId} {
+          allow read: if canAccessWorkspaceBoard(boardId);
+          allow create: if isTutor()
+            && request.resource.data.savedByUid == request.auth.uid;
+          allow update, delete: if false;
+        }
       }
     }
 
@@ -243,6 +263,19 @@ service cloud.firestore {
       allow read: if isSignedIn()
         && resource.data.sessionType == 'diagnostic'
         && isTutor();
+    }
+
+    // In-progress diagnostic sittings. One document per student (doc id = userId).
+    match /diagnostic_progress/{progressUserId} {
+      allow read, delete: if isOwner(progressUserId);
+
+      allow create, update: if isOwner(progressUserId)
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.specId is string
+        && request.resource.data.paused is bool
+        && request.resource.data.remainingSeconds is number;
+
+      allow read: if isTutor();
     }
   }
 }

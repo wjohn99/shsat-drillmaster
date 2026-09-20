@@ -36,9 +36,16 @@ import {
 import {
   clearDiagnosticSave,
   formatDiagnosticClock,
+  loadDiagnosticSave,
   persistDiagnosticSave,
+  withPausedClock,
   type DiagnosticExamSave,
 } from "@/lib/diagnosticExamStorage";
+import {
+  clearDiagnosticProgress,
+  saveDiagnosticProgress,
+} from "@/lib/diagnosticProgressService";
+import { toast } from "@/hooks/use-toast";
 import type { DiagnosticSubject } from "@/data/shsatDiagnosticForm";
 import type { DiagnosticEndReason } from "@/types/practiceSession";
 import type { Question } from "@/types";
@@ -98,6 +105,7 @@ export function DiagnosticExamRunner({
   const [confirmExit, setConfirmExit] = useState(false);
 
   const finishedRef = useRef(false);
+  const leavingRef = useRef(false);
   const finishExamRef = useRef<(reason: "submit" | "time") => void>(() => {});
   const questionStartMsRef = useRef(Date.now());
   const eventsByQuestionId = useRef<Map<string, SessionAnalyticsEvent>>(
@@ -170,7 +178,7 @@ export function DiagnosticExamRunner({
 
   const recordTiming = useCallback(
     (question: Question) => {
-      const elapsedSeconds = (Date.now() - questionStartMsRef.current) / 1000;
+      const elapsedSeconds = Math.max(0, (Date.now() - questionStartMsRef.current) / 1000);
       const value = answers[question.id];
       const evt: SessionAnalyticsEvent = {
         questionId: question.id,
@@ -184,7 +192,7 @@ export function DiagnosticExamRunner({
       const prev = eventsByQuestionId.current.get(question.id);
       eventsByQuestionId.current.set(question.id, {
         ...evt,
-        elapsedSeconds: (prev?.elapsedSeconds ?? 0) + elapsedSeconds,
+        elapsedSeconds: Number(((prev?.elapsedSeconds ?? 0) + elapsedSeconds).toFixed(1)),
       });
       questionStartMsRef.current = Date.now();
     },
@@ -202,6 +210,7 @@ export function DiagnosticExamRunner({
         [...eventsByQuestionId.current.values()],
       );
       clearDiagnosticSave(userId);
+      void clearDiagnosticProgress(userId).catch(() => undefined);
       onComplete(ordered, reason);
     },
     [answers, currentQuestion, exam, onComplete, recordTiming, userId],
@@ -221,53 +230,137 @@ export function DiagnosticExamRunner({
     return () => window.clearInterval(id);
   }, [deadlineAt]);
 
-  const persistProgress = useCallback(() => {
-    persistDiagnosticSave(userId, {
-      specId: exam.spec.id,
-      startedAt: initialSave?.startedAt ?? Date.now(),
+  const persistProgress = useCallback(
+    (options?: { paused?: boolean }) => {
+      if (finishedRef.current) return null;
+      if (currentQuestion) recordTiming(currentQuestion);
+      const remaining = Math.max(0, Math.ceil((deadlineAt - Date.now()) / 1000));
+      const now = Date.now();
+      const base: DiagnosticExamSave = {
+        specId: exam.spec.id,
+        startedAt: initialSave?.startedAt ?? now,
+        deadlineAt,
+        paused: false,
+        remainingSeconds: remaining,
+        updatedAt: now,
+        firstSection,
+        sectionIndex,
+        unitIndex,
+        questionIndexInUnit,
+        answers,
+        flagged: [...flagged],
+        lockedUnitKeys: [...lockedUnitKeys],
+        eliminated,
+        notepad,
+        clockHidden,
+        events: [...eventsByQuestionId.current.values()],
+      };
+      const save = options?.paused ? withPausedClock(base, now) : base;
+      persistDiagnosticSave(userId, save);
+      return save;
+    },
+    [
+      answers,
+      clockHidden,
+      currentQuestion,
       deadlineAt,
+      eliminated,
+      exam.spec.id,
       firstSection,
+      flagged,
+      initialSave?.startedAt,
+      lockedUnitKeys,
+      notepad,
+      questionIndexInUnit,
+      recordTiming,
       sectionIndex,
       unitIndex,
-      questionIndexInUnit,
-      answers,
-      flagged: [...flagged],
-      lockedUnitKeys: [...lockedUnitKeys],
-      eliminated,
-      notepad,
-      clockHidden,
-      events: [...eventsByQuestionId.current.values()],
-    });
-  }, [
-    answers,
-    clockHidden,
-    deadlineAt,
-    eliminated,
-    exam.spec.id,
-    firstSection,
-    flagged,
-    initialSave?.startedAt,
-    lockedUnitKeys,
-    notepad,
-    questionIndexInUnit,
-    sectionIndex,
-    unitIndex,
-    userId,
-  ]);
+      userId,
+    ],
+  );
 
   const persistProgressRef = useRef(persistProgress);
   persistProgressRef.current = persistProgress;
+  const remoteSaveTimerRef = useRef<number | null>(null);
+
+  const queueRemoteSave = useCallback((save: DiagnosticExamSave, flush = false) => {
+    if (remoteSaveTimerRef.current) {
+      window.clearTimeout(remoteSaveTimerRef.current);
+      remoteSaveTimerRef.current = null;
+    }
+    const write = () => {
+      if (finishedRef.current) return;
+      void saveDiagnosticProgress(userId, save)
+        .then(() => {
+          if (finishedRef.current) {
+            return clearDiagnosticProgress(userId);
+          }
+          const latest = loadDiagnosticSave(userId);
+          if (latest && latest.updatedAt > save.updatedAt) {
+            return saveDiagnosticProgress(userId, latest);
+          }
+        })
+        .catch((err: unknown) => {
+          if (flush) {
+            toast({
+              title: "Saved on this device",
+              description:
+                err instanceof Error
+                  ? err.message
+                  : "Could not sync this attempt to your account yet.",
+              variant: "destructive",
+            });
+          }
+        });
+    };
+    if (flush) {
+      write();
+      return;
+    }
+    remoteSaveTimerRef.current = window.setTimeout(write, 800);
+  }, [userId]);
 
   useEffect(() => {
-    if (finishedRef.current) return;
-    persistProgress();
-  }, [persistProgress]);
+    if (finishedRef.current || leavingRef.current) return;
+    const save = persistProgress();
+    if (save) queueRemoteSave(save);
+  }, [persistProgress, queueRemoteSave]);
 
   useEffect(() => {
     return () => {
-      if (!finishedRef.current) persistProgressRef.current();
+      if (remoteSaveTimerRef.current) {
+        window.clearTimeout(remoteSaveTimerRef.current);
+      }
+      if (finishedRef.current || leavingRef.current) return;
+      const save = persistProgressRef.current({ paused: true });
+      if (save) void saveDiagnosticProgress(userId, save).catch(() => undefined);
     };
-  }, []);
+  }, [userId]);
+
+  const pauseAndLeave = useCallback(async () => {
+    if (finishedRef.current) return;
+    leavingRef.current = true;
+    if (remoteSaveTimerRef.current) {
+      window.clearTimeout(remoteSaveTimerRef.current);
+      remoteSaveTimerRef.current = null;
+    }
+    const save = persistProgress({ paused: true });
+    if (save) {
+      try {
+        await saveDiagnosticProgress(userId, save);
+      } catch (err) {
+        toast({
+          title: "Paused on this device",
+          description:
+            err instanceof Error
+              ? err.message
+              : "Could not sync the pause to your account. Reopen this device if you can.",
+          variant: "destructive",
+        });
+      }
+    }
+    onExit();
+  }, [onExit, persistProgress, userId]);
 
   useEffect(() => {
     const onBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -476,6 +569,7 @@ export function DiagnosticExamRunner({
         onToggleAta={toggleAta}
         eliminatedChoiceIds={eliminated[currentQuestion.id]}
         onToggleEliminate={toggleEliminate}
+        highContrastChoices
       />
     </>
   );
@@ -525,7 +619,7 @@ export function DiagnosticExamRunner({
           <div className="flex min-w-0 items-center gap-3">
             <Button variant="ghost" onClick={() => setConfirmExit(true)}>
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Exit
+              Pause
             </Button>
             <div className="min-w-0">
               <h1 className="truncate text-xl font-bold">{exam.spec.name}</h1>
@@ -661,7 +755,7 @@ export function DiagnosticExamRunner({
               <Textarea
                 value={notepad}
                 onChange={(e) => setNotepad(e.target.value)}
-                placeholder="Scratch notes for this exam (saved on this device)."
+                placeholder="Scratch notes for this exam (saved to your account)."
                 className="mt-3 min-h-[88px] text-sm"
               />
             </details>
@@ -672,15 +766,15 @@ export function DiagnosticExamRunner({
       <AlertDialog open={confirmExit} onOpenChange={setConfirmExit}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Leave this diagnostic?</AlertDialogTitle>
+            <AlertDialogTitle>Pause and save this diagnostic?</AlertDialogTitle>
             <AlertDialogDescription>
-              Your answers stay saved on this device and you can resume. The exam timer keeps
-              running until time is up.
+              The timer stops. Your answers are saved to your account, so you can resume on this
+              device or another computer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Keep working</AlertDialogCancel>
-            <AlertDialogAction onClick={onExit}>Leave exam</AlertDialogAction>
+            <AlertDialogAction onClick={() => void pauseAndLeave()}>Pause and save</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

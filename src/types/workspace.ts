@@ -2,6 +2,55 @@ import type { Timestamp } from "firebase/firestore";
 
 export type WorkspaceListKind = "sessions" | "tests" | "info" | "custom";
 
+export type StudentAttentionStatus =
+  | "follow_up"
+  | "next_session"
+  | "active_work"
+  | "on_track";
+
+export const ATTENTION_STATUS_LABEL: Record<StudentAttentionStatus, string> = {
+  follow_up: "Follow-up needed",
+  next_session: "Next session",
+  active_work: "Active assignment",
+  on_track: "On track",
+};
+
+export const ATTENTION_STATUS_ORDER: StudentAttentionStatus[] = [
+  "follow_up",
+  "next_session",
+  "active_work",
+  "on_track",
+];
+
+export interface RoadmapFollowUp {
+  id: string;
+  text: string;
+  open: boolean;
+  createdAtMs: number;
+}
+
+/** Tutor-owned plan fields on the student board. Live scores/sessions are joined at read time. */
+export interface StudentRoadmap {
+  /** Tutor override; empty falls back to first diagnostic accuracy. */
+  startingPoint: string;
+  /** Tutor override; empty falls back to latest diagnostic accuracy. */
+  currentScores: string;
+  targetComposite: number | null;
+  targetSchool: string;
+  testDate: string;
+  currentPriority: string;
+  longTermPriorities: string;
+  strengthsNotes: string;
+  growthNotes: string;
+  nextSessionDate: string;
+  nextSessionTime: string;
+  nextSessionNotes: string;
+  followUps: RoadmapFollowUp[];
+  /** When set with statusManual, pins the Kanban column. */
+  status: StudentAttentionStatus | null;
+  statusManual: boolean;
+}
+
 export interface WorkspaceBoard {
   id: string;
   studentUid: string;
@@ -11,10 +60,13 @@ export interface WorkspaceBoard {
   color?: string;
   createdByUid: string;
   createdAt: Timestamp;
-  archivedAt?: Timestamp | null;
+    archivedAt?: Timestamp | null;
   deletedAt?: Timestamp | null;
   /** Tutor-assigned 2x diagnostic timing. Students cannot turn this on themselves. */
   diagnosticExtendedTime?: boolean;
+  roadmap: StudentRoadmap;
+  /** Used to refuse stale roadmap saves from another tab. */
+  roadmapUpdatedAt?: Timestamp | null;
 }
 
 export interface WorkspaceList {

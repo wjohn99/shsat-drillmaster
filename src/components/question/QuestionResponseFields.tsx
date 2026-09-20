@@ -26,6 +26,8 @@ interface QuestionResponseFieldsProps {
   /** Struck-through choice ids (answer eliminator). */
   eliminatedChoiceIds?: string[];
   onToggleEliminate?: (choiceId: string) => void;
+  /** Stronger choice-control outlines (diagnostic exam). */
+  highContrastChoices?: boolean;
 }
 
 export function QuestionResponseFields({
@@ -37,8 +39,10 @@ export function QuestionResponseFields({
   onToggleAta,
   eliminatedChoiceIds = [],
   onToggleEliminate,
+  highContrastChoices = false,
 }: QuestionResponseFieldsProps) {
   const eliminated = new Set(eliminatedChoiceIds);
+  const choiceControlClass = cn("mt-1", highContrastChoices && "diagnostic-choice-control");
   const showMcChoices =
     Boolean(question.choices) &&
     !isIndyCheckboxMultiSubtype(question.subtype) &&
@@ -117,7 +121,7 @@ export function QuestionResponseFields({
                     checked={checked}
                     onCheckedChange={() => onToggleAta(choice.id)}
                     disabled={disabled}
-                    className="mt-1"
+                    className={choiceControlClass}
                   />
                   <Label
                     htmlFor={`${question.id}-${choice.id}`}
@@ -160,7 +164,7 @@ export function QuestionResponseFields({
               return (
                 <div key={choice.id} className="space-y-1.5">
                   <div className="flex items-start space-x-3">
-                    <RadioGroupItem value={choice.id} id={choice.id} className="mt-1" />
+                    <RadioGroupItem value={choice.id} id={choice.id} className={choiceControlClass} />
                     <Label
                       htmlFor={choice.id}
                       className={cn(

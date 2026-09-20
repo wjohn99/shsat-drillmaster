@@ -194,6 +194,15 @@
     background-color: hsl(var(--glass-control-bg));
   }
 
+  /* Diagnostic exam: glass borders wash out on the paper surface. */
+  .diagnostic-choice-control {
+    border-width: 2px !important;
+    border-style: solid !important;
+    border-color: hsl(var(--foreground) / 0.78) !important;
+    background-color: hsl(var(--background)) !important;
+    box-shadow: none !important;
+  }
+
   .glass-control:hover:not(:disabled):not([data-disabled="true"]) {
     background-color: hsl(var(--glass-control-bg-hover));
   }

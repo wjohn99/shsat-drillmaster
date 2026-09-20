@@ -6,6 +6,10 @@ export interface DiagnosticExamSave {
   specId: string;
   startedAt: number;
   deadlineAt: number;
+  /** When true, remainingSeconds is frozen and the wall-clock deadline is ignored. */
+  paused: boolean;
+  remainingSeconds: number;
+  updatedAt: number;
   firstSection: DiagnosticSubject;
   sectionIndex: number;
   unitIndex: number;
@@ -49,8 +53,98 @@ export function remainingDiagnosticSeconds(deadlineAt: number, now = Date.now())
   return Math.max(0, Math.ceil((deadlineAt - now) / 1000));
 }
 
+export function remainingFromDiagnosticSave(save: DiagnosticExamSave, now = Date.now()): number {
+  if (save.paused) return Math.max(0, Math.floor(save.remainingSeconds || 0));
+  if (save.deadlineAt > 0) return remainingDiagnosticSeconds(save.deadlineAt, now);
+  return Math.max(0, Math.floor(save.remainingSeconds || 0));
+}
+
 export function isDiagnosticSaveExpired(save: DiagnosticExamSave, now = Date.now()): boolean {
-  return save.deadlineAt <= now;
+  if (save.paused) return false;
+  return remainingFromDiagnosticSave(save, now) <= 0;
+}
+
+export function diagnosticSaveTimestamp(save: DiagnosticExamSave): number {
+  return save.updatedAt || save.startedAt || 0;
+}
+
+export function pickNewerDiagnosticSave(
+  a: DiagnosticExamSave | null,
+  b: DiagnosticExamSave | null,
+): DiagnosticExamSave | null {
+  if (!a) return b;
+  if (!b) return a;
+  return diagnosticSaveTimestamp(b) >= diagnosticSaveTimestamp(a) ? b : a;
+}
+
+export function withRunningDeadline(
+  save: DiagnosticExamSave,
+  now = Date.now(),
+): DiagnosticExamSave {
+  const remaining = remainingFromDiagnosticSave(save, now);
+  return {
+    ...save,
+    paused: false,
+    remainingSeconds: remaining,
+    deadlineAt: now + remaining * 1000,
+    updatedAt: now,
+  };
+}
+
+export function withPausedClock(save: DiagnosticExamSave, now = Date.now()): DiagnosticExamSave {
+  const remaining = remainingFromDiagnosticSave(save, now);
+  return {
+    ...save,
+    paused: true,
+    remainingSeconds: remaining,
+    deadlineAt: now + remaining * 1000,
+    updatedAt: now,
+  };
+}
+
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+}
+
+export function normalizeDiagnosticExamSave(raw: unknown): DiagnosticExamSave | null {
+  if (!raw || typeof raw !== "object") return null;
+  const parsed = asRecord(raw);
+  if (parsed.specId !== SHSAT_DIAGNOSTIC_SPEC.id) return null;
+  const firstSection = parsed.firstSection === "MATH" ? "MATH" : "ELA";
+  const deadlineAt = Number(parsed.deadlineAt) || 0;
+  const paused = parsed.paused === true;
+  const remainingSeconds = Number.isFinite(Number(parsed.remainingSeconds))
+    ? Math.max(0, Math.floor(Number(parsed.remainingSeconds)))
+    : remainingDiagnosticSeconds(deadlineAt);
+  const answersRaw = asRecord(parsed.answers);
+  const answers: Record<string, string> = {};
+  for (const [key, value] of Object.entries(answersRaw)) {
+    if (typeof value === "string") answers[key] = value;
+  }
+  const eliminatedRaw = asRecord(parsed.eliminated);
+  const eliminated: Record<string, string[]> = {};
+  for (const [key, value] of Object.entries(eliminatedRaw)) {
+    if (Array.isArray(value)) eliminated[key] = value.map(String);
+  }
+  return {
+    specId: SHSAT_DIAGNOSTIC_SPEC.id,
+    startedAt: Number(parsed.startedAt) || Date.now(),
+    deadlineAt,
+    paused,
+    remainingSeconds,
+    updatedAt: Number(parsed.updatedAt) || Number(parsed.startedAt) || 0,
+    firstSection,
+    sectionIndex: Number(parsed.sectionIndex) || 0,
+    unitIndex: Number(parsed.unitIndex) || 0,
+    questionIndexInUnit: Number(parsed.questionIndexInUnit) || 0,
+    answers,
+    flagged: Array.isArray(parsed.flagged) ? parsed.flagged.map(String) : [],
+    lockedUnitKeys: Array.isArray(parsed.lockedUnitKeys) ? parsed.lockedUnitKeys.map(String) : [],
+    eliminated,
+    notepad: typeof parsed.notepad === "string" ? parsed.notepad : "",
+    clockHidden: parsed.clockHidden === true,
+    events: Array.isArray(parsed.events) ? (parsed.events as SessionAnalyticsEvent[]) : [],
+  };
 }
 
 function storageKey(userId: string): string {
@@ -168,9 +262,7 @@ export function loadDiagnosticSave(userId: string): DiagnosticExamSave | null {
   try {
     const raw = localStorage.getItem(storageKey(userId));
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as DiagnosticExamSave;
-    if (parsed.specId !== SHSAT_DIAGNOSTIC_SPEC.id) return null;
-    return parsed;
+    return normalizeDiagnosticExamSave(JSON.parse(raw));
   } catch {
     return null;
   }

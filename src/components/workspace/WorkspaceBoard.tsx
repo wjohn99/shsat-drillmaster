@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Loader2, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -10,23 +10,28 @@ import {
   fetchAssignmentsForStudent,
   fetchAssignmentsForTutor,
 } from "@/lib/assignmentService";
+import { fetchDiagnosticProgress, fetchDiagnosticProgressForTutor } from "@/lib/diagnosticProgressService";
 import { pickLatestCompletedAssignment } from "@/lib/dashboardStats";
 import { firstAndLatestDiagnostic } from "@/lib/diagnosticReport";
 import { fetchPracticeSessionsForStudent, fetchPracticeSessionsForTutor } from "@/lib/practiceSessionService";
+import { buildStudentRoadmapSnapshot } from "@/lib/studentRoadmap";
 import {
   createWorkspaceList,
   fetchWorkspaceBoard,
   fetchWorkspaceCards,
   fetchWorkspaceLists,
+  isWorkspaceConflictError,
   updateWorkspaceBoardDiagnosticExtendedTime,
+  updateWorkspaceBoardRoadmap,
 } from "@/lib/workspaceService";
+import { Timestamp } from "firebase/firestore";
 import type { WorksheetAssignment } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
-import type { WorkspaceBoard as WorkspaceBoardType, WorkspaceCard, WorkspaceList } from "@/types/workspace";
-import { WORKSPACE_HOME_PATH } from "@/types/worksheetsNavigation";
+import type { StudentRoadmap, WorkspaceBoard as WorkspaceBoardType, WorkspaceCard, WorkspaceList } from "@/types/workspace";
 import { BoardListColumn } from "./BoardListColumn";
 import { CardDetailModal } from "./CardDetailModal";
 import { StudentQuickActions } from "./StudentQuickActions";
+import { StudentRoadmapPanel } from "./StudentRoadmapPanel";
 
 interface WorkspaceBoardProps {
   boardId: string;
@@ -54,13 +59,18 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
   const [lastCompletedAssignment, setLastCompletedAssignment] =
     useState<WorksheetAssignment | null>(null);
   const [savingExtendedTime, setSavingExtendedTime] = useState(false);
+  const [diagnosticInProgress, setDiagnosticInProgress] = useState(false);
+  const [studentAssignments, setStudentAssignments] = useState<WorksheetAssignment[]>([]);
+  const [studentSessions, setStudentSessions] = useState<PracticeSessionRecord[]>([]);
+  const [savingRoadmap, setSavingRoadmap] = useState(false);
+  const roadmapUpdatedAtMsRef = useRef(0);
 
   const loadBoard = useCallback(async (opts?: { silent?: boolean }) => {
     const silent = opts?.silent ?? false;
     if (!silent) setLoading(true);
     setError(null);
     try {
-      const [boardRow, listRows, cardRows, assignmentRows, sessionRows] = await Promise.all([
+      const [boardRow, listRows, cardRows, assignmentRows, sessionRows, progressFlag] = await Promise.all([
         fetchWorkspaceBoard(boardId),
         fetchWorkspaceLists(boardId),
         fetchWorkspaceCards(boardId),
@@ -70,6 +80,13 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
         readOnly
           ? fetchPracticeSessionsForStudent().catch(() => [] as PracticeSessionRecord[])
           : fetchPracticeSessionsForTutor().catch(() => [] as PracticeSessionRecord[]),
+        readOnly
+          ? fetchDiagnosticProgress(boardId)
+              .then((row) => Boolean(row))
+              .catch(() => false)
+          : fetchDiagnosticProgressForTutor()
+              .then((rows) => rows.some((row) => row.userId === boardId))
+              .catch(() => false),
       ]);
       if (!boardRow) {
         setError("Workspace board not found.");
@@ -80,9 +97,13 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
         : assignmentRows.filter((a) => a.assignedToStudentUid === boardRow.studentUid);
       const map = new Map(studentAssignments.map((a) => [a.id, a]));
       setBoard(boardRow);
+      roadmapUpdatedAtMsRef.current = boardRow.roadmapUpdatedAt?.toMillis?.() ?? 0;
       setLists(listRows);
       setCards(cardRows);
       setAssignmentById(map);
+      setStudentAssignments(studentAssignments);
+      setStudentSessions(sessionRows.filter((s) => s.userId === boardRow.studentUid));
+      setDiagnosticInProgress(progressFlag);
       setLastSession(sessionRows.find((s) => s.userId === boardRow.studentUid) ?? null);
       const diagnosticPair = firstAndLatestDiagnostic(sessionRows, boardRow.studentUid);
       setFirstDiagnostic(diagnosticPair.first);
@@ -124,6 +145,43 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
     setNewListTitle("");
     setAddingList(false);
     await loadBoard();
+  };
+
+  const snapshot = useMemo(() => {
+    if (!board) return null;
+    return buildStudentRoadmapSnapshot({
+      board,
+      sessions: studentSessions,
+      assignments: studentAssignments,
+      diagnosticInProgress,
+    });
+  }, [board, studentSessions, studentAssignments, diagnosticInProgress]);
+
+  const handleSaveRoadmap = async (roadmap: StudentRoadmap) => {
+    setSavingRoadmap(true);
+    try {
+      const result = await updateWorkspaceBoardRoadmap(boardId, roadmap, {
+        expectedUpdatedAtMs: roadmapUpdatedAtMsRef.current,
+      });
+      roadmapUpdatedAtMsRef.current = result.roadmapUpdatedAtMs;
+      setBoard((prev) =>
+        prev
+          ? {
+              ...prev,
+              roadmap,
+              roadmapUpdatedAt: Timestamp.fromMillis(result.roadmapUpdatedAtMs),
+            }
+          : prev,
+      );
+      await loadBoard({ silent: true });
+    } catch (err) {
+      if (isWorkspaceConflictError(err)) {
+        await loadBoard({ silent: true });
+      }
+      throw err;
+    } finally {
+      setSavingRoadmap(false);
+    }
   };
 
   if (loading) {
@@ -198,11 +256,23 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
             firstDiagnostic={firstDiagnostic}
             latestDiagnostic={latestDiagnostic}
             showOpenBoard={false}
-            returnTo={WORKSPACE_HOME_PATH}
+            returnTo={`/workspace/${board.studentUid}`}
           />
         ) : null}
       </div>
 
+      {snapshot ? (
+        <StudentRoadmapPanel
+          snapshot={snapshot}
+          readOnly={readOnly}
+          saving={savingRoadmap}
+          onSave={handleSaveRoadmap}
+        />
+      ) : null}
+
+      <p className="mb-2 px-1 text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+        Session notes and homework
+      </p>
       <div className="flex gap-4 overflow-x-auto pb-6 min-h-[calc(100vh-12rem)] items-start">
         {lists.map((list) => (
           <BoardListColumn

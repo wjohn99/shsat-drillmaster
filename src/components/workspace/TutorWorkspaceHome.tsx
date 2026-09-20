@@ -79,7 +79,6 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
     <div className="space-y-8">
       <PageHeader
         title="Workspace"
-        description="One workspace per student. All tutors can view and edit; students only see their own."
         actions={
           <>
             <Button variant="outline" asChild>
@@ -111,8 +110,7 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
           <CardContent className="space-y-3 py-10 text-center">
             <p className="font-medium">No workspaces yet</p>
             <p className="text-sm text-muted-foreground max-w-md mx-auto">
-              Add a student who has signed in to create their workspace with default lists
-              (Session Summaries and Info).
+              Add a student who has signed in to create their workspace.
             </p>
             <Button onClick={() => setAddOpen(true)}>
               <UserPlus className="h-4 w-4 mr-2" />
@@ -124,11 +122,9 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {boards.map((board) => {
             const accent = workspaceBoardAccentColor(board.color);
+            const diagnostic = firstAndLatestDiagnostic(sessions, board.studentUid);
             return (
-              <Card
-                key={board.id}
-                className="h-full overflow-hidden"
-              >
+              <Card key={board.id} className="h-full overflow-hidden">
                 <div className="h-1.5 w-full" style={{ backgroundColor: accent }} />
                 <CardHeader>
                   <div className="flex items-center gap-2 min-w-0">
@@ -148,8 +144,8 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
                     studentUid={board.studentUid}
                     lastSession={lastSessionByStudent.get(board.studentUid)}
                     lastCompletedAssignment={lastCompletedByStudent.get(board.studentUid)}
-                    firstDiagnostic={firstAndLatestDiagnostic(sessions, board.studentUid).first}
-                    latestDiagnostic={firstAndLatestDiagnostic(sessions, board.studentUid).latest}
+                    firstDiagnostic={diagnostic.first}
+                    latestDiagnostic={diagnostic.latest}
                     returnTo={WORKSPACE_HOME_PATH}
                   />
                 </CardContent>

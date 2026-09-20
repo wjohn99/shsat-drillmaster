@@ -18,7 +18,6 @@ import {
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase";
 import {
   buildWorkspaceAttachmentStoragePath,
-  deleteWorkspaceStorageObject,
   uploadWorkspacePdf,
 } from "@/lib/workspaceAttachmentStorage";
 import {
@@ -338,11 +337,6 @@ export async function addCardPdfAttachment(
   try {
     await setDoc(attachmentRef, payload);
   } catch (err) {
-    try {
-      await deleteWorkspaceStorageObject(storagePath);
-    } catch {
-      // Orphan cleanup best-effort
-    }
     throw err instanceof Error ? err : new Error("Could not save attachment metadata.");
   }
 
@@ -425,26 +419,18 @@ export async function submitAttachmentWork(
   );
 }
 
-/** Soft-delete — link/file metadata kept in Firestore for recovery. */
+/** Soft-delete — file bytes stay in Storage; metadata is hidden and recoverable. */
 export async function softDeleteCardAttachment(
   boardId: string,
   cardId: string,
   attachmentId: string,
   fileName: string,
-  storagePath?: string | null,
+  _storagePath?: string | null,
 ): Promise<void> {
   await updateDoc(
     doc(getFirebaseDb(), BOARDS_COLLECTION, boardId, "cards", cardId, "attachments", attachmentId),
     { deletedAt: serverTimestamp() },
   );
-
-  if (storagePath) {
-    try {
-      await deleteWorkspaceStorageObject(storagePath);
-    } catch {
-      // Metadata is already hidden; orphaned objects can be cleaned from the console.
-    }
-  }
 
   await logCardActivity(
     boardId,

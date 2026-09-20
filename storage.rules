@@ -29,7 +29,7 @@ service firebase.storage {
         && request.resource.contentType == 'application/pdf'
         && fileName.matches('.*\\.pdf$');
 
-      allow delete: if isTutor() && canAccessWorkspaceBoard(boardId);
+      allow delete: if false;
     }
 
     match /{allPaths=**} {

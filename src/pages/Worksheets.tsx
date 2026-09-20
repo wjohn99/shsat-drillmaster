@@ -350,6 +350,9 @@ const Worksheets = () => {
       setShowOnWorkspace(true);
       setWorkspaceListId(target.listId);
       setWorkspaceCardTarget(target.cardId ?? WORKSPACE_NEW_CARD_ID);
+      if (navState.suggestedTagCodes?.length) {
+        setSelectedCodes(navState.suggestedTagCodes);
+      }
       openTutorBuild();
     } else if (
       (navState.openTutorBuild || navState.assignToStudentUid) &&
@@ -357,6 +360,9 @@ const Worksheets = () => {
     ) {
       if (navState.assignToStudentUid) {
         setSelectedStudentUid(navState.assignToStudentUid);
+      }
+      if (navState.suggestedTagCodes?.length) {
+        setSelectedCodes(navState.suggestedTagCodes);
       }
       openTutorBuild();
     } else if (navState.openStudentBuild && role === "student") {

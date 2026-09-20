@@ -94,10 +94,12 @@ export default function Workspace() {
     return <StudentWorkspacePlaceholder />;
   })();
 
+  const wideLayout = Boolean(boardId);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className={boardId ? "flex-1 px-4 py-6" : "flex-1 container py-8"}>
+      <main className={wideLayout ? "flex-1 px-4 py-6" : "flex-1 container py-8"}>
         {boardContent}
       </main>
     </div>
@@ -139,7 +141,7 @@ function StudentWorkspacePlaceholder() {
         Your tutor has not set up a workspace for you yet.
       </p>
       <p className="text-sm text-muted-foreground">
-        When ready, you will see session notes, practice tests, and info here.
+        When ready, you will see your SHSAT roadmap, session notes, and assignments here.
       </p>
     </div>
   );

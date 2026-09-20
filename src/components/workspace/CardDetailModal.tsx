@@ -98,6 +98,27 @@ function initials(name: string): string {
     .toUpperCase();
 }
 
+function notesFromCard(
+  card: WorkspaceCard,
+  defaultStudentName?: string,
+): {
+  studentName: string;
+  sessionDate: string;
+  startTime: string;
+  duration: string;
+  location: string;
+  concepts: string;
+} {
+  return {
+    studentName: card.sessionMeta?.studentName ?? defaultStudentName ?? "",
+    sessionDate: card.sessionMeta?.sessionDate ?? "",
+    startTime: card.sessionMeta?.startTime ?? "",
+    duration: card.sessionMeta?.duration ?? "",
+    location: card.sessionMeta?.location ?? "",
+    concepts: card.description ?? "",
+  };
+}
+
 export function CardDetailModal({
   boardId,
   card,
@@ -119,6 +140,9 @@ export function CardDetailModal({
   const [duration, setDuration] = useState("");
   const [location, setLocation] = useState("");
   const [concepts, setConcepts] = useState("");
+  const [savedNotes, setSavedNotes] = useState(() =>
+    card ? notesFromCard(card, defaultStudentName) : null,
+  );
   const [editingDescription, setEditingDescription] = useState(false);
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -145,14 +169,16 @@ export function CardDetailModal({
 
   useEffect(() => {
     if (!card) return;
+    const notes = notesFromCard(card, defaultStudentName);
     setTitle(card.title);
     setCompleted(card.completed);
-    setStudentName(card.sessionMeta?.studentName ?? defaultStudentName ?? "");
-    setSessionDate(card.sessionMeta?.sessionDate ?? "");
-    setStartTime(card.sessionMeta?.startTime ?? "");
-    setDuration(card.sessionMeta?.duration ?? "");
-    setLocation(card.sessionMeta?.location ?? "");
-    setConcepts(card.description ?? "");
+    setStudentName(notes.studentName);
+    setSessionDate(notes.sessionDate);
+    setStartTime(notes.startTime);
+    setDuration(notes.duration);
+    setLocation(notes.location);
+    setConcepts(notes.concepts);
+    setSavedNotes(notes);
     setEditingDescription(false);
     setShowFullDescription(false);
     setCommentDraft("");
@@ -161,7 +187,9 @@ export function CardDetailModal({
     setLinkUrl("");
     setLinkSetDueDate(false);
     setLinkDueDate(defaultAssignmentDueDateInput());
-  }, [card, defaultStudentName]);
+    // Only reset when opening a different card so a background refresh cannot wipe notes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [card?.id, defaultStudentName]);
 
   const isStudentView = profile?.role === "student";
   const minLinkDueDate = defaultAssignmentDueDateInput();
@@ -258,8 +286,8 @@ export function CardDetailModal({
     });
   };
 
-  const handleSaveDescription = async () => {
-    if (!card || readOnly) return;
+  const handleSaveDescription = async (opts?: { silent?: boolean; closeAfter?: boolean }) => {
+    if (!card || readOnly) return false;
     setSaving(true);
     try {
       await updateWorkspaceCard(boardId, card.id, {
@@ -273,18 +301,72 @@ export function CardDetailModal({
         },
         description: concepts,
       });
-      setEditingDescription(false);
-      onUpdated();
-      toast({ title: "Description saved" });
+      setSavedNotes({
+        studentName: studentName.trim(),
+        sessionDate: sessionDate.trim(),
+        startTime: startTime.trim(),
+        duration: duration.trim(),
+        location: location.trim(),
+        concepts,
+      });
+      if (!opts?.silent) {
+        setEditingDescription(false);
+        toast({ title: "Description saved" });
+        onUpdated();
+      }
+      if (opts?.closeAfter) onOpenChange(false);
+      return true;
     } catch (err) {
       toast({
         title: "Could not save",
         description: err instanceof Error ? err.message : "Please try again.",
         variant: "destructive",
       });
+      return false;
     } finally {
       setSaving(false);
     }
+  };
+
+  const descriptionDirty =
+    Boolean(card) &&
+    editingDescription &&
+    Boolean(savedNotes) &&
+    (studentName !== savedNotes?.studentName ||
+      sessionDate !== savedNotes?.sessionDate ||
+      startTime !== savedNotes?.startTime ||
+      duration !== savedNotes?.duration ||
+      location !== savedNotes?.location ||
+      concepts !== savedNotes?.concepts);
+
+  useEffect(() => {
+    if (readOnly || !descriptionDirty) return;
+    const timer = window.setTimeout(() => {
+      void handleSaveDescription({ silent: true });
+    }, 1500);
+    return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    readOnly,
+    descriptionDirty,
+    studentName,
+    sessionDate,
+    startTime,
+    duration,
+    location,
+    concepts,
+  ]);
+
+  const handleDialogOpenChange = (next: boolean) => {
+    if (next) {
+      onOpenChange(true);
+      return;
+    }
+    if (readOnly || !descriptionDirty) {
+      onOpenChange(false);
+      return;
+    }
+    void handleSaveDescription({ silent: true, closeAfter: true });
   };
 
   const handleSaveTitle = async () => {
@@ -419,7 +501,7 @@ export function CardDetailModal({
   if (!card) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogContent className="glass-modal max-w-6xl w-[96vw] h-[min(92vh,900px)] p-0 gap-0 flex flex-col overflow-hidden bg-card text-card-foreground [&>button]:z-20">
         <DialogTitle className="sr-only">{card.title}</DialogTitle>
 
@@ -536,12 +618,12 @@ export function CardDetailModal({
                         variant="ghost"
                         onClick={() => {
                           setEditingDescription(false);
-                          setStudentName(card.sessionMeta?.studentName ?? defaultStudentName ?? "");
-                          setSessionDate(card.sessionMeta?.sessionDate ?? "");
-                          setStartTime(card.sessionMeta?.startTime ?? "");
-                          setDuration(card.sessionMeta?.duration ?? "");
-                          setLocation(card.sessionMeta?.location ?? "");
-                          setConcepts(card.description ?? "");
+                          setStudentName(savedNotes?.studentName ?? "");
+                          setSessionDate(savedNotes?.sessionDate ?? "");
+                          setStartTime(savedNotes?.startTime ?? "");
+                          setDuration(savedNotes?.duration ?? "");
+                          setLocation(savedNotes?.location ?? "");
+                          setConcepts(savedNotes?.concepts ?? "");
                         }}
                       >
                         Cancel

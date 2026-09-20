@@ -212,9 +212,29 @@ export function buildDiagnosticCompletionEvents(
       subject: question.subject,
       module: question.module,
       correct: isQuestionAnswerCorrect(question, answer),
-      elapsedSeconds: existing?.elapsedSeconds ?? 0,
+      elapsedSeconds: Number((existing?.elapsedSeconds ?? 0).toFixed(1)),
       tags: question.tags.map((tag) => tag.code),
       ...(answer ? { answer } : {}),
+    };
+  });
+}
+
+/** Align stored events with the form: catalog module/subject, and a row for every item. */
+export function mergeDiagnosticEventsWithExam(
+  exam: AssembledDiagnosticExam,
+  events: SessionAnalyticsEvent[],
+): SessionAnalyticsEvent[] {
+  const byId = new Map(events.map((event) => [event.questionId, event]));
+  return diagnosticExamQuestions(exam).map((question) => {
+    const existing = byId.get(question.id);
+    return {
+      questionId: question.id,
+      subject: question.subject,
+      module: question.module,
+      correct: existing?.correct === true,
+      elapsedSeconds: Number((existing?.elapsedSeconds ?? 0).toFixed(1)),
+      tags: existing?.tags?.length ? existing.tags : question.tags.map((tag) => tag.code),
+      ...(existing?.answer ? { answer: existing.answer } : {}),
     };
   });
 }

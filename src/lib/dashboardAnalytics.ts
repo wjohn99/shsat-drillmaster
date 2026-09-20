@@ -49,6 +49,8 @@ function formatLastActiveLabel(ms: number): string {
   return formatRelativeDate(ms);
 }
 
+export type DiagnosticLaunchStatus = "assigned" | "started" | "finished";
+
 export interface StudentProgressRow {
   studentUid: string;
   name: string;
@@ -60,6 +62,7 @@ export interface StudentProgressRow {
   lastCompletedAssignment: TutorAssignmentRow | null;
   firstDiagnostic: PracticeSessionRecord | null;
   latestDiagnostic: PracticeSessionRecord | null;
+  diagnosticStatus: DiagnosticLaunchStatus;
 }
 
 export interface AttentionItem {
@@ -89,9 +92,11 @@ export function buildTutorDashboardAnalytics(
   students: StudentOption[],
   assignments: TutorAssignmentRow[],
   sessions: PracticeSessionRecord[],
+  diagnosticInProgressUids: Iterable<string> = [],
 ): TutorDashboardAnalytics {
   const now = Date.now();
   const staleCutoff = now - STALE_ASSIGNMENT_DAYS * DAY_MS;
+  const inProgressUids = new Set(diagnosticInProgressUids);
 
   const sessionsByStudent = new Map<string, PracticeSessionRecord[]>();
   for (const s of sessions) {
@@ -130,6 +135,11 @@ export function buildTutorDashboardAnalytics(
     const diagnosticOldestFirst = [...diagnosticSessions].sort(
       (a, b) => (a.completedAt?.toMillis?.() ?? 0) - (b.completedAt?.toMillis?.() ?? 0),
     );
+    const diagnosticStatus: DiagnosticLaunchStatus = inProgressUids.has(student.uid)
+      ? "started"
+      : diagnosticOldestFirst.length > 0
+        ? "finished"
+        : "assigned";
 
     return {
       studentUid: student.uid,
@@ -142,6 +152,7 @@ export function buildTutorDashboardAnalytics(
       lastCompletedAssignment: pickLatestCompletedAssignment(studentAssignments),
       firstDiagnostic: diagnosticOldestFirst[0] ?? null,
       latestDiagnostic: diagnosticOldestFirst[diagnosticOldestFirst.length - 1] ?? null,
+      diagnosticStatus,
     };
   });
 

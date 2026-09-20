@@ -1,7 +1,9 @@
 import { isFormatTagCode, tagCategoryForCode } from "@/data/taggingScheme";
+import { moduleLabel } from "@/lib/questionModule";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
 import type { DiagnosticCompletedSave } from "@/lib/diagnosticExamStorage";
+import type { QuestionModule } from "@/types";
 
 export type DiagnosticStrandId = "rc" | "re" | "num" | "alg" | "app" | "geo" | "dat";
 
@@ -85,6 +87,94 @@ export function computeDiagnosticStrands(events: SessionAnalyticsEvent[]): {
   ).filter((row) => row.id !== "app" || row.total > 0);
 
   return { ela, math };
+}
+
+export interface DiagnosticModuleBucket {
+  module: QuestionModule;
+  label: string;
+  correct: number;
+  total: number;
+  accuracyPct: number | null;
+  timeSeconds: number;
+  avgTimeSeconds: number | null;
+}
+
+export interface DiagnosticSubjectModuleStat {
+  subject: "ELA" | "MATH";
+  label: string;
+  modules: DiagnosticModuleBucket[];
+  correct: number;
+  total: number;
+  accuracyPct: number | null;
+  timeSeconds: number;
+}
+
+export function formatDiagnosticItemTime(seconds: number): string {
+  const whole = Math.max(0, Math.round(Number(seconds) || 0));
+  if (whole <= 0) return "—";
+  const hours = Math.floor(whole / 3600);
+  const minutes = Math.floor((whole % 3600) / 60);
+  const secs = whole % 60;
+  if (hours > 0) {
+    return `${hours}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  }
+  return `${minutes}:${String(secs).padStart(2, "0")}`;
+}
+
+function toModuleBucket(
+  module: QuestionModule,
+  events: SessionAnalyticsEvent[],
+): DiagnosticModuleBucket {
+  const total = events.length;
+  const correct = events.filter((event) => event.correct).length;
+  const timeSeconds = events.reduce((sum, event) => sum + (Number(event.elapsedSeconds) || 0), 0);
+  return {
+    module,
+    label: moduleLabel(module),
+    correct,
+    total,
+    accuracyPct: total ? Math.round((correct / total) * 100) : null,
+    timeSeconds,
+    avgTimeSeconds: total ? timeSeconds / total : null,
+  };
+}
+
+export function computeDiagnosticModuleBreakdown(events: SessionAnalyticsEvent[]): {
+  overall: DiagnosticModuleBucket[];
+  bySubject: DiagnosticSubjectModuleStat[];
+} {
+  const overall: DiagnosticModuleBucket[] = [
+    toModuleBucket("1", events.filter((event) => event.module === "1")),
+    toModuleBucket("2", events.filter((event) => event.module === "2")),
+  ];
+
+  const bySubject: DiagnosticSubjectModuleStat[] = (
+    [
+      ["ELA", "ELA"],
+      ["MATH", "Math"],
+    ] as const
+  ).map(([subject, label]) => {
+    const subset = events.filter((event) => event.subject === subject);
+    const correct = subset.filter((event) => event.correct).length;
+    const timeSeconds = subset.reduce(
+      (sum, event) => sum + (Number(event.elapsedSeconds) || 0),
+      0,
+    );
+    return {
+      subject,
+      label,
+      modules: [
+        toModuleBucket("1", subset.filter((event) => event.module === "1")),
+        toModuleBucket("2", subset.filter((event) => event.module === "2")),
+      ],
+      correct,
+      total: subset.length,
+      accuracyPct: subset.length ? Math.round((correct / subset.length) * 100) : null,
+      timeSeconds,
+    };
+  });
+
+  return { overall, bySubject };
 }
 
 export function diagnosticAttemptLabel(attemptNumber: number, total: number): string {

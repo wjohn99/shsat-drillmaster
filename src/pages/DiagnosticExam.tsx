@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ArrowLeft, CheckCircle2, Clock, TimerOff } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Clock, Loader2, TimerOff } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { DiagnosticExamRunner } from "@/components/diagnostic/DiagnosticExamRunner";
 import { DiagnosticItemReview } from "@/components/diagnostic/DiagnosticItemReview";
+import { DiagnosticModuleBreakdown } from "@/components/diagnostic/DiagnosticModuleBreakdown";
 import { DiagnosticStrandBreakdown } from "@/components/diagnostic/DiagnosticStrandBreakdown";
 import { SessionResultsDashboard } from "@/components/session/SessionResultsDashboard";
 import { useAuth } from "@/contexts/AuthContext";
@@ -29,9 +30,20 @@ import {
   loadDiagnosticAttempts,
   loadDiagnosticSave,
   markDiagnosticResultsSynced,
-  remainingDiagnosticSeconds,
+  persistDiagnosticSave,
+  pickNewerDiagnosticSave,
+  remainingFromDiagnosticSave,
+  withPausedClock,
+  withRunningDeadline,
+  type DiagnosticExamSave,
 } from "@/lib/diagnosticExamStorage";
 import {
+  clearDiagnosticProgress,
+  fetchDiagnosticProgress,
+  saveDiagnosticProgress,
+} from "@/lib/diagnosticProgressService";
+import {
+  computeDiagnosticModuleBreakdown,
   computeDiagnosticStrands,
   diagnosticAttemptLabel,
   orderDiagnosticSessionsOldestFirst,
@@ -47,6 +59,7 @@ import {
   buildDiagnosticCompletionEvents,
   countAnsweredDiagnosticItems,
   currentDiagnosticSection,
+  mergeDiagnosticEventsWithExam,
 } from "@/lib/shsatDiagnostic";
 import { toast } from "@/hooks/use-toast";
 import type { DiagnosticEndReason, PracticeSessionRecord } from "@/types/practiceSession";
@@ -59,17 +72,19 @@ export default function DiagnosticExam() {
   const location = useLocation();
   const { profile } = useAuth();
   const exam = useMemo(() => assembleDiagnosticExam(), []);
-  const existingSave = profile ? loadDiagnosticSave(profile.uid) : null;
-  const localAttempts = profile ? loadDiagnosticAttempts(profile.uid) : [];
   const reviewFromNav = (location.state as { reviewSession?: PracticeSessionRecord } | null)
     ?.reviewSession;
 
   const [phase, setPhase] = useState<Phase>(reviewFromNav ? "results" : "intro");
+  const [progress, setProgress] = useState<DiagnosticExamSave | null>(() =>
+    profile ? loadDiagnosticSave(profile.uid) : null,
+  );
+  const [progressLoading, setProgressLoading] = useState(Boolean(profile) && !reviewFromNav);
   const [firstSection, setFirstSection] = useState<DiagnosticSubject>(
-    existingSave?.firstSection ?? "ELA",
+    progress?.firstSection ?? "ELA",
   );
   const [assignedExtendedTime, setAssignedExtendedTime] = useState(false);
-  const [deadlineAt, setDeadlineAt] = useState(existingSave?.deadlineAt ?? 0);
+  const [deadlineAt, setDeadlineAt] = useState(progress?.deadlineAt ?? 0);
   const [events, setEvents] = useState<SessionAnalyticsEvent[]>(reviewFromNav?.events ?? []);
   const [endedReason, setEndedReason] = useState<DiagnosticEndReason | undefined>(
     reviewFromNav?.endedReason,
@@ -101,6 +116,43 @@ export default function DiagnosticExam() {
       : null,
   );
   const [now, setNow] = useState(Date.now());
+  const localAttempts = profile ? loadDiagnosticAttempts(profile.uid) : [];
+  const phaseRef = useRef(phase);
+  phaseRef.current = phase;
+
+  useEffect(() => {
+    if (!profile || reviewFromNav) {
+      setProgressLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setProgressLoading(true);
+    void fetchDiagnosticProgress(profile.uid)
+      .then((remote) => {
+        if (cancelled) return;
+        const local = loadDiagnosticSave(profile.uid);
+        const next = pickNewerDiagnosticSave(local, remote);
+        if (phaseRef.current !== "intro") return;
+        if (next) {
+          persistDiagnosticSave(profile.uid, next);
+          setProgress(next);
+          setFirstSection(next.firstSection);
+        } else {
+          setProgress(null);
+        }
+      })
+      .catch(() => {
+        if (!cancelled && phaseRef.current === "intro") {
+          setProgress(loadDiagnosticSave(profile.uid));
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setProgressLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [profile, reviewFromNav]);
 
   useEffect(() => {
     if (!profile) return;
@@ -133,10 +185,10 @@ export default function DiagnosticExam() {
   }, [profile, reviewFromNav]);
 
   useEffect(() => {
-    if (phase !== "intro" || !existingSave) return;
+    if (phase !== "intro" || !progress || progress.paused) return;
     const id = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(id);
-  }, [phase, existingSave?.deadlineAt]);
+  }, [phase, progress]);
 
   const canStartOfficial = exam.isComplete;
   const canPreview = exam.elaReady > 0 && exam.mathReady > 0;
@@ -183,15 +235,21 @@ export default function DiagnosticExam() {
   }, [localAttempts, orderedAccountSessions]);
   const hasCompletedDiagnostic = completedAttempts.length > 0;
   const displayedEndedReason = endedReason;
-  const saveExpired = existingSave ? isDiagnosticSaveExpired(existingSave, now) : false;
-  const saveRemaining = existingSave
-    ? remainingDiagnosticSeconds(existingSave.deadlineAt, now)
-    : 0;
-  const saveProgress = existingSave
-    ? countAnsweredDiagnosticItems(exam, existingSave.answers)
+  const saveExpired = progress ? isDiagnosticSaveExpired(progress, now) : false;
+  const saveRemaining = progress ? remainingFromDiagnosticSave(progress, now) : 0;
+  const saveProgress = progress
+    ? countAnsweredDiagnosticItems(exam, progress.answers)
     : null;
-  const saveSection = existingSave ? currentDiagnosticSection(exam, existingSave) : null;
-  const strandStats = useMemo(() => computeDiagnosticStrands(events), [events]);
+  const saveSection = progress ? currentDiagnosticSection(exam, progress) : null;
+  const resultsEvents = useMemo(
+    () => (events.length === 0 ? events : mergeDiagnosticEventsWithExam(exam, events)),
+    [exam, events],
+  );
+  const strandStats = useMemo(() => computeDiagnosticStrands(resultsEvents), [resultsEvents]);
+  const moduleBreakdown = useMemo(
+    () => computeDiagnosticModuleBreakdown(resultsEvents),
+    [resultsEvents],
+  );
 
   const persistAndUploadResults = async (
     completedEvents: SessionAnalyticsEvent[],
@@ -261,20 +319,71 @@ export default function DiagnosticExam() {
     }
   };
 
+  const writeProgress = async (save: DiagnosticExamSave) => {
+    if (!profile) return;
+    persistDiagnosticSave(profile.uid, save);
+    setProgress(save);
+    try {
+      await saveDiagnosticProgress(profile.uid, save);
+    } catch (err) {
+      toast({
+        title: "Saved on this device",
+        description:
+          err instanceof Error ? err.message : "Could not sync this attempt to your account yet.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const eraseInProgress = async () => {
+    if (!profile) return;
+    clearDiagnosticSave(profile.uid);
+    setProgress(null);
+    try {
+      await clearDiagnosticProgress(profile.uid);
+    } catch {
+      // Local clear is enough to start over on this device.
+    }
+  };
+
   const beginFreshExam = () => {
     if (!profile || !canPreview) return;
-    if (existingSave) clearDiagnosticSave(profile.uid);
-    setConfirmRetake(false);
-    setConfirmStartOver(false);
-    const minutes = assignedExtendedTime
-      ? SHSAT_DIAGNOSTIC_SPEC.extendedMinutes
-      : SHSAT_DIAGNOSTIC_SPEC.standardMinutes;
-    setDeadlineAt(Date.now() + minutes * 60 * 1000);
-    setPhase("exam");
+    void (async () => {
+      if (progress) await eraseInProgress();
+      setConfirmRetake(false);
+      setConfirmStartOver(false);
+      const minutes = assignedExtendedTime
+        ? SHSAT_DIAGNOSTIC_SPEC.extendedMinutes
+        : SHSAT_DIAGNOSTIC_SPEC.standardMinutes;
+      const nowMs = Date.now();
+      const remainingSeconds = minutes * 60;
+      const save: DiagnosticExamSave = {
+        specId: SHSAT_DIAGNOSTIC_SPEC.id,
+        startedAt: nowMs,
+        deadlineAt: nowMs + remainingSeconds * 1000,
+        paused: false,
+        remainingSeconds,
+        updatedAt: nowMs,
+        firstSection,
+        sectionIndex: 0,
+        unitIndex: 0,
+        questionIndexInUnit: 0,
+        answers: {},
+        flagged: [],
+        lockedUnitKeys: [],
+        eliminated: {},
+        notepad: "",
+        clockHidden: false,
+        events: [],
+      };
+      await writeProgress(save);
+      setDeadlineAt(save.deadlineAt);
+      setPhase("exam");
+    })();
   };
 
   const startNew = () => {
-    if (existingSave) {
+    if (progress) {
       setConfirmStartOver(true);
       return;
     }
@@ -285,25 +394,72 @@ export default function DiagnosticExam() {
     beginFreshExam();
   };
 
+  const requestAnotherSitting = () => {
+    if (!canPreview) return;
+    if (progress) {
+      setConfirmStartOver(true);
+      return;
+    }
+    setConfirmRetake(true);
+  };
+
+  const confirmDialogs = (
+    <>
+      <AlertDialog open={confirmStartOver} onOpenChange={setConfirmStartOver}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Erase this diagnostic and start over?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Answers, flags, and notes for this in-progress sitting will be deleted. This cannot be
+              undone. The timer will restart from the beginning. Finished sittings stay saved.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Keep in-progress exam</AlertDialogCancel>
+            <AlertDialogAction onClick={beginFreshExam}>Start over and erase answers</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={confirmRetake} onOpenChange={setConfirmRetake}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Sit the diagnostic again?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Previous sittings stay saved. This sitting will be stored as attempt{" "}
+              {completedAttempts.length + 1}. Tutors will see every report.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Keep existing reports</AlertDialogCancel>
+            <AlertDialogAction onClick={beginFreshExam}>Start new sitting</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
+  );
+
   const resume = () => {
-    if (!existingSave || !profile) return;
-    if (isDiagnosticSaveExpired(existingSave)) {
+    if (!progress || !profile) return;
+    if (isDiagnosticSaveExpired(progress)) {
       void finalizeFromSave("time");
       return;
     }
-    setFirstSection(existingSave.firstSection);
-    setDeadlineAt(existingSave.deadlineAt);
+    const running = withRunningDeadline(progress);
+    void writeProgress(running);
+    setFirstSection(running.firstSection);
+    setDeadlineAt(running.deadlineAt);
     setPhase("exam");
   };
 
   const finalizeFromSave = async (reason: DiagnosticEndReason) => {
-    if (!existingSave || !profile) return;
+    if (!progress || !profile) return;
     const completed = buildDiagnosticCompletionEvents(
       exam,
-      existingSave.answers,
-      existingSave.events,
+      progress.answers,
+      progress.events,
     );
-    clearDiagnosticSave(profile.uid);
+    await eraseInProgress();
     setEvents(completed);
     setEndedReason(reason);
     setPhase(reason === "time" ? "timesup" : "results");
@@ -327,6 +483,7 @@ export default function DiagnosticExam() {
   ) => {
     setEvents(completedEvents);
     setEndedReason(reason);
+    setProgress(null);
     setPhase(reason === "time" ? "timesup" : "results");
     await persistAndUploadResults(completedEvents, reason);
   };
@@ -339,8 +496,11 @@ export default function DiagnosticExam() {
         userId={profile.uid}
         firstSection={firstSection}
         deadlineAt={deadlineAt || Date.now() + SHSAT_DIAGNOSTIC_SPEC.standardMinutes * 60 * 1000}
-        initialSave={existingSave && existingSave.deadlineAt === deadlineAt ? existingSave : null}
-        onExit={() => setPhase("intro")}
+        initialSave={progress}
+        onExit={() => {
+          setProgress(profile ? loadDiagnosticSave(profile.uid) : null);
+          setPhase("intro");
+        }}
         onComplete={(completed, reason) => void handleComplete(completed, reason)}
       />
     );
@@ -372,28 +532,47 @@ export default function DiagnosticExam() {
                 </p>
               ) : (
                 <p className="text-sm text-muted-foreground">
-                  Your answers are saved on this device and to your account when sync succeeds.
+                  Your answers are saved to your account when sync succeeds.
                 </p>
               )}
               <Button className="w-full" size="lg" onClick={() => setPhase("results")}>
                 See results
               </Button>
+              {!reviewFromNav ? (
+                <Button
+                  className="w-full"
+                  size="lg"
+                  variant="outline"
+                  onClick={requestAnotherSitting}
+                  disabled={!canPreview}
+                >
+                  Start a new sitting
+                </Button>
+              ) : null}
+              {!reviewFromNav ? (
+                <p className="text-xs text-muted-foreground">
+                  Starting again does not delete this sitting. It is saved with your other reports.
+                </p>
+              ) : null}
             </CardContent>
           </Card>
         </div>
+        {confirmDialogs}
       </div>
     );
   }
 
   if (phase === "results") {
-    const elaEvents = events.filter((e) => e.subject === "ELA");
-    const mathEvents = events.filter((e) => e.subject === "MATH");
+    const elaEvents = resultsEvents.filter((e) => e.subject === "ELA");
+    const mathEvents = resultsEvents.filter((e) => e.subject === "MATH");
     const elaPct = elaEvents.length
       ? Math.round((elaEvents.filter((e) => e.correct).length / elaEvents.length) * 100)
       : 0;
     const mathPct = mathEvents.length
       ? Math.round((mathEvents.filter((e) => e.correct).length / mathEvents.length) * 100)
       : 0;
+    const module1 = moduleBreakdown.overall[0];
+    const module2 = moduleBreakdown.overall[1];
 
     return (
       <div className="min-h-screen">
@@ -401,19 +580,37 @@ export default function DiagnosticExam() {
         <div className="container py-8">
           <SessionResultsDashboard
             title={attemptLabel === "Diagnostic results" ? "Diagnostic results" : `Diagnostic results · ${attemptLabel}`}
-            events={events}
+            events={resultsEvents}
             summaryMetrics={[
               { label: "ELA", value: `${elaPct}%` },
               { label: "Math", value: `${mathPct}%` },
               {
+                label: "Module 1",
+                value:
+                  module1?.accuracyPct == null
+                    ? "—"
+                    : `${module1.accuracyPct}%`,
+              },
+              {
+                label: "Module 2",
+                value:
+                  module2?.accuracyPct == null
+                    ? "—"
+                    : `${module2.accuracyPct}%`,
+              },
+              {
                 label: "Items",
-                value: `${events.filter((e) => e.correct).length}/${events.length}`,
+                value: `${resultsEvents.filter((e) => e.correct).length}/${resultsEvents.length}`,
               },
             ]}
             extraSections={
               <div className="space-y-4">
+                <DiagnosticModuleBreakdown
+                  overall={moduleBreakdown.overall}
+                  bySubject={moduleBreakdown.bySubject}
+                />
                 <DiagnosticStrandBreakdown ela={strandStats.ela} math={strandStats.math} />
-                <DiagnosticItemReview exam={exam} events={events} />
+                <DiagnosticItemReview exam={exam} events={resultsEvents} />
               </div>
             }
             tagTableTitle="Fine-grained tags"
@@ -448,23 +645,35 @@ export default function DiagnosticExam() {
                     {attemptLabel === "First diagnostic"
                       ? "This sitting is saved as the first diagnostic (baseline). Later sittings will not replace it."
                       : `${attemptLabel} is saved separately from the first diagnostic.`}{" "}
-                    Official SHSAT scores are scaled; these numbers are raw accuracy by skill.
+                    Official SHSAT scores are scaled by item difficulty. These numbers are raw
+                    Module 1 / Module 2 accuracy and time on this fixed form.
                   </p>
                 )}
               </div>
             }
             footerActions={
               <div className="flex flex-wrap gap-2">
+                {!reviewFromNav ? (
+                  <Button onClick={requestAnotherSitting} disabled={!canPreview}>
+                    Start a new sitting
+                  </Button>
+                ) : null}
+                {!reviewFromNav ? (
+                  <Button variant="outline" onClick={() => setPhase("intro")}>
+                    All sittings
+                  </Button>
+                ) : null}
                 <Button variant="outline" asChild>
                   <Link to="/practice">Back to Practice</Link>
                 </Button>
-                <Button asChild>
+                <Button variant="outline" asChild>
                   <Link to="/dashboard">Dashboard</Link>
                 </Button>
               </div>
             }
           />
         </div>
+        {confirmDialogs}
       </div>
     );
   }
@@ -473,6 +682,12 @@ export default function DiagnosticExam() {
     <div className="min-h-screen">
       <Header />
       <div className="container py-8 max-w-3xl">
+          {progressLoading ? (
+            <div className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Loading your saved attempt…
+            </div>
+          ) : null}
           <Button variant="ghost" className="mb-6 -ml-2" onClick={() => navigate("/practice")}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Practice
@@ -539,18 +754,25 @@ export default function DiagnosticExam() {
               </p>
               <p>Standalone ELA items and all Math items lock as soon as you advance.</p>
               <p>No answer key until you submit the full exam. Time is shared across both sections.</p>
-              <p>The timer does not pause if you leave. You can resume on this device until time is up.</p>
+              <p>
+                Pause and save stops the timer and stores this attempt in your account. You can
+                resume on another computer.
+              </p>
             </CardContent>
           </Card>
 
-          {existingSave ? (
+          {progress ? (
             <Card className="mb-6 border-primary/30">
               <CardHeader>
-                <CardTitle>{saveExpired ? "Time ran out" : "In progress"}</CardTitle>
+                <CardTitle>
+                  {saveExpired ? "Time ran out" : progress.paused ? "Paused" : "In progress"}
+                </CardTitle>
                 <CardDescription>
                   {saveExpired
                     ? "The clock finished while you were away. Unanswered items will count as incorrect."
-                    : "Your answers are saved on this device. The timer keeps running."}
+                    : progress.paused
+                      ? "The timer is stopped. Your answers are saved to your account."
+                      : "This attempt is saved to your account. Pause to stop the timer."}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -564,10 +786,10 @@ export default function DiagnosticExam() {
                   <div className="rounded-lg border p-3">
                     <p className="text-muted-foreground">Current section</p>
                     <p className="font-medium">
-                      {saveSection?.subject ?? existingSave.firstSection}
+                      {saveSection?.subject ?? progress.firstSection}
                       <span className="text-muted-foreground font-normal">
                         {" "}
-                        ({existingSave.sectionIndex + 1} of 2)
+                        ({progress.sectionIndex + 1} of 2)
                       </span>
                     </p>
                   </div>
@@ -581,7 +803,17 @@ export default function DiagnosticExam() {
                 {saveExpired ? (
                   <Button onClick={() => void finalizeFromSave("time")}>View results</Button>
                 ) : (
-                  <Button onClick={resume}>Resume diagnostic</Button>
+                  <div className="flex flex-wrap gap-2">
+                    <Button onClick={resume}>Resume diagnostic</Button>
+                    {!progress.paused ? (
+                      <Button
+                        variant="outline"
+                        onClick={() => void writeProgress(withPausedClock(progress))}
+                      >
+                        Pause timer
+                      </Button>
+                    ) : null}
+                  </div>
                 )}
               </CardContent>
             </Card>
@@ -628,11 +860,11 @@ export default function DiagnosticExam() {
 
           <Card>
             <CardHeader>
-              <CardTitle>{existingSave ? "Start over" : "Start"}</CardTitle>
-              {existingSave ? (
+              <CardTitle>{progress ? "Start over" : "Start"}</CardTitle>
+              {progress ? (
                 <CardDescription>
-                  Starting over erases the in-progress exam on this device. Resume above unless you
-                  mean to throw those answers away.
+                  Starting over erases the in-progress exam from this device and your account.
+                  Resume above unless you mean to throw those answers away.
                 </CardDescription>
               ) : null}
             </CardHeader>
@@ -644,7 +876,7 @@ export default function DiagnosticExam() {
                     type="button"
                     variant={firstSection === "ELA" ? "default" : "outline"}
                     onClick={() => setFirstSection("ELA")}
-                    disabled={Boolean(existingSave)}
+                    disabled={Boolean(progress)}
                   >
                     ELA first
                   </Button>
@@ -652,7 +884,7 @@ export default function DiagnosticExam() {
                     type="button"
                     variant={firstSection === "MATH" ? "default" : "outline"}
                     onClick={() => setFirstSection("MATH")}
-                    disabled={Boolean(existingSave)}
+                    disabled={Boolean(progress)}
                   >
                     Math first
                   </Button>
@@ -685,7 +917,7 @@ export default function DiagnosticExam() {
                 </p>
               )}
 
-              {existingSave && !saveExpired ? (
+              {progress && !saveExpired ? (
                 <Button
                   className="w-full"
                   size="lg"
@@ -695,12 +927,12 @@ export default function DiagnosticExam() {
                 >
                   Start over and erase answers
                 </Button>
-              ) : existingSave && saveExpired ? (
+              ) : progress && saveExpired ? (
                 <p className="text-sm text-muted-foreground">
                   View results above to close this exam before starting another.
                 </p>
               ) : (
-                <Button className="w-full" size="lg" onClick={startNew} disabled={!canPreview}>
+                <Button className="w-full" size="lg" onClick={startNew} disabled={!canPreview || progressLoading}>
                   {hasCompletedDiagnostic
                     ? "Sit again"
                     : canStartOfficial
@@ -711,38 +943,7 @@ export default function DiagnosticExam() {
             </CardContent>
           </Card>
         </div>
-
-      <AlertDialog open={confirmStartOver} onOpenChange={setConfirmStartOver}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Erase this diagnostic and start over?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Answers, flags, and notes saved on this device will be deleted. This cannot be undone.
-              The timer will restart from the beginning.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Keep in-progress exam</AlertDialogCancel>
-            <AlertDialogAction onClick={beginFreshExam}>Start over and erase answers</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      <AlertDialog open={confirmRetake} onOpenChange={setConfirmRetake}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Sit the diagnostic again?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Your first diagnostic stays saved as the baseline. This sitting will be stored as
-              attempt {completedAttempts.length + 1}. Tutors will see both reports.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Keep existing reports</AlertDialogCancel>
-            <AlertDialogAction onClick={beginFreshExam}>Start new sitting</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        {confirmDialogs}
     </div>
   );
 }

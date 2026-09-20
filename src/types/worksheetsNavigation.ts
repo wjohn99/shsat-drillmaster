@@ -29,16 +29,21 @@ export type WorksheetsLocationState = {
   assignToWorkspace?: WorksheetsAssignToWorkspaceState;
   /** After assign / back / exit, land here instead of worksheets home. */
   returnTo?: string;
+  /** Prefill the worksheet builder with these skill tags. */
+  suggestedTagCodes?: string[];
 };
 
 export function assignToStudentNavState(
   studentUid?: string,
-  options?: { returnTo?: string },
+  options?: { returnTo?: string; suggestedTagCodes?: string[] },
 ): WorksheetsLocationState {
   return {
     openTutorBuild: true,
     ...(studentUid ? { assignToStudentUid: studentUid } : {}),
     ...(options?.returnTo ? { returnTo: options.returnTo } : {}),
+    ...(options?.suggestedTagCodes?.length
+      ? { suggestedTagCodes: options.suggestedTagCodes }
+      : {}),
   };
 }
 

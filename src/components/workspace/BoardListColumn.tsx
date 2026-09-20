@@ -262,7 +262,7 @@ export function BoardListColumn({
       await deleteWorkspaceList(boardId, list.id);
       setDeleteOpen(false);
       onListChanged();
-      toast({ title: "List deleted", description: `"${list.title}" and its cards were removed.` });
+      toast({ title: "List hidden", description: `"${list.title}" is hidden. Notes and files stay in the account.` });
     } catch (err) {
       toast({
         title: "Could not delete list",
@@ -554,8 +554,8 @@ export function BoardListColumn({
           <AlertDialogHeader>
             <AlertDialogTitle>Delete &ldquo;{list.title}&rdquo;?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will remove the list and all {listCards.length} card
-              {listCards.length === 1 ? "" : "s"} in it. This cannot be undone from the app.
+              This hides the list and its cards from the board. Session notes, comments, and files
+              stay saved on the account and are not permanently erased.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

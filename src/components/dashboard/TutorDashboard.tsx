@@ -28,6 +28,7 @@ import {
   fetchStudents,
 } from "@/lib/assignmentService";
 import { fetchPracticeSessionsForTutor } from "@/lib/practiceSessionService";
+import { fetchDiagnosticProgressForTutor } from "@/lib/diagnosticProgressService";
 import { buildTutorDashboardAnalytics } from "@/lib/dashboardAnalytics";
 import {
   countCompletedThisWeek,
@@ -52,6 +53,7 @@ export function TutorDashboard() {
   const [students, setStudents] = useState<StudentOption[]>([]);
   const [allAssignments, setAllAssignments] = useState<TutorAssignmentRow[]>([]);
   const [sessions, setSessions] = useState<PracticeSessionRecord[]>([]);
+  const [diagnosticInProgressUids, setDiagnosticInProgressUids] = useState<string[]>([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -66,11 +68,16 @@ export function TutorDashboard() {
         ]);
 
         let sessionRows: PracticeSessionRecord[] = [];
+        let inProgressUids: string[] = [];
         try {
           sessionRows = await fetchPracticeSessionsForTutor();
         } catch {
-          // Sessions are optional for the dashboard; assignments still drive most views.
           sessionRows = [];
+        }
+        try {
+          inProgressUids = (await fetchDiagnosticProgressForTutor()).map((row) => row.userId);
+        } catch {
+          inProgressUids = [];
         }
 
         if (cancelled) return;
@@ -84,6 +91,7 @@ export function TutorDashboard() {
         setStudents(studentList);
         setAllAssignments(rows);
         setSessions(sessionRows);
+        setDiagnosticInProgressUids(inProgressUids);
       } catch (err) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : "Could not load dashboard.");
@@ -99,8 +107,8 @@ export function TutorDashboard() {
   }, []);
 
   const analytics = useMemo(
-    () => buildTutorDashboardAnalytics(students, allAssignments, sessions),
-    [students, allAssignments, sessions],
+    () => buildTutorDashboardAnalytics(students, allAssignments, sessions, diagnosticInProgressUids),
+    [students, allAssignments, sessions, diagnosticInProgressUids],
   );
 
   const recentAssignments = useMemo(
@@ -172,7 +180,7 @@ export function TutorDashboard() {
               Student progress
             </CardTitle>
             <CardDescription>
-              Per-student overview from assignments and completed practice sessions
+              Diagnostic status plus assignments and completed practice sessions
             </CardDescription>
           </CardHeader>
           <CardContent className="overflow-x-auto">
@@ -185,6 +193,7 @@ export function TutorDashboard() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Student</TableHead>
+                    <TableHead>Diagnostic</TableHead>
                     <TableHead className="text-right">Open</TableHead>
                     <TableHead>Last active</TableHead>
                     <TableHead className="text-right">Avg accuracy</TableHead>
@@ -203,6 +212,39 @@ export function TutorDashboard() {
                             {row.email}
                           </p>
                         )}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col items-start gap-1">
+                          <Badge
+                            variant={
+                              row.diagnosticStatus === "finished"
+                                ? "secondary"
+                                : row.diagnosticStatus === "started"
+                                  ? "default"
+                                  : "outline"
+                            }
+                          >
+                            {row.diagnosticStatus === "assigned"
+                              ? "Assigned"
+                              : row.diagnosticStatus === "started"
+                                ? "Started"
+                                : "Finished"}
+                          </Badge>
+                          {row.latestDiagnostic ? (
+                            <Button
+                              size="sm"
+                              variant="link"
+                              className="h-auto px-0"
+                              onClick={() =>
+                                navigate("/practice/diagnostic", {
+                                  state: { reviewSession: row.latestDiagnostic },
+                                })
+                              }
+                            >
+                              View results
+                            </Button>
+                          ) : null}
+                        </div>
                       </TableCell>
                       <TableCell className="text-right tabular-nums">
                         {row.openAssignments}
