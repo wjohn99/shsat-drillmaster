@@ -15,8 +15,10 @@ import { pickLatestCompletedAssignment } from "@/lib/dashboardStats";
 import { firstAndLatestDiagnostic } from "@/lib/diagnosticReport";
 import { fetchPracticeSessionsForStudent, fetchPracticeSessionsForTutor } from "@/lib/practiceSessionService";
 import { buildStudentRoadmapSnapshot } from "@/lib/studentRoadmap";
+import { fetchCardBadgeCounts, persistCardBadgeCounts } from "@/lib/workspaceCardContentService";
 import {
   createWorkspaceList,
+  ensureDefaultWorkspaceLists,
   fetchWorkspaceBoard,
   fetchWorkspaceCards,
   fetchWorkspaceLists,
@@ -25,6 +27,7 @@ import {
   updateWorkspaceBoardRoadmap,
 } from "@/lib/workspaceService";
 import { Timestamp } from "firebase/firestore";
+import { toast } from "@/hooks/use-toast";
 import type { WorksheetAssignment } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type { StudentRoadmap, WorkspaceBoard as WorkspaceBoardType, WorkspaceCard, WorkspaceList } from "@/types/workspace";
@@ -70,6 +73,13 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
     if (!silent) setLoading(true);
     setError(null);
     try {
+      if (!readOnly) {
+        try {
+          await ensureDefaultWorkspaceLists(boardId);
+        } catch {
+          // Board still loads with whatever lists already exist.
+        }
+      }
       const [boardRow, listRows, cardRows, assignmentRows, sessionRows, progressFlag] = await Promise.all([
         fetchWorkspaceBoard(boardId),
         fetchWorkspaceLists(boardId),
@@ -113,6 +123,23 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
         if (!prev) return prev;
         return cardRows.find((c) => c.id === prev.id) ?? prev;
       });
+
+      const missingBadgeIds = cardRows
+        .filter((card) => card.commentCount == null || card.attachmentCount == null)
+        .map((card) => card.id);
+      if (missingBadgeIds.length > 0) {
+        void fetchCardBadgeCounts(boardId, missingBadgeIds).then((counts) => {
+          setCards((prev) =>
+            prev.map((card) => {
+              const next = counts.get(card.id);
+              return next ? { ...card, ...next } : card;
+            }),
+          );
+          if (!readOnly) {
+            void persistCardBadgeCounts(boardId, counts).catch(() => undefined);
+          }
+        });
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not load workspace.");
     } finally {
@@ -127,12 +154,15 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
   const handleToggleExtendedTime = async (enabled: boolean) => {
     if (!board || readOnly || savingExtendedTime) return;
     setSavingExtendedTime(true);
-    setError(null);
     try {
       await updateWorkspaceBoardDiagnosticExtendedTime(board.id, enabled);
       setBoard({ ...board, diagnosticExtendedTime: enabled });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not update extended time.");
+      toast({
+        title: "Could not update extended time",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setSavingExtendedTime(false);
     }

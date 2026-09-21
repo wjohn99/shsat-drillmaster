@@ -145,6 +145,10 @@ service cloud.firestore {
         && request.resource.data.diff(resource.data).affectedKeys()
             .hasOnly(['studentName', 'studentEmail', 'color', 'archivedAt', 'roadmap', 'roadmapUpdatedAt', 'updatedAt', 'diagnosticExtendedTime']);
 
+      allow update: if isTutor()
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['diagnosticExtendedTime', 'updatedAt']);
+
       allow delete: if false;
 
       match /roadmap_revisions/{revId} {
@@ -163,7 +167,13 @@ service cloud.firestore {
 
       match /cards/{cardId} {
         allow read: if canAccessWorkspaceBoard(boardId);
-        allow create, update: if isTutor();
+        allow create: if isTutor();
+        allow update: if isTutor()
+          || (
+            canAccessWorkspaceBoard(boardId)
+            && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['commentCount', 'attachmentCount', 'updatedAt'])
+          );
         allow delete: if false;
 
         match /attachments/{attachmentId} {

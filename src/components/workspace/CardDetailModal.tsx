@@ -403,6 +403,7 @@ export function CardDetailModal({
       setAttachments(rows);
       await reloadSubmissions(rows);
       toast({ title: "PDF attached" });
+      onUpdated();
     } catch (err) {
       toast({
         title: "Could not upload PDF",
@@ -436,6 +437,7 @@ export function CardDetailModal({
       setLinkDueDate(defaultAssignmentDueDateInput());
       setAddingLink(false);
       toast({ title: "Link added" });
+      onUpdated();
     } catch (err) {
       toast({
         title: "Could not add link",
@@ -458,6 +460,7 @@ export function CardDetailModal({
         attachment.storagePath,
       );
       setAttachments((prev) => prev.filter((a) => a.id !== attachment.id));
+      onUpdated();
     } catch (err) {
       toast({
         title: "Could not remove attachment",
@@ -473,6 +476,7 @@ export function CardDetailModal({
     try {
       await createCardComment(boardId, card.id, commentDraft);
       setCommentDraft("");
+      onUpdated();
     } catch (err) {
       toast({
         title: "Could not post comment",

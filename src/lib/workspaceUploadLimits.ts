@@ -9,11 +9,11 @@ export const MAX_PDFS_PER_CARD = 10;
 /** Max total attachments (PDFs + links) on one card. */
 export const MAX_ATTACHMENTS_PER_CARD = 20;
 
-/** Max stored PDF bytes per student workspace board (~200 MB). */
-export const MAX_BOARD_PDF_BYTES = 200 * 1024 * 1024;
+/** Max stored PDF bytes per student workspace board (~500 MB). */
+export const MAX_BOARD_PDF_BYTES = 500 * 1024 * 1024;
 
 /** Max PDF file count per student workspace board. */
-export const MAX_BOARD_PDF_COUNT = 50;
+export const MAX_BOARD_PDF_COUNT = 250;
 
 export type BoardPdfUsage = {
   pdfCount: number;

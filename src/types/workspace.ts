@@ -46,8 +46,9 @@ export interface StudentRoadmap {
   nextSessionTime: string;
   nextSessionNotes: string;
   followUps: RoadmapFollowUp[];
-  /** When set with statusManual, pins the Kanban column. */
+  /** Tutor-chosen status. Shown as a colored label on the workspace homepage. */
   status: StudentAttentionStatus | null;
+  /** Legacy. Status is always tutor-chosen now. */
   statusManual: boolean;
 }
 
@@ -98,6 +99,12 @@ export interface WorkspaceCard {
   dueAt?: Timestamp | null;
   /** Linked DrillMaster worksheet assignment (assigned from Worksheets tab). */
   assignmentId?: string | null;
+  /** Present on cards imported from a Trello board JSON export. */
+  trelloCardId?: string;
+  /** Active comments (hidden when 0). */
+  commentCount?: number;
+  /** Active file and link attachments (hidden when 0). */
+  attachmentCount?: number;
   createdAt: Timestamp;
   updatedAt: Timestamp;
   deletedAt?: Timestamp | null;
@@ -176,5 +183,6 @@ export type CardFeedItem =
 export const DEFAULT_WORKSPACE_LISTS: { title: string; kind: WorkspaceListKind; position: number }[] =
   [
     { title: "Session Summaries", kind: "sessions", position: 0 },
-    { title: "Info", kind: "info", position: 1 },
+    { title: "Study Sheets", kind: "custom", position: 1 },
+    { title: "Info", kind: "info", position: 2 },
   ];

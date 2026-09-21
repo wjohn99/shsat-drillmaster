@@ -108,6 +108,9 @@ function parseCard(boardId: string, snapshot: QueryDocumentSnapshot<DocumentData
     completed: Boolean(data.completed),
     dueAt: data.dueAt ?? null,
     assignmentId: (data.assignmentId as string | undefined) ?? null,
+    trelloCardId: (data.trelloCardId as string | undefined) ?? undefined,
+    commentCount: data.commentCount == null ? undefined : Number(data.commentCount) || 0,
+    attachmentCount: data.attachmentCount == null ? undefined : Number(data.attachmentCount) || 0,
     createdAt: data.createdAt,
     updatedAt: data.updatedAt,
     deletedAt: data.deletedAt ?? null,
@@ -187,21 +190,70 @@ export async function createWorkspaceBoard(
   return student.uid;
 }
 
-async function ensureDefaultWorkspaceLists(boardId: string): Promise<void> {
+function normalizeListTitle(title: string): string {
+  return title.trim().toLowerCase();
+}
+
+/** Create any missing standard lists and pin them to the shared column order. */
+export async function ensureDefaultWorkspaceLists(boardId: string): Promise<void> {
   const lists = await fetchWorkspaceLists(boardId);
-  if (lists.length > 0) return;
+  const existingByTitle = new Map(lists.map((list) => [normalizeListTitle(list.title), list]));
   const db = getFirebaseDb();
   const listsRef = collection(db, BOARDS_COLLECTION, boardId, "lists");
-  await Promise.all(
-    DEFAULT_WORKSPACE_LISTS.map((list) =>
-      addDoc(listsRef, {
-        title: list.title,
-        kind: list.kind,
-        position: list.position,
-        createdAt: serverTimestamp(),
-      }),
-    ),
+
+  const missing = DEFAULT_WORKSPACE_LISTS.filter(
+    (list) => !existingByTitle.has(normalizeListTitle(list.title)),
   );
+  if (missing.length > 0) {
+    await Promise.all(
+      missing.map((list) =>
+        addDoc(listsRef, {
+          title: list.title,
+          kind: list.kind,
+          position: list.position,
+          createdAt: serverTimestamp(),
+        }),
+      ),
+    );
+  }
+
+  const nextLists = missing.length > 0 ? await fetchWorkspaceLists(boardId) : lists;
+  const defaultTitles = new Set(
+    DEFAULT_WORKSPACE_LISTS.map((list) => normalizeListTitle(list.title)),
+  );
+  const batch = writeBatch(db);
+  let writes = 0;
+
+  for (const def of DEFAULT_WORKSPACE_LISTS) {
+    const found = nextLists.find(
+      (list) => normalizeListTitle(list.title) === normalizeListTitle(def.title),
+    );
+    if (!found) continue;
+    if (found.position !== def.position || found.kind !== def.kind) {
+      batch.update(doc(db, BOARDS_COLLECTION, boardId, "lists", found.id), {
+        position: def.position,
+        kind: def.kind,
+        updatedAt: serverTimestamp(),
+      });
+      writes += 1;
+    }
+  }
+
+  const customLists = nextLists
+    .filter((list) => !defaultTitles.has(normalizeListTitle(list.title)))
+    .sort((a, b) => a.position - b.position || a.title.localeCompare(b.title));
+  customLists.forEach((list, index) => {
+    const position = DEFAULT_WORKSPACE_LISTS.length + index;
+    if (list.position !== position) {
+      batch.update(doc(db, BOARDS_COLLECTION, boardId, "lists", list.id), {
+        position,
+        updatedAt: serverTimestamp(),
+      });
+      writes += 1;
+    }
+  });
+
+  if (writes > 0) await batch.commit();
 }
 
 export async function updateWorkspaceBoardDiagnosticExtendedTime(
@@ -211,6 +263,7 @@ export async function updateWorkspaceBoardDiagnosticExtendedTime(
   const db = getFirebaseDb();
   await updateDoc(doc(db, BOARDS_COLLECTION, boardId), {
     diagnosticExtendedTime: enabled,
+    updatedAt: serverTimestamp(),
   });
 }
 
@@ -304,6 +357,8 @@ export async function createWorkspaceCard(
     description: "",
     position,
     completed: false,
+    commentCount: 0,
+    attachmentCount: 0,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   };

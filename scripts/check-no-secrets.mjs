@@ -11,6 +11,8 @@ const PATTERNS = [
   /"private_key"\s*:\s*"-----BEGIN/,
   /ghp_[A-Za-z0-9]{20,}/,
   /github_pat_[A-Za-z0-9_]{20,}/,
+  /ATTA[A-Za-z0-9]{20,}/,
+  /TRELLO_(?:API_KEY|TOKEN|API_SECRET)\s*=\s*\S+/,
 ];
 
 function scanText(label, text) {

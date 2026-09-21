@@ -93,7 +93,7 @@ Billing guardrails (set up once in Google Cloud Console):
   Suggested: email alert at $5, $10, and hard review at $25/month.
 
 App limits already enforced: tutor-only PDF uploads, 25 MB/file, 10 PDFs/card,
-200 MB PDF cap per student board, workspace path only.
+500 MB / 250 PDF cap per student board, workspace path only.
 `);
 }
 

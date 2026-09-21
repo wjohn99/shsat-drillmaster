@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Check, GripVertical, MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
+import { Check, GripVertical, MessageSquare, MoreHorizontal, Paperclip, Pencil, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -453,6 +453,28 @@ export function BoardListColumn({
                         <p className="text-xs text-muted-foreground mt-1 line-clamp-2 pl-6">
                           {card.description}
                         </p>
+                      ) : null}
+                      {((card.commentCount ?? 0) > 0 || (card.attachmentCount ?? 0) > 0) ? (
+                        <div className="mt-2 pl-6 flex items-center gap-3 text-muted-foreground">
+                          {(card.commentCount ?? 0) > 0 ? (
+                            <span
+                              className="inline-flex items-center gap-1 text-[11px] tabular-nums"
+                              aria-label={`${card.commentCount} ${card.commentCount === 1 ? "comment" : "comments"}`}
+                            >
+                              <MessageSquare className="h-3.5 w-3.5" aria-hidden />
+                              {card.commentCount}
+                            </span>
+                          ) : null}
+                          {(card.attachmentCount ?? 0) > 0 ? (
+                            <span
+                              className="inline-flex items-center gap-1 text-[11px] tabular-nums"
+                              aria-label={`${card.attachmentCount} ${card.attachmentCount === 1 ? "attachment" : "attachments"}`}
+                            >
+                              <Paperclip className="h-3.5 w-3.5" aria-hidden />
+                              {card.attachmentCount}
+                            </span>
+                          ) : null}
+                        </div>
                       ) : null}
                     </button>
                   </div>

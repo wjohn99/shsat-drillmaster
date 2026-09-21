@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,9 +29,25 @@ import {
   type StudentRoadmapSnapshot,
 } from "@/lib/studentRoadmap";
 import type { StudentAttentionStatus, StudentRoadmap } from "@/types/workspace";
-import { ATTENTION_STATUS_LABEL } from "@/types/workspace";
+import { ATTENTION_STATUS_LABEL, ATTENTION_STATUS_ORDER } from "@/types/workspace";
 import { assignToStudentNavState } from "@/types/worksheetsNavigation";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
+import { AttentionStatusLabel, AttentionStatusSwatch } from "./AttentionStatusLabel";
+
+function RoadmapHeading({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={className}>
+      {children}
+      <div className="mt-1.5 h-px w-full bg-foreground/10" aria-hidden />
+    </div>
+  );
+}
 
 function subjectAccuracy(session: PracticeSessionRecord | null, subject: "ELA" | "MATH"): string {
   if (!session) return "-";
@@ -53,9 +70,11 @@ function ScoreTile({
 }) {
   return (
     <div className="rounded-lg border p-3">
-      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-        {label}
-      </p>
+      <RoadmapHeading>
+        <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+          {label}
+        </p>
+      </RoadmapHeading>
       {children ?? <p className="mt-1 text-xl font-semibold tabular-nums">{value}</p>}
       {hint ? <p className="mt-1 text-xs text-muted-foreground">{hint}</p> : null}
     </div>
@@ -90,7 +109,6 @@ export function StudentRoadmapPanel({
 
   const school = shsatSchoolById(draft.targetSchool);
   const returnTo = `/workspace/${snapshot.board.studentUid}`;
-  const statusSelectValue = draft.statusManual && draft.status ? draft.status : "auto";
 
   const update = <K extends keyof StudentRoadmap>(key: K, value: StudentRoadmap[K]) => {
     dirtyRef.current = true;
@@ -198,16 +216,27 @@ export function StudentRoadmapPanel({
       : `Public School Day ${formatIsoDateLabel(SHSAT_2026_PLAN.schoolDayDate)}`;
 
   return (
-    <section className="rounded-xl border glass-surface p-4 sm:p-5 mb-5 space-y-6">
-      <div className="flex flex-wrap items-start justify-between gap-3">
+    <details className="group rounded-xl border glass-surface mb-5">
+      <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 p-4 sm:px-5 sm:py-4 [&::-webkit-details-marker]:hidden">
         <h2 className="font-serif text-xl font-semibold tracking-tight">
           {snapshot.board.studentName}
         </h2>
-        <Badge variant={snapshot.status === "follow_up" ? "destructive" : "secondary"}>
-          {snapshot.statusLabel}
-        </Badge>
-      </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <AttentionStatusLabel status={draft.status} />
+          <span className="text-xs font-medium text-muted-foreground group-open:hidden">
+            Show roadmap
+          </span>
+          <span className="hidden text-xs font-medium text-muted-foreground group-open:inline">
+            Hide roadmap
+          </span>
+          <ChevronDown
+            className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180"
+            aria-hidden
+          />
+        </div>
+      </summary>
 
+      <div className="space-y-6 border-t border-border/60 px-4 pb-4 pt-4 sm:px-5 sm:pb-5">
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
         <ScoreTile label="Starting point" value={startingDisplay} hint={startingHint}>
           {readOnly ? undefined : (
@@ -272,7 +301,9 @@ export function StudentRoadmapPanel({
 
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="rounded-lg border p-3 space-y-2">
-          <p className="text-sm font-medium">Strengths</p>
+          <RoadmapHeading>
+            <p className="text-sm font-medium">Strengths</p>
+          </RoadmapHeading>
           {snapshot.strengths.length > 0 ? (
             <div className="flex flex-wrap gap-1.5">
               {snapshot.strengths.map((row) => (
@@ -300,7 +331,9 @@ export function StudentRoadmapPanel({
           )}
         </div>
         <div className="rounded-lg border p-3 space-y-2">
-          <p className="text-sm font-medium">Areas for growth</p>
+          <RoadmapHeading>
+            <p className="text-sm font-medium">Areas for growth</p>
+          </RoadmapHeading>
           {snapshot.growthAreas.length > 0 ? (
             <div className="flex flex-wrap gap-1.5">
               {snapshot.growthAreas.map((row) => (
@@ -330,7 +363,9 @@ export function StudentRoadmapPanel({
       </div>
 
       <div>
-        <p className="mb-2 text-sm font-medium">Progress over time</p>
+        <RoadmapHeading className="mb-2">
+          <p className="text-sm font-medium">Progress over time</p>
+        </RoadmapHeading>
         {snapshot.diagnosticSittings.length === 0 && snapshot.recentSessions.length === 0 ? (
           <p className="text-sm text-muted-foreground">
             Diagnostics, worksheets, and session notes will land here as they happen.
@@ -338,9 +373,11 @@ export function StudentRoadmapPanel({
         ) : (
           <div className="grid gap-2 sm:grid-cols-2">
             <div className="rounded-lg border p-3">
-              <p className="mb-2 text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
-                Diagnostics
-              </p>
+              <RoadmapHeading className="mb-2">
+                <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                  Diagnostics
+                </p>
+              </RoadmapHeading>
               {snapshot.diagnosticSittings.length === 0 ? (
                 <p className="text-sm text-muted-foreground">No diagnostic sitting yet.</p>
               ) : (
@@ -358,9 +395,11 @@ export function StudentRoadmapPanel({
               )}
             </div>
             <div className="rounded-lg border p-3">
-              <p className="mb-2 text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
-                Recent sessions
-              </p>
+              <RoadmapHeading className="mb-2">
+                <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                  Recent sessions
+                </p>
+              </RoadmapHeading>
               {snapshot.recentSessions.length === 0 ? (
                 <p className="text-sm text-muted-foreground">No saved sessions yet.</p>
               ) : (
@@ -385,7 +424,9 @@ export function StudentRoadmapPanel({
 
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="space-y-3">
-          <p className="text-sm font-medium">Current and long-term priorities</p>
+          <RoadmapHeading>
+            <p className="text-sm font-medium">Current and long-term priorities</p>
+          </RoadmapHeading>
           {readOnly ? (
             <>
               <p className="text-sm">
@@ -421,7 +462,9 @@ export function StudentRoadmapPanel({
         </div>
 
         <div className="space-y-3">
-          <p className="text-sm font-medium">Next session and follow-ups</p>
+          <RoadmapHeading>
+            <p className="text-sm font-medium">Next session and follow-ups</p>
+          </RoadmapHeading>
           {readOnly ? (
             <>
               <p className="text-sm">{snapshot.nextSessionLabel}</p>
@@ -509,8 +552,10 @@ export function StudentRoadmapPanel({
 
       {!readOnly ? (
         <div className="grid gap-3 sm:grid-cols-2">
-          <div className="space-y-1">
-            <Label>Target school</Label>
+          <div className="space-y-2">
+            <RoadmapHeading>
+              <Label>Target school</Label>
+            </RoadmapHeading>
             <Select value={draft.targetSchool} onValueChange={(value) => update("targetSchool", value)}>
               <SelectTrigger>
                 <SelectValue />
@@ -524,15 +569,16 @@ export function StudentRoadmapPanel({
               </SelectContent>
             </Select>
           </div>
-          <div className="space-y-1">
-            <Label>Kanban status</Label>
+          <div className="space-y-2">
+            <RoadmapHeading>
+              <Label>Kanban status</Label>
+            </RoadmapHeading>
             <Select
-              value={statusSelectValue}
+              value={draft.status ?? undefined}
               onValueChange={(value) => {
-                if (value === "auto") {
-                  setDraft((prev) => ({ ...prev, status: null, statusManual: false }));
-                  return;
-                }
+                dirtyRef.current = true;
+                setDirty(true);
+                setSaveState("idle");
                 setDraft((prev) => ({
                   ...prev,
                   status: value as StudentAttentionStatus,
@@ -541,13 +587,22 @@ export function StudentRoadmapPanel({
               }}
             >
               <SelectTrigger>
-                <SelectValue />
+                {draft.status ? (
+                  <span className="flex items-center gap-2">
+                    <AttentionStatusSwatch status={draft.status} />
+                    {ATTENTION_STATUS_LABEL[draft.status]}
+                  </span>
+                ) : (
+                  <span className="text-muted-foreground">Select status</span>
+                )}
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="auto">Auto from follow-ups and dates</SelectItem>
-                {(Object.keys(ATTENTION_STATUS_LABEL) as StudentAttentionStatus[]).map((key) => (
+                {ATTENTION_STATUS_ORDER.map((key) => (
                   <SelectItem key={key} value={key}>
-                    {ATTENTION_STATUS_LABEL[key]}
+                    <span className="flex items-center gap-2">
+                      <AttentionStatusSwatch status={key} />
+                      {ATTENTION_STATUS_LABEL[key]}
+                    </span>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -617,6 +672,7 @@ export function StudentRoadmapPanel({
           </p>
         )}
       </div>
-    </section>
+      </div>
+    </details>
   );
 }

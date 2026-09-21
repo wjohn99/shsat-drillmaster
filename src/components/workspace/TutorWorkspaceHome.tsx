@@ -9,12 +9,13 @@ import { fetchAssignmentsForTutor } from "@/lib/assignmentService";
 import { pickLatestCompletedAssignment } from "@/lib/dashboardStats";
 import { firstAndLatestDiagnostic } from "@/lib/diagnosticReport";
 import { fetchPracticeSessionsForTutor } from "@/lib/practiceSessionService";
-import { fetchAllWorkspaceBoards } from "@/lib/workspaceService";
+import { fetchAllWorkspaceBoards, ensureDefaultWorkspaceLists } from "@/lib/workspaceService";
 import type { WorksheetAssignment } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type { WorkspaceBoard } from "@/types/workspace";
 import { assignToStudentNavState, WORKSPACE_HOME_PATH } from "@/types/worksheetsNavigation";
 import { AddStudentBoardDialog } from "./AddStudentBoardDialog";
+import { AttentionStatusLabel } from "./AttentionStatusLabel";
 import { StudentQuickActions } from "./StudentQuickActions";
 
 interface TutorWorkspaceHomeProps {
@@ -38,6 +39,9 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
         fetchPracticeSessionsForTutor().catch(() => [] as PracticeSessionRecord[]),
         fetchAssignmentsForTutor().catch(() => [] as WorksheetAssignment[]),
       ]);
+      await Promise.all(
+        boardRows.map((board) => ensureDefaultWorkspaceLists(board.id).catch(() => undefined)),
+      );
       setBoards(boardRows);
       setSessions(sessionRows);
       setAssignments(assignmentRows);
@@ -127,17 +131,22 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
               <Card key={board.id} className="h-full overflow-hidden">
                 <div className="h-1.5 w-full" style={{ backgroundColor: accent }} />
                 <CardHeader>
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span
-                      className="h-3 w-3 shrink-0 rounded-full"
-                      style={{ backgroundColor: accent }}
-                      aria-hidden
-                    />
-                    <CardTitle className="text-lg truncate">{board.studentName}</CardTitle>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 space-y-1">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span
+                          className="h-3 w-3 shrink-0 rounded-full"
+                          style={{ backgroundColor: accent }}
+                          aria-hidden
+                        />
+                        <CardTitle className="text-lg truncate">{board.studentName}</CardTitle>
+                      </div>
+                      {board.studentEmail ? (
+                        <p className="text-sm text-muted-foreground truncate">{board.studentEmail}</p>
+                      ) : null}
+                    </div>
+                    <AttentionStatusLabel status={board.roadmap.status} />
                   </div>
-                  {board.studentEmail ? (
-                    <p className="text-sm text-muted-foreground truncate">{board.studentEmail}</p>
-                  ) : null}
                 </CardHeader>
                 <CardContent>
                   <StudentQuickActions

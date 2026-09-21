@@ -13,9 +13,7 @@ import type {
   StudentRoadmap,
   WorkspaceBoard,
 } from "@/types/workspace";
-import { ATTENTION_STATUS_LABEL } from "@/types/workspace";
-
-const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+import { ATTENTION_STATUS_LABEL, ATTENTION_STATUS_ORDER } from "@/types/workspace";
 
 export function emptyStudentRoadmap(): StudentRoadmap {
   return {
@@ -56,12 +54,6 @@ function parseFollowUp(raw: unknown): RoadmapFollowUp | null {
 export function parseStudentRoadmap(raw: unknown): StudentRoadmap {
   const parsed = asRecord(raw);
   const status = parsed.status;
-  const allowed: StudentAttentionStatus[] = [
-    "follow_up",
-    "next_session",
-    "active_work",
-    "on_track",
-  ];
   const followUps = Array.isArray(parsed.followUps)
     ? parsed.followUps.map(parseFollowUp).filter((row): row is RoadmapFollowUp => row != null)
     : [];
@@ -85,7 +77,8 @@ export function parseStudentRoadmap(raw: unknown): StudentRoadmap {
     nextSessionNotes: typeof parsed.nextSessionNotes === "string" ? parsed.nextSessionNotes : "",
     followUps,
     status:
-      typeof status === "string" && allowed.includes(status as StudentAttentionStatus)
+      typeof status === "string" &&
+      ATTENTION_STATUS_ORDER.includes(status as StudentAttentionStatus)
         ? (status as StudentAttentionStatus)
         : null,
     statusManual: parsed.statusManual === true,
@@ -196,30 +189,10 @@ function computeTagStats(sessions: PracticeSessionRecord[]): RoadmapTagStat[] {
     }));
 }
 
-export function deriveAttentionStatus(input: {
-  roadmap: StudentRoadmap;
-  openFollowUps: RoadmapFollowUp[];
-  assignments: WorksheetAssignment[];
-  diagnosticInProgress: boolean;
-  now?: number;
-}): StudentAttentionStatus {
-  if (input.roadmap.statusManual && input.roadmap.status) return input.roadmap.status;
-  const now = input.now ?? Date.now();
-  if (input.openFollowUps.length > 0) return "follow_up";
-  if (input.assignments.some(isAssignmentOverdue)) return "follow_up";
-  const nextMs = nextSessionMillis(input.roadmap);
-  if (nextMs != null && nextMs < now - 12 * 60 * 60 * 1000) return "follow_up";
-  if (nextMs != null && nextMs <= now + WEEK_MS) return "next_session";
-  if (input.assignments.some((row) => row.status === "todo") || input.diagnosticInProgress) {
-    return "active_work";
-  }
-  return "on_track";
-}
-
 export interface StudentRoadmapSnapshot {
   board: WorkspaceBoard;
   roadmap: StudentRoadmap;
-  status: StudentAttentionStatus;
+  status: StudentAttentionStatus | null;
   statusLabel: string;
   currentPriority: string;
   activeAssignment: WorksheetAssignment | null;
@@ -267,13 +240,7 @@ export function buildStudentRoadmapSnapshot(input: {
   const followUpsOpen = roadmap.followUps.filter((row) => row.open);
   const diagnosticInProgress = Boolean(input.diagnosticInProgress);
   const overdue = studentAssignments.filter(isAssignmentOverdue);
-  const status = deriveAttentionStatus({
-    roadmap,
-    openFollowUps: followUpsOpen,
-    assignments: studentAssignments,
-    diagnosticInProgress,
-    now,
-  });
+  const status = roadmap.status;
   const tagStats = computeTagStats(studentSessions);
   const growthAreas = [...tagStats]
     .sort((a, b) => a.accuracy - b.accuracy || b.count - a.count)
@@ -306,7 +273,7 @@ export function buildStudentRoadmapSnapshot(input: {
     board: input.board,
     roadmap,
     status,
-    statusLabel: ATTENTION_STATUS_LABEL[status],
+    statusLabel: status ? ATTENTION_STATUS_LABEL[status] : "No status",
     currentPriority,
     activeAssignment,
     activeAssignmentLabel,

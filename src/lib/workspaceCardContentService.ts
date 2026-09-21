@@ -3,6 +3,7 @@ import {
   collection,
   doc,
   getDocs,
+  increment,
   limit,
   onSnapshot,
   orderBy,
@@ -166,6 +167,60 @@ export function getAttachmentHref(attachment: WorkspaceCardAttachment): string |
 
 export { resolveAttachmentDownloadUrl } from "@/lib/workspaceAttachmentStorage";
 
+async function bumpCardBadge(
+  boardId: string,
+  cardId: string,
+  field: "commentCount" | "attachmentCount",
+  delta: number,
+): Promise<void> {
+  try {
+    await updateDoc(doc(getFirebaseDb(), BOARDS_COLLECTION, boardId, "cards", cardId), {
+      [field]: increment(delta),
+      updatedAt: serverTimestamp(),
+    });
+  } catch {
+    // Students can comment without card-write permission until rules deploy.
+  }
+}
+
+export async function fetchCardBadgeCounts(
+  boardId: string,
+  cardIds: string[],
+): Promise<Map<string, { commentCount: number; attachmentCount: number }>> {
+  const map = new Map<string, { commentCount: number; attachmentCount: number }>();
+  const chunkSize = 20;
+  for (let i = 0; i < cardIds.length; i += chunkSize) {
+    const chunk = cardIds.slice(i, i + chunkSize);
+    await Promise.all(
+      chunk.map(async (cardId) => {
+        const [commentSnap, attachmentSnap] = await Promise.all([
+          getDocs(cardCollection(boardId, cardId, "comments")),
+          getDocs(cardCollection(boardId, cardId, "attachments")),
+        ]);
+        map.set(cardId, {
+          commentCount: commentSnap.docs.filter((row) => !row.data().deletedAt).length,
+          attachmentCount: attachmentSnap.docs.filter((row) => !row.data().deletedAt).length,
+        });
+      }),
+    );
+  }
+  return map;
+}
+
+export async function persistCardBadgeCounts(
+  boardId: string,
+  counts: Map<string, { commentCount: number; attachmentCount: number }>,
+): Promise<void> {
+  await Promise.all(
+    [...counts.entries()].map(([cardId, value]) =>
+      updateDoc(doc(getFirebaseDb(), BOARDS_COLLECTION, boardId, "cards", cardId), {
+        commentCount: value.commentCount,
+        attachmentCount: value.attachmentCount,
+      }),
+    ),
+  );
+}
+
 async function logCardActivity(
   boardId: string,
   cardId: string,
@@ -280,6 +335,7 @@ export async function addCardLinkAttachment(
     "attachment_added",
     `added link "${fileName}"${duePart} to this card`,
   );
+  await bumpCardBadge(boardId, cardId, "attachmentCount", 1);
 
   return docRef.id;
 }
@@ -350,6 +406,7 @@ export async function addCardPdfAttachment(
     "attachment_added",
     `added PDF "${fileName}"${duePart} to this card`,
   );
+  await bumpCardBadge(boardId, cardId, "attachmentCount", 1);
 
   return attachmentRef.id;
 }
@@ -438,6 +495,7 @@ export async function softDeleteCardAttachment(
     "attachment_removed",
     `removed attachment "${fileName}"`,
   );
+  await bumpCardBadge(boardId, cardId, "attachmentCount", -1);
 }
 
 export async function fetchCardComments(
@@ -509,6 +567,7 @@ export async function createCardComment(
     authorName: user.displayName || user.email || "User",
     createdAt: serverTimestamp(),
   });
+  await bumpCardBadge(boardId, cardId, "commentCount", 1);
 }
 
 /** Soft-delete comment — recoverable in Firestore. */
@@ -521,4 +580,5 @@ export async function softDeleteCardComment(
     doc(getFirebaseDb(), BOARDS_COLLECTION, boardId, "cards", cardId, "comments", commentId),
     { deletedAt: serverTimestamp() },
   );
+  await bumpCardBadge(boardId, cardId, "commentCount", -1);
 }

@@ -39,6 +39,7 @@ credentials.json
 **/GoogleService-Info.plist
 secrets/
 .secrets/
+*trello*.json
 
 # MacOS
 .DS_Store
