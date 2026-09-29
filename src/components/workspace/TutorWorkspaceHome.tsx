@@ -9,7 +9,7 @@ import { fetchAssignmentsForTutor } from "@/lib/assignmentService";
 import { pickLatestCompletedAssignment } from "@/lib/dashboardStats";
 import { firstAndLatestDiagnostic } from "@/lib/diagnosticReport";
 import { fetchPracticeSessionsForTutor } from "@/lib/practiceSessionService";
-import { fetchAllWorkspaceBoards, ensureDefaultWorkspaceLists } from "@/lib/workspaceService";
+import { fetchAllWorkspaceBoards } from "@/lib/workspaceService";
 import type { WorksheetAssignment } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type { WorkspaceBoard } from "@/types/workspace";
@@ -39,9 +39,6 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
         fetchPracticeSessionsForTutor().catch(() => [] as PracticeSessionRecord[]),
         fetchAssignmentsForTutor().catch(() => [] as WorksheetAssignment[]),
       ]);
-      await Promise.all(
-        boardRows.map((board) => ensureDefaultWorkspaceLists(board.id).catch(() => undefined)),
-      );
       setBoards(boardRows);
       setSessions(sessionRows);
       setAssignments(assignmentRows);

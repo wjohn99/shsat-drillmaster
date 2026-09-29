@@ -91,8 +91,8 @@ export function AddStudentBoardDialog({
         <DialogHeader>
           <DialogTitle>Add student workspace</DialogTitle>
           <DialogDescription>
-            Create a living SHSAT roadmap for a signed-up student. All tutors can view and manage
-            it; the student only sees their own.
+            Creates an empty board for a signed-up student so you can import Trello data or add
+            lists yourself. All tutors can view and manage it; the student only sees their own.
           </DialogDescription>
         </DialogHeader>
 

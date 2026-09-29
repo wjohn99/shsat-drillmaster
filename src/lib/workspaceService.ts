@@ -23,13 +23,12 @@ import {
   parseStudentRoadmap,
   serializeStudentRoadmap,
 } from "@/lib/studentRoadmap";
-import {
-  DEFAULT_WORKSPACE_LISTS,
-  type StudentRoadmap,
-  type WorkspaceBoard,
-  type WorkspaceCard,
-  type WorkspaceCardSessionMeta,
-  type WorkspaceList,
+import type {
+  StudentRoadmap,
+  WorkspaceBoard,
+  WorkspaceCard,
+  WorkspaceCardSessionMeta,
+  WorkspaceList,
 } from "@/types/workspace";
 import type { StudentOption } from "@/types/assignment";
 
@@ -182,78 +181,13 @@ export async function createWorkspaceBoard(
     return false;
   });
 
-  await ensureDefaultWorkspaceLists(student.uid);
   if (alreadyExisted) {
     throw new Error(`${student.displayName} already has a workspace board.`);
   }
 
+  // New boards start with no lists. Trello import may also land on boards that
+  // already have lists and cards; the importer matches Trello list count and names.
   return student.uid;
-}
-
-function normalizeListTitle(title: string): string {
-  return title.trim().toLowerCase();
-}
-
-/** Create any missing standard lists and pin them to the shared column order. */
-export async function ensureDefaultWorkspaceLists(boardId: string): Promise<void> {
-  const lists = await fetchWorkspaceLists(boardId);
-  const existingByTitle = new Map(lists.map((list) => [normalizeListTitle(list.title), list]));
-  const db = getFirebaseDb();
-  const listsRef = collection(db, BOARDS_COLLECTION, boardId, "lists");
-
-  const missing = DEFAULT_WORKSPACE_LISTS.filter(
-    (list) => !existingByTitle.has(normalizeListTitle(list.title)),
-  );
-  if (missing.length > 0) {
-    await Promise.all(
-      missing.map((list) =>
-        addDoc(listsRef, {
-          title: list.title,
-          kind: list.kind,
-          position: list.position,
-          createdAt: serverTimestamp(),
-        }),
-      ),
-    );
-  }
-
-  const nextLists = missing.length > 0 ? await fetchWorkspaceLists(boardId) : lists;
-  const defaultTitles = new Set(
-    DEFAULT_WORKSPACE_LISTS.map((list) => normalizeListTitle(list.title)),
-  );
-  const batch = writeBatch(db);
-  let writes = 0;
-
-  for (const def of DEFAULT_WORKSPACE_LISTS) {
-    const found = nextLists.find(
-      (list) => normalizeListTitle(list.title) === normalizeListTitle(def.title),
-    );
-    if (!found) continue;
-    if (found.position !== def.position || found.kind !== def.kind) {
-      batch.update(doc(db, BOARDS_COLLECTION, boardId, "lists", found.id), {
-        position: def.position,
-        kind: def.kind,
-        updatedAt: serverTimestamp(),
-      });
-      writes += 1;
-    }
-  }
-
-  const customLists = nextLists
-    .filter((list) => !defaultTitles.has(normalizeListTitle(list.title)))
-    .sort((a, b) => a.position - b.position || a.title.localeCompare(b.title));
-  customLists.forEach((list, index) => {
-    const position = DEFAULT_WORKSPACE_LISTS.length + index;
-    if (list.position !== position) {
-      batch.update(doc(db, BOARDS_COLLECTION, boardId, "lists", list.id), {
-        position,
-        updatedAt: serverTimestamp(),
-      });
-      writes += 1;
-    }
-  });
-
-  if (writes > 0) await batch.commit();
 }
 
 export async function updateWorkspaceBoardDiagnosticExtendedTime(
@@ -485,6 +419,15 @@ export async function updateWorkspaceCard(
   }
 }
 
+/** Soft-deletes a card. Notes, comments, and files stay in Firestore. */
+export async function deleteWorkspaceCard(boardId: string, cardId: string): Promise<void> {
+  const db = getFirebaseDb();
+  await updateDoc(doc(db, BOARDS_COLLECTION, boardId, "cards", cardId), {
+    deletedAt: Timestamp.now(),
+    updatedAt: Timestamp.now(),
+  });
+}
+
 export interface LinkAssignmentToWorkspaceInput {
   boardId: string;
   listId: string;
@@ -546,7 +489,12 @@ export async function updateWorkspaceList(
   input: { title: string },
 ): Promise<void> {
   const db = getFirebaseDb();
-  await updateDoc(doc(db, BOARDS_COLLECTION, boardId, "lists", listId), {
+  const listRef = doc(db, BOARDS_COLLECTION, boardId, "lists", listId);
+  const snap = await getDoc(listRef);
+  if (!snap.exists() || snap.data()?.deletedAt) {
+    throw new Error("That list is no longer on the board.");
+  }
+  await updateDoc(listRef, {
     title: input.title,
     updatedAt: serverTimestamp(),
   });

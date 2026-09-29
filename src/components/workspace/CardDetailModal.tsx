@@ -20,6 +20,16 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,7 +51,7 @@ import {
   worksheetProgressStatus,
   WORKSHEET_PROGRESS_LABEL,
 } from "@/lib/dashboardStats";
-import { updateWorkspaceCard } from "@/lib/workspaceService";
+import { updateWorkspaceCard, deleteWorkspaceCard } from "@/lib/workspaceService";
 import type { WorksheetAssignment } from "@/types/assignment";
 import {
   addCardLinkAttachment,
@@ -155,6 +165,8 @@ export function CardDetailModal({
   const [linkSetDueDate, setLinkSetDueDate] = useState(false);
   const [linkDueDate, setLinkDueDate] = useState(defaultAssignmentDueDateInput);
   const [savingLink, setSavingLink] = useState(false);
+  const [pendingPdf, setPendingPdf] = useState<File | null>(null);
+  const [pdfDisplayName, setPdfDisplayName] = useState("");
   const [uploadingPdf, setUploadingPdf] = useState(false);
   const pdfInputRef = useRef<HTMLInputElement>(null);
   const [submissionsByAttachmentId, setSubmissionsByAttachmentId] = useState<
@@ -166,6 +178,8 @@ export function CardDetailModal({
   const [postingComment, setPostingComment] = useState(false);
   const [linkedAssignment, setLinkedAssignment] = useState<WorksheetAssignment | null>(null);
   const [linkedAssignmentLoading, setLinkedAssignmentLoading] = useState(false);
+  const [deleteCardOpen, setDeleteCardOpen] = useState(false);
+  const [deletingCard, setDeletingCard] = useState(false);
 
   useEffect(() => {
     if (!card) return;
@@ -187,11 +201,15 @@ export function CardDetailModal({
     setLinkUrl("");
     setLinkSetDueDate(false);
     setLinkDueDate(defaultAssignmentDueDateInput());
+    setPendingPdf(null);
+    setPdfDisplayName("");
     // Only reset when opening a different card so a background refresh cannot wipe notes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [card?.id, defaultStudentName]);
 
   const isStudentView = profile?.role === "student";
+  const isTutorView = !readOnly;
+  const canAddAttachments = Boolean(profile);
   const minLinkDueDate = defaultAssignmentDueDateInput();
 
   const attachmentCounts = useMemo(() => {
@@ -391,17 +409,54 @@ export function CardDetailModal({
     }
   };
 
-  const handlePdfSelected = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDeleteCard = async () => {
+    if (!card || readOnly) return;
+    setDeletingCard(true);
+    try {
+      await deleteWorkspaceCard(boardId, card.id);
+      setDeleteCardOpen(false);
+      onOpenChange(false);
+      onUpdated();
+      toast({ title: "Card hidden", description: "Notes and files stay saved on the account." });
+    } catch (err) {
+      toast({
+        title: "Could not delete card",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setDeletingCard(false);
+    }
+  };
+
+  const handlePdfSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     event.target.value = "";
-    if (!file || !card || readOnly) return;
+    if (!file || !card || !canAddAttachments) return;
+    setAddingLink(false);
+    setPendingPdf(file);
+    setPdfDisplayName(file.name.replace(/\.pdf$/i, "").trim() || "Document");
+  };
 
+  const clearPendingPdf = () => {
+    setPendingPdf(null);
+    setPdfDisplayName("");
+  };
+
+  const handleUploadNamedPdf = async () => {
+    if (!card || !canAddAttachments || !pendingPdf) return;
+    const displayName = pdfDisplayName.trim();
+    if (!displayName) {
+      toast({ title: "Name this file before uploading", variant: "destructive" });
+      return;
+    }
     setUploadingPdf(true);
     try {
-      await addCardPdfAttachment(boardId, card.id, file);
+      await addCardPdfAttachment(boardId, card.id, pendingPdf, { displayName });
       const rows = await fetchCardAttachments(boardId, card.id);
       setAttachments(rows);
       await reloadSubmissions(rows);
+      clearPendingPdf();
       toast({ title: "PDF attached" });
       onUpdated();
     } catch (err) {
@@ -416,8 +471,8 @@ export function CardDetailModal({
   };
 
   const handleAddLink = async () => {
-    if (!card || readOnly) return;
-    if (linkSetDueDate && linkDueDate < minLinkDueDate) {
+    if (!card || !canAddAttachments) return;
+    if (isTutorView && linkSetDueDate && linkDueDate < minLinkDueDate) {
       toast({
         title: "Due date must be today or later",
         variant: "destructive",
@@ -426,7 +481,8 @@ export function CardDetailModal({
     }
     setSavingLink(true);
     try {
-      const dueAt = linkSetDueDate ? assignmentDueDateInputToTimestamp(linkDueDate) : null;
+      const dueAt =
+        isTutorView && linkSetDueDate ? assignmentDueDateInputToTimestamp(linkDueDate) : null;
       await addCardLinkAttachment(boardId, card.id, linkTitle, linkUrl, dueAt);
       const rows = await fetchCardAttachments(boardId, card.id);
       setAttachments(rows);
@@ -450,7 +506,8 @@ export function CardDetailModal({
   };
 
   const handleRemoveAttachment = async (attachment: WorkspaceCardAttachment) => {
-    if (!card || readOnly) return;
+    if (!card) return;
+    if (readOnly && attachment.uploadedByUid !== profile?.uid) return;
     try {
       await softDeleteCardAttachment(
         boardId,
@@ -505,6 +562,7 @@ export function CardDetailModal({
   if (!card) return null;
 
   return (
+    <>
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogContent className="glass-modal max-w-6xl w-[96vw] h-[min(92vh,900px)] p-0 gap-0 flex flex-col overflow-hidden bg-card text-card-foreground [&>button]:z-20">
         <DialogTitle className="sr-only">{card.title}</DialogTitle>
@@ -543,8 +601,20 @@ export function CardDetailModal({
                   onChange={(e) => setTitle(e.target.value)}
                   onBlur={() => void handleSaveTitle()}
                   readOnly={readOnly}
-                  className="h-auto rounded-none border-0 bg-transparent px-0 py-1 text-xl font-semibold leading-tight shadow-none hover:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 [background-color:transparent] hover:[background-color:transparent]"
+                  className="h-auto min-w-0 flex-1 rounded-none border-0 bg-transparent px-0 py-1 text-xl font-semibold leading-tight shadow-none hover:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 [background-color:transparent] hover:[background-color:transparent]"
                 />
+                {!readOnly ? (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="shrink-0 text-destructive hover:text-destructive"
+                    onClick={() => setDeleteCardOpen(true)}
+                  >
+                    <Trash2 className="h-4 w-4 mr-1" />
+                    Delete card
+                  </Button>
+                ) : null}
               </div>
             </div>
 
@@ -726,9 +796,9 @@ export function CardDetailModal({
                     <Paperclip className="h-4 w-4" />
                     Attachments
                   </div>
-                  {!readOnly ? (
+                  {canAddAttachments ? (
                     <div className="flex items-center gap-1 flex-wrap justify-end">
-                      {!card.assignmentId ? (
+                      {isTutorView && !card.assignmentId ? (
                         <Button variant="ghost" size="sm" onClick={handleOpenWorksheetAssign}>
                           <ClipboardList className="h-4 w-4 mr-1" />
                           Assign worksheet
@@ -743,7 +813,10 @@ export function CardDetailModal({
                             ? `Limit reached (${MAX_PDFS_PER_CARD} PDFs or ${MAX_ATTACHMENTS_PER_CARD} attachments per card)`
                             : undefined
                         }
-                        onClick={() => pdfInputRef.current?.click()}
+                        onClick={() => {
+                          setAddingLink(false);
+                          pdfInputRef.current?.click();
+                        }}
                       >
                         {uploadingPdf ? (
                           <Loader2 className="h-4 w-4 mr-1 animate-spin" />
@@ -763,7 +836,10 @@ export function CardDetailModal({
                         variant="ghost"
                         size="sm"
                         disabled={linkAddBlocked}
-                        onClick={() => setAddingLink((v) => !v)}
+                        onClick={() => {
+                          clearPendingPdf();
+                          setAddingLink((v) => !v);
+                        }}
                       >
                         <Link2 className="h-4 w-4 mr-1" />
                         Add link
@@ -772,27 +848,70 @@ export function CardDetailModal({
                   ) : null}
                 </div>
 
-                {!readOnly ? (
+                {canAddAttachments ? (
                   <p className="text-xs text-muted-foreground mb-3">
                     PDFs only · max {Math.round(WORKSPACE_PDF_MAX_BYTES / (1024 * 1024))} MB each ·{" "}
-                    {attachmentCounts.pdfs}/{MAX_PDFS_PER_CARD} PDFs on this card · tutors only
-                    can upload
+                    {attachmentCounts.pdfs}/{MAX_PDFS_PER_CARD} PDFs on this card
                   </p>
                 ) : null}
 
-                {!readOnly && addingLink ? (
+                {canAddAttachments && pendingPdf ? (
+                  <div className="mb-4 rounded-lg border bg-muted/30 p-3 space-y-3">
+                    <p className="text-xs text-muted-foreground">
+                      Name this PDF so it is easy to find on the card. Original file: {pendingPdf.name}
+                    </p>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="pdf-display-name">Name</Label>
+                      <Input
+                        id="pdf-display-name"
+                        value={pdfDisplayName}
+                        onChange={(e) => setPdfDisplayName(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            void handleUploadNamedPdf();
+                          }
+                        }}
+                        placeholder="Week 3 homework"
+                        maxLength={200}
+                        autoFocus
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        disabled={uploadingPdf || pdfUploadBlocked || !pdfDisplayName.trim()}
+                        onClick={() => void handleUploadNamedPdf()}
+                      >
+                        {uploadingPdf ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : null}
+                        Save PDF
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        disabled={uploadingPdf}
+                        onClick={clearPendingPdf}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                ) : null}
+
+                {canAddAttachments && addingLink ? (
                   <div className="mb-4 rounded-lg border bg-muted/30 p-3 space-y-3">
                     <p className="text-xs text-muted-foreground">
                       Paste a Google Drive, Dropbox, or other share link. Stored in Drillmaster
                       only, no file upload needed.
                     </p>
                     <div className="space-y-1.5">
-                      <Label htmlFor="link-title">Label</Label>
+                      <Label htmlFor="link-title">Name</Label>
                       <Input
                         id="link-title"
                         value={linkTitle}
                         onChange={(e) => setLinkTitle(e.target.value)}
                         placeholder="Session 30 Notes"
+                        maxLength={200}
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -804,27 +923,31 @@ export function CardDetailModal({
                         placeholder="https://drive.google.com/..."
                       />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="link-due-date"
-                        checked={linkSetDueDate}
-                        onCheckedChange={(v) => setLinkSetDueDate(v === true)}
-                      />
-                      <Label htmlFor="link-due-date" className="text-sm font-normal cursor-pointer">
-                        Set a due date for this homework
-                      </Label>
-                    </div>
-                    {linkSetDueDate ? (
-                      <div className="space-y-1.5">
-                        <Label htmlFor="link-due-date-input">Due date</Label>
-                        <Input
-                          id="link-due-date-input"
-                          type="date"
-                          min={minLinkDueDate}
-                          value={linkDueDate}
-                          onChange={(e) => setLinkDueDate(e.target.value)}
-                        />
-                      </div>
+                    {isTutorView ? (
+                      <>
+                        <div className="flex items-center gap-2">
+                          <Checkbox
+                            id="link-due-date"
+                            checked={linkSetDueDate}
+                            onCheckedChange={(v) => setLinkSetDueDate(v === true)}
+                          />
+                          <Label htmlFor="link-due-date" className="text-sm font-normal cursor-pointer">
+                            Set a due date for this homework
+                          </Label>
+                        </div>
+                        {linkSetDueDate ? (
+                          <div className="space-y-1.5">
+                            <Label htmlFor="link-due-date-input">Due date</Label>
+                            <Input
+                              id="link-due-date-input"
+                              type="date"
+                              min={minLinkDueDate}
+                              value={linkDueDate}
+                              onChange={(e) => setLinkDueDate(e.target.value)}
+                            />
+                          </div>
+                        ) : null}
+                      </>
                     ) : null}
                     <div className="flex gap-2">
                       <Button
@@ -858,7 +981,7 @@ export function CardDetailModal({
                   </div>
                 ) : attachments.length === 0 ? (
                   <p className="text-sm text-muted-foreground">
-                    {readOnly
+                    {readOnly && !canAddAttachments
                       ? "No attachments yet."
                       : "Upload a PDF or add a link (max 25 MB per PDF)."}
                   </p>
@@ -871,8 +994,9 @@ export function CardDetailModal({
                         cardId={card.id}
                         attachment={attachment}
                         submission={submissionsByAttachmentId[attachment.id] ?? null}
-                        isTutorView={!readOnly}
+                        isTutorView={isTutorView}
                         isStudentView={isStudentView}
+                        currentUserUid={profile?.uid}
                         onRemove={() => void handleRemoveAttachment(attachment)}
                         onSubmissionUpdated={async () => {
                           await reloadSubmissions(attachments);
@@ -952,6 +1076,31 @@ export function CardDetailModal({
         </div>
       </DialogContent>
     </Dialog>
+    <AlertDialog open={deleteCardOpen} onOpenChange={setDeleteCardOpen}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete this card?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This hides the card from the board. Session notes, comments, and files stay saved on
+            the account and are not permanently erased.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={deletingCard}>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            disabled={deletingCard}
+            onClick={(e) => {
+              e.preventDefault();
+              void handleDeleteCard();
+            }}
+          >
+            {deletingCard ? "Deleting…" : "Delete card"}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+    </>
   );
 }
 
@@ -984,6 +1133,7 @@ function AttachmentRow({
   submission,
   isTutorView,
   isStudentView,
+  currentUserUid,
   onRemove,
   onSubmissionUpdated,
 }: {
@@ -993,6 +1143,7 @@ function AttachmentRow({
   submission: WorkspaceAttachmentSubmission | null;
   isTutorView: boolean;
   isStudentView: boolean;
+  currentUserUid?: string;
   onRemove: () => void;
   onSubmissionUpdated: () => Promise<void>;
 }) {
@@ -1031,6 +1182,9 @@ function AttachmentRow({
   const dueLabel = formatAttachmentDueDate(attachment);
   const hasSubmission = Boolean(submission);
   const overdue = isAttachmentOverdue(attachment, hasSubmission);
+  const isOwnAttachment = Boolean(currentUserUid && attachment.uploadedByUid === currentUserUid);
+  const canRemove = isTutorView || isOwnAttachment;
+  const showHomeworkSubmit = isStudentView && !isOwnAttachment;
 
   const openHref = (url: string) => {
     window.open(url, "_blank", "noopener,noreferrer");
@@ -1102,6 +1256,7 @@ function AttachmentRow({
           <p className="text-sm font-medium truncate">{attachment.fileName}</p>
           <p className="text-xs text-muted-foreground">
             Added {formatTimestamp(attachment.createdAt)}
+            {attachment.uploadedByName ? ` by ${attachment.uploadedByName}` : ""}
             {dueLabel ? ` · Due ${dueLabel}` : ""}
             {overdue ? " · Overdue" : ""}
             {hasSubmission ? " · Submitted" : ""}
@@ -1118,7 +1273,7 @@ function AttachmentRow({
           >
             <ExternalLink className="h-4 w-4" />
           </Button>
-          {isTutorView ? (
+          {canRemove ? (
             <Button
               variant="ghost"
               size="icon"
@@ -1153,7 +1308,7 @@ function AttachmentRow({
         </div>
       ) : null}
 
-      {isStudentView ? (
+      {showHomeworkSubmit ? (
         <div className="space-y-2">
           {!showSubmitForm ? (
             <Button

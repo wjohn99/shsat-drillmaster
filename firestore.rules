@@ -180,13 +180,16 @@ service cloud.firestore {
           allow read: if canAccessWorkspaceBoard(boardId)
             && (!('deletedAt' in resource.data) || resource.data.deletedAt == null);
 
-          allow create: if isTutor()
+          allow create: if canAccessWorkspaceBoard(boardId)
             && request.resource.data.uploadedByUid == request.auth.uid
             && request.resource.data.fileName is string
             && request.resource.data.fileName.size() > 0
             && request.resource.data.fileName.size() <= 200
             && !('deletedAt' in request.resource.data)
-            && (!('dueAt' in request.resource.data) || request.resource.data.dueAt is timestamp)
+            && (
+              !('dueAt' in request.resource.data)
+              || (isTutor() && request.resource.data.dueAt is timestamp)
+            )
             && (
               (request.resource.data.kind == 'link'
                 && request.resource.data.externalUrl is string
@@ -203,8 +206,14 @@ service cloud.firestore {
                 && request.resource.data.sizeBytes <= 25 * 1024 * 1024)
             );
 
-          allow update: if isTutor()
-            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['deletedAt']);
+          allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['deletedAt'])
+            && (
+              isTutor()
+              || (
+                workspaceBoardIdMatchesStudent(boardId)
+                && resource.data.uploadedByUid == request.auth.uid
+              )
+            );
 
           allow delete: if false;
 

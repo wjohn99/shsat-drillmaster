@@ -22,8 +22,7 @@ service firebase.storage {
     match /workspace/{boardId}/cards/{cardId}/{fileName} {
       allow read: if canAccessWorkspaceBoard(boardId);
 
-      allow write: if isTutor()
-        && canAccessWorkspaceBoard(boardId)
+      allow write: if canAccessWorkspaceBoard(boardId)
         && request.resource.size > 0
         && request.resource.size <= 25 * 1024 * 1024
         && request.resource.contentType == 'application/pdf'

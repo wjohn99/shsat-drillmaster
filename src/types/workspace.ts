@@ -180,9 +180,3 @@ export type CardFeedItem =
   | { kind: "comment"; data: WorkspaceCardComment }
   | { kind: "activity"; data: WorkspaceCardActivity };
 
-export const DEFAULT_WORKSPACE_LISTS: { title: string; kind: WorkspaceListKind; position: number }[] =
-  [
-    { title: "Session Summaries", kind: "sessions", position: 0 },
-    { title: "Study Sheets", kind: "custom", position: 1 },
-    { title: "Info", kind: "info", position: 2 },
-  ];

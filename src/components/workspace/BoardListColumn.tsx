@@ -29,6 +29,7 @@ import {
 import { Label } from "@/components/ui/label";
 import {
   createWorkspaceCard,
+  deleteWorkspaceCard,
   deleteWorkspaceList,
   reorderWorkspaceCards,
   updateWorkspaceCard,
@@ -53,6 +54,7 @@ interface BoardListColumnProps {
   onCardClick: (card: WorkspaceCard) => void;
   onCardsChanged: () => void;
   onListChanged: () => void;
+  onListRenamed?: (listId: string, title: string) => void;
 }
 
 export function BoardListColumn({
@@ -64,6 +66,7 @@ export function BoardListColumn({
   onCardClick,
   onCardsChanged,
   onListChanged,
+  onListRenamed,
 }: BoardListColumnProps) {
   const [adding, setAdding] = useState(false);
   const [newTitle, setNewTitle] = useState("");
@@ -73,6 +76,8 @@ export function BoardListColumn({
   const [renaming, setRenaming] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [cardToDelete, setCardToDelete] = useState<WorkspaceCard | null>(null);
+  const [deletingCard, setDeletingCard] = useState(false);
   const [draggingCardId, setDraggingCardId] = useState<string | null>(null);
   const [dropLineTop, setDropLineTop] = useState<number | null>(null);
   const [reordering, setReordering] = useState(false);
@@ -242,8 +247,8 @@ export function BoardListColumn({
     setRenaming(true);
     try {
       await updateWorkspaceList(boardId, list.id, { title });
+      onListRenamed?.(list.id, title);
       setRenameOpen(false);
-      onListChanged();
       toast({ title: "List renamed" });
     } catch (err) {
       toast({
@@ -271,6 +276,25 @@ export function BoardListColumn({
       });
     } finally {
       setDeleting(false);
+    }
+  };
+
+  const handleDeleteCard = async () => {
+    if (!cardToDelete) return;
+    setDeletingCard(true);
+    try {
+      await deleteWorkspaceCard(boardId, cardToDelete.id);
+      setCardToDelete(null);
+      onCardsChanged();
+      toast({ title: "Card hidden", description: "Notes and files stay saved on the account." });
+    } catch (err) {
+      toast({
+        title: "Could not delete card",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setDeletingCard(false);
     }
   };
 
@@ -363,7 +387,7 @@ export function BoardListColumn({
                 <div
                   data-workspace-card
                   className={cn(
-                    "rounded-lg",
+                    "group/card rounded-lg",
                     isDraggingThis && "opacity-40 ring-2 ring-primary/40",
                   )}
                 >
@@ -393,7 +417,7 @@ export function BoardListColumn({
                       type="button"
                       onClick={() => onCardClick(card)}
                       className={cn(
-                        "flex-1 min-w-0 text-left rounded-lg px-3 py-2.5 text-sm shadow-sm transition-colors",
+                        "relative flex-1 min-w-0 text-left rounded-lg px-3 py-2.5 text-sm shadow-sm transition-colors",
                         "bg-card border border-border hover:bg-accent/50",
                         card.completed && "opacity-80",
                       )}
@@ -476,6 +500,32 @@ export function BoardListColumn({
                           ) : null}
                         </div>
                       ) : null}
+                      {!readOnly ? (
+                        <span
+                          role="button"
+                          tabIndex={0}
+                          aria-label={`Delete ${card.title}`}
+                          className={cn(
+                            "absolute top-1.5 right-1.5 h-7 w-7 inline-flex items-center justify-center rounded-md",
+                            "text-muted-foreground hover:text-destructive hover:bg-background/80",
+                            "opacity-0 group-hover/card:opacity-100 focus:opacity-100",
+                            "outline-none ring-0 focus:outline-none",
+                          )}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setCardToDelete(card);
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key !== "Enter" && e.key !== " ") return;
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setCardToDelete(card);
+                          }}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </span>
+                      ) : null}
                     </button>
                   </div>
                 </div>
@@ -541,33 +591,37 @@ export function BoardListColumn({
         }}
       >
         <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Rename list</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-2">
-            <Label htmlFor={`rename-list-${list.id}`}>List name</Label>
-            <Input
-              id={`rename-list-${list.id}`}
-              value={renameTitle}
-              onChange={(e) => setRenameTitle(e.target.value)}
-              placeholder="List name"
-              autoFocus
-              onKeyDown={(e) => {
-                if (e.key === "Enter") void handleRenameList();
-              }}
-            />
-          </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setRenameOpen(false)} disabled={renaming}>
-              Cancel
-            </Button>
-            <Button
-              onClick={() => void handleRenameList()}
-              disabled={renaming || !renameTitle.trim() || renameTitle.trim() === list.title}
-            >
-              {renaming ? "Saving…" : "Save"}
-            </Button>
-          </DialogFooter>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              void handleRenameList();
+            }}
+          >
+            <DialogHeader>
+              <DialogTitle>Rename list</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-2 py-4">
+              <Label htmlFor={`rename-list-${list.id}`}>List name</Label>
+              <Input
+                id={`rename-list-${list.id}`}
+                value={renameTitle}
+                onChange={(e) => setRenameTitle(e.target.value)}
+                placeholder="List name"
+                autoFocus
+              />
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="ghost" onClick={() => setRenameOpen(false)} disabled={renaming}>
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={renaming || !renameTitle.trim() || renameTitle.trim() === list.title}
+              >
+                {renaming ? "Saving…" : "Save"}
+              </Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
 
@@ -591,6 +645,31 @@ export function BoardListColumn({
               }}
             >
               {deleting ? "Deleting…" : "Delete list"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={Boolean(cardToDelete)} onOpenChange={(open) => !open && setCardToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this card?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This hides &ldquo;{cardToDelete?.title}&rdquo; from the board. Session notes, comments,
+              and files stay saved on the account and are not permanently erased.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deletingCard}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={deletingCard}
+              onClick={(e) => {
+                e.preventDefault();
+                void handleDeleteCard();
+              }}
+            >
+              {deletingCard ? "Deleting…" : "Delete card"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

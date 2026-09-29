@@ -18,7 +18,6 @@ import { buildStudentRoadmapSnapshot } from "@/lib/studentRoadmap";
 import { fetchCardBadgeCounts, persistCardBadgeCounts } from "@/lib/workspaceCardContentService";
 import {
   createWorkspaceList,
-  ensureDefaultWorkspaceLists,
   fetchWorkspaceBoard,
   fetchWorkspaceCards,
   fetchWorkspaceLists,
@@ -73,13 +72,6 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
     if (!silent) setLoading(true);
     setError(null);
     try {
-      if (!readOnly) {
-        try {
-          await ensureDefaultWorkspaceLists(boardId);
-        } catch {
-          // Board still loads with whatever lists already exist.
-        }
-      }
       const [boardRow, listRows, cardRows, assignmentRows, sessionRows, progressFlag] = await Promise.all([
         fetchWorkspaceBoard(boardId),
         fetchWorkspaceLists(boardId),
@@ -304,6 +296,15 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
         Session notes and homework
       </p>
       <div className="flex gap-4 overflow-x-auto pb-6 min-h-[calc(100vh-12rem)] items-start">
+        {lists.length === 0 ? (
+          <div className="w-72 shrink-0 rounded-xl border border-dashed border-border bg-muted/40 px-4 py-6">
+            <p className="text-sm text-muted-foreground">
+              {readOnly
+                ? "No lists on this board yet."
+                : "This board starts empty. Import Trello data or add a list to begin."}
+            </p>
+          </div>
+        ) : null}
         {lists.map((list) => (
           <BoardListColumn
             key={list.id}
@@ -319,6 +320,11 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
             }}
             onCardsChanged={() => void loadBoard({ silent: true })}
             onListChanged={() => void loadBoard({ silent: true })}
+            onListRenamed={(listId, title) => {
+              setLists((prev) =>
+                prev.map((row) => (row.id === listId ? { ...row, title } : row)),
+              );
+            }}
           />
         ))}
 
@@ -348,7 +354,7 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
                 className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground bg-muted/80 border border-border hover:bg-accent/50 transition-colors w-full"
               >
                 <Plus className="h-4 w-4" />
-                Add another list
+                {lists.length === 0 ? "Add a list" : "Add another list"}
               </button>
             )}
           </div>

@@ -318,7 +318,7 @@ export async function addCardLinkAttachment(
     contentType: "text/link",
     sizeBytes: 0,
     uploadedByUid: user.uid,
-    uploadedByName: user.displayName || user.email || "Tutor",
+    uploadedByName: user.displayName || user.email || "User",
     createdAt: serverTimestamp(),
   };
   if (dueAt) payload.dueAt = dueAt;
@@ -360,7 +360,11 @@ export async function addCardPdfAttachment(
     throw new Error(uploadCheck.message);
   }
 
-  const fileName = opts?.displayName?.trim() || file.name.trim() || "Document.pdf";
+  const fileName = (
+    opts?.displayName?.trim() ||
+    file.name.replace(/\.pdf$/i, "").trim() ||
+    "Document"
+  ).slice(0, 200);
   const attachmentsRef = cardCollection(boardId, cardId, "attachments");
   const attachmentRef = doc(attachmentsRef);
   const storagePath = buildWorkspaceAttachmentStoragePath(
@@ -385,7 +389,7 @@ export async function addCardPdfAttachment(
     contentType: "application/pdf",
     sizeBytes: file.size,
     uploadedByUid: user.uid,
-    uploadedByName: user.displayName || user.email || "Tutor",
+    uploadedByName: user.displayName || user.email || "User",
     createdAt: serverTimestamp(),
   };
   if (opts?.dueAt) payload.dueAt = opts.dueAt;

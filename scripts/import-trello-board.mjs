@@ -2,8 +2,28 @@
 /**
  * Merge a Trello board JSON export into one Drillmaster student workspace.
  *
- * Keeps cards/lists already on the Drillmaster board. Safe to re-run: imported
- * Trello cards, comments, and attachments use stable ids (trello_<trelloId>).
+ * Target boards are not always empty. Some already have lists, and those lists
+ * may already have cards with notes, comments, and files. Keep that content.
+ * Do not dump Trello cards into a differently named column.
+ *
+ * List shape comes from Trello, not from Drillmaster templates:
+ *   - Trello boards differ: list count and list names are not the same student
+ *     to student, and they will not match Session Summaries / Study Sheets / Info.
+ *   - Every Trello list must exist on the workspace under that Trello list's
+ *     exact name (emoji stripped, spacing trimmed). No alias mapping
+ *     (e.g. Files is not Study Sheets).
+ *   - Match an existing list only by trelloListId (re-runs) or exact name.
+ *   - If no exact-name list exists, create one. Unmatched existing lists and
+ *     their cards stay on the board, shifted after the Trello columns.
+ *
+ * Workflow:
+ *   1. Create the student board in Drillmaster if it does not exist yet.
+ *      New boards start with no lists; older boards may already have columns.
+ *   2. Run this import. It aligns lists to the Trello export (count + exact
+ *      names + order), then cards, comments, and PDFs.
+ *
+ * Safe to re-run: imported Trello lists, cards, comments, and attachments use
+ * stable ids (trello_<trelloId>). Existing Drillmaster lists/cards are kept.
  *
  * Usage:
  *   node scripts/import-trello-board.mjs --json /path/to/board.json --email student@email.com
@@ -31,27 +51,20 @@ const FIREBASE_CLIENT_ID =
 const FIREBASE_CLIENT_SECRET = "j9iVZfS8kkCEFUPaAeJV0sAi";
 const FIREBASE_TOOLS_PATH = path.join(os.homedir(), ".config/configstore/firebase-tools.json");
 
+/** Infer Drillmaster list kind from a Trello title. Titles themselves are kept as exported. */
 const LIST_KIND_BY_TITLE = {
   "session summaries": "sessions",
+  "summary & assignments": "sessions",
+  "summary and assignments": "sessions",
+  completed: "sessions",
+  "viaan homework": "sessions",
   info: "info",
+  "goggle doc for homework": "info",
+  "google docs for homwork": "info",
+  "google doc for homework": "info",
   tests: "tests",
   "study sheets": "custom",
-};
-
-/** Map Trello list titles onto the standard Drillmaster columns. */
-const LIST_DESTINATION_BY_TITLE = {
-  "session summaries": { title: "Session Summaries", kind: "sessions" },
-  "summary & assignments": { title: "Session Summaries", kind: "sessions" },
-  "summary and assignments": { title: "Session Summaries", kind: "sessions" },
-  completed: { title: "Session Summaries", kind: "sessions" },
-  files: { title: "Study Sheets", kind: "custom" },
-  "study sheets": { title: "Study Sheets", kind: "custom" },
-  info: { title: "Info", kind: "info" },
-  tests: { title: "Study Sheets", kind: "custom" },
-  "goggle doc for homework": { title: "Info", kind: "info" },
-  "google docs for homwork": { title: "Info", kind: "info" },
-  "google doc for homework": { title: "Info", kind: "info" },
-  "viaan homework": { title: "Session Summaries", kind: "sessions" },
+  files: "custom",
 };
 
 function loadDotEnv(filePath) {
@@ -104,14 +117,27 @@ function normalizeTitle(value) {
     .toLowerCase();
 }
 
-function destinationForTrelloList(name) {
-  const key = normalizeTitle(name);
+function titleForTrelloList(name) {
   return (
-    LIST_DESTINATION_BY_TITLE[key] || {
-      title: String(name || "List").replace(/\p{Extended_Pictographic}/gu, "").trim() || "List",
-      kind: LIST_KIND_BY_TITLE[key] || "custom",
-    }
+    String(name || "List")
+      .replace(/\p{Extended_Pictographic}/gu, "")
+      .replace(/\u200c/g, "")
+      .replace(/\s+/g, " ")
+      .trim() || "List"
   );
+}
+
+function exactListTitleKey(value) {
+  return titleForTrelloList(value).toLowerCase();
+}
+
+function kindForTrelloList(name) {
+  const key = normalizeTitle(name);
+  if (LIST_KIND_BY_TITLE[key]) return LIST_KIND_BY_TITLE[key];
+  if (key.includes("session")) return "sessions";
+  if (key.includes("google doc")) return "info";
+  if (key.includes("test")) return "tests";
+  return "custom";
 }
 
 function isPdfAttachment(att) {
@@ -357,39 +383,40 @@ function buildImportPlan(board) {
   }
 
   const plannedLists = lists.map((list, index) => {
-    const dest = destinationForTrelloList(list.name);
+    const title = titleForTrelloList(list.name);
+    const kind = kindForTrelloList(list.name);
     return {
-    trelloId: list.id,
-    trelloTitle: String(list.name || "List").trim() || "List",
-    title: dest.title,
-    kind: dest.kind,
-    position: index,
-    cards: (board.cards || [])
-      .filter((card) => card.idList === list.id && !card.closed)
-      .sort((a, b) => (a.pos || 0) - (b.pos || 0))
-      .map((card) => {
-        const parsed =
-          dest.kind === "sessions"
-            ? parseSessionMeta(card.desc || "")
-            : { sessionMeta: undefined, description: cleanText(card.desc || "") };
-        const attachments = [...(card.attachments || [])]
-          .filter((att) => att.isUpload && isPdfAttachment(att))
-          .sort((a, b) => (a.pos || 0) - (b.pos || 0));
-        return {
-          trelloId: card.id,
-          shortLink: card.shortLink || "",
-          title: String(card.name || "Untitled").trim() || "Untitled",
-          description: parsed.description,
-          sessionMeta: parsed.sessionMeta,
-          completed: Boolean(card.dueComplete),
-          due: card.due || null,
-          createdAt: createDates.get(card.id) || card.dateLastActivity || new Date().toISOString(),
-          updatedAt: card.dateLastActivity || createDates.get(card.id) || new Date().toISOString(),
-          comments: commentsByCard.get(card.id) || [],
-          attachments,
-        };
-      }),
-  };
+      trelloId: list.id,
+      trelloTitle: String(list.name || "List").trim() || "List",
+      title,
+      kind,
+      position: index,
+      cards: (board.cards || [])
+        .filter((card) => card.idList === list.id && !card.closed)
+        .sort((a, b) => (a.pos || 0) - (b.pos || 0))
+        .map((card) => {
+          const parsed =
+            kind === "sessions"
+              ? parseSessionMeta(card.desc || "")
+              : { sessionMeta: undefined, description: cleanText(card.desc || "") };
+          const attachments = [...(card.attachments || [])]
+            .filter((att) => att.isUpload && isPdfAttachment(att))
+            .sort((a, b) => (a.pos || 0) - (b.pos || 0));
+          return {
+            trelloId: card.id,
+            shortLink: card.shortLink || "",
+            title: String(card.name || "Untitled").trim() || "Untitled",
+            description: parsed.description,
+            sessionMeta: parsed.sessionMeta,
+            completed: Boolean(card.dueComplete),
+            due: card.due || null,
+            createdAt: createDates.get(card.id) || card.dateLastActivity || new Date().toISOString(),
+            updatedAt: card.dateLastActivity || createDates.get(card.id) || new Date().toISOString(),
+            comments: commentsByCard.get(card.id) || [],
+            attachments,
+          };
+        }),
+    };
   });
 
   return {
@@ -411,7 +438,9 @@ function findStudentBoard(boards, email) {
     String(board.data.studentEmail || "").toLowerCase().includes(needle.split("@")[0]),
   );
   if (fuzzy.length === 1) return fuzzy[0];
-  throw new Error(`No workspace board found for ${email}. Create the student board in Drillmaster first.`);
+  throw new Error(
+    `No workspace board found for ${email}. Create the student board in Drillmaster first, then run this import.`,
+  );
 }
 
 function trelloAuthHeader(key, token) {
@@ -482,11 +511,11 @@ async function main() {
   const wantPdfs = !args.skipAttachments;
 
   console.log(`Trello board: ${plan.trelloBoardName} (${plan.trelloShortUrl || plan.trelloBoardId})`);
-  console.log(`Lists to import: ${plan.lists.length}`);
+  console.log(`Trello lists (${plan.lists.length}), using exact Trello names:`);
   for (const list of plan.lists) {
     const pdfs = list.cards.reduce((n, card) => n + card.attachments.length, 0);
     const comments = list.cards.reduce((n, card) => n + card.comments.length, 0);
-    const from = list.trelloTitle && list.trelloTitle !== list.title ? ` ← ${list.trelloTitle}` : "";
+    const from = list.trelloTitle && titleForTrelloList(list.trelloTitle) !== list.title ? ` ← ${list.trelloTitle}` : "";
     console.log(`  - ${list.title}${from} (${list.kind}): ${list.cards.length} cards, ${comments} comments, ${pdfs} PDFs`);
   }
 
@@ -504,10 +533,48 @@ async function main() {
   const liveLists = existingLists.filter((item) => !item.data.deletedAt);
   const liveCards = existingCards.filter((item) => !item.data.deletedAt);
   const nativeCards = liveCards.filter((item) => !item.data.trelloCardId);
-  console.log(`Existing Drillmaster lists: ${liveLists.map((item) => item.data.title).join(", ") || "(none)"}`);
+  console.log(
+    `Existing Drillmaster lists (${liveLists.length}): ${liveLists.map((item) => item.data.title).join(", ") || "(none)"}`,
+  );
+  if (liveLists.length !== plan.lists.length) {
+    console.log(
+      `List count differs (workspace ${liveLists.length} vs Trello ${plan.lists.length}). Matching by exact name only; extra workspace lists and their cards are kept.`,
+    );
+  }
   console.log(`Existing Drillmaster cards kept: ${nativeCards.length}`);
   for (const card of nativeCards) {
     console.log(`  keep ${card.id} "${card.data.title}"`);
+  }
+
+  const usedListIds = new Set();
+  const listMatches = plan.lists.map((list) => {
+    const byTrelloId = liveLists.find(
+      (item) => item.data.trelloListId === list.trelloId && !usedListIds.has(item.id),
+    );
+    const byExactName = liveLists.find(
+      (item) =>
+        !usedListIds.has(item.id) && exactListTitleKey(item.data.title) === exactListTitleKey(list.title),
+    );
+    const match = byTrelloId || byExactName || null;
+    if (match) usedListIds.add(match.id);
+    return { list, match, how: byTrelloId ? "trelloListId" : match ? "exact name" : "create" };
+  });
+  const leftoverLists = liveLists.filter((item) => !usedListIds.has(item.id));
+
+  console.log("List alignment (Trello count and exact names):");
+  for (const row of listMatches) {
+    if (row.match) {
+      console.log(
+        `  ${row.list.title}: reuse "${row.match.data.title}" (${row.how}, id=${row.match.id})`,
+      );
+    } else {
+      console.log(`  ${row.list.title}: create (no exact-name match)`);
+    }
+  }
+  for (const leftover of leftoverLists) {
+    console.log(
+      `  keep extra workspace list "${leftover.data.title}" id=${leftover.id} (cards stay on this list)`,
+    );
   }
 
   if (args.dryRun) {
@@ -517,34 +584,50 @@ async function main() {
 
   const listIdByTrello = new Map();
   const now = new Date();
-  const nextListPosition =
-    liveLists.length > 0 ? Math.max(...liveLists.map((item) => Number(item.data.position) || 0)) + 1 : 0;
-  let extraListPosition = nextListPosition;
 
-  for (const list of plan.lists) {
-    const match =
-      liveLists.find((item) => item.data.trelloListId === list.trelloId) ||
-      liveLists.find((item) => normalizeTitle(item.data.title) === normalizeTitle(list.title));
+  for (const row of listMatches) {
+    const { list, match } = row;
     if (match) {
       await upsertDocument(accessToken, `/workspace_boards/${boardId}/lists/${match.id}`, {
+        title: list.title,
+        kind: list.kind,
+        position: list.position,
         trelloListId: list.trelloId,
         updatedAt: now,
       });
       listIdByTrello.set(list.trelloId, match.id);
+      match.data.title = list.title;
+      match.data.kind = list.kind;
+      match.data.position = list.position;
     } else {
       const newId = trelloDocId(list.trelloId);
-      const position = extraListPosition++;
       await upsertDocument(accessToken, `/workspace_boards/${boardId}/lists/${newId}`, {
         title: list.title,
         kind: list.kind,
-        position,
+        position: list.position,
         trelloListId: list.trelloId,
         createdAt: now,
         updatedAt: now,
       });
       listIdByTrello.set(list.trelloId, newId);
-      liveLists.push({ id: newId, data: { title: list.title, kind: list.kind, position } });
+      liveLists.push({
+        id: newId,
+        data: { title: list.title, kind: list.kind, position: list.position },
+      });
     }
+  }
+
+  leftoverLists.sort(
+    (a, b) => (Number(a.data.position) || 0) - (Number(b.data.position) || 0) || a.id.localeCompare(b.id),
+  );
+  for (let i = 0; i < leftoverLists.length; i++) {
+    const position = plan.lists.length + i;
+    if (Number(leftoverLists[i].data.position) === position) continue;
+    await upsertDocument(accessToken, `/workspace_boards/${boardId}/lists/${leftoverLists[i].id}`, {
+      position,
+      updatedAt: now,
+    });
+    leftoverLists[i].data.position = position;
   }
 
   const nextCardPositionByList = new Map();
