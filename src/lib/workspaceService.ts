@@ -283,11 +283,11 @@ export async function createWorkspaceCard(
   const db = getFirebaseDb();
   const existing = await fetchWorkspaceCards(boardId);
   const inList = existing.filter((c) => c.listId === listId);
-  const position = inList.length > 0 ? Math.max(...inList.map((c) => c.position)) + 1 : 0;
+  const position = inList.length > 0 ? Math.min(...inList.map((c) => c.position)) - 1 : 0;
 
   const payload: Record<string, unknown> = {
     listId,
-    title,
+    title: title.trim().slice(0, 200),
     description: "",
     position,
     completed: false,
@@ -475,7 +475,7 @@ export async function createWorkspaceList(
   const position = lists.length > 0 ? Math.max(...lists.map((l) => l.position)) + 1 : 0;
 
   const docRef = await addDoc(collection(db, BOARDS_COLLECTION, boardId, "lists"), {
-    title,
+    title: title.trim().slice(0, 200),
     kind: "custom",
     position,
     createdAt: serverTimestamp(),

@@ -161,13 +161,34 @@ service cloud.firestore {
 
       match /lists/{listId} {
         allow read: if canAccessWorkspaceBoard(boardId);
-        allow create, update: if isTutor();
+        allow create: if isTutor()
+          || (
+            workspaceBoardIdMatchesStudent(boardId)
+            && request.resource.data.title is string
+            && request.resource.data.title.size() > 0
+            && request.resource.data.title.size() <= 200
+            && request.resource.data.kind == 'custom'
+            && (request.resource.data.position is int || request.resource.data.position is float)
+            && !('deletedAt' in request.resource.data)
+          );
+        allow update: if isTutor();
         allow delete: if false;
       }
 
       match /cards/{cardId} {
         allow read: if canAccessWorkspaceBoard(boardId);
-        allow create: if isTutor();
+        allow create: if isTutor()
+          || (
+            workspaceBoardIdMatchesStudent(boardId)
+            && request.resource.data.listId is string
+            && request.resource.data.title is string
+            && request.resource.data.title.size() > 0
+            && request.resource.data.title.size() <= 200
+            && request.resource.data.description is string
+            && request.resource.data.completed == false
+            && !('deletedAt' in request.resource.data)
+            && !('assignmentId' in request.resource.data)
+          );
         allow update: if isTutor()
           || (
             canAccessWorkspaceBoard(boardId)

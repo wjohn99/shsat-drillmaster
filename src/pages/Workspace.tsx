@@ -79,6 +79,7 @@ export default function Workspace() {
           <WorkspaceBoard
             boardId={boardId}
             readOnly={isStudent}
+            canCreateListsAndCards
             showBackLink={isTutor}
           />
         </BoardCrashGuard>

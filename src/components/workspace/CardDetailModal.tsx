@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   ClipboardList,
   ExternalLink,
+  Eye,
   Link2,
   Loader2,
   MessageSquare,
@@ -32,6 +33,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -1253,7 +1259,45 @@ function AttachmentRow({
           {isLink ? <Link2 className="h-4 w-4" /> : isPdf ? "PDF" : "FILE"}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium truncate">{attachment.fileName}</p>
+          {isPdf && downloadUrl ? (
+            <HoverCard openDelay={300} closeDelay={120}>
+              <HoverCardTrigger asChild>
+                <button
+                  type="button"
+                  className="group/preview inline-flex items-center gap-1.5 max-w-full text-left"
+                >
+                  <span className="text-sm font-medium truncate group-hover/preview:underline">
+                    {attachment.fileName}
+                  </span>
+                  <Eye className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden />
+                  <span className="sr-only">Preview {attachment.fileName}</span>
+                </button>
+              </HoverCardTrigger>
+              <HoverCardContent
+                side="left"
+                align="start"
+                className="w-[360px] p-2 z-[80]"
+              >
+                <p className="text-xs font-medium mb-2">Preview</p>
+                <iframe
+                  title={`Preview ${attachment.fileName}`}
+                  src={downloadUrl}
+                  className="h-[420px] w-full rounded border bg-background"
+                />
+                <Button
+                  type="button"
+                  variant="link"
+                  size="sm"
+                  className="h-auto px-0 mt-1 text-xs"
+                  onClick={openAttachment}
+                >
+                  Open file
+                </Button>
+              </HoverCardContent>
+            </HoverCard>
+          ) : (
+            <p className="text-sm font-medium truncate">{attachment.fileName}</p>
+          )}
           <p className="text-xs text-muted-foreground">
             Added {formatTimestamp(attachment.createdAt)}
             {attachment.uploadedByName ? ` by ${attachment.uploadedByName}` : ""}

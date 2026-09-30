@@ -38,10 +38,17 @@ import { StudentRoadmapPanel } from "./StudentRoadmapPanel";
 interface WorkspaceBoardProps {
   boardId: string;
   readOnly?: boolean;
+  /** Students can add lists and cards on their own board without full tutor edit access. */
+  canCreateListsAndCards?: boolean;
   showBackLink?: boolean;
 }
 
-export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false }: WorkspaceBoardProps) {
+export function WorkspaceBoard({
+  boardId,
+  readOnly = false,
+  canCreateListsAndCards = !readOnly,
+  showBackLink = false,
+}: WorkspaceBoardProps) {
   const [board, setBoard] = useState<WorkspaceBoardType | null>(null);
   const [lists, setLists] = useState<WorkspaceList[]>([]);
   const [cards, setCards] = useState<WorkspaceCard[]>([]);
@@ -163,10 +170,18 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
   const handleAddList = async () => {
     const title = newListTitle.trim();
     if (!title) return;
-    await createWorkspaceList(boardId, title);
-    setNewListTitle("");
-    setAddingList(false);
-    await loadBoard();
+    try {
+      await createWorkspaceList(boardId, title);
+      setNewListTitle("");
+      setAddingList(false);
+      await loadBoard();
+    } catch (err) {
+      toast({
+        title: "Could not add list",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const snapshot = useMemo(() => {
@@ -299,9 +314,11 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
         {lists.length === 0 ? (
           <div className="w-72 shrink-0 rounded-xl border border-dashed border-border bg-muted/40 px-4 py-6">
             <p className="text-sm text-muted-foreground">
-              {readOnly
-                ? "No lists on this board yet."
-                : "This board starts empty. Import Trello data or add a list to begin."}
+              {canCreateListsAndCards
+                ? readOnly
+                  ? "Add a list to start organizing your notes and files."
+                  : "This board starts empty. Import Trello data or add a list to begin."
+                : "No lists on this board yet."}
             </p>
           </div>
         ) : null}
@@ -313,6 +330,7 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
             cards={cards}
             assignmentById={assignmentById}
             readOnly={readOnly}
+            canCreateListsAndCards={canCreateListsAndCards}
             onCardClick={(card) => {
               setSelectedCard(card);
               setSelectedListTitle(list.title);
@@ -328,7 +346,7 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
           />
         ))}
 
-        {!readOnly && (
+        {canCreateListsAndCards && (
           <div className="w-72 shrink-0">
             {addingList ? (
               <div className="rounded-xl bg-muted/80 border border-border p-3 space-y-2">
@@ -336,6 +354,7 @@ export function WorkspaceBoard({ boardId, readOnly = false, showBackLink = false
                   value={newListTitle}
                   onChange={(e) => setNewListTitle(e.target.value)}
                   placeholder="List title"
+                  maxLength={200}
                   autoFocus
                 />
                 <div className="flex gap-2">

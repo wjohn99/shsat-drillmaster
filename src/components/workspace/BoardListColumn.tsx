@@ -51,6 +51,7 @@ interface BoardListColumnProps {
   cards: WorkspaceCard[];
   assignmentById?: Map<string, WorksheetAssignment>;
   readOnly?: boolean;
+  canCreateListsAndCards?: boolean;
   onCardClick: (card: WorkspaceCard) => void;
   onCardsChanged: () => void;
   onListChanged: () => void;
@@ -63,6 +64,7 @@ export function BoardListColumn({
   cards,
   assignmentById,
   readOnly = false,
+  canCreateListsAndCards = !readOnly,
   onCardClick,
   onCardsChanged,
   onListChanged,
@@ -233,6 +235,12 @@ export function BoardListColumn({
       setNewTitle("");
       setAdding(false);
       onCardsChanged();
+    } catch (err) {
+      toast({
+        title: "Could not add card",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setSubmitting(false);
     }
@@ -537,12 +545,13 @@ export function BoardListColumn({
             <p className="px-2 py-6 text-center text-xs text-muted-foreground">No cards yet</p>
           ) : null}
 
-          {adding && !readOnly ? (
+          {adding && canCreateListsAndCards ? (
             <div className="space-y-2 p-1">
               <Input
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
                 placeholder="Card title"
+                maxLength={200}
                 autoFocus
                 onKeyDown={(e) => {
                   if (e.key === "Enter") void handleAddCard();
@@ -571,7 +580,7 @@ export function BoardListColumn({
           ) : null}
         </div>
 
-        {!readOnly && !adding ? (
+        {canCreateListsAndCards && !adding ? (
           <button
             type="button"
             onClick={() => setAdding(true)}
