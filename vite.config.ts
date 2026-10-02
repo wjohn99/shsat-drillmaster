@@ -3,9 +3,9 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
-  // Use base path only for production builds (GitHub Pages)
-  base: mode === "production" ? "/shsat-drillmaster/" : "/",
+export default defineConfig({
+  // Custom domain (stepprephub.com) is served at the site root.
+  base: "/",
   server: {
     host: "::",
     port: 8080,
@@ -16,4 +16,4 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-}));
+});

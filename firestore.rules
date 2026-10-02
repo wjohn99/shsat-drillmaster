@@ -227,12 +227,20 @@ service cloud.firestore {
                 && request.resource.data.sizeBytes <= 25 * 1024 * 1024)
             );
 
-          allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['deletedAt'])
-            && (
+          allow update: if (
               isTutor()
               || (
                 workspaceBoardIdMatchesStudent(boardId)
                 && resource.data.uploadedByUid == request.auth.uid
+              )
+            )
+            && (
+              request.resource.data.diff(resource.data).affectedKeys().hasOnly(['deletedAt'])
+              || (
+                request.resource.data.diff(resource.data).affectedKeys().hasOnly(['fileName'])
+                && request.resource.data.fileName is string
+                && request.resource.data.fileName.size() > 0
+                && request.resource.data.fileName.size() <= 200
               )
             );
 

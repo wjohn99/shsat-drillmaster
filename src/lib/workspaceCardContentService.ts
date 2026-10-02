@@ -480,6 +480,32 @@ export async function submitAttachmentWork(
   );
 }
 
+export async function renameCardAttachment(
+  boardId: string,
+  cardId: string,
+  attachmentId: string,
+  fileName: string,
+): Promise<string> {
+  const next = fileName.trim().slice(0, 200);
+  if (!next) {
+    throw new Error("Name is required.");
+  }
+
+  await updateDoc(
+    doc(getFirebaseDb(), BOARDS_COLLECTION, boardId, "cards", cardId, "attachments", attachmentId),
+    { fileName: next },
+  );
+
+  await logCardActivity(
+    boardId,
+    cardId,
+    "card_updated",
+    `renamed an attachment to "${next}"`,
+  );
+
+  return next;
+}
+
 /** Soft-delete — file bytes stay in Storage; metadata is hidden and recoverable. */
 export async function softDeleteCardAttachment(
   boardId: string,

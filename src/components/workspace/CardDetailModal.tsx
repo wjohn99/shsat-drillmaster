@@ -13,12 +13,14 @@ import {
   Loader2,
   MessageSquare,
   Paperclip,
+  Pencil,
   Trash2,
   Upload,
 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
@@ -33,11 +35,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -65,6 +62,7 @@ import {
   createCardComment,
   fetchCardAttachments,
   fetchLatestSubmissionsForAttachments,
+  renameCardAttachment,
   resolveAttachmentDownloadUrl,
   softDeleteCardAttachment,
   softDeleteCardComment,
@@ -1004,6 +1002,13 @@ export function CardDetailModal({
                         isStudentView={isStudentView}
                         currentUserUid={profile?.uid}
                         onRemove={() => void handleRemoveAttachment(attachment)}
+                        onRenamed={(fileName) => {
+                          setAttachments((prev) =>
+                            prev.map((item) =>
+                              item.id === attachment.id ? { ...item, fileName } : item,
+                            ),
+                          );
+                        }}
                         onSubmissionUpdated={async () => {
                           await reloadSubmissions(attachments);
                         }}
@@ -1141,6 +1146,7 @@ function AttachmentRow({
   isStudentView,
   currentUserUid,
   onRemove,
+  onRenamed,
   onSubmissionUpdated,
 }: {
   boardId: string;
@@ -1151,6 +1157,7 @@ function AttachmentRow({
   isStudentView: boolean;
   currentUserUid?: string;
   onRemove: () => void;
+  onRenamed: (fileName: string) => void;
   onSubmissionUpdated: () => Promise<void>;
 }) {
   const isLink = attachment.kind === "link";
@@ -1160,6 +1167,10 @@ function AttachmentRow({
   const [submitUrl, setSubmitUrl] = useState("");
   const [submitNotes, setSubmitNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [renaming, setRenaming] = useState(false);
+  const [renameValue, setRenameValue] = useState(attachment.fileName);
+  const [savingName, setSavingName] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -1181,6 +1192,24 @@ function AttachmentRow({
       cancelled = true;
     };
   }, [attachment.id, attachment.kind, attachment.externalUrl, attachment.storagePath]);
+
+  useEffect(() => {
+    setRenameValue(attachment.fileName);
+  }, [attachment.fileName]);
+
+  useEffect(() => {
+    if (!renaming) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      event.stopPropagation();
+      setRenameValue(attachment.fileName);
+      setRenaming(false);
+    };
+    document.addEventListener("keydown", onKeyDown, true);
+    return () => document.removeEventListener("keydown", onKeyDown, true);
+  }, [renaming, attachment.fileName]);
+
   const isPdf =
     !isLink &&
     (attachment.contentType.includes("pdf") ||
@@ -1190,6 +1219,8 @@ function AttachmentRow({
   const overdue = isAttachmentOverdue(attachment, hasSubmission);
   const isOwnAttachment = Boolean(currentUserUid && attachment.uploadedByUid === currentUserUid);
   const canRemove = isTutorView || isOwnAttachment;
+  const canRename = isTutorView || isOwnAttachment;
+  const canPreviewPdf = isPdf && Boolean(downloadUrl);
   const showHomeworkSubmit = isStudentView && !isOwnAttachment;
 
   const openHref = (url: string) => {
@@ -1243,6 +1274,38 @@ function AttachmentRow({
     }
   };
 
+  const cancelRename = () => {
+    setRenameValue(attachment.fileName);
+    setRenaming(false);
+  };
+
+  const handleRename = async () => {
+    const next = renameValue.trim();
+    if (!next) {
+      toast({ title: "Name is required", variant: "destructive" });
+      return;
+    }
+    if (next === attachment.fileName) {
+      setRenaming(false);
+      return;
+    }
+    setSavingName(true);
+    try {
+      const saved = await renameCardAttachment(boardId, cardId, attachment.id, next);
+      onRenamed(saved);
+      setRenaming(false);
+      toast({ title: "Name updated" });
+    } catch (err) {
+      toast({
+        title: "Could not rename file",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSavingName(false);
+    }
+  };
+
   return (
     <div className="rounded-lg border bg-card p-2.5 space-y-2 group">
       <div className="flex items-center gap-3">
@@ -1259,42 +1322,58 @@ function AttachmentRow({
           {isLink ? <Link2 className="h-4 w-4" /> : isPdf ? "PDF" : "FILE"}
         </div>
         <div className="min-w-0 flex-1">
-          {isPdf && downloadUrl ? (
-            <HoverCard openDelay={300} closeDelay={120}>
-              <HoverCardTrigger asChild>
-                <button
-                  type="button"
-                  className="group/preview inline-flex items-center gap-1.5 max-w-full text-left"
-                >
-                  <span className="text-sm font-medium truncate group-hover/preview:underline">
-                    {attachment.fileName}
-                  </span>
-                  <Eye className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden />
-                  <span className="sr-only">Preview {attachment.fileName}</span>
-                </button>
-              </HoverCardTrigger>
-              <HoverCardContent
-                side="left"
-                align="start"
-                className="w-[360px] p-2 z-[80]"
+          {renaming ? (
+            <div className="flex items-center gap-1.5">
+              <Input
+                value={renameValue}
+                onChange={(e) => setRenameValue(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    void handleRename();
+                  }
+                  if (e.key === "Escape") {
+                    e.preventDefault();
+                    cancelRename();
+                  }
+                }}
+                maxLength={200}
+                className="h-8 text-sm"
+                autoFocus
+                aria-label="File name"
+              />
+              <Button
+                type="button"
+                size="sm"
+                className="h-8 shrink-0"
+                disabled={savingName}
+                onClick={() => void handleRename()}
               >
-                <p className="text-xs font-medium mb-2">Preview</p>
-                <iframe
-                  title={`Preview ${attachment.fileName}`}
-                  src={downloadUrl}
-                  className="h-[420px] w-full rounded border bg-background"
-                />
-                <Button
-                  type="button"
-                  variant="link"
-                  size="sm"
-                  className="h-auto px-0 mt-1 text-xs"
-                  onClick={openAttachment}
-                >
-                  Open file
-                </Button>
-              </HoverCardContent>
-            </HoverCard>
+                {savingName ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Save"}
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-8 shrink-0"
+                disabled={savingName}
+                onClick={cancelRename}
+              >
+                Cancel
+              </Button>
+            </div>
+          ) : canPreviewPdf ? (
+            <button
+              type="button"
+              className="group/preview inline-flex items-center gap-1.5 max-w-full text-left"
+              onClick={() => setPreviewOpen(true)}
+            >
+              <span className="text-sm font-medium truncate group-hover/preview:underline">
+                {attachment.fileName}
+              </span>
+              <Eye className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden />
+              <span className="sr-only">Preview {attachment.fileName}</span>
+            </button>
           ) : (
             <p className="text-sm font-medium truncate">{attachment.fileName}</p>
           )}
@@ -1307,6 +1386,28 @@ function AttachmentRow({
           </p>
         </div>
         <div className="flex items-center gap-1 shrink-0">
+          {canPreviewPdf ? (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setPreviewOpen(true)}
+              title="Preview PDF"
+            >
+              <Eye className="h-4 w-4" />
+            </Button>
+          ) : null}
+          {canRename && !renaming ? (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setRenaming(true)}
+              title="Rename"
+            >
+              <Pencil className="h-4 w-4" />
+            </Button>
+          ) : null}
           <Button
             variant="ghost"
             size="icon"
@@ -1329,6 +1430,30 @@ function AttachmentRow({
           ) : null}
         </div>
       </div>
+
+      <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
+        <DialogContent
+          overlayClassName="z-[80]"
+          className="z-[80] flex h-[min(92dvh,900px)] w-[min(1100px,calc(100vw-1rem))] max-w-none flex-col gap-2 overflow-hidden p-3"
+        >
+          <DialogTitle className="pr-8 text-sm truncate">{attachment.fileName}</DialogTitle>
+          <DialogDescription className="sr-only">
+            PDF preview for {attachment.fileName}
+          </DialogDescription>
+          {downloadUrl ? (
+            <iframe
+              title={`Preview ${attachment.fileName}`}
+              src={downloadUrl}
+              className="min-h-0 w-full flex-1 rounded border bg-background"
+            />
+          ) : null}
+          <div className="flex justify-end">
+            <Button type="button" variant="outline" size="sm" onClick={openAttachment}>
+              Open in new tab
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {submission ? (
         <div className="rounded-md border border-emerald-500/25 bg-emerald-500/5 px-2.5 py-2 text-xs space-y-1">

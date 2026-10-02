@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * Resolves `/public` asset paths for Vite `base` (e.g. `/shsat-drillmaster/` on GitHub Pages).
+ * Resolves `/public` asset paths for Vite `base`.
  * Leaves absolute `http(s):` URLs and paths already under `BASE_URL` (e.g. Vite `?url` imports) unchanged.
  */
 export function publicUrl(path: string): string {
