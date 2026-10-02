@@ -321,7 +321,7 @@ export function BoardListColumn({
           void commitReorder();
         }}
       >
-        <div className="px-3 py-2.5 flex items-center gap-2 border-b border-border">
+        <div className="px-3 py-2.5 flex items-center gap-2 border-b border-border shrink-0">
           <h3 className="font-semibold text-sm truncate flex-1 min-w-0">{list.title}</h3>
           <span className="text-xs text-muted-foreground tabular-nums shrink-0">
             {listCards.length}
@@ -368,10 +368,55 @@ export function BoardListColumn({
           ) : null}
         </div>
 
+        {canCreateListsAndCards && !adding ? (
+          <button
+            type="button"
+            onClick={() => setAdding(true)}
+            className="mx-2 mt-2 shrink-0 flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-accent/60 transition-colors"
+          >
+            <Plus className="h-4 w-4" />
+            Add a card
+          </button>
+        ) : null}
+
+        {adding && canCreateListsAndCards ? (
+          <div className="space-y-2 p-2 pb-0 shrink-0">
+            <Input
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
+              placeholder="Card title"
+              maxLength={200}
+              autoFocus
+              onKeyDown={(e) => {
+                if (e.key === "Enter") void handleAddCard();
+                if (e.key === "Escape") {
+                  setAdding(false);
+                  setNewTitle("");
+                }
+              }}
+            />
+            <div className="flex gap-2">
+              <Button size="sm" onClick={handleAddCard} disabled={submitting || !newTitle.trim()}>
+                Add
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => {
+                  setAdding(false);
+                  setNewTitle("");
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        ) : null}
+
         <div
           ref={listBodyRef}
           className={cn(
-            "relative overflow-y-auto p-2 min-h-[120px]",
+            "relative flex-1 min-h-0 overflow-y-auto p-2",
             draggingCardId && "bg-primary/5 ring-1 ring-inset ring-primary/20 rounded-b-xl",
           )}
         >
@@ -544,52 +589,7 @@ export function BoardListColumn({
           {listCards.length === 0 ? (
             <p className="px-2 py-6 text-center text-xs text-muted-foreground">No cards yet</p>
           ) : null}
-
-          {adding && canCreateListsAndCards ? (
-            <div className="space-y-2 p-1">
-              <Input
-                value={newTitle}
-                onChange={(e) => setNewTitle(e.target.value)}
-                placeholder="Card title"
-                maxLength={200}
-                autoFocus
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") void handleAddCard();
-                  if (e.key === "Escape") {
-                    setAdding(false);
-                    setNewTitle("");
-                  }
-                }}
-              />
-              <div className="flex gap-2">
-                <Button size="sm" onClick={handleAddCard} disabled={submitting || !newTitle.trim()}>
-                  Add
-                </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => {
-                    setAdding(false);
-                    setNewTitle("");
-                  }}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          ) : null}
         </div>
-
-        {canCreateListsAndCards && !adding ? (
-          <button
-            type="button"
-            onClick={() => setAdding(true)}
-            className="m-2 mt-0 flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-accent/60 transition-colors"
-          >
-            <Plus className="h-4 w-4" />
-            Add a card
-          </button>
-        ) : null}
       </div>
 
       <Dialog
