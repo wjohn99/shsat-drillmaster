@@ -42,6 +42,15 @@ export async function uploadWorkspacePdf(
   await uploadBytes(ref(storage, storagePath), file, metadata);
 }
 
+export async function uploadWorkspacePdfAndGetUrl(
+  storagePath: string,
+  file: File,
+): Promise<string> {
+  await uploadWorkspacePdf(storagePath, file);
+  const storage = getFirebaseStorage();
+  return getDownloadURL(ref(storage, storagePath));
+}
+
 export async function deleteWorkspaceStorageObject(storagePath: string): Promise<void> {
   const storage = getFirebaseStorage();
   await deleteObject(ref(storage, storagePath));

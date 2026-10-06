@@ -19,12 +19,15 @@ import {
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase";
 import {
   buildWorkspaceAttachmentStoragePath,
+  isPdfFile,
   uploadWorkspacePdf,
+  uploadWorkspacePdfAndGetUrl,
 } from "@/lib/workspaceAttachmentStorage";
 import {
   summarizeBoardPdfUsage,
   validateLinkAttachment,
   validatePdfUpload,
+  WORKSPACE_PDF_MAX_BYTES,
 } from "@/lib/workspaceUploadLimits";
 import { fetchWorkspaceCards } from "@/lib/workspaceService";
 import type {
@@ -465,6 +468,65 @@ export async function submitAttachmentWork(
   const trimmedNotes = notes?.trim() ?? "";
 
   await addDoc(attachmentSubmissionsCollection(boardId, cardId, attachmentId), {
+    submissionUrl: url,
+    notes: trimmedNotes,
+    submittedByUid: user.uid,
+    submittedByName: user.displayName || user.email || "Student",
+    submittedAt: serverTimestamp(),
+  });
+
+  await logCardActivity(
+    boardId,
+    cardId,
+    "attachment_submitted",
+    `submitted completed work for "${attachmentLabel}"`,
+  );
+}
+
+export async function submitAttachmentPdfWork(
+  boardId: string,
+  cardId: string,
+  attachmentId: string,
+  attachmentLabel: string,
+  file: File,
+  notes?: string,
+): Promise<void> {
+  const auth = getFirebaseAuth();
+  const user = auth.currentUser;
+  if (!user) throw new Error("You must be signed in to submit work.");
+
+  if (!isPdfFile(file)) {
+    throw new Error("Only PDF files are allowed.");
+  }
+  if (file.size <= 0) {
+    throw new Error("The file is empty.");
+  }
+  if (file.size > WORKSPACE_PDF_MAX_BYTES) {
+    throw new Error(
+      `PDF must be ${Math.round(WORKSPACE_PDF_MAX_BYTES / (1024 * 1024))} MB or smaller.`,
+    );
+  }
+
+  const submissionRef = doc(attachmentSubmissionsCollection(boardId, cardId, attachmentId));
+  const displayName = file.name.replace(/\.pdf$/i, "").trim() || "Homework";
+  const storagePath = buildWorkspaceAttachmentStoragePath(
+    boardId,
+    cardId,
+    `hw_${attachmentId}_${submissionRef.id}`,
+    displayName,
+  );
+
+  let url: string;
+  try {
+    url = await uploadWorkspacePdfAndGetUrl(storagePath, file);
+  } catch (err) {
+    throw new Error(
+      err instanceof Error ? err.message : "Could not upload PDF. Check Storage is enabled.",
+    );
+  }
+
+  const trimmedNotes = notes?.trim() ?? "";
+  await setDoc(submissionRef, {
     submissionUrl: url,
     notes: trimmedNotes,
     submittedByUid: user.uid,

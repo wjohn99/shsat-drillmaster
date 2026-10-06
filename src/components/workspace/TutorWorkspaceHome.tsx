@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Loader2, UserPlus } from "lucide-react";
+import { Loader2, Pencil, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -16,6 +16,7 @@ import type { WorkspaceBoard } from "@/types/workspace";
 import { assignToStudentNavState, WORKSPACE_HOME_PATH } from "@/types/worksheetsNavigation";
 import { AddStudentBoardDialog } from "./AddStudentBoardDialog";
 import { AttentionStatusLabel } from "./AttentionStatusLabel";
+import { EditBoardDetailsDialog } from "./EditBoardDetailsDialog";
 import { StudentQuickActions } from "./StudentQuickActions";
 
 interface TutorWorkspaceHomeProps {
@@ -29,6 +30,7 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [addOpen, setAddOpen] = useState(false);
+  const [editingBoard, setEditingBoard] = useState<WorkspaceBoard | null>(null);
 
   const loadBoards = async () => {
     setLoading(true);
@@ -137,6 +139,17 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
                           aria-hidden
                         />
                         <CardTitle className="text-lg truncate">{board.studentName}</CardTitle>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7 shrink-0"
+                          title="Edit name and color"
+                          onClick={() => setEditingBoard(board)}
+                        >
+                          <Pencil className="h-3.5 w-3.5" />
+                          <span className="sr-only">Edit name and color</span>
+                        </Button>
                       </div>
                       {board.studentEmail ? (
                         <p className="text-sm text-muted-foreground truncate">{board.studentEmail}</p>
@@ -167,6 +180,22 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
         onCreated={(boardId) => {
           void loadBoards();
           onBoardCreated?.(boardId);
+        }}
+      />
+      <EditBoardDetailsDialog
+        board={editingBoard}
+        open={Boolean(editingBoard)}
+        onOpenChange={(open) => {
+          if (!open) setEditingBoard(null);
+        }}
+        onSaved={({ studentName, color }) => {
+          setBoards((prev) =>
+            prev
+              .map((row) =>
+                row.id === editingBoard?.id ? { ...row, studentName, color } : row,
+              )
+              .sort((a, b) => a.studentName.localeCompare(b.studentName)),
+          );
         }}
       />
     </div>

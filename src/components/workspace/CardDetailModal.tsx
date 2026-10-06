@@ -66,6 +66,7 @@ import {
   resolveAttachmentDownloadUrl,
   softDeleteCardAttachment,
   softDeleteCardComment,
+  submitAttachmentPdfWork,
   submitAttachmentWork,
   subscribeCardFeed,
 } from "@/lib/workspaceCardContentService";
@@ -1166,7 +1167,9 @@ function AttachmentRow({
   const [showSubmitForm, setShowSubmitForm] = useState(false);
   const [submitUrl, setSubmitUrl] = useState("");
   const [submitNotes, setSubmitNotes] = useState("");
+  const [submitPdf, setSubmitPdf] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const submitPdfInputRef = useRef<HTMLInputElement>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [renaming, setRenaming] = useState(false);
   const [renameValue, setRenameValue] = useState(attachment.fileName);
@@ -1244,22 +1247,37 @@ function AttachmentRow({
   };
 
   const handleSubmitWork = async () => {
-    if (!submitUrl.trim()) {
-      toast({ title: "Add a link to your completed work", variant: "destructive" });
+    if (!submitPdf && !submitUrl.trim()) {
+      toast({
+        title: "Add a Drive link or upload a PDF",
+        variant: "destructive",
+      });
       return;
     }
     setSubmitting(true);
     try {
-      await submitAttachmentWork(
-        boardId,
-        cardId,
-        attachment.id,
-        attachment.fileName,
-        submitUrl,
-        submitNotes,
-      );
+      if (submitPdf) {
+        await submitAttachmentPdfWork(
+          boardId,
+          cardId,
+          attachment.id,
+          attachment.fileName,
+          submitPdf,
+          submitNotes,
+        );
+      } else {
+        await submitAttachmentWork(
+          boardId,
+          cardId,
+          attachment.id,
+          attachment.fileName,
+          submitUrl,
+          submitNotes,
+        );
+      }
       setSubmitUrl("");
       setSubmitNotes("");
+      setSubmitPdf(null);
       setShowSubmitForm(false);
       await onSubmissionUpdated();
       toast({ title: "Work submitted" });
@@ -1486,6 +1504,7 @@ function AttachmentRow({
               className="w-full"
               onClick={() => {
                 setShowSubmitForm(true);
+                setSubmitPdf(null);
                 if (submission) {
                   setSubmitUrl(submission.submissionUrl);
                   setSubmitNotes(submission.notes);
@@ -1498,19 +1517,67 @@ function AttachmentRow({
           ) : (
             <div className="rounded-md border bg-muted/30 p-2.5 space-y-2">
               <p className="text-xs text-muted-foreground">
-                Paste a link to your finished homework (Google Drive, Dropbox, etc.).
+                Paste a Google Drive link, or upload a PDF of your finished homework.
               </p>
               <div className="space-y-1.5">
                 <Label htmlFor={`submit-url-${attachment.id}`} className="text-xs">
-                  Link to your work
+                  Google Drive link
                 </Label>
                 <Input
                   id={`submit-url-${attachment.id}`}
                   value={submitUrl}
-                  onChange={(e) => setSubmitUrl(e.target.value)}
+                  onChange={(e) => {
+                    setSubmitUrl(e.target.value);
+                    if (e.target.value.trim()) setSubmitPdf(null);
+                  }}
                   placeholder="https://drive.google.com/..."
+                  disabled={Boolean(submitPdf)}
                 />
               </div>
+              <div className="flex items-center gap-2">
+                <div className="h-px flex-1 bg-border" />
+                <span className="text-[11px] uppercase tracking-wide text-muted-foreground">or</span>
+                <div className="h-px flex-1 bg-border" />
+              </div>
+              <input
+                ref={submitPdfInputRef}
+                type="file"
+                accept="application/pdf,.pdf"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] ?? null;
+                  e.target.value = "";
+                  setSubmitPdf(file);
+                  if (file) setSubmitUrl("");
+                }}
+              />
+              {submitPdf ? (
+                <div className="flex items-center gap-2 rounded-md border bg-background px-2.5 py-2">
+                  <p className="min-w-0 flex-1 truncate text-xs font-medium">{submitPdf.name}</p>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 shrink-0"
+                    disabled={submitting}
+                    onClick={() => setSubmitPdf(null)}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  disabled={submitting}
+                  onClick={() => submitPdfInputRef.current?.click()}
+                >
+                  <Upload className="h-4 w-4 mr-1.5" />
+                  Upload PDF
+                </Button>
+              )}
               <div className="space-y-1.5">
                 <Label htmlFor={`submit-notes-${attachment.id}`} className="text-xs">
                   Notes (optional)
@@ -1527,7 +1594,7 @@ function AttachmentRow({
               <div className="flex gap-2">
                 <Button
                   size="sm"
-                  disabled={submitting || !submitUrl.trim()}
+                  disabled={submitting || (!submitPdf && !submitUrl.trim())}
                   onClick={() => void handleSubmitWork()}
                 >
                   {submitting ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : null}
@@ -1540,6 +1607,7 @@ function AttachmentRow({
                     setShowSubmitForm(false);
                     setSubmitUrl("");
                     setSubmitNotes("");
+                    setSubmitPdf(null);
                   }}
                 >
                   Cancel

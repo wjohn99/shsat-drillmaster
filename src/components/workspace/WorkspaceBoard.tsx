@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Loader2, Plus } from "lucide-react";
+import { ArrowLeft, Loader2, Pencil, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,6 +32,7 @@ import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type { StudentRoadmap, WorkspaceBoard as WorkspaceBoardType, WorkspaceCard, WorkspaceList } from "@/types/workspace";
 import { BoardListColumn } from "./BoardListColumn";
 import { CardDetailModal } from "./CardDetailModal";
+import { EditBoardDetailsDialog } from "./EditBoardDetailsDialog";
 import { StudentQuickActions } from "./StudentQuickActions";
 import { StudentRoadmapPanel } from "./StudentRoadmapPanel";
 
@@ -72,6 +73,7 @@ export function WorkspaceBoard({
   const [studentAssignments, setStudentAssignments] = useState<WorksheetAssignment[]>([]);
   const [studentSessions, setStudentSessions] = useState<PracticeSessionRecord[]>([]);
   const [savingRoadmap, setSavingRoadmap] = useState(false);
+  const [editDetailsOpen, setEditDetailsOpen] = useState(false);
   const roadmapUpdatedAtMsRef = useRef(0);
 
   const loadBoard = useCallback(async (opts?: { silent?: boolean }) => {
@@ -262,7 +264,22 @@ export function WorkspaceBoard({
             aria-hidden
           />
           <div className="min-w-0">
-            <h1 className="text-xl font-bold truncate">{board.studentName}</h1>
+            <div className="flex items-center gap-1.5 min-w-0">
+              <h1 className="text-xl font-bold truncate">{board.studentName}</h1>
+              {!readOnly ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 shrink-0"
+                  title="Edit name and color"
+                  onClick={() => setEditDetailsOpen(true)}
+                >
+                  <Pencil className="h-4 w-4" />
+                  <span className="sr-only">Edit name and color</span>
+                </Button>
+              ) : null}
+            </div>
             {board.studentEmail ? (
               <p className="text-sm text-muted-foreground truncate">{board.studentEmail}</p>
             ) : null}
@@ -390,6 +407,16 @@ export function WorkspaceBoard({
         onOpenChange={setCardModalOpen}
         onUpdated={() => void loadBoard({ silent: true })}
       />
+      {!readOnly ? (
+        <EditBoardDetailsDialog
+          board={board}
+          open={editDetailsOpen}
+          onOpenChange={setEditDetailsOpen}
+          onSaved={({ studentName, color }) => {
+            setBoard((prev) => (prev ? { ...prev, studentName, color } : prev));
+          }}
+        />
+      ) : null}
     </>
   );
 }

@@ -16,7 +16,7 @@ import {
 } from "firebase/firestore";
 import { fetchStudents } from "@/lib/assignmentService";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase";
-import { DEFAULT_WORKSPACE_BOARD_COLOR } from "@/lib/workspaceBoardColors";
+import { DEFAULT_WORKSPACE_BOARD_COLOR, workspaceBoardAccentColor } from "@/lib/workspaceBoardColors";
 import {
   emptyStudentRoadmap,
   mergeRoadmapForWrite,
@@ -188,6 +188,33 @@ export async function createWorkspaceBoard(
   // New boards start with no lists. Trello import may also land on boards that
   // already have lists and cards; the importer matches Trello list count and names.
   return student.uid;
+}
+
+export async function updateWorkspaceBoardDetails(
+  boardId: string,
+  patch: { studentName?: string; color?: string },
+): Promise<void> {
+  const next: Record<string, unknown> = {
+    updatedAt: serverTimestamp(),
+  };
+
+  if (patch.studentName !== undefined) {
+    const studentName = patch.studentName.trim().slice(0, 200);
+    if (!studentName) {
+      throw new Error("Board name is required.");
+    }
+    next.studentName = studentName;
+  }
+
+  if (patch.color !== undefined) {
+    next.color = workspaceBoardAccentColor(patch.color);
+  }
+
+  if (Object.keys(next).length === 1) {
+    return;
+  }
+
+  await updateDoc(doc(getFirebaseDb(), BOARDS_COLLECTION, boardId), next);
 }
 
 export async function updateWorkspaceBoardDiagnosticExtendedTime(
