@@ -11,6 +11,7 @@
     "deploy": "npm run build && node scripts/copy-docs-if-no-secrets.mjs",
     "storage:provision": "node scripts/provision-firebase-storage.mjs drillmaster-cee20 us-central1",
     "import:trello": "node scripts/import-trello-board.mjs",
+    "functions:deploy": "firebase deploy --only functions",
     "lint": "eslint .",
     "preview": "vite preview"
   },

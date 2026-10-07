@@ -26,6 +26,12 @@ export interface StudentOption {
   lastActiveAt?: Timestamp;
 }
 
+export interface TutorOption {
+  uid: string;
+  displayName: string;
+  email: string;
+}
+
 export interface TutorAssignmentRow extends WorksheetAssignment {
   studentName: string;
 }

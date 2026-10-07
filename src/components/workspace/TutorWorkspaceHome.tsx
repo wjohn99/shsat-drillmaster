@@ -5,16 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { workspaceBoardAccentColor } from "@/lib/workspaceBoardColors";
-import { fetchAssignmentsForTutor } from "@/lib/assignmentService";
+import { fetchAssignmentsForTutor, fetchTutors } from "@/lib/assignmentService";
 import { pickLatestCompletedAssignment } from "@/lib/dashboardStats";
 import { firstAndLatestDiagnostic } from "@/lib/diagnosticReport";
 import { fetchPracticeSessionsForTutor } from "@/lib/practiceSessionService";
-import { fetchAllWorkspaceBoards } from "@/lib/workspaceService";
-import type { WorksheetAssignment } from "@/types/assignment";
+import { fetchAllWorkspaceBoards, resolvedAssignedTutorUid } from "@/lib/workspaceService";
+import type { TutorOption, WorksheetAssignment } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type { WorkspaceBoard } from "@/types/workspace";
 import { assignToStudentNavState, WORKSPACE_HOME_PATH } from "@/types/worksheetsNavigation";
 import { AddStudentBoardDialog } from "./AddStudentBoardDialog";
+import { AssignedTutorSelect } from "./AssignedTutorSelect";
 import { AttentionStatusLabel } from "./AttentionStatusLabel";
 import { EditBoardDetailsDialog } from "./EditBoardDetailsDialog";
 import { StudentQuickActions } from "./StudentQuickActions";
@@ -27,6 +28,7 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
   const [boards, setBoards] = useState<WorkspaceBoard[]>([]);
   const [sessions, setSessions] = useState<PracticeSessionRecord[]>([]);
   const [assignments, setAssignments] = useState<WorksheetAssignment[]>([]);
+  const [tutors, setTutors] = useState<TutorOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [addOpen, setAddOpen] = useState(false);
@@ -36,14 +38,16 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
     setLoading(true);
     setError(null);
     try {
-      const [boardRows, sessionRows, assignmentRows] = await Promise.all([
+      const [boardRows, sessionRows, assignmentRows, tutorRows] = await Promise.all([
         fetchAllWorkspaceBoards(),
         fetchPracticeSessionsForTutor().catch(() => [] as PracticeSessionRecord[]),
         fetchAssignmentsForTutor().catch(() => [] as WorksheetAssignment[]),
+        fetchTutors().catch(() => [] as TutorOption[]),
       ]);
       setBoards(boardRows);
       setSessions(sessionRows);
       setAssignments(assignmentRows);
+      setTutors(tutorRows);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not load workspace boards.");
     } finally {
@@ -77,6 +81,30 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
     }
     return map;
   }, [assignments]);
+
+  const boardsByTutor = useMemo(() => {
+    const nameFor = (board: WorkspaceBoard) => {
+      const uid = resolvedAssignedTutorUid(board);
+      const tutor = tutors.find((row) => row.uid === uid);
+      return tutor?.displayName || board.assignedTutorName || "Unassigned";
+    };
+    const groups = new Map<string, { uid: string; name: string; boards: WorkspaceBoard[] }>();
+    for (const board of boards) {
+      const uid = resolvedAssignedTutorUid(board) || "unassigned";
+      const current = groups.get(uid);
+      if (current) {
+        current.boards.push(board);
+      } else {
+        groups.set(uid, { uid, name: nameFor(board), boards: [board] });
+      }
+    }
+    return [...groups.values()]
+      .map((group) => ({
+        ...group,
+        boards: [...group.boards].sort((a, b) => a.studentName.localeCompare(b.studentName)),
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [boards, tutors]);
 
   return (
     <div className="space-y-8">
@@ -122,55 +150,81 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
           </CardContent>
         </Card>
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {boards.map((board) => {
-            const accent = workspaceBoardAccentColor(board.color);
-            const diagnostic = firstAndLatestDiagnostic(sessions, board.studentUid);
-            return (
-              <Card key={board.id} className="h-full overflow-hidden">
-                <div className="h-1.5 w-full" style={{ backgroundColor: accent }} />
-                <CardHeader>
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0 space-y-1">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <span
-                          className="h-3 w-3 shrink-0 rounded-full"
-                          style={{ backgroundColor: accent }}
-                          aria-hidden
+        <div className="space-y-10">
+          {boardsByTutor.map((group) => (
+            <section key={group.uid} className="space-y-3">
+              <div className="flex items-baseline justify-between gap-3 px-1">
+                <h2 className="text-sm font-semibold tracking-tight">{group.name}</h2>
+                <p className="text-xs text-muted-foreground">
+                  {group.boards.length} {group.boards.length === 1 ? "board" : "boards"}
+                </p>
+              </div>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {group.boards.map((board) => {
+                  const accent = workspaceBoardAccentColor(board.color);
+                  const diagnostic = firstAndLatestDiagnostic(sessions, board.studentUid);
+                  return (
+                    <Card key={board.id} className="h-full overflow-hidden">
+                      <div className="h-1.5 w-full" style={{ backgroundColor: accent }} />
+                      <CardHeader className="pb-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0 space-y-2">
+                            <div className="flex items-center gap-2 min-w-0">
+                              <span
+                                className="h-3 w-3 shrink-0 rounded-full"
+                                style={{ backgroundColor: accent }}
+                                aria-hidden
+                              />
+                              <CardTitle className="text-lg truncate">{board.studentName}</CardTitle>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7 shrink-0"
+                                title="Edit name and color"
+                                onClick={() => setEditingBoard(board)}
+                              >
+                                <Pencil className="h-3.5 w-3.5" />
+                                <span className="sr-only">Edit name and color</span>
+                              </Button>
+                            </div>
+                            {board.studentEmail ? (
+                              <p className="text-sm text-muted-foreground truncate">
+                                {board.studentEmail}
+                              </p>
+                            ) : null}
+                            <AssignedTutorSelect
+                              board={board}
+                              tutors={tutors}
+                              compact
+                              onAssigned={(next) => {
+                                setBoards((prev) =>
+                                  prev.map((row) =>
+                                    row.id === board.id ? { ...row, ...next } : row,
+                                  ),
+                                );
+                              }}
+                            />
+                          </div>
+                          <AttentionStatusLabel status={board.roadmap.status} />
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <StudentQuickActions
+                          studentUid={board.studentUid}
+                          lastSession={lastSessionByStudent.get(board.studentUid)}
+                          lastCompletedAssignment={lastCompletedByStudent.get(board.studentUid)}
+                          firstDiagnostic={diagnostic.first}
+                          latestDiagnostic={diagnostic.latest}
+                          returnTo={WORKSPACE_HOME_PATH}
                         />
-                        <CardTitle className="text-lg truncate">{board.studentName}</CardTitle>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="h-7 w-7 shrink-0"
-                          title="Edit name and color"
-                          onClick={() => setEditingBoard(board)}
-                        >
-                          <Pencil className="h-3.5 w-3.5" />
-                          <span className="sr-only">Edit name and color</span>
-                        </Button>
-                      </div>
-                      {board.studentEmail ? (
-                        <p className="text-sm text-muted-foreground truncate">{board.studentEmail}</p>
-                      ) : null}
-                    </div>
-                    <AttentionStatusLabel status={board.roadmap.status} />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <StudentQuickActions
-                    studentUid={board.studentUid}
-                    lastSession={lastSessionByStudent.get(board.studentUid)}
-                    lastCompletedAssignment={lastCompletedByStudent.get(board.studentUid)}
-                    firstDiagnostic={diagnostic.first}
-                    latestDiagnostic={diagnostic.latest}
-                    returnTo={WORKSPACE_HOME_PATH}
-                  />
-                </CardContent>
-              </Card>
-            );
-          })}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </section>
+          ))}
         </div>
       )}
 

@@ -68,6 +68,12 @@ function parseBoard(
     studentEmail: (data.studentEmail as string) ?? "",
     color: (data.color as string | undefined) ?? undefined,
     createdByUid: data.createdByUid as string,
+    assignedTutorUid:
+      (data.assignedTutorUid as string | undefined) ||
+      (data.createdByUid as string | undefined) ||
+      undefined,
+    assignedTutorName: (data.assignedTutorName as string | undefined) ?? undefined,
+    assignedTutorEmail: (data.assignedTutorEmail as string | undefined) ?? undefined,
     createdAt: data.createdAt,
     archivedAt: data.archivedAt ?? null,
     deletedAt: data.deletedAt ?? null,
@@ -173,6 +179,9 @@ export async function createWorkspaceBoard(
       studentEmail: student.email,
       color: opts?.color ?? DEFAULT_WORKSPACE_BOARD_COLOR,
       createdByUid: tutorUid,
+      assignedTutorUid: tutorUid,
+      assignedTutorName: auth.currentUser?.displayName || auth.currentUser?.email || "Tutor",
+      assignedTutorEmail: auth.currentUser?.email || "",
       createdAt: now,
       roadmap: serializeStudentRoadmap(emptyStudentRoadmap()),
       roadmapUpdatedAt: now,
@@ -215,6 +224,29 @@ export async function updateWorkspaceBoardDetails(
   }
 
   await updateDoc(doc(getFirebaseDb(), BOARDS_COLLECTION, boardId), next);
+}
+
+export function resolvedAssignedTutorUid(board: {
+  assignedTutorUid?: string;
+  createdByUid: string;
+}): string {
+  return board.assignedTutorUid || board.createdByUid;
+}
+
+export async function updateWorkspaceBoardAssignedTutor(
+  boardId: string,
+  tutor: { uid: string; displayName: string; email: string },
+): Promise<void> {
+  const uid = tutor.uid.trim();
+  if (!uid) {
+    throw new Error("Select a tutor.");
+  }
+  await updateDoc(doc(getFirebaseDb(), BOARDS_COLLECTION, boardId), {
+    assignedTutorUid: uid,
+    assignedTutorName: (tutor.displayName.trim() || tutor.email || "Tutor").slice(0, 200),
+    assignedTutorEmail: tutor.email.trim().slice(0, 320),
+    updatedAt: serverTimestamp(),
+  });
 }
 
 export async function updateWorkspaceBoardDiagnosticExtendedTime(

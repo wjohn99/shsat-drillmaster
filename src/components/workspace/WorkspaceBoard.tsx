@@ -9,6 +9,7 @@ import { workspaceBoardAccentColor } from "@/lib/workspaceBoardColors";
 import {
   fetchAssignmentsForStudent,
   fetchAssignmentsForTutor,
+  fetchTutors,
 } from "@/lib/assignmentService";
 import { fetchDiagnosticProgress, fetchDiagnosticProgressForTutor } from "@/lib/diagnosticProgressService";
 import { pickLatestCompletedAssignment } from "@/lib/dashboardStats";
@@ -27,9 +28,10 @@ import {
 } from "@/lib/workspaceService";
 import { Timestamp } from "firebase/firestore";
 import { toast } from "@/hooks/use-toast";
-import type { WorksheetAssignment } from "@/types/assignment";
+import type { TutorOption, WorksheetAssignment } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type { StudentRoadmap, WorkspaceBoard as WorkspaceBoardType, WorkspaceCard, WorkspaceList } from "@/types/workspace";
+import { AssignedTutorSelect } from "./AssignedTutorSelect";
 import { BoardListColumn } from "./BoardListColumn";
 import { CardDetailModal } from "./CardDetailModal";
 import { EditBoardDetailsDialog } from "./EditBoardDetailsDialog";
@@ -74,6 +76,7 @@ export function WorkspaceBoard({
   const [studentSessions, setStudentSessions] = useState<PracticeSessionRecord[]>([]);
   const [savingRoadmap, setSavingRoadmap] = useState(false);
   const [editDetailsOpen, setEditDetailsOpen] = useState(false);
+  const [tutors, setTutors] = useState<TutorOption[]>([]);
   const roadmapUpdatedAtMsRef = useRef(0);
 
   const loadBoard = useCallback(async (opts?: { silent?: boolean }) => {
@@ -151,6 +154,24 @@ export function WorkspaceBoard({
   useEffect(() => {
     void loadBoard();
   }, [loadBoard]);
+
+  useEffect(() => {
+    if (readOnly) {
+      setTutors([]);
+      return;
+    }
+    let cancelled = false;
+    void fetchTutors()
+      .then((rows) => {
+        if (!cancelled) setTutors(rows);
+      })
+      .catch(() => {
+        if (!cancelled) setTutors([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [readOnly]);
 
   const handleToggleExtendedTime = async (enabled: boolean) => {
     if (!board || readOnly || savingExtendedTime) return;
@@ -284,19 +305,28 @@ export function WorkspaceBoard({
               <p className="text-sm text-muted-foreground truncate">{board.studentEmail}</p>
             ) : null}
             {!readOnly ? (
-              <div className="mt-2 flex items-center gap-2">
-                <Switch
-                  id={`diagnostic-extended-time-${board.id}`}
-                  checked={Boolean(board.diagnosticExtendedTime)}
-                  onCheckedChange={(checked) => void handleToggleExtendedTime(checked)}
-                  disabled={savingExtendedTime}
+              <div className="mt-3 space-y-3">
+                <AssignedTutorSelect
+                  board={board}
+                  tutors={tutors}
+                  onAssigned={(next) => {
+                    setBoard((prev) => (prev ? { ...prev, ...next } : prev));
+                  }}
                 />
-                <Label
-                  htmlFor={`diagnostic-extended-time-${board.id}`}
-                  className="text-xs font-normal text-muted-foreground"
-                >
-                  Extended time on diagnostic (360 min)
-                </Label>
+                <div className="flex items-center gap-2">
+                  <Switch
+                    id={`diagnostic-extended-time-${board.id}`}
+                    checked={Boolean(board.diagnosticExtendedTime)}
+                    onCheckedChange={(checked) => void handleToggleExtendedTime(checked)}
+                    disabled={savingExtendedTime}
+                  />
+                  <Label
+                    htmlFor={`diagnostic-extended-time-${board.id}`}
+                    className="text-xs font-normal text-muted-foreground"
+                  >
+                    Extended time on diagnostic (360 min)
+                  </Label>
+                </div>
               </div>
             ) : null}
           </div>

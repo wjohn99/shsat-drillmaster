@@ -53,6 +53,9 @@ service cloud.firestore {
       // Tutors loading the student roster (query must filter role == 'student').
       allow read: if isTutor() && resource.data.role == 'student';
 
+      // Tutors assigning a board owner (query must filter role == 'tutor').
+      allow read: if isTutor() && resource.data.role == 'tutor';
+
       allow create: if isOwner(userId) && isValidUserWrite(userId);
 
       allow update: if isOwner(userId)
@@ -131,6 +134,7 @@ service cloud.firestore {
       allow create: if isTutor()
         && request.resource.data.studentUid == boardId
         && request.resource.data.createdByUid == request.auth.uid
+        && request.resource.data.assignedTutorUid == request.auth.uid
         && request.resource.data.studentName is string
         && request.resource.data.studentEmail is string
         && !('deletedAt' in request.resource.data);
@@ -143,11 +147,17 @@ service cloud.firestore {
         && (!('deletedAt' in request.resource.data)
           || request.resource.data.deletedAt == resource.data.deletedAt)
         && request.resource.data.diff(resource.data).affectedKeys()
-            .hasOnly(['studentName', 'studentEmail', 'color', 'archivedAt', 'roadmap', 'roadmapUpdatedAt', 'updatedAt', 'diagnosticExtendedTime']);
+            .hasOnly(['studentName', 'studentEmail', 'color', 'archivedAt', 'roadmap', 'roadmapUpdatedAt', 'updatedAt', 'diagnosticExtendedTime', 'assignedTutorUid', 'assignedTutorName', 'assignedTutorEmail']);
 
       allow update: if isTutor()
         && request.resource.data.diff(resource.data).affectedKeys()
           .hasOnly(['diagnosticExtendedTime', 'updatedAt']);
+
+      allow update: if isTutor()
+        && request.resource.data.assignedTutorUid is string
+        && request.resource.data.assignedTutorUid.size() > 0
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['assignedTutorUid', 'assignedTutorName', 'assignedTutorEmail', 'updatedAt']);
 
       allow delete: if false;
 

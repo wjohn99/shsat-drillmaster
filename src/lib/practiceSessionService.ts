@@ -177,6 +177,7 @@ export async function resolveLinkedTutorUid(): Promise<string | null> {
 
   try {
     const board = await fetchWorkspaceBoard(uid);
+    if (board?.assignedTutorUid) return board.assignedTutorUid;
     if (board?.createdByUid) return board.createdByUid;
   } catch {
     // Board lookup is optional; fall through to assignments.

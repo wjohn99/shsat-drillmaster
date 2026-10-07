@@ -16,6 +16,7 @@ import type { Question } from "@/types";
 import type {
   AssignmentStatus,
   StudentOption,
+  TutorOption,
   WorksheetAssignment,
 } from "@/types/assignment";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase";
@@ -91,6 +92,14 @@ function mapStudentDoc(id: string, data: DocumentData): StudentOption {
   };
 }
 
+function mapTutorDoc(id: string, data: DocumentData): TutorOption {
+  return {
+    uid: id,
+    displayName: (data.displayName as string) || (data.email as string) || "Tutor",
+    email: (data.email as string) ?? "",
+  };
+}
+
 async function fetchStudentByUid(uid: string): Promise<StudentOption | null> {
   const snapshot = await getDoc(doc(getFirebaseDb(), "users", uid));
   if (!snapshot.exists()) return null;
@@ -118,6 +127,29 @@ export async function fetchStudents(): Promise<StudentOption[]> {
     return students
       .filter((s): s is StudentOption => s !== null)
       .sort((a, b) => a.displayName.localeCompare(b.displayName));
+  }
+}
+
+/** Loads tutor accounts for board assignment. Query must use role == 'tutor'. */
+export async function fetchTutors(): Promise<TutorOption[]> {
+  const db = getFirebaseDb();
+  try {
+    const tutorsQuery = query(collection(db, "users"), where("role", "==", "tutor"));
+    const snapshot = await getDocs(tutorsQuery);
+    return snapshot.docs
+      .map((tutorDoc) => mapTutorDoc(tutorDoc.id, tutorDoc.data()))
+      .sort((a, b) => a.displayName.localeCompare(b.displayName));
+  } catch {
+    const auth = getFirebaseAuth();
+    const user = auth.currentUser;
+    if (!user) return [];
+    return [
+      {
+        uid: user.uid,
+        displayName: user.displayName || user.email || "Tutor",
+        email: user.email || "",
+      },
+    ];
   }
 }
 

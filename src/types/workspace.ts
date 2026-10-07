@@ -60,6 +60,10 @@ export interface WorkspaceBoard {
   /** Hex accent (e.g. #0ea5e9) — set when the board is created. */
   color?: string;
   createdByUid: string;
+  /** Tutor who should get board notifications. Defaults to createdByUid. */
+  assignedTutorUid?: string;
+  assignedTutorName?: string;
+  assignedTutorEmail?: string;
   createdAt: Timestamp;
     archivedAt?: Timestamp | null;
   deletedAt?: Timestamp | null;
