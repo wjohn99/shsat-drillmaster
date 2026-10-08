@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Loader2, Pencil, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { workspaceBoardAccentColor } from "@/lib/workspaceBoardColors";
 import { fetchAssignmentsForTutor, fetchTutors } from "@/lib/assignmentService";
@@ -15,7 +15,6 @@ import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type { WorkspaceBoard } from "@/types/workspace";
 import { assignToStudentNavState, WORKSPACE_HOME_PATH } from "@/types/worksheetsNavigation";
 import { AddStudentBoardDialog } from "./AddStudentBoardDialog";
-import { AssignedTutorSelect } from "./AssignedTutorSelect";
 import { AttentionStatusLabel } from "./AttentionStatusLabel";
 import { EditBoardDetailsDialog } from "./EditBoardDetailsDialog";
 import { StudentQuickActions } from "./StudentQuickActions";
@@ -152,73 +151,85 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
       ) : (
         <div className="space-y-10">
           {boardsByTutor.map((group) => (
-            <section key={group.uid} className="space-y-3">
-              <div className="flex items-baseline justify-between gap-3 px-1">
-                <h2 className="text-sm font-semibold tracking-tight">{group.name}</h2>
-                <p className="text-xs text-muted-foreground">
+            <section key={group.uid} className="space-y-4">
+              <div className="flex items-end justify-between gap-3 border-b border-border/70 pb-2">
+                <h2 className="text-lg font-semibold tracking-tight">{group.name}</h2>
+                <p className="text-xs tabular-nums text-muted-foreground">
                   {group.boards.length} {group.boards.length === 1 ? "board" : "boards"}
                 </p>
               </div>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {group.boards.map((board) => {
                   const accent = workspaceBoardAccentColor(board.color);
                   const diagnostic = firstAndLatestDiagnostic(sessions, board.studentUid);
+                  const lastSession = lastSessionByStudent.get(board.studentUid);
                   return (
-                    <Card key={board.id} className="h-full overflow-hidden">
-                      <div className="h-1.5 w-full" style={{ backgroundColor: accent }} />
-                      <CardHeader className="pb-3">
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="min-w-0 space-y-2">
-                            <div className="flex items-center gap-2 min-w-0">
-                              <span
-                                className="h-3 w-3 shrink-0 rounded-full"
-                                style={{ backgroundColor: accent }}
-                                aria-hidden
-                              />
-                              <CardTitle className="text-lg truncate">{board.studentName}</CardTitle>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                className="h-7 w-7 shrink-0"
-                                title="Edit name and color"
-                                onClick={() => setEditingBoard(board)}
-                              >
-                                <Pencil className="h-3.5 w-3.5" />
-                                <span className="sr-only">Edit name and color</span>
-                              </Button>
+                    <Card
+                      key={board.id}
+                      className="group relative flex h-52 overflow-hidden transition-[transform,box-shadow] duration-300 ease-out motion-safe:hover:-translate-y-1 hover:shadow-[0_18px_36px_-16px_hsl(220_40%_16%/0.28),inset_0_1px_0_hsl(0_0%_100%/0.72)]"
+                    >
+                      <Link
+                        to={`/workspace/${board.studentUid}`}
+                        aria-label={`Open ${board.studentName}`}
+                        className="absolute inset-0 z-0 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      />
+                      <div
+                        className="w-1.5 shrink-0 transition-shadow duration-300 group-hover:shadow-[8px_0_20px_-8px_var(--board-accent)]"
+                        style={{ backgroundColor: accent, ["--board-accent" as string]: accent }}
+                        aria-hidden
+                      />
+                      <div className="flex min-w-0 flex-1 flex-col">
+                        <div
+                          className="relative px-5 pb-4 pt-4"
+                          style={{
+                            backgroundImage: `linear-gradient(180deg, ${accent}24 0%, transparent 100%)`,
+                          }}
+                        >
+                          <div
+                            className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                            style={{
+                              backgroundImage: `linear-gradient(180deg, ${accent}38 0%, transparent 72%)`,
+                            }}
+                            aria-hidden
+                          />
+                          <div className="relative flex items-start justify-between gap-3">
+                            <div className="min-w-0 space-y-1">
+                              <div className="flex items-center gap-1 min-w-0">
+                                <CardTitle className="truncate text-xl">{board.studentName}</CardTitle>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon"
+                                  className="relative z-10 h-7 w-7 shrink-0 text-muted-foreground"
+                                  title="Edit name and color"
+                                  onClick={() => setEditingBoard(board)}
+                                >
+                                  <Pencil className="h-3.5 w-3.5" />
+                                  <span className="sr-only">Edit name and color</span>
+                                </Button>
+                              </div>
+                              {board.studentEmail ? (
+                                <p className="truncate text-sm text-muted-foreground">
+                                  {board.studentEmail}
+                                </p>
+                              ) : null}
                             </div>
-                            {board.studentEmail ? (
-                              <p className="text-sm text-muted-foreground truncate">
-                                {board.studentEmail}
-                              </p>
-                            ) : null}
-                            <AssignedTutorSelect
-                              board={board}
-                              tutors={tutors}
-                              compact
-                              onAssigned={(next) => {
-                                setBoards((prev) =>
-                                  prev.map((row) =>
-                                    row.id === board.id ? { ...row, ...next } : row,
-                                  ),
-                                );
-                              }}
-                            />
+                            <AttentionStatusLabel status={board.roadmap.status} />
                           </div>
-                          <AttentionStatusLabel status={board.roadmap.status} />
                         </div>
-                      </CardHeader>
-                      <CardContent>
-                        <StudentQuickActions
-                          studentUid={board.studentUid}
-                          lastSession={lastSessionByStudent.get(board.studentUid)}
-                          lastCompletedAssignment={lastCompletedByStudent.get(board.studentUid)}
-                          firstDiagnostic={diagnostic.first}
-                          latestDiagnostic={diagnostic.latest}
-                          returnTo={WORKSPACE_HOME_PATH}
-                        />
-                      </CardContent>
+                        <div className="relative z-10 mt-auto border-t border-border/70 bg-background/50 px-5 py-3 transition-colors duration-300 group-hover:bg-background/75">
+                          <StudentQuickActions
+                            studentUid={board.studentUid}
+                            lastSession={lastSession}
+                            lastCompletedAssignment={lastCompletedByStudent.get(board.studentUid)}
+                            firstDiagnostic={diagnostic.first}
+                            latestDiagnostic={diagnostic.latest}
+                            showOpenBoard={false}
+                            showFirstDiagnostic={false}
+                            returnTo={WORKSPACE_HOME_PATH}
+                          />
+                        </div>
+                      </div>
                     </Card>
                   );
                 })}

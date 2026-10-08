@@ -95,17 +95,15 @@ const Practice = () => {
                 {SHSAT_DIAGNOSTIC_SPEC.testSeason}
               </p>
               <CardTitle className="mt-1 text-xl">{SHSAT_DIAGNOSTIC_SPEC.name}</CardTitle>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                50 ELA + 50 Math · {SHSAT_DIAGNOSTIC_SPEC.standardMinutes} minutes · choose your
-                first section · no answers until you submit. Matches Fall 2026 timing and navigation.
-              </p>
               <p className="mt-2 text-sm text-muted-foreground">
-                Form loaded: {diagnostic.elaReady}/{SHSAT_DIAGNOSTIC_SPEC.elaCount} ELA ·{" "}
-                {diagnostic.mathReady}/{SHSAT_DIAGNOSTIC_SPEC.mathCount} Math
-                {diagnostic.isComplete
-                  ? " · ready to launch"
-                  : " · preview until the full form is imported"}
+                50 ELA, 50 Math, {SHSAT_DIAGNOSTIC_SPEC.standardMinutes} minutes
               </p>
+              {diagnostic.isComplete ? null : (
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {diagnostic.elaReady}/{SHSAT_DIAGNOSTIC_SPEC.elaCount} ELA ·{" "}
+                  {diagnostic.mathReady}/{SHSAT_DIAGNOSTIC_SPEC.mathCount} Math loaded
+                </p>
+              )}
             </div>
             <div className="flex shrink-0 flex-col gap-2">
               <Button asChild>

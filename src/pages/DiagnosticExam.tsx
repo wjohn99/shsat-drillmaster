@@ -695,14 +695,9 @@ export default function DiagnosticExam() {
 
           <div className="mb-8">
             <Badge className="mb-3">{SHSAT_DIAGNOSTIC_SPEC.testSeason}</Badge>
-            <h1 className="mb-2 font-serif text-2xl font-semibold tracking-tight">
+            <h1 className="font-serif text-2xl font-semibold tracking-tight">
               {SHSAT_DIAGNOSTIC_SPEC.name}
             </h1>
-            <p className="text-muted-foreground">
-              Full-length exam matching the Fall 2026 SHSAT (2027 admissions): 50 ELA, 50 Math, and{" "}
-              {SHSAT_DIAGNOSTIC_SPEC.standardMinutes} minutes. The official test is computer-adaptive;
-              this diagnostic uses a fixed imported form with the same timing and navigation rules.
-            </p>
           </div>
 
           <Card className="mb-6">

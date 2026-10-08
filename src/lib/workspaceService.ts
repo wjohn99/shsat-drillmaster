@@ -344,10 +344,18 @@ export async function createWorkspaceCard(
   const inList = existing.filter((c) => c.listId === listId);
   const position = inList.length > 0 ? Math.min(...inList.map((c) => c.position)) - 1 : 0;
 
+  const today = new Date();
+  const sessionDate = [
+    today.getFullYear(),
+    String(today.getMonth() + 1).padStart(2, "0"),
+    String(today.getDate()).padStart(2, "0"),
+  ].join("-");
+
   const payload: Record<string, unknown> = {
     listId,
     title: title.trim().slice(0, 200),
     description: "",
+    sessionMeta: { sessionDate },
     position,
     completed: false,
     commentCount: 0,

@@ -16,6 +16,8 @@ interface StudentQuickActionsProps {
   latestDiagnostic?: PracticeSessionRecord | null;
   className?: string;
   showOpenBoard?: boolean;
+  showFirstDiagnostic?: boolean;
+  showLastResults?: boolean;
   /** When set, worksheet CTAs return here instead of staying on worksheets. */
   returnTo?: string;
 }
@@ -28,6 +30,8 @@ export function StudentQuickActions({
   latestDiagnostic,
   className,
   showOpenBoard = true,
+  showFirstDiagnostic = true,
+  showLastResults = true,
   returnTo,
 }: StudentQuickActionsProps) {
   const resultsState = viewLastResultsNavState(lastSession, lastCompletedAssignment, {
@@ -48,7 +52,7 @@ export function StudentQuickActions({
           Assign worksheet
         </Link>
       </Button>
-      {firstDiagnostic ? (
+      {showFirstDiagnostic && firstDiagnostic ? (
         <Button size="sm" variant="outline" asChild>
           <Link to="/practice/diagnostic" state={{ reviewSession: firstDiagnostic }}>
             First diagnostic
@@ -62,17 +66,19 @@ export function StudentQuickActions({
           </Link>
         </Button>
       ) : null}
-      {resultsState ? (
-        <Button size="sm" asChild>
-          <Link to="/worksheets" state={resultsState}>
+      {showLastResults ? (
+        resultsState ? (
+          <Button size="sm" asChild>
+            <Link to="/worksheets" state={resultsState}>
+              View last results
+            </Link>
+          </Button>
+        ) : (
+          <Button size="sm" disabled title="No results yet">
             View last results
-          </Link>
-        </Button>
-      ) : (
-        <Button size="sm" disabled title="No results yet">
-          View last results
-        </Button>
-      )}
+          </Button>
+        )
+      ) : null}
     </div>
   );
 }

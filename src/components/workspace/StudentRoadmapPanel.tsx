@@ -86,11 +86,14 @@ export function StudentRoadmapPanel({
   readOnly,
   saving,
   onSave,
+  settings,
 }: {
   snapshot: StudentRoadmapSnapshot;
   readOnly: boolean;
   saving?: boolean;
   onSave: (roadmap: StudentRoadmap) => Promise<void>;
+  /** Tutor controls shown inside the expanded roadmap, hidden while it is collapsed. */
+  settings?: ReactNode;
 }) {
   const [draft, setDraft] = useState<StudentRoadmap>(snapshot.roadmap);
   const [followUpDraft, setFollowUpDraft] = useState("");
@@ -216,11 +219,9 @@ export function StudentRoadmapPanel({
       : `Public School Day ${formatIsoDateLabel(SHSAT_2026_PLAN.schoolDayDate)}`;
 
   return (
-    <details className="group rounded-xl border glass-surface mb-5">
-      <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 p-4 sm:px-5 sm:py-4 [&::-webkit-details-marker]:hidden">
-        <h2 className="font-serif text-xl font-semibold tracking-tight">
-          {snapshot.board.studentName}
-        </h2>
+    <details className="group rounded-xl border glass-surface mb-3">
+      <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 px-4 py-2.5 sm:px-5 [&::-webkit-details-marker]:hidden">
+        <h2 className="text-sm font-semibold tracking-tight">Roadmap</h2>
         <div className="flex items-center gap-2 shrink-0">
           <AttentionStatusLabel status={draft.status} />
           <span className="text-xs font-medium text-muted-foreground group-open:hidden">
@@ -237,6 +238,9 @@ export function StudentRoadmapPanel({
       </summary>
 
       <div className="space-y-6 border-t border-border/60 px-4 pb-4 pt-4 sm:px-5 sm:pb-5">
+      {settings ? (
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3">{settings}</div>
+      ) : null}
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
         <ScoreTile label="Starting point" value={startingDisplay} hint={startingHint}>
           {readOnly ? undefined : (

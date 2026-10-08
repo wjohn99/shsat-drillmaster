@@ -92,12 +92,17 @@ interface CardDetailModalProps {
   boardId: string;
   card: WorkspaceCard | null;
   listTitle?: string;
-  defaultStudentName?: string;
   open: boolean;
   readOnly?: boolean;
+  /** Place the cursor in the notes field when this card opens. */
+  focusNotes?: boolean;
   onOpenChange: (open: boolean) => void;
   onUpdated: () => void;
 }
+
+/** Flat fields on the card surface. Glass shadows get clipped inside the scroll area. */
+const sessionFieldClass =
+  "min-w-0 border-input bg-background shadow-none backdrop-blur-none hover:bg-background focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0";
 
 function formatTimestamp(ts: { toDate?: () => Date } | undefined): string {
   if (!ts?.toDate) return "";
@@ -113,24 +118,81 @@ function initials(name: string): string {
     .toUpperCase();
 }
 
-function notesFromCard(
-  card: WorkspaceCard,
-  defaultStudentName?: string,
-): {
-  studentName: string;
+/** HTML date input value, or "" when the stored text is not a calendar date. */
+function toDateInputValue(value: string): string {
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) return trimmed;
+  const mdy = trimmed.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/);
+  if (mdy) {
+    const month = mdy[1].padStart(2, "0");
+    const day = mdy[2].padStart(2, "0");
+    let year = mdy[3];
+    if (year.length === 2) year = String(Number(year) >= 70 ? 1900 + Number(year) : 2000 + Number(year));
+    return `${year}-${month}-${day}`;
+  }
+  return "";
+}
+
+/** HTML time input value (HH:MM), or "" when the stored text is not a clock time. */
+function toTimeInputValue(value: string): string {
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+  if (/^\d{2}:\d{2}$/.test(trimmed)) return trimmed;
+  const match = trimmed.match(/^(\d{1,2})(?::(\d{2}))?\s*(am|pm)$/i);
+  if (!match) return "";
+  let hours = Number(match[1]);
+  const minutes = match[2] ? Number(match[2]) : 0;
+  const meridiem = match[3].toLowerCase();
+  if (hours > 12 || minutes > 59) return "";
+  if (meridiem === "pm" && hours < 12) hours += 12;
+  if (meridiem === "am" && hours === 12) hours = 0;
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+}
+
+function formatSessionDate(value: string): string {
+  const iso = toDateInputValue(value);
+  if (!iso) return value.trim();
+  const [year, month, day] = iso.split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function formatSessionTime(value: string): string {
+  const hm = toTimeInputValue(value);
+  if (!hm) return value.trim();
+  const [hours, minutes] = hm.split(":").map(Number);
+  const date = new Date();
+  date.setHours(hours, minutes, 0, 0);
+  return date.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+}
+
+function notesFromCard(card: WorkspaceCard): {
   sessionDate: string;
   startTime: string;
+  legacyDate: string;
+  legacyTime: string;
   duration: string;
   location: string;
   concepts: string;
+  storedStudentName: string;
 } {
+  const rawDate = card.sessionMeta?.sessionDate ?? "";
+  const rawTime = card.sessionMeta?.startTime ?? "";
+  const sessionDate = toDateInputValue(rawDate);
+  const startTime = toTimeInputValue(rawTime);
   return {
-    studentName: card.sessionMeta?.studentName ?? defaultStudentName ?? "",
-    sessionDate: card.sessionMeta?.sessionDate ?? "",
-    startTime: card.sessionMeta?.startTime ?? "",
+    sessionDate,
+    startTime,
+    legacyDate: sessionDate ? "" : rawDate.trim(),
+    legacyTime: startTime ? "" : rawTime.trim(),
     duration: card.sessionMeta?.duration ?? "",
     location: card.sessionMeta?.location ?? "",
     concepts: card.description ?? "",
+    storedStudentName: card.sessionMeta?.studentName?.trim() ?? "",
   };
 }
 
@@ -138,9 +200,9 @@ export function CardDetailModal({
   boardId,
   card,
   listTitle,
-  defaultStudentName,
   open,
   readOnly = false,
+  focusNotes = false,
   onOpenChange,
   onUpdated,
 }: CardDetailModalProps) {
@@ -149,16 +211,17 @@ export function CardDetailModal({
 
   const [title, setTitle] = useState("");
   const [completed, setCompleted] = useState(false);
-  const [studentName, setStudentName] = useState("");
   const [sessionDate, setSessionDate] = useState("");
   const [startTime, setStartTime] = useState("");
+  const [legacyDate, setLegacyDate] = useState("");
+  const [legacyTime, setLegacyTime] = useState("");
+  const [dateTouched, setDateTouched] = useState(false);
+  const [timeTouched, setTimeTouched] = useState(false);
   const [duration, setDuration] = useState("");
   const [location, setLocation] = useState("");
   const [concepts, setConcepts] = useState("");
-  const [savedNotes, setSavedNotes] = useState(() =>
-    card ? notesFromCard(card, defaultStudentName) : null,
-  );
-  const [editingDescription, setEditingDescription] = useState(false);
+  const [storedStudentName, setStoredStudentName] = useState("");
+  const [savedNotes, setSavedNotes] = useState(() => (card ? notesFromCard(card) : null));
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -174,6 +237,7 @@ export function CardDetailModal({
   const [pdfDisplayName, setPdfDisplayName] = useState("");
   const [uploadingPdf, setUploadingPdf] = useState(false);
   const pdfInputRef = useRef<HTMLInputElement>(null);
+  const notesRef = useRef<HTMLTextAreaElement>(null);
   const [submissionsByAttachmentId, setSubmissionsByAttachmentId] = useState<
     Record<string, WorkspaceAttachmentSubmission | null>
   >({});
@@ -188,17 +252,20 @@ export function CardDetailModal({
 
   useEffect(() => {
     if (!card) return;
-    const notes = notesFromCard(card, defaultStudentName);
+    const notes = notesFromCard(card);
     setTitle(card.title);
     setCompleted(card.completed);
-    setStudentName(notes.studentName);
     setSessionDate(notes.sessionDate);
     setStartTime(notes.startTime);
+    setLegacyDate(notes.legacyDate);
+    setLegacyTime(notes.legacyTime);
+    setDateTouched(false);
+    setTimeTouched(false);
     setDuration(notes.duration);
     setLocation(notes.location);
     setConcepts(notes.concepts);
+    setStoredStudentName(notes.storedStudentName);
     setSavedNotes(notes);
-    setEditingDescription(false);
     setShowFullDescription(false);
     setCommentDraft("");
     setAddingLink(false);
@@ -210,7 +277,13 @@ export function CardDetailModal({
     setPdfDisplayName("");
     // Only reset when opening a different card so a background refresh cannot wipe notes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [card?.id, defaultStudentName]);
+  }, [card?.id]);
+
+  useEffect(() => {
+    if (!open || !focusNotes || readOnly) return;
+    const timer = window.setTimeout(() => notesRef.current?.focus(), 0);
+    return () => window.clearTimeout(timer);
+  }, [open, focusNotes, readOnly, card?.id]);
 
   const isStudentView = profile?.role === "student";
   const isTutorView = !readOnly;
@@ -309,34 +382,36 @@ export function CardDetailModal({
     });
   };
 
-  const handleSaveDescription = async (opts?: { silent?: boolean; closeAfter?: boolean }) => {
+  const handleSaveDescription = async (opts?: { closeAfter?: boolean }) => {
     if (!card || readOnly) return false;
     setSaving(true);
     try {
+      const dateToSave = dateTouched ? sessionDate.trim() : legacyDate || sessionDate.trim();
+      const timeToSave = timeTouched ? startTime.trim() : legacyTime || startTime.trim();
       await updateWorkspaceCard(boardId, card.id, {
         // Firestore rejects `undefined` in map fields, use empty strings to clear.
         sessionMeta: {
-          studentName: studentName.trim(),
-          sessionDate: sessionDate.trim(),
-          startTime: startTime.trim(),
+          ...(storedStudentName ? { studentName: storedStudentName } : {}),
+          sessionDate: dateToSave,
+          startTime: timeToSave,
           duration: duration.trim(),
           location: location.trim(),
         },
         description: concepts,
       });
+      setLegacyDate(dateTouched ? "" : legacyDate);
+      setLegacyTime(timeTouched ? "" : legacyTime);
       setSavedNotes({
-        studentName: studentName.trim(),
         sessionDate: sessionDate.trim(),
         startTime: startTime.trim(),
+        legacyDate: dateTouched ? "" : legacyDate,
+        legacyTime: timeTouched ? "" : legacyTime,
         duration: duration.trim(),
         location: location.trim(),
         concepts,
+        storedStudentName,
       });
-      if (!opts?.silent) {
-        setEditingDescription(false);
-        toast({ title: "Description saved" });
-        onUpdated();
-      }
+      onUpdated();
       if (opts?.closeAfter) onOpenChange(false);
       return true;
     } catch (err) {
@@ -353,32 +428,12 @@ export function CardDetailModal({
 
   const descriptionDirty =
     Boolean(card) &&
-    editingDescription &&
     Boolean(savedNotes) &&
-    (studentName !== savedNotes?.studentName ||
-      sessionDate !== savedNotes?.sessionDate ||
+    (sessionDate !== savedNotes?.sessionDate ||
       startTime !== savedNotes?.startTime ||
       duration !== savedNotes?.duration ||
       location !== savedNotes?.location ||
       concepts !== savedNotes?.concepts);
-
-  useEffect(() => {
-    if (readOnly || !descriptionDirty) return;
-    const timer = window.setTimeout(() => {
-      void handleSaveDescription({ silent: true });
-    }, 1500);
-    return () => window.clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    readOnly,
-    descriptionDirty,
-    studentName,
-    sessionDate,
-    startTime,
-    duration,
-    location,
-    concepts,
-  ]);
 
   const handleDialogOpenChange = (next: boolean) => {
     if (next) {
@@ -389,7 +444,7 @@ export function CardDetailModal({
       onOpenChange(false);
       return;
     }
-    void handleSaveDescription({ silent: true, closeAfter: true });
+    void handleSaveDescription({ closeAfter: true });
   };
 
   const handleSaveTitle = async () => {
@@ -550,26 +605,26 @@ export function CardDetailModal({
     }
   };
 
-  const descriptionPreview = buildDescriptionPreview(
-    studentName,
-    sessionDate,
-    startTime,
-    duration,
-    location,
-    concepts,
-  );
-  const descriptionLong = descriptionPreview.length > 480;
-  const descriptionShown =
-    showFullDescription || !descriptionLong
-      ? descriptionPreview
-      : `${descriptionPreview.slice(0, 480)}…`;
+  const dateLabel = formatSessionDate(legacyDate || sessionDate);
+  const timeLabel = formatSessionTime(legacyTime || startTime);
+  const whenLine = [dateLabel, timeLabel, duration.trim(), location.trim()].filter(Boolean).join(" · ");
+  const summaryLong = concepts.trim().length > 480;
+  const summaryShown =
+    showFullDescription || !summaryLong ? concepts.trim() : `${concepts.trim().slice(0, 480)}…`;
 
   if (!card) return null;
 
   return (
     <>
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
-      <DialogContent className="glass-modal max-w-6xl w-[96vw] h-[min(92vh,900px)] p-0 gap-0 flex flex-col overflow-hidden bg-card text-card-foreground [&>button]:z-20">
+      <DialogContent
+        className="glass-modal max-w-6xl w-[96vw] h-[min(92vh,900px)] p-0 gap-0 flex flex-col overflow-hidden bg-card text-card-foreground [&>button]:z-20"
+        onOpenAutoFocus={(event) => {
+          if (!focusNotes || readOnly) return;
+          event.preventDefault();
+          notesRef.current?.focus();
+        }}
+      >
         <DialogTitle className="sr-only">{card.title}</DialogTitle>
 
         <div className="flex flex-1 min-h-0 flex-col lg:flex-row">
@@ -624,103 +679,21 @@ export function CardDetailModal({
             </div>
 
             <ScrollArea className="flex-1 px-6 pb-6">
-              {/* Description */}
               <section className="mb-8">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2 text-sm font-semibold">
-                    <AlignLeft className="h-4 w-4" />
-                    Description
-                  </div>
-                  {!readOnly && !editingDescription ? (
-                    <Button variant="ghost" size="sm" onClick={() => setEditingDescription(true)}>
-                      Edit
-                    </Button>
-                  ) : null}
+                <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
+                  <AlignLeft className="h-4 w-4" />
+                  Session notes
                 </div>
 
-                {editingDescription && !readOnly ? (
-                  <div className="space-y-3 rounded-lg border bg-muted/30 p-4">
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      <div className="space-y-1.5 sm:col-span-2">
-                        <Label>Name</Label>
-                        <Input value={studentName} onChange={(e) => setStudentName(e.target.value)} />
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label>Date</Label>
-                        <Input
-                          value={sessionDate}
-                          onChange={(e) => setSessionDate(e.target.value)}
-                          placeholder="MM/DD/YY"
-                        />
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label>Start time</Label>
-                        <Input
-                          value={startTime}
-                          onChange={(e) => setStartTime(e.target.value)}
-                          placeholder="6:40 pm"
-                        />
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label>Duration</Label>
-                        <Input
-                          value={duration}
-                          onChange={(e) => setDuration(e.target.value)}
-                          placeholder="1 hour"
-                        />
-                      </div>
-                      <div className="space-y-1.5 sm:col-span-2">
-                        <Label>Location</Label>
-                        <Input
-                          value={location}
-                          onChange={(e) => setLocation(e.target.value)}
-                          placeholder="Google Meet"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label className="font-semibold">Session Summary</Label>
-                      <Textarea
-                        value={concepts}
-                        onChange={(e) => setConcepts(e.target.value)}
-                        rows={10}
-                        placeholder="Summary of what was covered in this session…"
-                        className="font-mono text-sm"
-                      />
-                    </div>
-                    <div className="flex gap-2">
-                      <Button onClick={() => void handleSaveDescription()} disabled={saving}>
-                        {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
-                        Save
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        onClick={() => {
-                          setEditingDescription(false);
-                          setStudentName(savedNotes?.studentName ?? "");
-                          setSessionDate(savedNotes?.sessionDate ?? "");
-                          setStartTime(savedNotes?.startTime ?? "");
-                          setDuration(savedNotes?.duration ?? "");
-                          setLocation(savedNotes?.location ?? "");
-                          setConcepts(savedNotes?.concepts ?? "");
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
+                {readOnly ? (
                   <div className="text-sm space-y-3">
-                    {descriptionPreview ? (
-                      <pre className="whitespace-pre-wrap font-sans text-foreground/90 leading-relaxed">
-                        {descriptionShown}
-                      </pre>
+                    {whenLine ? <p className="text-muted-foreground">{whenLine}</p> : null}
+                    {summaryShown ? (
+                      <p className="whitespace-pre-wrap text-foreground/90 leading-relaxed">{summaryShown}</p>
                     ) : (
-                      <p className="text-muted-foreground italic">
-                        {readOnly ? "No description yet." : "No description yet. Click Edit to add session notes."}
-                      </p>
+                      <p className="text-muted-foreground">No session notes yet.</p>
                     )}
-                    {descriptionLong && !editingDescription ? (
+                    {summaryLong ? (
                       <Button
                         variant="outline"
                         size="sm"
@@ -740,6 +713,85 @@ export function CardDetailModal({
                         )}
                       </Button>
                     ) : null}
+                  </div>
+                ) : (
+                  <div className="space-y-3 px-1">
+                    <div className="grid sm:grid-cols-2 gap-x-4 gap-y-3">
+                      <div className="min-w-0 space-y-1.5">
+                        <Label htmlFor="session-date">Date</Label>
+                        <Input
+                          id="session-date"
+                          type="date"
+                          value={sessionDate}
+                          onChange={(e) => {
+                            setDateTouched(true);
+                            setLegacyDate("");
+                            setSessionDate(e.target.value);
+                          }}
+                          className={sessionFieldClass}
+                        />
+                        {legacyDate ? (
+                          <p className="text-xs text-muted-foreground">Saved as {legacyDate}</p>
+                        ) : null}
+                      </div>
+                      <div className="min-w-0 space-y-1.5">
+                        <Label htmlFor="session-time">Start time</Label>
+                        <Input
+                          id="session-time"
+                          type="time"
+                          value={startTime}
+                          onChange={(e) => {
+                            setTimeTouched(true);
+                            setLegacyTime("");
+                            setStartTime(e.target.value);
+                          }}
+                          className={sessionFieldClass}
+                        />
+                        {legacyTime ? (
+                          <p className="text-xs text-muted-foreground">Saved as {legacyTime}</p>
+                        ) : null}
+                      </div>
+                      <div className="min-w-0 space-y-1.5">
+                        <Label htmlFor="session-duration">Duration</Label>
+                        <Input
+                          id="session-duration"
+                          value={duration}
+                          onChange={(e) => setDuration(e.target.value)}
+                          placeholder="1 hour"
+                          className={sessionFieldClass}
+                        />
+                      </div>
+                      <div className="min-w-0 space-y-1.5">
+                        <Label htmlFor="session-location">Location</Label>
+                        <Input
+                          id="session-location"
+                          value={location}
+                          onChange={(e) => setLocation(e.target.value)}
+                          placeholder="Google Meet"
+                          className={sessionFieldClass}
+                        />
+                      </div>
+                    </div>
+                    <Textarea
+                      ref={notesRef}
+                      value={concepts}
+                      onChange={(e) => setConcepts(e.target.value)}
+                      rows={8}
+                      placeholder="What you covered"
+                      aria-label="Session notes"
+                      className={sessionFieldClass}
+                    />
+                    <div className="flex justify-end">
+                      <Button
+                        type="button"
+                        size="sm"
+                        onClick={() => void handleSaveDescription()}
+                        disabled={saving || !descriptionDirty}
+                      >
+                        {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
+                        Save
+                      </Button>
+                    </div>
                   </div>
                 )}
               </section>
@@ -1114,28 +1166,6 @@ export function CardDetailModal({
     </AlertDialog>
     </>
   );
-}
-
-function buildDescriptionPreview(
-  studentName: string,
-  sessionDate: string,
-  startTime: string,
-  duration: string,
-  location: string,
-  concepts: string,
-): string {
-  const lines: string[] = [];
-  if (studentName) lines.push(`Name: ${studentName}`);
-  if (sessionDate) lines.push(`Date: ${sessionDate}`);
-  if (startTime) lines.push(`Start Time: ${startTime}`);
-  if (duration) lines.push(`Duration: ${duration}`);
-  if (location) lines.push(`Location: ${location}`);
-  if (lines.length > 0 && concepts.trim()) lines.push("");
-  if (concepts.trim()) {
-    lines.push("Session Summary");
-    lines.push(concepts.trim());
-  }
-  return lines.join("\n");
 }
 
 function AttachmentRow({

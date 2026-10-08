@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Timestamp } from "firebase/firestore";
 import { Check, GripVertical, MessageSquare, MoreHorizontal, Paperclip, Pencil, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -45,14 +46,24 @@ import {
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 
+function formatCardSessionDate(value?: string): string {
+  if (!value) return "";
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value.trim());
+  if (!match) return value.trim();
+  const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+  if (Number.isNaN(date.getTime())) return value.trim();
+  return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+}
+
 interface BoardListColumnProps {
   boardId: string;
   list: WorkspaceList;
+  accentColor?: string;
   cards: WorkspaceCard[];
   assignmentById?: Map<string, WorksheetAssignment>;
   readOnly?: boolean;
   canCreateListsAndCards?: boolean;
-  onCardClick: (card: WorkspaceCard) => void;
+  onCardClick: (card: WorkspaceCard, opts?: { focusNotes?: boolean }) => void;
   onCardsChanged: () => void;
   onListChanged: () => void;
   onListRenamed?: (listId: string, title: string) => void;
@@ -61,6 +72,7 @@ interface BoardListColumnProps {
 export function BoardListColumn({
   boardId,
   list,
+  accentColor,
   cards,
   assignmentById,
   readOnly = false,
@@ -231,9 +243,32 @@ export function BoardListColumn({
     if (!title) return;
     setSubmitting(true);
     try {
-      await createWorkspaceCard(boardId, list.id, title);
+      const cardId = await createWorkspaceCard(boardId, list.id, title);
+      const today = new Date();
+      const sessionDate = [
+        today.getFullYear(),
+        String(today.getMonth() + 1).padStart(2, "0"),
+        String(today.getDate()).padStart(2, "0"),
+      ].join("-");
       setNewTitle("");
       setAdding(false);
+      onCardClick(
+        {
+          id: cardId,
+          boardId,
+          listId: list.id,
+          title,
+          description: "",
+          sessionMeta: { sessionDate },
+          position: 0,
+          completed: false,
+          commentCount: 0,
+          attachmentCount: 0,
+          createdAt: Timestamp.now(),
+          updatedAt: Timestamp.now(),
+        },
+        { focusNotes: true },
+      );
       onCardsChanged();
     } catch (err) {
       toast({
@@ -309,7 +344,7 @@ export function BoardListColumn({
   return (
     <>
       <div
-        className="w-72 shrink-0 flex flex-col max-h-[calc(100vh-10rem)] rounded-xl bg-muted/80 border border-border"
+        className="glass-surface flex w-72 max-h-[calc(100vh-10rem)] shrink-0 flex-col overflow-hidden rounded-xl border"
         onDragOver={(e) => {
           if (readOnly || !draggingCardIdRef.current) return;
           e.preventDefault();
@@ -321,8 +356,11 @@ export function BoardListColumn({
           void commitReorder();
         }}
       >
-        <div className="px-3 py-2.5 flex items-center gap-2 border-b border-border shrink-0">
-          <h3 className="font-semibold text-sm truncate flex-1 min-w-0">{list.title}</h3>
+        {accentColor ? (
+          <div className="h-1.5 w-full shrink-0" style={{ backgroundColor: accentColor }} aria-hidden />
+        ) : null}
+        <div className="flex shrink-0 items-center gap-2 border-b border-border/70 px-3 py-3">
+          <h3 className="min-w-0 flex-1 truncate text-base font-semibold">{list.title}</h3>
           <span className="text-xs text-muted-foreground tabular-nums shrink-0">
             {listCards.length}
           </span>
@@ -434,6 +472,7 @@ export function BoardListColumn({
 
           {listCards.map((card, index) => {
             const isDraggingThis = draggingCardId === card.id;
+            const sessionWhen = formatCardSessionDate(card.sessionMeta?.sessionDate);
 
             return (
               <div key={card.id} className="mb-2 last:mb-0">
@@ -470,8 +509,8 @@ export function BoardListColumn({
                       type="button"
                       onClick={() => onCardClick(card)}
                       className={cn(
-                        "relative flex-1 min-w-0 text-left rounded-lg px-3 py-2.5 text-sm shadow-sm transition-colors",
-                        "bg-card border border-border hover:bg-accent/50",
+                        "relative min-w-0 flex-1 rounded-xl border border-border bg-card px-3.5 py-3 text-left text-sm transition-colors",
+                        "hover:border-foreground/20",
                         card.completed && "opacity-80",
                       )}
                     >
@@ -521,6 +560,11 @@ export function BoardListColumn({
                           {card.title}
                         </span>
                       </div>
+                      {sessionWhen ? (
+                        <p className="mt-1 pl-6 text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                          {sessionWhen}
+                        </p>
+                      ) : null}
                       {card.assignmentId ? (
                         <BoardCardAssignmentStatus
                           assignment={assignmentById?.get(card.assignmentId) ?? null}

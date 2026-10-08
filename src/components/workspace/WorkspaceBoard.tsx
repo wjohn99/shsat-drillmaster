@@ -59,6 +59,7 @@ export function WorkspaceBoard({
   const [error, setError] = useState<string | null>(null);
   const [selectedCard, setSelectedCard] = useState<WorkspaceCard | null>(null);
   const [cardModalOpen, setCardModalOpen] = useState(false);
+  const [focusCardNotes, setFocusCardNotes] = useState(false);
   const [selectedListTitle, setSelectedListTitle] = useState<string | undefined>();
   const [addingList, setAddingList] = useState(false);
   const [newListTitle, setNewListTitle] = useState("");
@@ -269,46 +270,70 @@ export function WorkspaceBoard({
 
   return (
     <>
-      <div className="flex items-start justify-between gap-4 mb-4 px-1 flex-wrap">
-        <div className="flex items-center gap-3 min-w-0">
-          {showBackLink ? (
-            <Button variant="ghost" size="sm" className="shrink-0" asChild>
-              <Link to="/workspace">
-                <ArrowLeft className="h-4 w-4 mr-1" />
-                Workspace
-              </Link>
-            </Button>
-          ) : null}
-          <div
-            className="h-9 w-1.5 shrink-0 rounded-full"
-            style={{ backgroundColor: boardAccent }}
-            aria-hidden
-          />
-          <div className="min-w-0">
-            <div className="flex items-center gap-1.5 min-w-0">
-              <h1 className="text-xl font-bold truncate">{board.studentName}</h1>
-              {!readOnly ? (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 shrink-0"
-                  title="Edit name and color"
-                  onClick={() => setEditDetailsOpen(true)}
-                >
-                  <Pencil className="h-4 w-4" />
-                  <span className="sr-only">Edit name and color</span>
+      <div className="mb-4 overflow-hidden rounded-xl border glass-surface">
+        <div className="flex min-w-0">
+          <div className="w-1.5 shrink-0" style={{ backgroundColor: boardAccent }} aria-hidden />
+          <div className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-4 px-5 py-4">
+            <div className="flex min-w-0 items-center gap-3">
+              {showBackLink ? (
+                <Button variant="ghost" size="sm" className="shrink-0" asChild>
+                  <Link to="/workspace">
+                    <ArrowLeft className="h-4 w-4 mr-1" />
+                    Workspace
+                  </Link>
                 </Button>
               ) : null}
+              <div className="min-w-0">
+                <div className="flex min-w-0 items-center gap-1.5">
+                  <h1 className="truncate text-2xl font-semibold tracking-tight">{board.studentName}</h1>
+                  {!readOnly ? (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 shrink-0"
+                      title="Edit name and color"
+                      onClick={() => setEditDetailsOpen(true)}
+                    >
+                      <Pencil className="h-4 w-4" />
+                      <span className="sr-only">Edit name and color</span>
+                    </Button>
+                  ) : null}
+                </div>
+                {board.studentEmail ? (
+                  <p className="truncate text-sm text-muted-foreground">{board.studentEmail}</p>
+                ) : null}
+              </div>
             </div>
-            {board.studentEmail ? (
-              <p className="text-sm text-muted-foreground truncate">{board.studentEmail}</p>
-            ) : null}
             {!readOnly ? (
-              <div className="mt-3 space-y-3">
+              <StudentQuickActions
+                className="shrink-0 justify-end"
+                studentUid={board.studentUid}
+                lastSession={lastSession}
+                lastCompletedAssignment={lastCompletedAssignment}
+                firstDiagnostic={firstDiagnostic}
+                latestDiagnostic={latestDiagnostic}
+                showOpenBoard={false}
+                returnTo={`/workspace/${board.studentUid}`}
+              />
+            ) : null}
+          </div>
+        </div>
+      </div>
+
+      {snapshot ? (
+        <StudentRoadmapPanel
+          snapshot={snapshot}
+          readOnly={readOnly}
+          saving={savingRoadmap}
+          onSave={handleSaveRoadmap}
+          settings={
+            readOnly ? undefined : (
+              <>
                 <AssignedTutorSelect
                   board={board}
                   tutors={tutors}
+                  compact
                   onAssigned={(next) => {
                     setBoard((prev) => (prev ? { ...prev, ...next } : prev));
                   }}
@@ -327,30 +352,9 @@ export function WorkspaceBoard({
                     Extended time on diagnostic (360 min)
                   </Label>
                 </div>
-              </div>
-            ) : null}
-          </div>
-        </div>
-        {!readOnly ? (
-          <StudentQuickActions
-            className="shrink-0 justify-end"
-            studentUid={board.studentUid}
-            lastSession={lastSession}
-            lastCompletedAssignment={lastCompletedAssignment}
-            firstDiagnostic={firstDiagnostic}
-            latestDiagnostic={latestDiagnostic}
-            showOpenBoard={false}
-            returnTo={`/workspace/${board.studentUid}`}
-          />
-        ) : null}
-      </div>
-
-      {snapshot ? (
-        <StudentRoadmapPanel
-          snapshot={snapshot}
-          readOnly={readOnly}
-          saving={savingRoadmap}
-          onSave={handleSaveRoadmap}
+              </>
+            )
+          }
         />
       ) : null}
 
@@ -374,11 +378,13 @@ export function WorkspaceBoard({
             key={list.id}
             boardId={boardId}
             list={list}
+            accentColor={boardAccent}
             cards={cards}
             assignmentById={assignmentById}
             readOnly={readOnly}
             canCreateListsAndCards={canCreateListsAndCards}
-            onCardClick={(card) => {
+            onCardClick={(card, opts) => {
+              setFocusCardNotes(Boolean(opts?.focusNotes));
               setSelectedCard(card);
               setSelectedListTitle(list.title);
               setCardModalOpen(true);
@@ -396,7 +402,7 @@ export function WorkspaceBoard({
         {canCreateListsAndCards && (
           <div className="w-72 shrink-0">
             {addingList ? (
-              <div className="rounded-xl bg-muted/80 border border-border p-3 space-y-2">
+              <div className="space-y-2 rounded-xl border glass-surface p-3">
                 <Input
                   value={newListTitle}
                   onChange={(e) => setNewListTitle(e.target.value)}
@@ -417,7 +423,7 @@ export function WorkspaceBoard({
               <button
                 type="button"
                 onClick={() => setAddingList(true)}
-                className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground bg-muted/80 border border-border hover:bg-accent/50 transition-colors w-full"
+                className="flex w-full items-center gap-2 rounded-xl border border-dashed px-4 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent/40"
               >
                 <Plus className="h-4 w-4" />
                 {lists.length === 0 ? "Add a list" : "Add another list"}
@@ -431,10 +437,13 @@ export function WorkspaceBoard({
         boardId={boardId}
         card={selectedCard}
         listTitle={selectedListTitle}
-        defaultStudentName={board?.studentName}
         open={cardModalOpen}
         readOnly={readOnly}
-        onOpenChange={setCardModalOpen}
+        focusNotes={focusCardNotes}
+        onOpenChange={(next) => {
+          setCardModalOpen(next);
+          if (!next) setFocusCardNotes(false);
+        }}
         onUpdated={() => void loadBoard({ silent: true })}
       />
       {!readOnly ? (
