@@ -78,6 +78,12 @@ function parseBoard(
     archivedAt: data.archivedAt ?? null,
     deletedAt: data.deletedAt ?? null,
     diagnosticExtendedTime: Boolean(data.diagnosticExtendedTime),
+    diagnosticAssigned: Boolean(
+      data.diagnosticAssigned ||
+        (data.roadmap &&
+          typeof data.roadmap === "object" &&
+          (data.roadmap as { diagnosticAssigned?: unknown }).diagnosticAssigned),
+    ),
     roadmap: parseStudentRoadmap(data.roadmap),
     roadmapUpdatedAt: data.roadmapUpdatedAt ?? null,
   };
@@ -257,6 +263,31 @@ export async function updateWorkspaceBoardDiagnosticExtendedTime(
   await updateDoc(doc(db, BOARDS_COLLECTION, boardId), {
     diagnosticExtendedTime: enabled,
     updatedAt: serverTimestamp(),
+  });
+}
+
+export async function updateWorkspaceBoardDiagnosticAssigned(
+  boardId: string,
+  assigned: boolean,
+): Promise<void> {
+  const db = getFirebaseDb();
+  const boardRef = doc(db, BOARDS_COLLECTION, boardId);
+  // Stored on the roadmap map. Live rules already allow roadmap writes, and a
+  // top-level diagnosticAssigned field is rejected until those rules are deployed.
+  await runTransaction(db, async (tx) => {
+    const snap = await tx.get(boardRef);
+    if (!snap.exists()) throw new Error("Workspace board not found.");
+    const data = snap.data();
+    if (data.deletedAt) throw new Error("This workspace board is no longer active.");
+    const roadmap =
+      data.roadmap && typeof data.roadmap === "object"
+        ? { ...(data.roadmap as Record<string, unknown>) }
+        : {};
+    roadmap.diagnosticAssigned = assigned;
+    tx.update(boardRef, {
+      roadmap,
+      updatedAt: Timestamp.now(),
+    });
   });
 }
 

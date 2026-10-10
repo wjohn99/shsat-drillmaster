@@ -7,7 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Clock, ArrowRight } from "lucide-react";
 import { SHSAT_DIAGNOSTIC_SPEC } from "@/data/shsatDiagnosticForm";
+import { DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE } from "@/lib/diagnosticAccess";
+import { fetchDiagnosticProgress } from "@/lib/diagnosticProgressService";
 import { assembleDiagnosticExam } from "@/lib/shsatDiagnostic";
+import { fetchWorkspaceBoard } from "@/lib/workspaceService";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchPracticeSessionsForStudent } from "@/lib/practiceSessionService";
 import { assignToStudentNavState } from "@/types/worksheetsNavigation";
@@ -18,6 +21,9 @@ const Practice = () => {
   const isTutor = profile?.role === "tutor";
   const diagnostic = useMemo(() => assembleDiagnosticExam(), []);
   const [diagnosticSessions, setDiagnosticSessions] = useState<PracticeSessionRecord[]>([]);
+  const [diagnosticAssigned, setDiagnosticAssigned] = useState(isTutor);
+  const [diagnosticInProgress, setDiagnosticInProgress] = useState(false);
+  const [diagnosticAccessLoaded, setDiagnosticAccessLoaded] = useState(isTutor);
 
   useEffect(() => {
     if (!profile) return;
@@ -33,6 +39,31 @@ const Practice = () => {
       cancelled = true;
     };
   }, [profile]);
+
+  useEffect(() => {
+    if (!profile) return;
+    if (profile.role === "tutor") {
+      setDiagnosticAssigned(true);
+      setDiagnosticAccessLoaded(true);
+      return;
+    }
+    let cancelled = false;
+    setDiagnosticAccessLoaded(false);
+    void Promise.all([
+      fetchWorkspaceBoard(profile.uid).catch(() => null),
+      fetchDiagnosticProgress(profile.uid).catch(() => null),
+    ]).then(([board, progress]) => {
+      if (cancelled) return;
+      setDiagnosticAssigned(Boolean(board?.diagnosticAssigned));
+      setDiagnosticInProgress(Boolean(progress));
+      setDiagnosticAccessLoaded(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [profile]);
+
+  const canStartDiagnostic = isTutor || diagnosticAssigned;
 
   const practiceTypes = [
     {
@@ -76,7 +107,11 @@ const Practice = () => {
       <div className="container py-8">
         <PageHeader
           title="Practice"
-          description="Start with a full SHSAT diagnostic, then drill weaker skills in shorter sessions."
+          description={
+            isTutor
+              ? "Start with a full SHSAT diagnostic, then drill weaker skills in shorter sessions."
+              : "The SHSAT diagnostic stays listed here. Your tutor assigns it before you can start. Skill practice below is open anytime."
+          }
           actions={
             isTutor ? (
               <Button asChild>
@@ -106,12 +141,38 @@ const Practice = () => {
               )}
             </div>
             <div className="flex shrink-0 flex-col gap-2">
-              <Button asChild>
-                <Link to="/practice/diagnostic">
+              {canStartDiagnostic ? (
+                <Button asChild>
+                  <Link to="/practice/diagnostic">
+                    Open diagnostic
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              ) : diagnosticInProgress ? (
+                <Button asChild>
+                  <Link to="/practice/diagnostic">
+                    Resume diagnostic
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              ) : (
+                <Button disabled>
                   Open diagnostic
                   <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+                </Button>
+              )}
+              {isTutor ? (
+                <p className="max-w-xs text-sm text-muted-foreground">
+                  Students can see this here, and can start it only after you assign it on their
+                  workspace board.
+                </p>
+              ) : diagnosticAccessLoaded && !diagnosticAssigned ? (
+                <p className="max-w-xs text-sm text-muted-foreground">
+                  {diagnosticInProgress
+                    ? "You can resume this sitting. Your tutor has to assign the diagnostic before you can start a new one."
+                    : DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE}
+                </p>
+              ) : null}
               {diagnosticSessions.length === 1 ? (
                 <Button variant="outline" asChild>
                   <Link to="/practice/diagnostic" state={{ reviewSession: diagnosticSessions[0] }}>

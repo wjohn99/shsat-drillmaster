@@ -19,15 +19,15 @@ import {
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase";
 import {
   buildWorkspaceAttachmentStoragePath,
-  isPdfFile,
-  uploadWorkspacePdf,
-  uploadWorkspacePdfAndGetUrl,
+  uploadWorkspaceFile,
+  uploadWorkspaceFileAndGetUrl,
 } from "@/lib/workspaceAttachmentStorage";
 import {
   summarizeBoardPdfUsage,
   validateLinkAttachment,
   validatePdfUpload,
   WORKSPACE_PDF_MAX_BYTES,
+  workspaceFileContentType,
 } from "@/lib/workspaceUploadLimits";
 import { fetchWorkspaceCards } from "@/lib/workspaceService";
 import type {
@@ -362,10 +362,14 @@ export async function addCardPdfAttachment(
   if (!uploadCheck.ok) {
     throw new Error(uploadCheck.message);
   }
+  const contentType = workspaceFileContentType(file);
+  if (!contentType) {
+    throw new Error("Only PDF, JPEG, and PNG files are allowed.");
+  }
 
   const fileName = (
     opts?.displayName?.trim() ||
-    file.name.replace(/\.pdf$/i, "").trim() ||
+    file.name.replace(/\.(pdf|png|jpe?g)$/i, "").trim() ||
     "Document"
   ).slice(0, 200);
   const attachmentsRef = cardCollection(boardId, cardId, "attachments");
@@ -374,14 +378,15 @@ export async function addCardPdfAttachment(
     boardId,
     cardId,
     attachmentRef.id,
-    fileName,
+    file.name,
+    contentType,
   );
 
   try {
-    await uploadWorkspacePdf(storagePath, file);
+    await uploadWorkspaceFile(storagePath, file, contentType);
   } catch (err) {
     throw new Error(
-      err instanceof Error ? err.message : "Could not upload PDF. Check Storage is enabled.",
+      err instanceof Error ? err.message : "Could not upload the file. Check Storage is enabled.",
     );
   }
 
@@ -389,7 +394,7 @@ export async function addCardPdfAttachment(
     kind: "file",
     fileName,
     storagePath,
-    contentType: "application/pdf",
+    contentType,
     sizeBytes: file.size,
     uploadedByUid: user.uid,
     uploadedByName: user.displayName || user.email || "User",
@@ -411,7 +416,7 @@ export async function addCardPdfAttachment(
     boardId,
     cardId,
     "attachment_added",
-    `added PDF "${fileName}"${duePart} to this card`,
+    `added "${fileName}"${duePart} to this card`,
   );
   await bumpCardBadge(boardId, cardId, "attachmentCount", 1);
 
@@ -495,33 +500,34 @@ export async function submitAttachmentPdfWork(
   const user = auth.currentUser;
   if (!user) throw new Error("You must be signed in to submit work.");
 
-  if (!isPdfFile(file)) {
-    throw new Error("Only PDF files are allowed.");
+  const contentType = workspaceFileContentType(file);
+  if (!contentType) {
+    throw new Error("Only PDF, JPEG, and PNG files are allowed.");
   }
   if (file.size <= 0) {
     throw new Error("The file is empty.");
   }
   if (file.size > WORKSPACE_PDF_MAX_BYTES) {
     throw new Error(
-      `PDF must be ${Math.round(WORKSPACE_PDF_MAX_BYTES / (1024 * 1024))} MB or smaller.`,
+      `File must be ${Math.round(WORKSPACE_PDF_MAX_BYTES / (1024 * 1024))} MB or smaller.`,
     );
   }
 
   const submissionRef = doc(attachmentSubmissionsCollection(boardId, cardId, attachmentId));
-  const displayName = file.name.replace(/\.pdf$/i, "").trim() || "Homework";
   const storagePath = buildWorkspaceAttachmentStoragePath(
     boardId,
     cardId,
     `hw_${attachmentId}_${submissionRef.id}`,
-    displayName,
+    file.name,
+    contentType,
   );
 
   let url: string;
   try {
-    url = await uploadWorkspacePdfAndGetUrl(storagePath, file);
+    url = await uploadWorkspaceFileAndGetUrl(storagePath, file, contentType);
   } catch (err) {
     throw new Error(
-      err instanceof Error ? err.message : "Could not upload PDF. Check Storage is enabled.",
+      err instanceof Error ? err.message : "Could not upload the file. Check Storage is enabled.",
     );
   }
 

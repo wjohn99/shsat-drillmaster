@@ -23,6 +23,7 @@ import {
   fetchWorkspaceCards,
   fetchWorkspaceLists,
   isWorkspaceConflictError,
+  updateWorkspaceBoardDiagnosticAssigned,
   updateWorkspaceBoardDiagnosticExtendedTime,
   updateWorkspaceBoardRoadmap,
 } from "@/lib/workspaceService";
@@ -72,6 +73,7 @@ export function WorkspaceBoard({
   const [lastCompletedAssignment, setLastCompletedAssignment] =
     useState<WorksheetAssignment | null>(null);
   const [savingExtendedTime, setSavingExtendedTime] = useState(false);
+  const [savingDiagnosticAssigned, setSavingDiagnosticAssigned] = useState(false);
   const [diagnosticInProgress, setDiagnosticInProgress] = useState(false);
   const [studentAssignments, setStudentAssignments] = useState<WorksheetAssignment[]>([]);
   const [studentSessions, setStudentSessions] = useState<PracticeSessionRecord[]>([]);
@@ -173,6 +175,23 @@ export function WorkspaceBoard({
       cancelled = true;
     };
   }, [readOnly]);
+
+  const handleToggleDiagnosticAssigned = async (assigned: boolean) => {
+    if (!board || readOnly || savingDiagnosticAssigned) return;
+    setSavingDiagnosticAssigned(true);
+    try {
+      await updateWorkspaceBoardDiagnosticAssigned(board.id, assigned);
+      setBoard({ ...board, diagnosticAssigned: assigned });
+    } catch (err) {
+      toast({
+        title: "Could not update diagnostic assignment",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSavingDiagnosticAssigned(false);
+    }
+  };
 
   const handleToggleExtendedTime = async (enabled: boolean) => {
     if (!board || readOnly || savingExtendedTime) return;
@@ -302,6 +321,22 @@ export function WorkspaceBoard({
                 </div>
                 {board.studentEmail ? (
                   <p className="truncate text-sm text-muted-foreground">{board.studentEmail}</p>
+                ) : null}
+                {!readOnly ? (
+                  <div className="mt-2 flex items-center gap-2">
+                    <Switch
+                      id={`diagnostic-assigned-${board.id}`}
+                      checked={Boolean(board.diagnosticAssigned)}
+                      onCheckedChange={(checked) => void handleToggleDiagnosticAssigned(checked)}
+                      disabled={savingDiagnosticAssigned}
+                    />
+                    <Label
+                      htmlFor={`diagnostic-assigned-${board.id}`}
+                      className="text-xs font-normal text-muted-foreground"
+                    >
+                      Assign diagnostic
+                    </Label>
+                  </div>
                 ) : null}
               </div>
             </div>

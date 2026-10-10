@@ -17,8 +17,12 @@ import { Progress } from "@/components/ui/progress";
 import { DashboardShell } from "./DashboardShell";
 import { StatTile } from "./StatTile";
 import { AccuracyTrendChart } from "./AccuracyTrendChart";
+import { useAuth } from "@/contexts/AuthContext";
 import { fetchAssignmentsForStudent } from "@/lib/assignmentService";
+import { DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE } from "@/lib/diagnosticAccess";
+import { fetchDiagnosticProgress } from "@/lib/diagnosticProgressService";
 import { fetchPracticeSessionsForStudent } from "@/lib/practiceSessionService";
+import { fetchWorkspaceBoard } from "@/lib/workspaceService";
 import {
   buildStudentDashboardAnalytics,
   WEEKLY_QUESTION_GOAL,
@@ -37,23 +41,29 @@ const PREVIEW_LIMIT = 3;
 
 export function StudentDashboard() {
   const navigate = useNavigate();
+  const { profile } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [assignments, setAssignments] = useState<WorksheetAssignment[]>([]);
   const [selfSessions, setSelfSessions] = useState<PracticeSessionRecord[]>([]);
   const [assignmentSessions, setAssignmentSessions] = useState<PracticeSessionRecord[]>([]);
   const [diagnosticSessions, setDiagnosticSessions] = useState<PracticeSessionRecord[]>([]);
+  const [diagnosticAssigned, setDiagnosticAssigned] = useState(false);
+  const [diagnosticInProgress, setDiagnosticInProgress] = useState(false);
 
   useEffect(() => {
+    if (!profile) return;
     let cancelled = false;
 
     (async () => {
       setLoading(true);
       setError(null);
       try {
-        const [assignmentRows, allSessions] = await Promise.all([
+        const [assignmentRows, allSessions, board, progress] = await Promise.all([
           fetchAssignmentsForStudent(),
           fetchPracticeSessionsForStudent(),
+          fetchWorkspaceBoard(profile.uid).catch(() => null),
+          fetchDiagnosticProgress(profile.uid).catch(() => null),
         ]);
         if (cancelled) return;
 
@@ -61,6 +71,8 @@ export function StudentDashboard() {
         setSelfSessions(allSessions.filter((s) => s.sessionType === "self"));
         setAssignmentSessions(allSessions.filter((s) => s.sessionType === "assignment"));
         setDiagnosticSessions(allSessions.filter((s) => s.sessionType === "diagnostic"));
+        setDiagnosticAssigned(Boolean(board?.diagnosticAssigned));
+        setDiagnosticInProgress(Boolean(progress));
       } catch (err) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : "Could not load dashboard.");
@@ -73,7 +85,7 @@ export function StudentDashboard() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [profile]);
 
   const analytics = useMemo(
     () =>
@@ -165,13 +177,28 @@ export function StudentDashboard() {
               50 ELA · 50 Math · 180 minutes · scored after you submit
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-wrap gap-2">
-            <Button size="lg" asChild>
-              <Link to="/practice/diagnostic">
+          <CardContent className="flex flex-col items-start gap-3">
+            <div className="flex flex-wrap gap-2">
+            {diagnosticAssigned ? (
+              <Button size="lg" asChild>
+                <Link to="/practice/diagnostic">
+                  <Play className="h-5 w-5 mr-2" />
+                  Open diagnostic
+                </Link>
+              </Button>
+            ) : diagnosticInProgress ? (
+              <Button size="lg" asChild>
+                <Link to="/practice/diagnostic">
+                  <Play className="h-5 w-5 mr-2" />
+                  Resume diagnostic
+                </Link>
+              </Button>
+            ) : (
+              <Button size="lg" disabled>
                 <Play className="h-5 w-5 mr-2" />
                 Open diagnostic
-              </Link>
-            </Button>
+              </Button>
+            )}
             {diagnosticSessions.length === 1 ? (
               <Button size="lg" variant="outline" asChild>
                 <Link
@@ -205,6 +232,14 @@ export function StudentDashboard() {
                   </Link>
                 </Button>
               </>
+            ) : null}
+            </div>
+            {!diagnosticAssigned ? (
+              <p className="text-sm text-muted-foreground">
+                {diagnosticInProgress
+                  ? "You can resume this sitting. Your tutor has to assign the diagnostic before you can start a new one."
+                  : DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE}
+              </p>
             ) : null}
           </CardContent>
         </Card>

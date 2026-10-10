@@ -17,6 +17,8 @@ type QuestionSolutionPanelProps = {
   isCorrect?: boolean;
   showHeader?: boolean;
   selectedChoiceIds?: string[];
+  /** Tutor-only. The panel itself is already shown after an answer is checked. */
+  showSkillToImprove?: boolean;
   className?: string;
 };
 
@@ -80,6 +82,7 @@ export function QuestionSolutionPanel({
   isCorrect,
   showHeader = true,
   selectedChoiceIds = [],
+  showSkillToImprove = false,
   className = "",
 }: QuestionSolutionPanelProps) {
   const solutionText = getQuestionSolutionExplanation(question);
@@ -172,7 +175,7 @@ export function QuestionSolutionPanel({
 
       {commonTrap ? <CommonTrapCallout commonTrap={commonTrap} /> : null}
 
-      {skills.length > 0 ? (
+      {showSkillToImprove && skills.length > 0 ? (
         <section className="space-y-2">
           <h5 className="flex items-center gap-2 text-sm font-semibold">
             <Target className="h-4 w-4 text-primary" aria-hidden />

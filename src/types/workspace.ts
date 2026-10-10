@@ -69,6 +69,8 @@ export interface WorkspaceBoard {
   deletedAt?: Timestamp | null;
   /** Tutor-assigned 2x diagnostic timing. Students cannot turn this on themselves. */
   diagnosticExtendedTime?: boolean;
+  /** Tutor must turn this on before the student can start a new diagnostic sitting. */
+  diagnosticAssigned?: boolean;
   roadmap: StudentRoadmap;
   /** Used to refuse stale roadmap saves from another tab. */
   roadmapUpdatedAt?: Timestamp | null;

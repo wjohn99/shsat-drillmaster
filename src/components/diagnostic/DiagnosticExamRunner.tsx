@@ -41,10 +41,7 @@ import {
   withPausedClock,
   type DiagnosticExamSave,
 } from "@/lib/diagnosticExamStorage";
-import {
-  clearDiagnosticProgress,
-  saveDiagnosticProgress,
-} from "@/lib/diagnosticProgressService";
+import { saveDiagnosticProgress } from "@/lib/diagnosticProgressService";
 import { toast } from "@/hooks/use-toast";
 import type { DiagnosticSubject } from "@/data/shsatDiagnosticForm";
 import type { DiagnosticEndReason } from "@/types/practiceSession";
@@ -106,6 +103,8 @@ export function DiagnosticExamRunner({
 
   const finishedRef = useRef(false);
   const leavingRef = useRef(false);
+  const remoteSaveTimerRef = useRef<number | null>(null);
+  const remoteSaveChainRef = useRef<Promise<void>>(Promise.resolve());
   const finishExamRef = useRef<(reason: "submit" | "time") => void>(() => {});
   const questionStartMsRef = useRef(Date.now());
   const eventsByQuestionId = useRef<Map<string, SessionAnalyticsEvent>>(
@@ -210,8 +209,15 @@ export function DiagnosticExamRunner({
         [...eventsByQuestionId.current.values()],
       );
       clearDiagnosticSave(userId);
-      void clearDiagnosticProgress(userId).catch(() => undefined);
-      onComplete(ordered, reason);
+      if (remoteSaveTimerRef.current) {
+        window.clearTimeout(remoteSaveTimerRef.current);
+        remoteSaveTimerRef.current = null;
+      }
+      // Let an in-flight progress write finish before the report is saved, so a
+      // sitting already underway can still be stored if assignment is turned off.
+      void remoteSaveChainRef.current.finally(() => {
+        onComplete(ordered, reason);
+      });
     },
     [answers, currentQuestion, exam, onComplete, recordTiming, userId],
   );
@@ -281,7 +287,6 @@ export function DiagnosticExamRunner({
 
   const persistProgressRef = useRef(persistProgress);
   persistProgressRef.current = persistProgress;
-  const remoteSaveTimerRef = useRef<number | null>(null);
 
   const queueRemoteSave = useCallback((save: DiagnosticExamSave, flush = false) => {
     if (remoteSaveTimerRef.current) {
@@ -290,11 +295,9 @@ export function DiagnosticExamRunner({
     }
     const write = () => {
       if (finishedRef.current) return;
-      void saveDiagnosticProgress(userId, save)
+      const task = saveDiagnosticProgress(userId, save)
         .then(() => {
-          if (finishedRef.current) {
-            return clearDiagnosticProgress(userId);
-          }
+          if (finishedRef.current) return;
           const latest = loadDiagnosticSave(userId);
           if (latest && latest.updatedAt > save.updatedAt) {
             return saveDiagnosticProgress(userId, latest);
@@ -311,7 +314,9 @@ export function DiagnosticExamRunner({
               variant: "destructive",
             });
           }
-        });
+        })
+        .then(() => undefined);
+      remoteSaveChainRef.current = task;
     };
     if (flush) {
       write();
@@ -332,7 +337,9 @@ export function DiagnosticExamRunner({
         window.clearTimeout(remoteSaveTimerRef.current);
       }
       if (finishedRef.current || leavingRef.current) return;
-      const save = persistProgressRef.current({ paused: true });
+      // Refresh unmounts this screen. Keep the clock running and the question,
+      // so the next load can reopen the exam instead of pausing onto the start page.
+      const save = persistProgressRef.current();
       if (save) void saveDiagnosticProgress(userId, save).catch(() => undefined);
     };
   }, [userId]);

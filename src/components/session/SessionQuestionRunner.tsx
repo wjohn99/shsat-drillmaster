@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Header } from "@/components/layout/Header";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +25,11 @@ export interface SessionQuestionRunnerProps {
   onComplete: (events: SessionAnalyticsEvent[]) => void;
   /** Prefix for highlight localStorage keys (e.g. "worksheet", "practice-set"). */
   storageKeyPrefix: string;
+  /**
+   * When false, record the answer and move on without the correct answer
+   * or explanation. Used for a cold diagnostic assignment.
+   */
+  revealAnswers?: boolean;
 }
 
 export function SessionQuestionRunner({
@@ -32,13 +38,16 @@ export function SessionQuestionRunner({
   onExit,
   onComplete,
   storageKeyPrefix,
+  revealAnswers = true,
 }: SessionQuestionRunnerProps) {
   const { passages } = useQuestions();
+  const { profile } = useAuth();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [flaggedQuestions, setFlaggedQuestions] = useState<Set<string>>(new Set());
   const [feedback, setFeedback] = useState<null | { correct: boolean }>(null);
   const [reviewingAnswer, setReviewingAnswer] = useState(false);
+  const [lockedQuestionIds, setLockedQuestionIds] = useState<Set<string>>(new Set());
 
   const questionStartMsRef = useRef(Date.now());
   const eventsByQuestionId = useRef<Map<string, SessionAnalyticsEvent>>(new Map());
@@ -95,7 +104,7 @@ export function SessionQuestionRunner({
   const recordCurrentAndAdvance = () => {
     if (!currentQuestion) return;
 
-    if (reviewingAnswer) {
+    if (reviewingAnswer || (!revealAnswers && lockedQuestionIds.has(currentQuestion.id))) {
       advanceAfterReview();
       return;
     }
@@ -115,6 +124,17 @@ export function SessionQuestionRunner({
       tags: currentQuestion.tags.map((t) => t.code),
     };
     eventsByQuestionId.current.set(currentQuestion.id, evt);
+
+    if (!revealAnswers) {
+      setLockedQuestionIds((prev) => {
+        const next = new Set(prev);
+        next.add(currentQuestion.id);
+        return next;
+      });
+      advanceAfterReview();
+      return;
+    }
+
     setFeedback({ correct });
     setReviewingAnswer(true);
   };
@@ -149,7 +169,8 @@ export function SessionQuestionRunner({
   }
 
   const raw = answers[currentQuestion.id];
-  const showSolution = reviewingAnswer;
+  const answerLocked = !revealAnswers && lockedQuestionIds.has(currentQuestion.id);
+  const showSolution = revealAnswers && reviewingAnswer;
 
   return (
     <div className="min-h-screen">
@@ -205,7 +226,7 @@ export function SessionQuestionRunner({
               </CardHeader>
 
               <CardContent className="space-y-6">
-                {feedback && (
+                {revealAnswers && feedback && (
                   <div
                     className={`rounded-lg border p-3 text-sm ${
                       feedback.correct
@@ -269,7 +290,7 @@ export function SessionQuestionRunner({
                 <QuestionResponseFields
                   question={currentQuestion}
                   raw={raw}
-                  disabled={showSolution}
+                  disabled={showSolution || answerLocked}
                   showSolution={showSolution}
                   onChange={(value) => handleAnswerChange(currentQuestion.id, value)}
                   onToggleAta={(choiceId) => toggleAtaAnswer(currentQuestion.id, choiceId)}
@@ -280,6 +301,7 @@ export function SessionQuestionRunner({
                     question={currentQuestion}
                     isCorrect={feedback.correct}
                     selectedChoiceIds={getSelectedChoiceIds(currentQuestion, raw)}
+                    showSkillToImprove={profile?.role === "tutor"}
                   />
                 )}
               </CardContent>
@@ -293,13 +315,21 @@ export function SessionQuestionRunner({
 
               <Button
                 onClick={recordCurrentAndAdvance}
-                disabled={!reviewingAnswer && !canSubmitQuestionAnswer(currentQuestion, raw)}
+                disabled={
+                  !reviewingAnswer &&
+                  !answerLocked &&
+                  !canSubmitQuestionAnswer(currentQuestion, raw)
+                }
               >
-                {reviewingAnswer
+                {reviewingAnswer || answerLocked
                   ? currentQuestionIndex === questions.length - 1
                     ? "Finish worksheet"
                     : "Continue"
-                  : "Check answer"}
+                  : revealAnswers
+                    ? "Check answer"
+                    : currentQuestionIndex === questions.length - 1
+                      ? "Finish worksheet"
+                      : "Next"}
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
             </div>

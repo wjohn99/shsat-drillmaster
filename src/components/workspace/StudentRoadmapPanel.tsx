@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
+import { DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE } from "@/lib/diagnosticAccess";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -224,6 +225,9 @@ export function StudentRoadmapPanel({
         <h2 className="text-sm font-semibold tracking-tight">Roadmap</h2>
         <div className="flex items-center gap-2 shrink-0">
           <AttentionStatusLabel status={draft.status} />
+          {!snapshot.board.diagnosticAssigned ? (
+            <Badge variant="outline">Diagnostic not assigned</Badge>
+          ) : null}
           <span className="text-xs font-medium text-muted-foreground group-open:hidden">
             Show roadmap
           </span>
@@ -672,7 +676,11 @@ export function StudentRoadmapPanel({
           <p className="text-sm text-muted-foreground">
             {snapshot.diagnosticInProgress
               ? "This student has started the diagnostic but has not finished it. Results will appear here after they submit."
-              : "This student has not started the diagnostic yet."}
+              : !snapshot.board.diagnosticAssigned
+                ? readOnly
+                  ? DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE
+                  : "Turn on Assign diagnostic in the board header before this student can start it."
+                : "This student has not started the diagnostic yet."}
           </p>
         )}
       </div>

@@ -41,6 +41,31 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'tutor';
     }
 
+    function diagnosticAssignedToSignedInUser() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/workspace_boards/$(request.auth.uid))
+        && (
+          get(/databases/$(database)/documents/workspace_boards/$(request.auth.uid)).data.diagnosticAssigned == true
+          || (
+            get(/databases/$(database)/documents/workspace_boards/$(request.auth.uid)).data.roadmap is map
+            && get(/databases/$(database)/documents/workspace_boards/$(request.auth.uid)).data.roadmap.diagnosticAssigned == true
+          )
+        );
+    }
+
+    function canStartDiagnostic() {
+      return isTutor() || diagnosticAssignedToSignedInUser();
+    }
+
+    // A sitting already underway can be saved even if the tutor later turns assignment off.
+    function canSaveDiagnosticSession() {
+      return canStartDiagnostic()
+        || (
+          isSignedIn()
+          && exists(/databases/$(database)/documents/diagnostic_progress/$(request.auth.uid))
+        );
+    }
+
     // Tutor emails — maintain via Firebase Console or Admin SDK only.
     match /tutor_whitelist/{emailId} {
       allow read: if isSignedIn();
@@ -82,7 +107,9 @@ service cloud.firestore {
         && request.resource.data.questionIds is list
         && request.resource.data.questionIds.size() > 0
         && request.resource.data.status == 'todo'
-        && request.resource.data.dueAt is timestamp;
+        && request.resource.data.dueAt is timestamp
+        && (!('revealAnswers' in request.resource.data)
+            || request.resource.data.revealAnswers is bool);
 
       // Tutor links assignment to a workspace card after create.
       allow update: if isTutor()
@@ -147,11 +174,11 @@ service cloud.firestore {
         && (!('deletedAt' in request.resource.data)
           || request.resource.data.deletedAt == resource.data.deletedAt)
         && request.resource.data.diff(resource.data).affectedKeys()
-            .hasOnly(['studentName', 'studentEmail', 'color', 'archivedAt', 'roadmap', 'roadmapUpdatedAt', 'updatedAt', 'diagnosticExtendedTime', 'assignedTutorUid', 'assignedTutorName', 'assignedTutorEmail']);
+            .hasOnly(['studentName', 'studentEmail', 'color', 'archivedAt', 'roadmap', 'roadmapUpdatedAt', 'updatedAt', 'diagnosticExtendedTime', 'diagnosticAssigned', 'assignedTutorUid', 'assignedTutorName', 'assignedTutorEmail']);
 
       allow update: if isTutor()
         && request.resource.data.diff(resource.data).affectedKeys()
-          .hasOnly(['diagnosticExtendedTime', 'updatedAt']);
+          .hasOnly(['diagnosticExtendedTime', 'diagnosticAssigned', 'updatedAt']);
 
       allow update: if isTutor()
         && request.resource.data.assignedTutorUid is string
@@ -231,7 +258,7 @@ service cloud.firestore {
                 && request.resource.data.storagePath.matches(
                   'workspace/' + boardId + '/cards/' + cardId + '/[A-Za-z0-9._-]+'
                 )
-                && request.resource.data.contentType == 'application/pdf'
+                && request.resource.data.contentType in ['application/pdf', 'image/jpeg', 'image/png']
                 && request.resource.data.sizeBytes is int
                 && request.resource.data.sizeBytes > 0
                 && request.resource.data.sizeBytes <= 25 * 1024 * 1024)
@@ -305,7 +332,13 @@ service cloud.firestore {
     match /practice_sessions/{sessionId} {
       allow create: if isSignedIn()
         && request.resource.data.userId == request.auth.uid
-        && request.resource.data.sessionType in ['assignment', 'self', 'tutor-preview', 'diagnostic'];
+        && (
+          request.resource.data.sessionType in ['assignment', 'self', 'tutor-preview']
+          || (
+            request.resource.data.sessionType == 'diagnostic'
+            && canSaveDiagnosticSession()
+          )
+        );
 
       // Students: own sessions only (query must use userId == auth.uid).
       allow read: if isSignedIn()
@@ -327,7 +360,14 @@ service cloud.firestore {
     match /diagnostic_progress/{progressUserId} {
       allow read, delete: if isOwner(progressUserId);
 
-      allow create, update: if isOwner(progressUserId)
+      allow create: if isOwner(progressUserId)
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.specId is string
+        && request.resource.data.paused is bool
+        && request.resource.data.remainingSeconds is number
+        && canStartDiagnostic();
+
+      allow update: if isOwner(progressUserId)
         && request.resource.data.userId == request.auth.uid
         && request.resource.data.specId is string
         && request.resource.data.paused is bool

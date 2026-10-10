@@ -27,6 +27,7 @@ import { ModuleBadge } from "@/components/question/ModuleBadge";
 import { QuestionSolutionPanel } from "@/components/question/QuestionSolutionPanel";
 import { getSelectedChoiceIds } from "@/lib/questionExplanation";
 import { useQuestionBookmarks } from "@/contexts/QuestionBookmarksContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { isAtaAnswerCorrect, isIndyCheckboxMultiSubtype, serializeAtaAnswer } from "@/lib/indyAta";
 import { isMsAnswerCorrect } from "@/lib/indyMs";
@@ -59,6 +60,7 @@ const NOTES_STORAGE_KEY = "question-notes";
 
 export default function Question() {
   const { questions, passages, getQuestionById, loading } = useQuestions();
+  const { profile } = useAuth();
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const isPracticeMode = searchParams.get('practice') === 'true';
@@ -586,6 +588,7 @@ export default function Question() {
                     question={question}
                     isCorrect={isAnswerCorrect()}
                     selectedChoiceIds={getSelectedChoiceIds(question, getUserAnswer())}
+                    showSkillToImprove={profile?.role === "tutor" && isPracticeMode}
                   />
                 )}
 

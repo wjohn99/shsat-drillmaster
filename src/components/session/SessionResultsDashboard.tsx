@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,6 +33,76 @@ function skillBarFill(accuracy: number): string {
   return "hsl(var(--primary))";
 }
 
+const SKILL_AXIS_WIDTH = 220;
+const SKILL_AXIS_WIDTH_NARROW = 156;
+const SKILL_ROW_PX = 36;
+const SKILL_LABEL_CHARS = 34;
+const SKILL_LABEL_CHARS_NARROW = 24;
+
+function useNarrowSkillChart(): boolean {
+  const [narrow, setNarrow] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 640px)");
+    const apply = () => setNarrow(query.matches);
+    apply();
+    query.addEventListener("change", apply);
+    return () => query.removeEventListener("change", apply);
+  }, []);
+  return narrow;
+}
+
+function wrapSkillLabel(label: string, maxChars: number): string[] {
+  if (label.length <= maxChars) return [label];
+  const words = label.split(" ");
+  const lines: string[] = [];
+  let current = "";
+  for (const word of words) {
+    const next = current ? `${current} ${word}` : word;
+    if (current && next.length > maxChars) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = next;
+    }
+  }
+  if (current) lines.push(current);
+  if (lines.length <= 2) return lines;
+  const rest = lines.slice(1).join(" ");
+  const clipped = rest.length > maxChars ? `${rest.slice(0, maxChars - 1)}…` : rest;
+  return [lines[0], clipped];
+}
+
+function SkillAxisTick({
+  x = 0,
+  y = 0,
+  payload,
+  maxChars = SKILL_LABEL_CHARS,
+}: {
+  x?: number;
+  y?: number;
+  payload?: { value?: string };
+  maxChars?: number;
+}) {
+  const lines = wrapSkillLabel(payload?.value ?? "", maxChars);
+  const lineHeight = 13;
+  const firstDy = 4 - ((lines.length - 1) * lineHeight) / 2;
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text
+        textAnchor="end"
+        fill="hsl(var(--foreground))"
+        fontSize={11}
+      >
+        {lines.map((line, index) => (
+          <tspan key={`${line}-${index}`} x={0} dy={index === 0 ? firstDy : lineHeight}>
+            {line}
+          </tspan>
+        ))}
+      </text>
+    </g>
+  );
+}
+
 export interface SessionSummaryMetric {
   label: string;
   value: string | number;
@@ -65,6 +135,9 @@ export function SessionResultsDashboard({
   tagTableTitle = "Tags & skills",
 }: SessionResultsDashboardProps) {
   const results = useMemo(() => computeSessionAnalytics(events), [events]);
+  const narrowSkillChart = useNarrowSkillChart();
+  const skillAxisWidth = narrowSkillChart ? SKILL_AXIS_WIDTH_NARROW : SKILL_AXIS_WIDTH;
+  const skillLabelChars = narrowSkillChart ? SKILL_LABEL_CHARS_NARROW : SKILL_LABEL_CHARS;
   const [tagSort, setTagSort] = useState<{ key: TagSortKey; dir: "asc" | "desc" }>({
     key: "accuracy",
     dir: "asc",
@@ -197,14 +270,15 @@ export function SessionResultsDashboard({
             <CardContent
               className="pt-0"
               style={{
-                height: Math.min(520, Math.max(240, results.skillFocusChart.length * 40)),
+                height: Math.max(220, results.skillFocusChart.length * SKILL_ROW_PX + 48),
               }}
             >
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   layout="vertical"
                   data={results.skillFocusChart}
-                  margin={{ top: 4, right: 16, left: 4, bottom: 24 }}
+                  margin={{ top: 8, right: 16, left: 8, bottom: 28 }}
+                  barCategoryGap={6}
                 >
                   <CartesianGrid strokeDasharray="3 3" horizontal={false} />
                   <XAxis
@@ -222,9 +296,10 @@ export function SessionResultsDashboard({
                   <YAxis
                     type="category"
                     dataKey="label"
-                    width={168}
-                    tick={{ fontSize: 11 }}
+                    width={skillAxisWidth}
                     interval={0}
+                    tickLine={false}
+                    tick={<SkillAxisTick maxChars={skillLabelChars} />}
                   />
                   <Tooltip
                     cursor={{ fill: "hsl(var(--muted) / 0.35)" }}
@@ -247,12 +322,16 @@ export function SessionResultsDashboard({
                     x={results.accuracyPct}
                     stroke="hsl(var(--muted-foreground))"
                     strokeDasharray="4 4"
-                    label={{
-                      value: "Session avg",
-                      position: "insideTopRight",
-                      fill: "hsl(var(--muted-foreground))",
-                      fontSize: 10,
-                    }}
+                    label={
+                      narrowSkillChart
+                        ? undefined
+                        : {
+                            value: "Session avg",
+                            position: "insideTopRight",
+                            fill: "hsl(var(--muted-foreground))",
+                            fontSize: 10,
+                          }
+                    }
                   />
                   <Bar dataKey="accuracy" radius={[0, 4, 4, 0]} maxBarSize={28}>
                     {results.skillFocusChart.map((row) => (

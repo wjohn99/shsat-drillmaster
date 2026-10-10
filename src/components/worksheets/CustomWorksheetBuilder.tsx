@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, Check, FileDown, Loader2, Search, Send } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
@@ -64,6 +65,8 @@ interface CustomWorksheetBuilderProps {
   workspacePlacementLocked?: boolean;
   assigning?: boolean;
   onAssign?: () => void;
+  revealAnswers?: boolean;
+  onRevealAnswersChange?: (value: boolean) => void;
 }
 
 const DEFAULT_OPEN_SECTIONS: WorksheetSectionId[] = [
@@ -107,6 +110,8 @@ export function CustomWorksheetBuilder({
   workspacePlacementLocked = false,
   assigning = false,
   onAssign,
+  revealAnswers = true,
+  onRevealAnswersChange,
 }: CustomWorksheetBuilderProps) {
   const isTutor = variant === "tutor";
   const canStart = selectedCodes.length > 0 && matchingCount > 0;
@@ -305,6 +310,25 @@ export function CustomWorksheetBuilder({
                 ) : null}
               </div>
             ) : null}
+
+            <div className="flex items-start gap-3 rounded-lg border bg-muted/30 p-3">
+              <Switch
+                id="reveal-answers"
+                checked={revealAnswers}
+                onCheckedChange={(checked) => onRevealAnswersChange?.(checked)}
+                className="mt-0.5"
+              />
+              <div className="space-y-1">
+                <Label htmlFor="reveal-answers" className="font-medium cursor-pointer">
+                  Show answers and explanations
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  {revealAnswers
+                    ? "The student sees the correct answer and explanation after each question."
+                    : "Cold diagnostic. The student answers each question without seeing the answer or explanation."}
+                </p>
+              </div>
+            </div>
 
             <p className="text-xs text-muted-foreground">
               Overdue assignments appear in your dashboard Needs attention section.

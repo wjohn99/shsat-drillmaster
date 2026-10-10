@@ -80,7 +80,13 @@ function parseAssignment(
     workspaceCardId: (data.workspaceCardId as string | undefined) ?? null,
     title: (data.title as string) ?? "Assigned worksheet",
     tagCodes: (data.tagCodes as string[]) ?? [],
+    revealAnswers: data.revealAnswers !== false,
   };
+}
+
+/** Older assignments omit the field and still show answers. */
+export function assignmentRevealsAnswers(assignment: { revealAnswers?: boolean }): boolean {
+  return assignment.revealAnswers !== false;
 }
 
 function mapStudentDoc(id: string, data: DocumentData): StudentOption {
@@ -213,6 +219,8 @@ export interface CreateAssignmentInput {
   title: string;
   tagCodes: string[];
   dueAt: Timestamp;
+  /** False hides answers and explanations from the student during the sitting. */
+  revealAnswers: boolean;
   workspace?: CreateAssignmentWorkspaceInput;
 }
 
@@ -251,6 +259,7 @@ export async function createAssignment(
     title: input.title,
     tagCodes: input.tagCodes,
     dueAt: input.dueAt,
+    revealAnswers: input.revealAnswers,
     status: "todo" satisfies AssignmentStatus,
     createdAt: serverTimestamp(),
     workspaceBoardId: input.workspace?.boardId ?? null,

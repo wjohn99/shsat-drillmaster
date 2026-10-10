@@ -64,6 +64,12 @@ export function isDiagnosticSaveExpired(save: DiagnosticExamSave, now = Date.now
   return remainingFromDiagnosticSave(save, now) <= 0;
 }
 
+/** A sitting still on the clock. Refresh should reopen the exam, not the start page. */
+export function isLiveDiagnosticExam(save: DiagnosticExamSave | null, now = Date.now()): boolean {
+  if (!save || save.paused) return false;
+  return !isDiagnosticSaveExpired(save, now);
+}
+
 export function diagnosticSaveTimestamp(save: DiagnosticExamSave): number {
   return save.updatedAt || save.startedAt || 0;
 }

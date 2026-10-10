@@ -49,7 +49,14 @@ function formatLastActiveLabel(ms: number): string {
   return formatRelativeDate(ms);
 }
 
-export type DiagnosticLaunchStatus = "assigned" | "started" | "finished";
+export type DiagnosticLaunchStatus = "not_assigned" | "assigned" | "started" | "finished";
+
+export const DIAGNOSTIC_STATUS_LABEL: Record<DiagnosticLaunchStatus, string> = {
+  not_assigned: "Not assigned",
+  assigned: "Assigned",
+  started: "Started",
+  finished: "Finished",
+};
 
 export interface StudentProgressRow {
   studentUid: string;
@@ -93,10 +100,12 @@ export function buildTutorDashboardAnalytics(
   assignments: TutorAssignmentRow[],
   sessions: PracticeSessionRecord[],
   diagnosticInProgressUids: Iterable<string> = [],
+  diagnosticAssignedUids: Iterable<string> = [],
 ): TutorDashboardAnalytics {
   const now = Date.now();
   const staleCutoff = now - STALE_ASSIGNMENT_DAYS * DAY_MS;
   const inProgressUids = new Set(diagnosticInProgressUids);
+  const assignedUids = new Set(diagnosticAssignedUids);
 
   const sessionsByStudent = new Map<string, PracticeSessionRecord[]>();
   for (const s of sessions) {
@@ -139,7 +148,9 @@ export function buildTutorDashboardAnalytics(
       ? "started"
       : diagnosticOldestFirst.length > 0
         ? "finished"
-        : "assigned";
+        : assignedUids.has(student.uid)
+          ? "assigned"
+          : "not_assigned";
 
     return {
       studentUid: student.uid,

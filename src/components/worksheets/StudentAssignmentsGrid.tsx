@@ -132,6 +132,11 @@ export function StudentAssignmentsGrid({
                 {assignment.tagCodes.length > 0 &&
                   ` · ${assignment.tagCodes.length} skill tag${assignment.tagCodes.length === 1 ? "" : "s"}`}
               </p>
+              {assignment.revealAnswers === false ? (
+                <p className="text-xs text-muted-foreground mb-4">
+                  Answers and explanations stay hidden on this worksheet.
+                </p>
+              ) : null}
               <div className="flex flex-col gap-2">
                 {isCompleted && onReviewAssignment ? (
                   <Button

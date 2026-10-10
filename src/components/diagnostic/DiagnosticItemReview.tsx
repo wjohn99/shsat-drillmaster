@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import { BookOpen, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -111,6 +112,7 @@ function itemsForModule(items: ReviewItem[], module: QuestionModule): ReviewItem
 }
 
 export function DiagnosticItemReview({ exam, events }: DiagnosticItemReviewProps) {
+  const { profile } = useAuth();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const eventById = useMemo(
     () => new Map(events.map((event) => [event.questionId, event])),
@@ -332,6 +334,7 @@ export function DiagnosticItemReview({ exam, events }: DiagnosticItemReviewProps
                     question={selected}
                     isCorrect={selectedEvent?.correct}
                     selectedChoiceIds={getSelectedChoiceIds(selected, raw)}
+                    showSkillToImprove={profile?.role === "tutor"}
                   />
                 </div>
               </div>

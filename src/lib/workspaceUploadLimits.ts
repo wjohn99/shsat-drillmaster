@@ -42,15 +42,30 @@ export function summarizeBoardPdfUsage(
   return { pdfCount, pdfBytes };
 }
 
+export type WorkspaceFileContentType = "application/pdf" | "image/jpeg" | "image/png";
+
+export function workspaceFileContentType(file: File): WorkspaceFileContentType | null {
+  const name = file.name.toLowerCase();
+  if (file.type === "application/pdf" || name.endsWith(".pdf")) return "application/pdf";
+  if (file.type === "image/png" || name.endsWith(".png")) return "image/png";
+  if (
+    file.type === "image/jpeg" ||
+    file.type === "image/jpg" ||
+    name.endsWith(".jpg") ||
+    name.endsWith(".jpeg")
+  ) {
+    return "image/jpeg";
+  }
+  return null;
+}
+
 export function validatePdfUpload(
   file: File,
   cardAttachments: WorkspaceCardAttachment[],
   boardUsage: BoardPdfUsage,
 ): UploadValidationResult {
-  const name = file.name.toLowerCase();
-  const isPdf = file.type === "application/pdf" || name.endsWith(".pdf");
-  if (!isPdf) {
-    return { ok: false, message: "Only PDF files are allowed." };
+  if (!workspaceFileContentType(file)) {
+    return { ok: false, message: "Only PDF, JPEG, and PNG files are allowed." };
   }
 
   if (file.size <= 0) {
@@ -60,7 +75,7 @@ export function validatePdfUpload(
   if (file.size > WORKSPACE_PDF_MAX_BYTES) {
     return {
       ok: false,
-      message: `PDF must be ${Math.round(WORKSPACE_PDF_MAX_BYTES / (1024 * 1024))} MB or smaller.`,
+      message: `File must be ${Math.round(WORKSPACE_PDF_MAX_BYTES / (1024 * 1024))} MB or smaller.`,
     };
   }
 
@@ -70,7 +85,7 @@ export function validatePdfUpload(
   if (pdfsOnCard >= MAX_PDFS_PER_CARD) {
     return {
       ok: false,
-      message: `This card already has the maximum of ${MAX_PDFS_PER_CARD} PDFs.`,
+      message: `This card already has the maximum of ${MAX_PDFS_PER_CARD} files.`,
     };
   }
 
@@ -84,7 +99,7 @@ export function validatePdfUpload(
   if (boardUsage.pdfCount >= MAX_BOARD_PDF_COUNT) {
     return {
       ok: false,
-      message: `This student's workspace already has the maximum of ${MAX_BOARD_PDF_COUNT} PDFs.`,
+      message: `This student's workspace already has the maximum of ${MAX_BOARD_PDF_COUNT} files.`,
     };
   }
 
@@ -92,7 +107,7 @@ export function validatePdfUpload(
     const capMb = Math.round(MAX_BOARD_PDF_BYTES / (1024 * 1024));
     return {
       ok: false,
-      message: `Upload would exceed the ${capMb} MB PDF limit for this student's workspace.`,
+      message: `Upload would exceed the ${capMb} MB file limit for this student's workspace.`,
     };
   }
 

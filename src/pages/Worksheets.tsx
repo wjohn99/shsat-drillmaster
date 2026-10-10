@@ -19,6 +19,7 @@ import {
 import { openWorksheetPdfInNewTab } from "@/lib/worksheetPdfExport";
 import {
   assignmentDueDateInputToTimestamp,
+  assignmentRevealsAnswers,
   createAssignment,
   defaultAssignmentDueDateInput,
   fetchStudents,
@@ -93,6 +94,7 @@ const Worksheets = () => {
   const [assignmentDueDate, setAssignmentDueDate] = useState(defaultAssignmentDueDateInput);
   const minAssignmentDueDate = useMemo(() => toAssignmentDueDateInputValue(new Date()), []);
   const [showOnWorkspace, setShowOnWorkspace] = useState(true);
+  const [revealAnswers, setRevealAnswers] = useState(true);
   const [workspaceBoardExists, setWorkspaceBoardExists] = useState(false);
   const [workspaceLists, setWorkspaceLists] = useState<WorkspaceList[]>([]);
   const [workspaceCards, setWorkspaceCards] = useState<WorkspaceCard[]>([]);
@@ -432,6 +434,7 @@ const Worksheets = () => {
         title,
         tagCodes: selectedCodes,
         dueAt,
+        revealAnswers,
         workspace: placeOnWorkspace
           ? {
               boardId: selectedStudentUid,
@@ -467,11 +470,13 @@ const Worksheets = () => {
       const student = students.find((s) => s.uid === selectedStudentUid);
       toast({
         title: "Assignment sent",
-        description: student
-          ? placeOnWorkspace
-            ? `${student.displayName} can start from Active Assignments or their workspace (due ${dueLabel}).`
-            : `${student.displayName} will see this in Active Assignments (due ${dueLabel}).`
-          : `The student will see this in Active Assignments (due ${dueLabel}).`,
+        description: `${
+          student
+            ? placeOnWorkspace
+              ? `${student.displayName} can start from Active Assignments or their workspace (due ${dueLabel}).`
+              : `${student.displayName} will see this in Active Assignments (due ${dueLabel}).`
+            : `The student will see this in Active Assignments (due ${dueLabel}).`
+        }${revealAnswers ? "" : " Answers and explanations stay hidden."}`,
       });
       setAssignmentsRefreshKey((k) => k + 1);
       setSelectedStudentUid("");
@@ -571,6 +576,11 @@ const Worksheets = () => {
         sessionTitle={sessionTitle}
         storageKeyPrefix={storageKeyPrefix}
         onExit={exitRunner}
+        revealAnswers={
+          runSource === "assignment" && activeAssignment
+            ? assignmentRevealsAnswers(activeAssignment)
+            : true
+        }
         onComplete={async (events) => {
           setSessionEvents(events);
 
@@ -667,7 +677,11 @@ const Worksheets = () => {
               footnote={
                 runSource === "self"
                   ? "Self-practice results are for your review only, not shared with your tutor."
-                  : "Statistics use your answers and time on each question in this worksheet."
+                  : runSource === "assignment" &&
+                      activeAssignment &&
+                      !assignmentRevealsAnswers(activeAssignment)
+                    ? "Answers and explanations stayed hidden on this worksheet. Statistics use your answers and time on each question."
+                    : "Statistics use your answers and time on each question in this worksheet."
               }
               footerActions={
                 role === "tutor" ? (
@@ -764,6 +778,8 @@ const Worksheets = () => {
               workspacePlacementLocked={workspacePlacementLocked}
               assigning={assigning}
               onAssign={handleAssignToStudent}
+              revealAnswers={revealAnswers}
+              onRevealAnswersChange={setRevealAnswers}
             />
           </div>
         )}

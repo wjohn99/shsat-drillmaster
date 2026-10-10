@@ -29,7 +29,8 @@ import {
 } from "@/lib/assignmentService";
 import { fetchPracticeSessionsForTutor } from "@/lib/practiceSessionService";
 import { fetchDiagnosticProgressForTutor } from "@/lib/diagnosticProgressService";
-import { buildTutorDashboardAnalytics } from "@/lib/dashboardAnalytics";
+import { buildTutorDashboardAnalytics, DIAGNOSTIC_STATUS_LABEL } from "@/lib/dashboardAnalytics";
+import { fetchAllWorkspaceBoards } from "@/lib/workspaceService";
 import {
   countCompletedThisWeek,
   countOpenAssignments,
@@ -54,6 +55,7 @@ export function TutorDashboard() {
   const [allAssignments, setAllAssignments] = useState<TutorAssignmentRow[]>([]);
   const [sessions, setSessions] = useState<PracticeSessionRecord[]>([]);
   const [diagnosticInProgressUids, setDiagnosticInProgressUids] = useState<string[]>([]);
+  const [diagnosticAssignedUids, setDiagnosticAssignedUids] = useState<string[]>([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -62,9 +64,10 @@ export function TutorDashboard() {
       setLoading(true);
       setError(null);
       try {
-        const [studentList, assignments] = await Promise.all([
+        const [studentList, assignments, boards] = await Promise.all([
           fetchStudents(),
           fetchAssignmentsForTutor(),
+          fetchAllWorkspaceBoards().catch(() => []),
         ]);
 
         let sessionRows: PracticeSessionRecord[] = [];
@@ -92,6 +95,9 @@ export function TutorDashboard() {
         setAllAssignments(rows);
         setSessions(sessionRows);
         setDiagnosticInProgressUids(inProgressUids);
+        setDiagnosticAssignedUids(
+          boards.filter((board) => board.diagnosticAssigned).map((board) => board.studentUid),
+        );
       } catch (err) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : "Could not load dashboard.");
@@ -107,8 +113,15 @@ export function TutorDashboard() {
   }, []);
 
   const analytics = useMemo(
-    () => buildTutorDashboardAnalytics(students, allAssignments, sessions, diagnosticInProgressUids),
-    [students, allAssignments, sessions, diagnosticInProgressUids],
+    () =>
+      buildTutorDashboardAnalytics(
+        students,
+        allAssignments,
+        sessions,
+        diagnosticInProgressUids,
+        diagnosticAssignedUids,
+      ),
+    [students, allAssignments, sessions, diagnosticInProgressUids, diagnosticAssignedUids],
   );
 
   const recentAssignments = useMemo(
@@ -224,11 +237,7 @@ export function TutorDashboard() {
                                   : "outline"
                             }
                           >
-                            {row.diagnosticStatus === "assigned"
-                              ? "Assigned"
-                              : row.diagnosticStatus === "started"
-                                ? "Started"
-                                : "Finished"}
+                            {DIAGNOSTIC_STATUS_LABEL[row.diagnosticStatus]}
                           </Badge>
                           {row.latestDiagnostic ? (
                             <Button

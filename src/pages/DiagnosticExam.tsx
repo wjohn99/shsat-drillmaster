@@ -27,6 +27,7 @@ import {
   clearDiagnosticSave,
   formatDiagnosticClock,
   isDiagnosticSaveExpired,
+  isLiveDiagnosticExam,
   loadDiagnosticAttempts,
   loadDiagnosticSave,
   markDiagnosticResultsSynced,
@@ -61,6 +62,11 @@ import {
   currentDiagnosticSection,
   mergeDiagnosticEventsWithExam,
 } from "@/lib/shsatDiagnostic";
+import {
+  DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE,
+  isPermissionDenied,
+  roleCanStartDiagnostic,
+} from "@/lib/diagnosticAccess";
 import { toast } from "@/hooks/use-toast";
 import type { DiagnosticEndReason, PracticeSessionRecord } from "@/types/practiceSession";
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
@@ -75,16 +81,23 @@ export default function DiagnosticExam() {
   const reviewFromNav = (location.state as { reviewSession?: PracticeSessionRecord } | null)
     ?.reviewSession;
 
-  const [phase, setPhase] = useState<Phase>(reviewFromNav ? "results" : "intro");
-  const [progress, setProgress] = useState<DiagnosticExamSave | null>(() =>
-    profile ? loadDiagnosticSave(profile.uid) : null,
+  const initialSave =
+    !reviewFromNav && profile ? loadDiagnosticSave(profile.uid) : null;
+  const resumeLiveExam = isLiveDiagnosticExam(initialSave);
+  const [phase, setPhase] = useState<Phase>(
+    reviewFromNav ? "results" : resumeLiveExam ? "exam" : "intro",
   );
+  const [progress, setProgress] = useState<DiagnosticExamSave | null>(initialSave);
   const [progressLoading, setProgressLoading] = useState(Boolean(profile) && !reviewFromNav);
   const [firstSection, setFirstSection] = useState<DiagnosticSubject>(
     progress?.firstSection ?? "ELA",
   );
   const [assignedExtendedTime, setAssignedExtendedTime] = useState(false);
-  const [deadlineAt, setDeadlineAt] = useState(progress?.deadlineAt ?? 0);
+  const [diagnosticAssigned, setDiagnosticAssigned] = useState(profile?.role === "tutor");
+  const [assignmentLoaded, setAssignmentLoaded] = useState(profile?.role === "tutor");
+  const [deadlineAt, setDeadlineAt] = useState(
+    resumeLiveExam && initialSave ? initialSave.deadlineAt : 0,
+  );
   const [events, setEvents] = useState<SessionAnalyticsEvent[]>(reviewFromNav?.events ?? []);
   const [endedReason, setEndedReason] = useState<DiagnosticEndReason | undefined>(
     reviewFromNav?.endedReason,
@@ -119,6 +132,7 @@ export default function DiagnosticExam() {
   const localAttempts = profile ? loadDiagnosticAttempts(profile.uid) : [];
   const phaseRef = useRef(phase);
   phaseRef.current = phase;
+  const restoredOnLoadRef = useRef(false);
 
   useEffect(() => {
     if (!profile || reviewFromNav) {
@@ -132,18 +146,30 @@ export default function DiagnosticExam() {
         if (cancelled) return;
         const local = loadDiagnosticSave(profile.uid);
         const next = pickNewerDiagnosticSave(local, remote);
-        if (phaseRef.current !== "intro") return;
-        if (next) {
-          persistDiagnosticSave(profile.uid, next);
-          setProgress(next);
-          setFirstSection(next.firstSection);
-        } else {
-          setProgress(null);
+        if (!next) {
+          if (phaseRef.current === "intro") setProgress(null);
+          return;
+        }
+        persistDiagnosticSave(profile.uid, next);
+        if (restoredOnLoadRef.current) return;
+        restoredOnLoadRef.current = true;
+        setProgress(next);
+        setFirstSection(next.firstSection);
+        if (isLiveDiagnosticExam(next)) {
+          setDeadlineAt(next.deadlineAt);
+          setPhase("exam");
         }
       })
       .catch(() => {
-        if (!cancelled && phaseRef.current === "intro") {
-          setProgress(loadDiagnosticSave(profile.uid));
+        if (cancelled || restoredOnLoadRef.current) return;
+        restoredOnLoadRef.current = true;
+        const local = loadDiagnosticSave(profile.uid);
+        if (!local) return;
+        setProgress(local);
+        setFirstSection(local.firstSection);
+        if (isLiveDiagnosticExam(local)) {
+          setDeadlineAt(local.deadlineAt);
+          setPhase("exam");
         }
       })
       .finally(() => {
@@ -157,12 +183,27 @@ export default function DiagnosticExam() {
   useEffect(() => {
     if (!profile) return;
     let cancelled = false;
+    if (profile.role === "tutor") {
+      setDiagnosticAssigned(true);
+      setAssignmentLoaded(true);
+    } else {
+      setAssignmentLoaded(false);
+    }
     void fetchWorkspaceBoard(profile.uid)
       .then((board) => {
-        if (!cancelled) setAssignedExtendedTime(Boolean(board?.diagnosticExtendedTime));
+        if (cancelled) return;
+        setAssignedExtendedTime(Boolean(board?.diagnosticExtendedTime));
+        if (profile.role !== "tutor") {
+          setDiagnosticAssigned(Boolean(board?.diagnosticAssigned));
+        }
       })
       .catch(() => {
-        if (!cancelled) setAssignedExtendedTime(false);
+        if (cancelled) return;
+        setAssignedExtendedTime(false);
+        if (profile.role !== "tutor") setDiagnosticAssigned(false);
+      })
+      .finally(() => {
+        if (!cancelled && profile.role !== "tutor") setAssignmentLoaded(true);
       });
     return () => {
       cancelled = true;
@@ -191,6 +232,12 @@ export default function DiagnosticExam() {
   }, [phase, progress]);
 
   const canStartOfficial = exam.isComplete;
+  const canStartNew = roleCanStartDiagnostic(
+    profile?.role,
+    assignmentLoaded && diagnosticAssigned,
+  );
+  const showDiagnosticLockMessage =
+    profile?.role === "student" && assignmentLoaded && !diagnosticAssigned;
   const canPreview = exam.elaReady > 0 && exam.mathReady > 0;
   const orderedAccountSessions = useMemo(
     () => orderDiagnosticSessionsOldestFirst(accountSessions),
@@ -303,11 +350,21 @@ export default function DiagnosticExam() {
         isBaseline,
       });
       markDiagnosticResultsSynced(profile.uid, id, localId);
+      try {
+        await clearDiagnosticProgress(profile.uid);
+      } catch {
+        // The report is already saved. A leftover in-progress row can be cleared later.
+      }
       void fetchPracticeSessionsForStudent(["diagnostic"])
         .then(setAccountSessions)
         .catch(() => undefined);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Could not save to your account.";
+      const denied = isPermissionDenied(err);
+      const message = denied
+        ? DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE
+        : err instanceof Error
+          ? err.message
+          : "Could not save to your account.";
       setSaveError(message);
       toast({
         title: "Saved on this device, retry to sync your account",
@@ -319,19 +376,25 @@ export default function DiagnosticExam() {
     }
   };
 
-  const writeProgress = async (save: DiagnosticExamSave) => {
-    if (!profile) return;
+  const writeProgress = async (save: DiagnosticExamSave): Promise<"ok" | "denied" | "local"> => {
+    if (!profile) return "denied";
     persistDiagnosticSave(profile.uid, save);
     setProgress(save);
     try {
       await saveDiagnosticProgress(profile.uid, save);
+      return "ok";
     } catch (err) {
+      const denied = isPermissionDenied(err);
       toast({
-        title: "Saved on this device",
-        description:
-          err instanceof Error ? err.message : "Could not sync this attempt to your account yet.",
+        title: denied ? "Diagnostic is not assigned" : "Saved on this device",
+        description: denied
+          ? DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE
+          : err instanceof Error
+            ? err.message
+            : "Could not sync this attempt to your account yet.",
         variant: "destructive",
       });
+      return denied ? "denied" : "local";
     }
   };
 
@@ -347,7 +410,7 @@ export default function DiagnosticExam() {
   };
 
   const beginFreshExam = () => {
-    if (!profile || !canPreview) return;
+    if (!profile || !canPreview || !canStartNew) return;
     void (async () => {
       if (progress) await eraseInProgress();
       setConfirmRetake(false);
@@ -376,13 +439,18 @@ export default function DiagnosticExam() {
         clockHidden: false,
         events: [],
       };
-      await writeProgress(save);
+      const remote = await writeProgress(save);
+      if (remote === "denied") {
+        await eraseInProgress();
+        return;
+      }
       setDeadlineAt(save.deadlineAt);
       setPhase("exam");
     })();
   };
 
   const startNew = () => {
+    if (!canStartNew) return;
     if (progress) {
       setConfirmStartOver(true);
       return;
@@ -395,7 +463,7 @@ export default function DiagnosticExam() {
   };
 
   const requestAnotherSitting = () => {
-    if (!canPreview) return;
+    if (!canPreview || !canStartNew) return;
     if (progress) {
       setConfirmStartOver(true);
       return;
@@ -459,7 +527,8 @@ export default function DiagnosticExam() {
       progress.answers,
       progress.events,
     );
-    await eraseInProgress();
+    clearDiagnosticSave(profile.uid);
+    setProgress(null);
     setEvents(completed);
     setEndedReason(reason);
     setPhase(reason === "time" ? "timesup" : "results");
@@ -491,7 +560,7 @@ export default function DiagnosticExam() {
   if (phase === "exam" && profile) {
     return (
       <DiagnosticExamRunner
-        key={deadlineAt}
+        key={`${deadlineAt}:${progress?.updatedAt ?? 0}`}
         exam={exam}
         userId={profile.uid}
         firstSection={firstSection}
@@ -544,12 +613,16 @@ export default function DiagnosticExam() {
                   size="lg"
                   variant="outline"
                   onClick={requestAnotherSitting}
-                  disabled={!canPreview}
+                  disabled={!canPreview || !canStartNew}
                 >
                   Start a new sitting
                 </Button>
               ) : null}
-              {!reviewFromNav ? (
+              {!reviewFromNav && showDiagnosticLockMessage ? (
+                <p className="text-sm text-muted-foreground">
+                  {DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE}
+                </p>
+              ) : !reviewFromNav ? (
                 <p className="text-xs text-muted-foreground">
                   Starting again does not delete this sitting. It is saved with your other reports.
                 </p>
@@ -652,9 +725,15 @@ export default function DiagnosticExam() {
               </div>
             }
             footerActions={
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-col items-start gap-2">
+                {!reviewFromNav && showDiagnosticLockMessage ? (
+                  <p className="text-sm text-muted-foreground">
+                    {DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE}
+                  </p>
+                ) : null}
+                <div className="flex flex-wrap gap-2">
                 {!reviewFromNav ? (
-                  <Button onClick={requestAnotherSitting} disabled={!canPreview}>
+                  <Button onClick={requestAnotherSitting} disabled={!canPreview || !canStartNew}>
                     Start a new sitting
                   </Button>
                 ) : null}
@@ -669,6 +748,7 @@ export default function DiagnosticExam() {
                 <Button variant="outline" asChild>
                   <Link to="/dashboard">Dashboard</Link>
                 </Button>
+                </div>
               </div>
             }
           />
@@ -896,11 +976,12 @@ export default function DiagnosticExam() {
               </div>
               {profile?.role === "tutor" ? (
                 <p className="text-xs text-muted-foreground">
-                  To give a student 360 minutes, turn on extended time on their workspace board.
+                  Students can start this only after you assign it on their workspace board. Turn
+                  on extended time there to give a student 360 minutes.
                 </p>
               ) : null}
 
-              {!canStartOfficial ? (
+              {showDiagnosticLockMessage ? null : !canStartOfficial ? (
                 <p className="text-sm text-muted-foreground">
                   This form is not complete yet. Timing and navigation still match the Fall 2026
                   rules.
@@ -912,13 +993,21 @@ export default function DiagnosticExam() {
                 </p>
               )}
 
+              {showDiagnosticLockMessage ? (
+                <p className="text-sm text-muted-foreground">
+                  {progress
+                    ? "You can resume this sitting. Your tutor has to assign the diagnostic before you can start a new one."
+                    : DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE}
+                </p>
+              ) : null}
+
               {progress && !saveExpired ? (
                 <Button
                   className="w-full"
                   size="lg"
                   variant="outline"
                   onClick={startNew}
-                  disabled={!canPreview}
+                  disabled={!canPreview || !canStartNew}
                 >
                   Start over and erase answers
                 </Button>
@@ -927,7 +1016,12 @@ export default function DiagnosticExam() {
                   View results above to close this exam before starting another.
                 </p>
               ) : (
-                <Button className="w-full" size="lg" onClick={startNew} disabled={!canPreview || progressLoading}>
+                <Button
+                  className="w-full"
+                  size="lg"
+                  onClick={startNew}
+                  disabled={!canPreview || progressLoading || !canStartNew}
+                >
                   {hasCompletedDiagnostic
                     ? "Sit again"
                     : canStartOfficial

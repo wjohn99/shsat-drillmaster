@@ -7,19 +7,28 @@ import {
 } from "firebase/storage";
 
 import { getFirebaseStorage } from "@/lib/firebase";
+import { type WorkspaceFileContentType } from "@/lib/workspaceUploadLimits";
 import type { WorkspaceCardAttachment } from "@/types/workspace";
 
 export { WORKSPACE_PDF_MAX_BYTES } from "@/lib/workspaceUploadLimits";
 
-export function isPdfFile(file: File): boolean {
-  const name = file.name.toLowerCase();
-  return file.type === "application/pdf" || name.endsWith(".pdf");
+function extensionForContentType(contentType: WorkspaceFileContentType): string {
+  if (contentType === "image/png") return ".png";
+  if (contentType === "image/jpeg") return ".jpg";
+  return ".pdf";
 }
 
-export function sanitizeStorageFileName(name: string): string {
-  const trimmed = name.trim() || "document.pdf";
+export function sanitizeStorageFileName(
+  name: string,
+  contentType: WorkspaceFileContentType = "application/pdf",
+): string {
+  const trimmed = name.trim() || "file";
   const safe = trimmed.replace(/[^a-zA-Z0-9._-]/g, "_");
-  return safe.toLowerCase().endsWith(".pdf") ? safe : `${safe}.pdf`;
+  const lower = safe.toLowerCase();
+  if (/\.(pdf|png|jpg|jpeg)$/.test(lower)) {
+    return lower;
+  }
+  return `${lower}${extensionForContentType(contentType)}`;
 }
 
 export function buildWorkspaceAttachmentStoragePath(
@@ -27,26 +36,27 @@ export function buildWorkspaceAttachmentStoragePath(
   cardId: string,
   attachmentId: string,
   fileName: string,
+  contentType: WorkspaceFileContentType = "application/pdf",
 ): string {
-  return `workspace/${boardId}/cards/${cardId}/${attachmentId}_${sanitizeStorageFileName(fileName)}`;
+  return `workspace/${boardId}/cards/${cardId}/${attachmentId}_${sanitizeStorageFileName(fileName, contentType)}`;
 }
 
-export async function uploadWorkspacePdf(
+export async function uploadWorkspaceFile(
   storagePath: string,
   file: File,
+  contentType: WorkspaceFileContentType,
 ): Promise<void> {
   const storage = getFirebaseStorage();
-  const metadata: UploadMetadata = {
-    contentType: "application/pdf",
-  };
+  const metadata: UploadMetadata = { contentType };
   await uploadBytes(ref(storage, storagePath), file, metadata);
 }
 
-export async function uploadWorkspacePdfAndGetUrl(
+export async function uploadWorkspaceFileAndGetUrl(
   storagePath: string,
   file: File,
+  contentType: WorkspaceFileContentType,
 ): Promise<string> {
-  await uploadWorkspacePdf(storagePath, file);
+  await uploadWorkspaceFile(storagePath, file, contentType);
   const storage = getFirebaseStorage();
   return getDownloadURL(ref(storage, storagePath));
 }

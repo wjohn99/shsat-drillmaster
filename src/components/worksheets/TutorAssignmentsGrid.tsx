@@ -112,6 +112,9 @@ export function TutorAssignmentsGrid({
                 ) : null}
                 {WORKSHEET_PROGRESS_LABEL[progress]}
               </Badge>
+              {assignment.revealAnswers === false ? (
+                <Badge variant="outline">Cold diagnostic</Badge>
+              ) : null}
               {dueLabel && !isCompleted ? (
                 <span className={`text-xs ${overdue ? "text-destructive font-medium" : "text-muted-foreground"}`}>
                   Due {dueLabel}

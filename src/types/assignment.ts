@@ -17,6 +17,11 @@ export interface WorksheetAssignment {
   workspaceCardId?: string | null;
   title: string;
   tagCodes: string[];
+  /**
+   * When false, the student does not see correct answers or explanations
+   * while taking the worksheet (cold diagnostic). Missing means show them.
+   */
+  revealAnswers: boolean;
 }
 
 export interface StudentOption {

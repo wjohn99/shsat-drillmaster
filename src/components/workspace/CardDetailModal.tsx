@@ -75,6 +75,7 @@ import {
   MAX_ATTACHMENTS_PER_CARD,
   MAX_PDFS_PER_CARD,
   WORKSPACE_PDF_MAX_BYTES,
+  workspaceFileContentType,
 } from "@/lib/workspaceUploadLimits";
 import type {
   CardFeedItem,
@@ -493,9 +494,16 @@ export function CardDetailModal({
     const file = event.target.files?.[0];
     event.target.value = "";
     if (!file || !card || !canAddAttachments) return;
+    if (!workspaceFileContentType(file)) {
+      toast({
+        title: "Only PDF, JPEG, and PNG files are allowed.",
+        variant: "destructive",
+      });
+      return;
+    }
     setAddingLink(false);
     setPendingPdf(file);
-    setPdfDisplayName(file.name.replace(/\.pdf$/i, "").trim() || "Document");
+    setPdfDisplayName(file.name.replace(/\.(pdf|png|jpe?g)$/i, "").trim() || "Document");
   };
 
   const clearPendingPdf = () => {
@@ -517,11 +525,11 @@ export function CardDetailModal({
       setAttachments(rows);
       await reloadSubmissions(rows);
       clearPendingPdf();
-      toast({ title: "PDF attached" });
+      toast({ title: "File attached" });
       onUpdated();
     } catch (err) {
       toast({
-        title: "Could not upload PDF",
+        title: "Could not upload file",
         description: err instanceof Error ? err.message : "Please try again.",
         variant: "destructive",
       });
@@ -867,7 +875,7 @@ export function CardDetailModal({
                         disabled={uploadingPdf || pdfUploadBlocked}
                         title={
                           pdfUploadBlocked
-                            ? `Limit reached (${MAX_PDFS_PER_CARD} PDFs or ${MAX_ATTACHMENTS_PER_CARD} attachments per card)`
+                            ? `Limit reached (${MAX_PDFS_PER_CARD} files or ${MAX_ATTACHMENTS_PER_CARD} attachments per card)`
                             : undefined
                         }
                         onClick={() => {
@@ -880,12 +888,12 @@ export function CardDetailModal({
                         ) : (
                           <Upload className="h-4 w-4 mr-1" />
                         )}
-                        Upload PDF
+                        Upload file
                       </Button>
                       <input
                         ref={pdfInputRef}
                         type="file"
-                        accept="application/pdf,.pdf"
+                        accept="application/pdf,.pdf,image/jpeg,image/png,.jpg,.jpeg,.png"
                         className="hidden"
                         onChange={(e) => void handlePdfSelected(e)}
                       />
@@ -907,15 +915,15 @@ export function CardDetailModal({
 
                 {canAddAttachments ? (
                   <p className="text-xs text-muted-foreground mb-3">
-                    PDFs only · max {Math.round(WORKSPACE_PDF_MAX_BYTES / (1024 * 1024))} MB each ·{" "}
-                    {attachmentCounts.pdfs}/{MAX_PDFS_PER_CARD} PDFs on this card
+                    PDF, JPEG, or PNG · max {Math.round(WORKSPACE_PDF_MAX_BYTES / (1024 * 1024))} MB each ·{" "}
+                    {attachmentCounts.pdfs}/{MAX_PDFS_PER_CARD} files on this card
                   </p>
                 ) : null}
 
                 {canAddAttachments && pendingPdf ? (
                   <div className="mb-4 rounded-lg border bg-muted/30 p-3 space-y-3">
                     <p className="text-xs text-muted-foreground">
-                      Name this PDF so it is easy to find on the card. Original file: {pendingPdf.name}
+                      Name this file so it is easy to find on the card. Original file: {pendingPdf.name}
                     </p>
                     <div className="space-y-1.5">
                       <Label htmlFor="pdf-display-name">Name</Label>
@@ -1243,17 +1251,21 @@ function AttachmentRow({
     return () => document.removeEventListener("keydown", onKeyDown, true);
   }, [renaming, attachment.fileName]);
 
+  const fileNameLower = attachment.fileName.toLowerCase();
   const isPdf =
     !isLink &&
-    (attachment.contentType.includes("pdf") ||
-      attachment.fileName.toLowerCase().endsWith(".pdf"));
+    (attachment.contentType.includes("pdf") || fileNameLower.endsWith(".pdf"));
+  const isImage =
+    !isLink &&
+    (attachment.contentType.startsWith("image/") ||
+      /\.(png|jpe?g)$/.test(fileNameLower));
   const dueLabel = formatAttachmentDueDate(attachment);
   const hasSubmission = Boolean(submission);
   const overdue = isAttachmentOverdue(attachment, hasSubmission);
   const isOwnAttachment = Boolean(currentUserUid && attachment.uploadedByUid === currentUserUid);
   const canRemove = isTutorView || isOwnAttachment;
   const canRename = isTutorView || isOwnAttachment;
-  const canPreviewPdf = isPdf && Boolean(downloadUrl);
+  const canPreviewFile = (isPdf || isImage) && Boolean(downloadUrl);
   const showHomeworkSubmit = isStudentView && !isOwnAttachment;
 
   const openHref = (url: string) => {
@@ -1279,7 +1291,7 @@ function AttachmentRow({
   const handleSubmitWork = async () => {
     if (!submitPdf && !submitUrl.trim()) {
       toast({
-        title: "Add a Drive link or upload a PDF",
+        title: "Add a Drive link or upload a file",
         variant: "destructive",
       });
       return;
@@ -1364,10 +1376,12 @@ function AttachmentRow({
               ? "bg-primary/10 text-primary"
               : isPdf
                 ? "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-200"
-                : "bg-muted",
+                : isImage
+                  ? "bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-200"
+                  : "bg-muted",
           )}
         >
-          {isLink ? <Link2 className="h-4 w-4" /> : isPdf ? "PDF" : "FILE"}
+          {isLink ? <Link2 className="h-4 w-4" /> : isPdf ? "PDF" : isImage ? "IMG" : "FILE"}
         </div>
         <div className="min-w-0 flex-1">
           {renaming ? (
@@ -1410,7 +1424,7 @@ function AttachmentRow({
                 Cancel
               </Button>
             </div>
-          ) : canPreviewPdf ? (
+          ) : canPreviewFile ? (
             <button
               type="button"
               className="group/preview inline-flex items-center gap-1.5 max-w-full text-left"
@@ -1434,13 +1448,13 @@ function AttachmentRow({
           </p>
         </div>
         <div className="flex items-center gap-1 shrink-0">
-          {canPreviewPdf ? (
+          {canPreviewFile ? (
             <Button
               variant="ghost"
               size="icon"
               className="h-8 w-8"
               onClick={() => setPreviewOpen(true)}
-              title="Preview PDF"
+              title={isImage ? "Preview image" : "Preview PDF"}
             >
               <Eye className="h-4 w-4" />
             </Button>
@@ -1486,9 +1500,15 @@ function AttachmentRow({
         >
           <DialogTitle className="pr-8 text-sm truncate">{attachment.fileName}</DialogTitle>
           <DialogDescription className="sr-only">
-            PDF preview for {attachment.fileName}
+            {isImage ? "Image" : "PDF"} preview for {attachment.fileName}
           </DialogDescription>
-          {downloadUrl ? (
+          {downloadUrl && isImage ? (
+            <img
+              alt={attachment.fileName}
+              src={downloadUrl}
+              className="min-h-0 w-full flex-1 rounded border bg-background object-contain"
+            />
+          ) : downloadUrl ? (
             <iframe
               title={`Preview ${attachment.fileName}`}
               src={downloadUrl}
@@ -1547,7 +1567,7 @@ function AttachmentRow({
           ) : (
             <div className="rounded-md border bg-muted/30 p-2.5 space-y-2">
               <p className="text-xs text-muted-foreground">
-                Paste a Google Drive link, or upload a PDF of your finished homework.
+                Paste a Google Drive link, or upload a PDF, JPEG, or PNG of your finished homework.
               </p>
               <div className="space-y-1.5">
                 <Label htmlFor={`submit-url-${attachment.id}`} className="text-xs">
@@ -1572,11 +1592,18 @@ function AttachmentRow({
               <input
                 ref={submitPdfInputRef}
                 type="file"
-                accept="application/pdf,.pdf"
+                accept="application/pdf,.pdf,image/jpeg,image/png,.jpg,.jpeg,.png"
                 className="hidden"
                 onChange={(e) => {
                   const file = e.target.files?.[0] ?? null;
                   e.target.value = "";
+                  if (file && !workspaceFileContentType(file)) {
+                    toast({
+                      title: "Only PDF, JPEG, and PNG files are allowed.",
+                      variant: "destructive",
+                    });
+                    return;
+                  }
                   setSubmitPdf(file);
                   if (file) setSubmitUrl("");
                 }}
@@ -1605,7 +1632,7 @@ function AttachmentRow({
                   onClick={() => submitPdfInputRef.current?.click()}
                 >
                   <Upload className="h-4 w-4 mr-1.5" />
-                  Upload PDF
+                  Upload PDF or image
                 </Button>
               )}
               <div className="space-y-1.5">
