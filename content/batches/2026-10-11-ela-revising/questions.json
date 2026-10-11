@@ -1,0 +1,2834 @@
+{
+  "batch": "2026-10-11-ela-revising",
+  "description": "Fifty new original Revising/Editing Part B items (ELA-REB-101 to ELA-REB-150): 40 four-choice items across twelve conventions and language skills, and 10 inline-dropdown (INDY-IC) items. Split evenly between Module 1 and Module 2.",
+  "questions": [
+    {
+      "id": "ELA-REB-101",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-SEN"
+      ],
+      "stem": "Which sentence contains an error in its construction and should be revised?\n\n(1) The Brooklyn Bridge opened to the public in May 1883 after fourteen years of construction. (2) At the time, it was the longest suspension bridge in the world. (3) Emily Roebling, who took over many of the engineering duties after her husband became ill. (4) Shortly before the official opening, she became the first person to ride across the bridge.",
+      "choices": [
+        {
+          "id": "ELA-REB-101-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false,
+          "explanation": "Sentence 1 is complete. Its subject is \"The Brooklyn Bridge,\" and its verb is \"opened.\""
+        },
+        {
+          "id": "ELA-REB-101-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": false,
+          "explanation": "Sentence 2 is complete. \"At the time\" is an introductory phrase, and the main clause \"it was the longest suspension bridge\" has a subject and a verb."
+        },
+        {
+          "id": "ELA-REB-101-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": true,
+          "explanation": "Correct. This is a fragment. \"Who took over many of the engineering duties\" is a clause that describes Emily Roebling, but the sentence never says what Emily Roebling did. Revised: \"Emily Roebling took over many of the engineering duties after her husband became ill.\""
+        },
+        {
+          "id": "ELA-REB-101-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": false,
+          "explanation": "Sentence 4 is complete. \"Shortly before the official opening\" is an introductory phrase, \"she\" clearly refers to Emily Roebling, and \"became\" is the verb."
+        }
+      ],
+      "solutionExplanation": "Every sentence needs a subject and a main verb that completes a thought. Sentence 3 names a subject, Emily Roebling, and then adds a \"who\" clause that describes her. The only verb, \"took over,\" belongs to that \"who\" clause, so the main subject never gets a verb of its own. Deleting \"who\" turns \"took over\" into the main verb and fixes the fragment.",
+      "commonTrap": "Students see the verb \"took over\" and assume sentence 3 is complete. But that verb is trapped inside the \"who\" clause. Cover up the \"who\" clause and ask what Emily Roebling did. If nothing is left, the sentence is a fragment.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-102",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-SEN"
+      ],
+      "stem": "Read these sentences.\n\n(1) The new skate park in our neighborhood was designed for beginners.\n\n(2) Many experienced skaters now practice there every weekend.\n\nWhich is the best way to combine the sentences to show the relationship between the ideas?",
+      "choices": [
+        {
+          "id": "ELA-REB-102-a",
+          "label": "A",
+          "text": "The new skate park in our neighborhood was designed for beginners, so many experienced skaters now practice there every weekend.",
+          "isCorrect": false,
+          "explanation": "\"So\" signals cause and effect, but a park designed for beginners would not cause experienced skaters to go there. The ideas contrast."
+        },
+        {
+          "id": "ELA-REB-102-b",
+          "label": "B",
+          "text": "The new skate park in our neighborhood was designed for beginners, many experienced skaters now practice there every weekend.",
+          "isCorrect": false,
+          "explanation": "This joins two complete sentences with only a comma, which creates a comma splice. It also gives no word that shows how the ideas relate."
+        },
+        {
+          "id": "ELA-REB-102-c",
+          "label": "C",
+          "text": "Because the new skate park in our neighborhood was designed for beginners, many experienced skaters now practice there every weekend.",
+          "isCorrect": false,
+          "explanation": "\"Because\" says the beginner design is the reason experienced skaters go there, which does not make sense. The relationship is contrast, not cause."
+        },
+        {
+          "id": "ELA-REB-102-d",
+          "label": "D",
+          "text": "Although the new skate park in our neighborhood was designed for beginners, many experienced skaters now practice there every weekend.",
+          "isCorrect": true,
+          "explanation": "Correct. \"Although\" shows the contrast: the park was meant for beginners, yet experienced skaters use it. The dependent clause is joined to the main clause with a comma, so the sentence is correctly built."
+        }
+      ],
+      "solutionExplanation": "The first sentence says who the park was meant for, and the second says who actually uses it. Those ideas contrast, so the combined sentence needs a contrast word. \"Although\" turns the first sentence into a dependent clause and shows the contrast, which makes choice D correct.",
+      "commonTrap": "Students often pick a cause word like \"so\" or \"because\" without testing the logic. Ask whether the first idea really causes the second. Being designed for beginners does not cause experts to come, so the ideas contrast.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-103",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-SEN"
+      ],
+      "stem": "Which sentence contains an error in its construction and should be revised?\n\n(1) Each spring, volunteers in the Bronx gather along the Bronx River to remove trash and plant native grasses. (2) The river, once so polluted that few people wanted to go near it, now supports herons, turtles, and schools of fish. (3) A beaver named José, the first seen in the river in two centuries, arriving in 2007 and quickly becoming a local celebrity. (4) His appearance convinced many residents that the cleanup efforts were working.",
+      "choices": [
+        {
+          "id": "ELA-REB-103-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false,
+          "explanation": "Sentence 1 is complete. \"Volunteers\" is the subject, and \"gather\" is the verb. The infinitives \"to remove\" and \"to plant\" explain why they gather."
+        },
+        {
+          "id": "ELA-REB-103-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": false,
+          "explanation": "Sentence 2 is complete even though it is long. The phrase \"once so polluted that few people wanted to go near it\" interrupts the sentence, but the subject \"The river\" still has a main verb, \"supports.\""
+        },
+        {
+          "id": "ELA-REB-103-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": true,
+          "explanation": "Correct. This is a fragment. \"Arriving\" and \"becoming\" are -ing forms, which cannot serve as main verbs by themselves, so the subject \"A beaver named José\" never gets a complete verb. Revised: \"A beaver named José, the first seen in the river in two centuries, arrived in 2007 and quickly became a local celebrity.\""
+        },
+        {
+          "id": "ELA-REB-103-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": false,
+          "explanation": "Sentence 4 is complete. \"His appearance\" is the subject, and \"convinced\" is the verb. \"His\" clearly refers to José."
+        }
+      ],
+      "solutionExplanation": "To check for a fragment, find the subject and then look for a complete main verb. In sentence 3, the subject is \"A beaver named José,\" followed by an appositive set off by commas. After that come only \"arriving\" and \"becoming.\" An -ing word needs a helping verb such as \"was\" to act as a main verb, so the sentence has no main verb. Changing them to \"arrived\" and \"became\" fixes it.",
+      "commonTrap": "Sentence 2 is the tempting choice because its long interrupting phrase makes it feel unfinished. But once the phrase between the commas is removed, \"The river now supports herons, turtles, and schools of fish\" is complete. Sentence 3 sounds like it has action, but -ing words alone are not main verbs.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-104",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-SEN",
+        "RE-RUN"
+      ],
+      "stem": "Read this paragraph.\n\n(1) The Apollo Theater in Harlem has hosted Amateur Night since 1934. (2) Performers who win over its famously tough audience can launch major careers. (3) Ella Fitzgerald, for example, who won the contest as a teenager and went on to become one of the most celebrated jazz singers of all time. (4) Today, the show still draws hopeful singers, dancers, and comedians from around the world.\n\nWhich revision corrects the error in sentence 3?",
+      "choices": [
+        {
+          "id": "ELA-REB-104-a",
+          "label": "A",
+          "text": "For example, Ella Fitzgerald, who won the contest as a teenager and who went on to become one of the most celebrated jazz singers of all time.",
+          "isCorrect": false,
+          "explanation": "Moving \"for example\" and repeating \"who\" does not help. Both verbs are still inside \"who\" clauses, so Ella Fitzgerald still has no main verb."
+        },
+        {
+          "id": "ELA-REB-104-b",
+          "label": "B",
+          "text": "Ella Fitzgerald, for example, who won the contest as a teenager, going on to become one of the most celebrated jazz singers of all time.",
+          "isCorrect": false,
+          "explanation": "This is still a fragment. \"Won\" remains inside the \"who\" clause, and \"going\" is an -ing form that cannot be a main verb by itself."
+        },
+        {
+          "id": "ELA-REB-104-c",
+          "label": "C",
+          "text": "Ella Fitzgerald, for example, won the contest as a teenager, she went on to become one of the most celebrated jazz singers of all time.",
+          "isCorrect": false,
+          "explanation": "This fixes the fragment but creates a comma splice. \"Ella Fitzgerald won the contest as a teenager\" and \"she went on to become...\" are both complete sentences joined by only a comma."
+        },
+        {
+          "id": "ELA-REB-104-d",
+          "label": "D",
+          "text": "Ella Fitzgerald, for example, won the contest as a teenager and went on to become one of the most celebrated jazz singers of all time.",
+          "isCorrect": true,
+          "explanation": "Correct. Removing \"who\" makes \"won\" and \"went\" the main verbs of the subject \"Ella Fitzgerald,\" so the sentence is complete."
+        }
+      ],
+      "solutionExplanation": "Sentence 3 is a fragment. Every verb in it, \"won\" and \"went,\" sits inside the clause beginning with \"who,\" so the subject \"Ella Fitzgerald\" has no main verb. Deleting \"who\" makes \"won\" and \"went\" the main verbs. Choice D does this without adding any new error.",
+      "commonTrap": "Choice C is tempting because it removes \"who\" and clearly has a main verb. But it splits the ideas into two complete sentences and joins them with only a comma. When a revision fixes one error, check that it does not create another.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-105",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-MOD"
+      ],
+      "stem": "Which sentence contains an error in its construction and should be revised?\n\n(1) The High Line is a public park built on an old elevated railway on Manhattan's West Side. (2) Freight trains used the tracks until 1980, when the line was abandoned. (3) Covered in wildflowers and weeds, two local residents saw the abandoned tracks as a chance to create something new. (4) Their campaign to save the structure led to the park's opening in 2009.",
+      "choices": [
+        {
+          "id": "ELA-REB-105-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false,
+          "explanation": "Sentence 1 is correct. \"Built on an old elevated railway\" sits right after \"a public park,\" which is what was built."
+        },
+        {
+          "id": "ELA-REB-105-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": false,
+          "explanation": "Sentence 2 is correct. The clause \"when the line was abandoned\" clearly refers to the year 1980."
+        },
+        {
+          "id": "ELA-REB-105-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": true,
+          "explanation": "Correct. The opening phrase \"Covered in wildflowers and weeds\" should describe the tracks, but the noun right after the comma is \"two local residents.\" The sentence says the residents were covered in weeds. Revised: \"Two local residents saw the abandoned tracks, which were covered in wildflowers and weeds, as a chance to create something new.\""
+        },
+        {
+          "id": "ELA-REB-105-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": false,
+          "explanation": "Sentence 4 is correct. \"Their\" clearly refers to the two residents in sentence 3."
+        }
+      ],
+      "solutionExplanation": "An introductory modifier describes the noun that comes right after the comma. In sentence 3, \"Covered in wildflowers and weeds\" is followed by \"two local residents,\" so the sentence illogically says the residents were covered in weeds. The phrase must be placed next to \"the abandoned tracks.\"",
+      "commonTrap": "Readers automatically connect \"covered in wildflowers and weeds\" to the tracks because that is what makes sense, so the sentence seems fine. Always check the noun right after an introductory phrase. Grammar follows position, not common sense.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-106",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-MOD"
+      ],
+      "stem": "Read this paragraph.\n\n(1) Last week, our science class visited the New York Hall of Science in Queens. (2) A guide showed us a model of a lunar module wearing a bright blue vest. (3) She explained how astronauts used the module to land on the moon. (4) Afterward, we built and tested our own small landers out of paper cups and straws.\n\nWhich revision corrects the error in sentence 2?",
+      "choices": [
+        {
+          "id": "ELA-REB-106-a",
+          "label": "A",
+          "text": "A guide showed us, wearing a bright blue vest, a model of a lunar module.",
+          "isCorrect": false,
+          "explanation": "The phrase now sits right after \"us,\" so it seems to describe the students. It also splits the verb \"showed\" from what was shown."
+        },
+        {
+          "id": "ELA-REB-106-b",
+          "label": "B",
+          "text": "A guide wearing a bright blue vest showed us a model of a lunar module.",
+          "isCorrect": true,
+          "explanation": "Correct. \"Wearing a bright blue vest\" now comes right after \"A guide,\" the person who wore the vest."
+        },
+        {
+          "id": "ELA-REB-106-c",
+          "label": "C",
+          "text": "Wearing a bright blue vest, a model of a lunar module was shown to us by a guide.",
+          "isCorrect": false,
+          "explanation": "The opening phrase is followed by \"a model of a lunar module,\" so the sentence still says the model wore the vest."
+        },
+        {
+          "id": "ELA-REB-106-d",
+          "label": "D",
+          "text": "A guide showed a model of a lunar module wearing a bright blue vest to us.",
+          "isCorrect": false,
+          "explanation": "\"Wearing a bright blue vest\" still comes right after \"lunar module,\" so the module still seems to be wearing the vest."
+        }
+      ],
+      "solutionExplanation": "A modifier should sit next to the word it describes. In sentence 2, \"wearing a bright blue vest\" follows \"lunar module,\" which makes it sound as if the model wore the vest. Moving the phrase next to \"A guide\" fixes the error, as in choice B.",
+      "commonTrap": "Choice C is tempting because it moves the phrase to the front of the sentence, a common fix. But an opening phrase describes the noun right after the comma, and here that noun is still the model.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-107",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-MOD"
+      ],
+      "stem": "Which sentence contains an error in its construction and should be revised?\n\n(1) In 1964, the World's Fair opened in Flushing Meadows Corona Park with exhibits from dozens of countries. (2) Visitors could ride a monorail, watch early computer demonstrations, and see a giant steel globe called the Unisphere. (3) After standing in the park for more than half a century, many New Yorkers now see the Unisphere as a symbol of Queens itself. (4) The globe, which is about twelve stories tall, remains one of the most photographed landmarks in the borough.",
+      "choices": [
+        {
+          "id": "ELA-REB-107-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false,
+          "explanation": "Sentence 1 is correct. The phrase \"with exhibits from dozens of countries\" describes how the fair opened."
+        },
+        {
+          "id": "ELA-REB-107-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": false,
+          "explanation": "Sentence 2 is correct. The three verbs in the list, \"ride,\" \"watch,\" and \"see,\" are parallel, and all follow \"could.\""
+        },
+        {
+          "id": "ELA-REB-107-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": true,
+          "explanation": "Correct. \"After standing in the park for more than half a century\" should describe the Unisphere, but the noun after the comma is \"many New Yorkers.\" The sentence says the New Yorkers stood in the park for more than fifty years. Revised: \"After standing in the park for more than half a century, the Unisphere is now seen by many New Yorkers as a symbol of Queens itself.\""
+        },
+        {
+          "id": "ELA-REB-107-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": false,
+          "explanation": "Sentence 4 is correct. The clause \"which is about twelve stories tall\" is set off by commas and clearly describes \"The globe.\""
+        }
+      ],
+      "solutionExplanation": "An introductory phrase must describe the subject that follows the comma. In sentence 3, the subject is \"many New Yorkers,\" but it was the Unisphere that stood in the park all those years. Making \"the Unisphere\" the subject of the main clause fixes the dangling modifier.",
+      "commonTrap": "This error is hard to hear because the sentence mentions the Unisphere later, so the meaning feels clear. Students may instead pick sentence 4 because of its interrupting clause. Always test the noun directly after an opening -ing phrase: did the New Yorkers stand in the park for half a century? No, so the modifier dangles.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-108",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-MOD",
+        "RE-RUN"
+      ],
+      "stem": "Read this paragraph.\n\n(1) Jazz musician Louis Armstrong lived in a modest brick house in Corona, Queens, for nearly thirty years. (2) Although he was famous around the world, Armstrong chose to stay in the working-class neighborhood. (3) Neighborhood children often gathered on his front steps, where he would sometimes play his trumpet for them. (4) Preserved almost exactly as the Armstrongs left it, visitors can now tour the house as a museum.\n\nWhich revision corrects the error in sentence 4?",
+      "choices": [
+        {
+          "id": "ELA-REB-108-a",
+          "label": "A",
+          "text": "Preserved almost exactly as the Armstrongs left it, the house is now a museum that visitors can tour.",
+          "isCorrect": true,
+          "explanation": "Correct. \"The house\" now comes right after the opening phrase, so it is the house that was preserved."
+        },
+        {
+          "id": "ELA-REB-108-b",
+          "label": "B",
+          "text": "Preserved almost exactly as the Armstrongs left it, visitors can now tour the house, which is a museum.",
+          "isCorrect": false,
+          "explanation": "The opening phrase is still followed by \"visitors,\" so the sentence still says the visitors were preserved."
+        },
+        {
+          "id": "ELA-REB-108-c",
+          "label": "C",
+          "text": "Visitors, preserved almost exactly as the Armstrongs left it, can now tour the house as a museum.",
+          "isCorrect": false,
+          "explanation": "The phrase now interrupts right after \"Visitors,\" so it still describes the wrong noun. \"It\" also no longer has a clear antecedent."
+        },
+        {
+          "id": "ELA-REB-108-d",
+          "label": "D",
+          "text": "Preserved almost exactly as the Armstrongs left it, the house is now a museum, visitors can tour it.",
+          "isCorrect": false,
+          "explanation": "This fixes the modifier but creates a comma splice. \"The house is now a museum\" and \"visitors can tour it\" are complete sentences joined by only a comma."
+        }
+      ],
+      "solutionExplanation": "In sentence 4, \"Preserved almost exactly as the Armstrongs left it\" describes the house, but the noun after the comma is \"visitors.\" The fix is to make \"the house\" the subject of the main clause. Choice A does this and keeps the rest of the sentence grammatical.",
+      "commonTrap": "Choice D is the trap. It puts \"the house\" in the right place, so students stop checking. But it then attaches a second complete sentence with only a comma. A correct revision must fix the error without creating a new one.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-109",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-TEN"
+      ],
+      "stem": "Which sentence should be revised to correct an inappropriate shift in verb tense?\n\n(1) On October 27, 1904, New York City opened its first subway line. (2) The line ran from City Hall to 145th Street in Harlem. (3) More than 100,000 people ride the new trains on the first evening alone. (4) Newspapers described the subway as one of the greatest engineering achievements of the age.",
+      "choices": [
+        {
+          "id": "ELA-REB-109-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false,
+          "explanation": "Sentence 1 uses the past tense \"opened,\" which fits an event in 1904."
+        },
+        {
+          "id": "ELA-REB-109-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": false,
+          "explanation": "Sentence 2 uses the past tense \"ran,\" which matches the rest of the paragraph."
+        },
+        {
+          "id": "ELA-REB-109-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": true,
+          "explanation": "Correct. \"Ride\" is present tense, but the sentence describes the first evening in 1904. Revised: \"More than 100,000 people rode the new trains on the first evening alone.\""
+        },
+        {
+          "id": "ELA-REB-109-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": false,
+          "explanation": "Sentence 4 uses the past tense \"described,\" which matches the paragraph."
+        }
+      ],
+      "solutionExplanation": "The paragraph tells about events in 1904, so its verbs should be in the past tense. Sentences 1, 2, and 4 use \"opened,\" \"ran,\" and \"described.\" Sentence 3 shifts to the present tense \"ride.\" Changing it to \"rode\" keeps the tense consistent.",
+      "commonTrap": "Students who read quickly may not notice the shift because \"ride\" sounds natural and the sentence includes a number that draws attention. Check every verb against the time frame set in sentence 1.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-110",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-TEN"
+      ],
+      "stem": "Which sentence should be revised to correct an inappropriate shift in verb tense?\n\n(1) Every fall, monarch butterflies leave the northeastern United States and begin a journey of up to 3,000 miles to central Mexico. (2) Scientists have learned that the butterflies use the position of the sun, along with an internal clock, to stay on course. (3) Along the way, the monarchs stopped to feed on nectar from goldenrod, asters, and other late-blooming flowers. (4) By the time they reach the mountain forests of Mexico, some have been traveling for more than two months.",
+      "choices": [
+        {
+          "id": "ELA-REB-110-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false,
+          "explanation": "Sentence 1 uses the present tense \"leave\" and \"begin\" to describe something that happens \"every fall.\" This sets the tense for the paragraph."
+        },
+        {
+          "id": "ELA-REB-110-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": false,
+          "explanation": "Sentence 2 is correct. The present perfect \"have learned\" describes knowledge scientists gained in the past that is still true, and \"use\" stays in the present."
+        },
+        {
+          "id": "ELA-REB-110-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": true,
+          "explanation": "Correct. \"Stopped\" is past tense, but the paragraph describes a migration that happens every year, in the present tense. Revised: \"Along the way, the monarchs stop to feed on nectar from goldenrod, asters, and other late-blooming flowers.\""
+        },
+        {
+          "id": "ELA-REB-110-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": false,
+          "explanation": "Sentence 4 is correct. \"Reach\" is present tense, and \"have been traveling\" correctly shows an action that continues up to that moment."
+        }
+      ],
+      "solutionExplanation": "The paragraph describes a yearly event, so it uses the present tense: \"leave,\" \"begin,\" \"use,\" and \"reach.\" Sentence 3 shifts to the past tense \"stopped\" for no reason. Changing it to \"stop\" fixes the error. The perfect tenses in sentences 2 and 4 are not shifts, because they show how earlier actions connect to the present.",
+      "commonTrap": "Students often flag sentence 2 or sentence 4 because \"have learned\" and \"have been traveling\" look different from the simple present. But perfect tenses are allowed when they show time relationships. The real shift is the simple past \"stopped\" in a paragraph about something that happens every year.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-111",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-TEN"
+      ],
+      "stem": "Read this paragraph.\n\n(1) Last Saturday, our robotics team competed in a regional tournament at the Javits Center. (2) By the time we set up our robot, the first round already started. (3) We had to rush through our safety inspection, so we missed the practice run. (4) Despite the rough start, our robot scored more points than any other robot in the afternoon matches.\n\nWhich revision corrects the error in sentence 2?",
+      "choices": [
+        {
+          "id": "ELA-REB-111-a",
+          "label": "A",
+          "text": "By the time we set up our robot, the first round has already started.",
+          "isCorrect": false,
+          "explanation": "\"Has started\" is present perfect, which connects to the present. The tournament happened last Saturday, so this creates a tense shift."
+        },
+        {
+          "id": "ELA-REB-111-b",
+          "label": "B",
+          "text": "By the time we set up our robot, the first round had already started.",
+          "isCorrect": true,
+          "explanation": "Correct. The past perfect \"had started\" shows that the round began before the team finished setting up, which was itself in the past."
+        },
+        {
+          "id": "ELA-REB-111-c",
+          "label": "C",
+          "text": "By the time we set up our robot, the first round already starts.",
+          "isCorrect": false,
+          "explanation": "\"Starts\" is present tense, which does not fit a story about last Saturday."
+        },
+        {
+          "id": "ELA-REB-111-d",
+          "label": "D",
+          "text": "By the time we had set up our robot, the first round already started.",
+          "isCorrect": false,
+          "explanation": "This puts the past perfect on the wrong action. It suggests setting up came first, but the sentence means the round started first."
+        }
+      ],
+      "solutionExplanation": "When two past actions are described and one happened before the other, the earlier action uses the past perfect (\"had\" plus a past participle). Here the round started before the team finished setting up, so the round needs \"had already started.\" Choice B is correct.",
+      "commonTrap": "Choice D is tempting because it adds \"had,\" which students know is the fix for this kind of sentence. But \"had\" must go with the earlier action. Ask which happened first: the round started first, so \"had\" belongs with \"started.\"",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-112",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-RUN"
+      ],
+      "stem": "Which sentence contains an error in its construction and should be revised?\n\n(1) The Staten Island Ferry carries tens of thousands of passengers across New York Harbor every day. (2) The trip between St. George and Whitehall takes about twenty-five minutes. (3) The ride is free, many tourists take it just to see the Statue of Liberty from the water. (4) Commuters, on the other hand, often use the time to read or rest before work.",
+      "choices": [
+        {
+          "id": "ELA-REB-112-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false,
+          "explanation": "Sentence 1 is a single complete sentence with the subject \"The Staten Island Ferry\" and the verb \"carries.\""
+        },
+        {
+          "id": "ELA-REB-112-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": false,
+          "explanation": "Sentence 2 is a single complete sentence with the subject \"The trip\" and the verb \"takes.\""
+        },
+        {
+          "id": "ELA-REB-112-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": true,
+          "explanation": "Correct. \"The ride is free\" and \"many tourists take it just to see the Statue of Liberty from the water\" are both complete sentences, and only a comma joins them. Revised: \"Because the ride is free, many tourists take it just to see the Statue of Liberty from the water.\""
+        },
+        {
+          "id": "ELA-REB-112-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": false,
+          "explanation": "Sentence 4 is correct. \"On the other hand\" is an interrupting phrase set off by commas, and the sentence has one subject, \"Commuters,\" and one verb, \"use.\""
+        }
+      ],
+      "solutionExplanation": "A comma splice joins two complete sentences with only a comma. In sentence 3, \"The ride is free\" could stand alone, and so could \"many tourists take it....\" To fix the error, add a conjunction (\", so\"), use a semicolon, or make one clause dependent (\"Because the ride is free, ...\").",
+      "commonTrap": "Students may pick sentence 4 because it has two commas in the middle. But those commas set off a short phrase, not a second sentence. Test each part around a comma: if both sides could stand alone, the comma is not enough.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-113",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-RUN"
+      ],
+      "stem": "Read this paragraph.\n\n(1) Coral reefs cover less than one percent of the ocean floor. (2) They are home to about a quarter of all ocean species scientists call them the rainforests of the sea. (3) Rising ocean temperatures, however, can cause corals to lose the tiny algae that give them their color. (4) This process, known as bleaching, can leave entire reefs weakened or dead.\n\nWhich revision corrects the error in sentence 2?",
+      "choices": [
+        {
+          "id": "ELA-REB-113-a",
+          "label": "A",
+          "text": "They are home to about a quarter of all ocean species, scientists call them the rainforests of the sea.",
+          "isCorrect": false,
+          "explanation": "Adding only a comma turns the run-on into a comma splice. Two complete sentences still need more than a comma."
+        },
+        {
+          "id": "ELA-REB-113-b",
+          "label": "B",
+          "text": "They are home to about a quarter of all ocean species and scientists call them, the rainforests of the sea.",
+          "isCorrect": false,
+          "explanation": "The comma after \"them\" wrongly separates the verb from the rest of its phrase, and a comma is still needed before \"and.\""
+        },
+        {
+          "id": "ELA-REB-113-c",
+          "label": "C",
+          "text": "Being home to about a quarter of all ocean species, scientists call them the rainforests of the sea.",
+          "isCorrect": false,
+          "explanation": "This creates a dangling modifier. The opening phrase is followed by \"scientists,\" so the sentence says scientists are home to ocean species."
+        },
+        {
+          "id": "ELA-REB-113-d",
+          "label": "D",
+          "text": "They are home to about a quarter of all ocean species, so scientists call them the rainforests of the sea.",
+          "isCorrect": true,
+          "explanation": "Correct. The comma and the conjunction \"so\" correctly join the two complete sentences and show that the variety of life is the reason for the nickname."
+        }
+      ],
+      "solutionExplanation": "Sentence 2 is a run-on: \"They are home to about a quarter of all ocean species\" and \"scientists call them the rainforests of the sea\" are two complete sentences with no punctuation between them. A comma plus a conjunction such as \"so\" joins them correctly, as in choice D.",
+      "commonTrap": "Choice A is tempting because adding a comma at the break seems to fix the problem. But a comma alone cannot join two complete sentences. It needs a conjunction such as \"so\" or \"and,\" or a semicolon.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-114",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-RUN",
+        "RE-SEM"
+      ],
+      "stem": "Which sentence contains an error in its construction and should be revised?\n\n(1) Shirley Chisholm was born in Brooklyn but spent part of her childhood in Barbados, where she lived with her grandmother. (2) After graduating from Brooklyn College, she worked as a teacher and later directed a child care center. (3) In 1968, she became the first Black woman elected to the United States Congress. (4) She ran for president in 1972, however, she did not win the Democratic nomination.",
+      "choices": [
+        {
+          "id": "ELA-REB-114-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false,
+          "explanation": "Sentence 1 is correct. \"But\" joins two verbs that share the subject \"Shirley Chisholm,\" and the \"where\" clause correctly describes Barbados."
+        },
+        {
+          "id": "ELA-REB-114-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": false,
+          "explanation": "Sentence 2 is correct. The introductory phrase is followed by \"she,\" the person who graduated, and \"worked\" and \"directed\" are parallel verbs."
+        },
+        {
+          "id": "ELA-REB-114-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": false,
+          "explanation": "Sentence 3 is a single complete sentence with a short introductory phrase."
+        },
+        {
+          "id": "ELA-REB-114-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": true,
+          "explanation": "Correct. \"She ran for president in 1972\" and \"she did not win the Democratic nomination\" are complete sentences. \"However\" is not a conjunction, so commas cannot join the two. Revised: \"She ran for president in 1972; however, she did not win the Democratic nomination.\""
+        }
+      ],
+      "solutionExplanation": "Words such as \"however,\" \"therefore,\" and \"moreover\" are transition words, not conjunctions. When one of them begins a second complete sentence, the first sentence must end with a period or a semicolon. Sentence 4 uses only a comma before \"however,\" so it is a comma splice.",
+      "commonTrap": "Sentence 4 looks properly punctuated because \"however\" is often set off by commas when it interrupts a single sentence. Here, though, it sits between two complete sentences. Students who check only whether \"however\" has commas around it miss the splice.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-115",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-SVA"
+      ],
+      "stem": "Which sentence should be revised to correct an error in subject-verb agreement?\n\n(1) The Bronx Zoo is one of the largest city zoos in the United States. (2) Each year, millions of visitors walk its paths to see animals from around the world. (3) The zoo's gorillas lives in a rain forest exhibit called Congo Gorilla Forest. (4) Many visitors say that watching the gorillas is the highlight of their trip.",
+      "choices": [
+        {
+          "id": "ELA-REB-115-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false,
+          "explanation": "Sentence 1 is correct. The singular subject \"The Bronx Zoo\" takes the singular verb \"is.\""
+        },
+        {
+          "id": "ELA-REB-115-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": false,
+          "explanation": "Sentence 2 is correct. The plural subject \"millions of visitors\" takes the plural verb \"walk.\""
+        },
+        {
+          "id": "ELA-REB-115-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": true,
+          "explanation": "Correct. The subject \"gorillas\" is plural, but \"lives\" is a singular verb. Revised: \"The zoo's gorillas live in a rain forest exhibit called Congo Gorilla Forest.\""
+        },
+        {
+          "id": "ELA-REB-115-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": false,
+          "explanation": "Sentence 4 is correct. The subject of \"is\" is \"watching the gorillas,\" an activity, which is singular. \"Many visitors\" correctly takes \"say.\""
+        }
+      ],
+      "solutionExplanation": "A verb must agree in number with its subject. In sentence 3, the subject is \"gorillas,\" which is plural, so the verb must be \"live,\" not \"lives.\" The word \"zoo's\" is a possessive that describes the gorillas. It is not the subject.",
+      "commonTrap": "Sentence 4 is tempting because \"gorillas is\" appears side by side. But the subject of \"is\" is the activity \"watching the gorillas,\" which is singular. Find the true subject before judging the verb.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-116",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-SVA"
+      ],
+      "stem": "Read this paragraph.\n\n(1) Our school's garden club grows vegetables on the roof of the building. (2) The tomatoes and the peppers needs water every morning during the summer. (3) Club members take turns coming in early to water the plants. (4) In the fall, the club donates its harvest to a local food pantry.\n\nWhich revision corrects the error in sentence 2?",
+      "choices": [
+        {
+          "id": "ELA-REB-116-a",
+          "label": "A",
+          "text": "The tomatoes and the peppers need water every morning during the summer.",
+          "isCorrect": true,
+          "explanation": "Correct. Two subjects joined by \"and\" form a plural subject, which takes the plural verb \"need.\""
+        },
+        {
+          "id": "ELA-REB-116-b",
+          "label": "B",
+          "text": "The tomatoes and the peppers is needing water every morning during the summer.",
+          "isCorrect": false,
+          "explanation": "\"Is\" is singular, so the verb still does not agree with the plural subject."
+        },
+        {
+          "id": "ELA-REB-116-c",
+          "label": "C",
+          "text": "The tomatoes and the peppers, which grow in large pots, needs water every morning during the summer.",
+          "isCorrect": false,
+          "explanation": "Adding a description does not change the subject. \"The tomatoes and the peppers\" is still plural, so \"needs\" is still wrong."
+        },
+        {
+          "id": "ELA-REB-116-d",
+          "label": "D",
+          "text": "The tomatoes, along with the peppers, needs water every morning during the summer.",
+          "isCorrect": false,
+          "explanation": "\"Along with the peppers\" is not part of the subject, so the subject is \"The tomatoes.\" That subject is plural, so \"needs\" is still wrong."
+        }
+      ],
+      "solutionExplanation": "A compound subject joined by \"and\" is plural. \"The tomatoes and the peppers\" therefore needs the plural verb \"need.\" Only choice A makes this change without adding a new problem.",
+      "commonTrap": "Choice D is tempting because students learn that \"along with\" phrases do not count as part of the subject. That rule is true, but here the remaining subject, \"The tomatoes,\" is still plural, so \"needs\" is still wrong.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-117",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-SVA"
+      ],
+      "stem": "Which sentence should be revised to correct an error in subject-verb agreement?\n\n(1) The collection of letters, photographs, and diaries donated to the library last year offers a rare look at life in nineteenth-century Brooklyn. (2) Among the most fascinating items is a journal kept by a young ferry captain. (3) Each of the journal's entries describe the weather, the passengers, and the condition of the East River. (4) Historians who have studied the collection say it is one of the most valuable gifts the library has ever received.",
+      "choices": [
+        {
+          "id": "ELA-REB-117-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false,
+          "explanation": "Sentence 1 is correct. The subject is \"The collection,\" which is singular, so \"offers\" agrees with it. \"Letters, photographs, and diaries\" are inside a prepositional phrase and are not the subject."
+        },
+        {
+          "id": "ELA-REB-117-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": false,
+          "explanation": "Sentence 2 is correct. The sentence is inverted: the subject \"a journal\" comes after the verb. \"A journal\" is singular, so \"is\" is correct."
+        },
+        {
+          "id": "ELA-REB-117-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": true,
+          "explanation": "Correct. The subject is \"Each,\" which is always singular, so the verb must be \"describes.\" The plural word \"entries\" is part of the phrase \"of the journal's entries\" and is not the subject. Revised: \"Each of the journal's entries describes the weather, the passengers, and the condition of the East River.\""
+        },
+        {
+          "id": "ELA-REB-117-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": false,
+          "explanation": "Sentence 4 is correct. The plural subject \"Historians\" takes \"say,\" and \"the library has\" also agrees."
+        }
+      ],
+      "solutionExplanation": "To check agreement, cross out phrases that come between the subject and the verb. In sentence 3, removing \"of the journal's entries\" leaves \"Each describe,\" which is wrong because \"each\" is singular. The verb should be \"describes.\"",
+      "commonTrap": "Sentence 1 is the trap. A list of plural nouns sits right before \"offers,\" so the singular verb sounds wrong. But the subject is \"The collection.\" Sentence 2 is a second trap because its subject comes after the verb. In both, the verb agrees with the true subject.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-118",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-SVA"
+      ],
+      "stem": "Read this paragraph.\n\n(1) Every summer, the city opens dozens of public pools across all five boroughs. (2) Lifeguards at each pool complete weeks of training before the season begins. (3) At the largest pools, the number of swimmers who visit on a hot July afternoon are often in the thousands. (4) To keep everyone safe, the pools close briefly whenever thunder is heard.\n\nWhich revision corrects the error in sentence 3?",
+      "choices": [
+        {
+          "id": "ELA-REB-118-a",
+          "label": "A",
+          "text": "At the largest pools, the number of swimmers who visits on a hot July afternoon is often in the thousands.",
+          "isCorrect": false,
+          "explanation": "This fixes \"is\" but breaks \"who visit.\" \"Who\" refers to \"swimmers,\" which is plural, so the verb must be \"visit.\""
+        },
+        {
+          "id": "ELA-REB-118-b",
+          "label": "B",
+          "text": "At the largest pools, the number of swimmers who visit on a hot July afternoon is often in the thousands.",
+          "isCorrect": true,
+          "explanation": "Correct. The subject \"the number\" is singular, so it takes \"is.\" \"Who visit\" still agrees with \"swimmers.\""
+        },
+        {
+          "id": "ELA-REB-118-c",
+          "label": "C",
+          "text": "At the largest pools, a number of swimmers who visit on a hot July afternoon is often in the thousands.",
+          "isCorrect": false,
+          "explanation": "\"A number of\" means \"many\" and takes a plural verb, so \"is\" is now wrong. The change also makes the sentence illogical."
+        },
+        {
+          "id": "ELA-REB-118-d",
+          "label": "D",
+          "text": "At the largest pools, the number of swimmers who visit on a hot July afternoon, are often in the thousands.",
+          "isCorrect": false,
+          "explanation": "The comma wrongly separates the subject from its verb, and \"are\" still does not agree with \"the number.\""
+        }
+      ],
+      "solutionExplanation": "In sentence 3, the main subject is \"the number,\" which is singular, so the verb should be \"is.\" The phrase \"of swimmers who visit on a hot July afternoon\" comes between the subject and the verb but does not change the subject. Inside that phrase, \"who visit\" correctly agrees with \"swimmers.\" Choice B fixes the main verb and keeps the inner verb correct.",
+      "commonTrap": "Choice A is tempting because it makes both verbs singular, which feels consistent. But the two verbs have different subjects. \"Is\" goes with \"the number,\" and \"visit\" goes with \"swimmers.\"",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-119",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-PRO"
+      ],
+      "stem": "Which sentence should be revised to correct an error in pronoun use?\n\n(1) My cousin Andre and I entered the borough science fair this spring. (2) Our project tested which brand of paper towel absorbs the most water. (3) The judges gave Andre and I a second-place ribbon for our careful measurements. (4) We plan to enter again next year with an even more ambitious project.",
+      "choices": [
+        {
+          "id": "ELA-REB-119-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false,
+          "explanation": "Sentence 1 is correct. \"Andre and I\" is the subject of \"entered,\" so the subject pronoun \"I\" is correct."
+        },
+        {
+          "id": "ELA-REB-119-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": false,
+          "explanation": "Sentence 2 is correct. \"Our\" is the right possessive pronoun for the project that belongs to the writer and Andre."
+        },
+        {
+          "id": "ELA-REB-119-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": true,
+          "explanation": "Correct. \"Andre and I\" receives the ribbon, so it is an object, not a subject. The object pronoun is \"me.\" Revised: \"The judges gave Andre and me a second-place ribbon for our careful measurements.\""
+        },
+        {
+          "id": "ELA-REB-119-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": false,
+          "explanation": "Sentence 4 is correct. \"We\" is the subject of \"plan.\""
+        }
+      ],
+      "solutionExplanation": "Use a subject pronoun (I, he, she, we, they) for the one doing the action and an object pronoun (me, him, her, us, them) for the one receiving it. In sentence 3, the judges gave the ribbon to Andre and the writer, so the pronoun must be \"me.\" A quick test: remove \"Andre and.\" \"The judges gave I a ribbon\" is clearly wrong.",
+      "commonTrap": "Students often think \"Andre and I\" always sounds more correct, especially since sentence 1 uses it correctly. But \"I\" is correct only when it is part of the subject. Drop the other name and listen to the pronoun alone.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-120",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-PRO",
+        "RE-SEN"
+      ],
+      "stem": "Read this paragraph.\n\n(1) For months, the community board debated whether to turn an empty lot on Atlantic Avenue into a garden or a parking area. (2) Residents argued that a garden would give children a safe place to play. (3) Local shop owners worried that losing it would hurt their businesses. (4) In the end, the board approved a plan that included both a small garden and a few parking spaces.\n\nWhich revision corrects the error in sentence 3?",
+      "choices": [
+        {
+          "id": "ELA-REB-120-a",
+          "label": "A",
+          "text": "Local shop owners worried that a lack of parking would hurt their businesses.",
+          "isCorrect": true,
+          "explanation": "Correct. Replacing the vague \"it\" with \"a lack of parking\" makes clear what the shop owners feared."
+        },
+        {
+          "id": "ELA-REB-120-b",
+          "label": "B",
+          "text": "Local shop owners worried that losing it would hurt its businesses.",
+          "isCorrect": false,
+          "explanation": "\"It\" is still vague, and \"its\" does not agree with the plural \"shop owners.\""
+        },
+        {
+          "id": "ELA-REB-120-c",
+          "label": "C",
+          "text": "Local shop owners worried that losing that would hurt their businesses.",
+          "isCorrect": false,
+          "explanation": "\"That\" is just as vague as \"it.\" The reader still cannot tell whether the owners mean the lot, the garden, or the parking area."
+        },
+        {
+          "id": "ELA-REB-120-d",
+          "label": "D",
+          "text": "Local shop owners, worried that a lack of parking would hurt their businesses.",
+          "isCorrect": false,
+          "explanation": "This makes the meaning clear but creates a fragment. With the comma, \"worried\" becomes a description of the owners, and the sentence has no main verb."
+        }
+      ],
+      "solutionExplanation": "In sentence 3, \"it\" could refer to the lot, the garden, or the parking area, all named in sentence 1. The shop owners were worried about losing parking, but the sentence never says so. Choice A replaces the vague pronoun with a clear noun phrase and keeps the sentence complete.",
+      "commonTrap": "Choice D is tempting because it contains the same clear wording as the correct answer. But the added comma turns \"worried\" into a modifier, so \"shop owners\" no longer has a verb. Read the full revision, not just the changed words.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-121",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-PRO"
+      ],
+      "stem": "Which sentence should be revised to correct an error in pronoun use?\n\n(1) Our principal announced that the eighth graders would plan this year's spring festival. (2) The student council, whose members meet every Thursday, divided the work among several committees. (3) Ms. Okafor, who teaches art, asked the decorations committee to design a mural for the gym. (4) Some teachers were surprised that us students could organize such a large event on our own.",
+      "choices": [
+        {
+          "id": "ELA-REB-121-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false,
+          "explanation": "Sentence 1 contains no pronoun error. \"Our\" correctly shows that the principal belongs to the writer's school."
+        },
+        {
+          "id": "ELA-REB-121-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": false,
+          "explanation": "Sentence 2 is correct. \"Whose\" is the right possessive pronoun to show that the members belong to the student council."
+        },
+        {
+          "id": "ELA-REB-121-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": false,
+          "explanation": "Sentence 3 is correct. \"Who\" is the subject of \"teaches,\" so the subject form is right."
+        },
+        {
+          "id": "ELA-REB-121-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": true,
+          "explanation": "Correct. \"Us students\" is the subject of \"could organize,\" so it needs the subject pronoun \"we.\" Revised: \"Some teachers were surprised that we students could organize such a large event on our own.\""
+        }
+      ],
+      "solutionExplanation": "When a pronoun is followed by a noun, as in \"we students\" or \"us students,\" remove the noun to test it. \"Us could organize such a large event\" is wrong; \"we could organize\" is right. Since the pronoun is the subject of \"could organize,\" sentence 4 should use \"we.\"",
+      "commonTrap": "Students often suspect \"whose\" in sentence 2 or \"who\" in sentence 3 because those pronouns are commonly confused. Both are used correctly. The error in sentence 4 is easy to miss because \"us students\" is common in everyday speech.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-122",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-COM"
+      ],
+      "stem": "Read this paragraph.\n\n(1) Hurricane Sandy struck New York City on October 29, 2012. (2) The record-breaking tide that flooded subway tunnels and lower Manhattan streets, reached nearly fourteen feet at the Battery. (3) Hundreds of thousands of residents lost power for days. (4) In the years since, the city has built new flood barriers and raised parts of its shoreline.\n\nWhich edit is needed to correct the punctuation in the paragraph?",
+      "choices": [
+        {
+          "id": "ELA-REB-122-a",
+          "label": "A",
+          "text": "Insert a comma after \"built\" in sentence 4.",
+          "isCorrect": false,
+          "explanation": "This would separate the verb \"built\" from its object \"new flood barriers,\" which creates an error."
+        },
+        {
+          "id": "ELA-REB-122-b",
+          "label": "B",
+          "text": "Delete the comma after \"29\" in sentence 1.",
+          "isCorrect": false,
+          "explanation": "A comma is required between the day and the year in a date, so this comma is correct."
+        },
+        {
+          "id": "ELA-REB-122-c",
+          "label": "C",
+          "text": "Insert a comma after \"residents\" in sentence 3.",
+          "isCorrect": false,
+          "explanation": "This would place a comma between the subject \"residents\" and the verb \"lost,\" which creates an error."
+        },
+        {
+          "id": "ELA-REB-122-d",
+          "label": "D",
+          "text": "Delete the comma after \"streets\" in sentence 2.",
+          "isCorrect": true,
+          "explanation": "Correct. That comma separates the subject, \"The record-breaking tide that flooded subway tunnels and lower Manhattan streets,\" from its verb, \"reached.\" A single comma should not come between a subject and its verb."
+        }
+      ],
+      "solutionExplanation": "In sentence 2, the full subject is long: \"The record-breaking tide that flooded subway tunnels and lower Manhattan streets.\" Because of its length, a writer may be tempted to pause with a comma before the verb \"reached.\" But a single comma should never separate a subject from its verb, so the comma after \"streets\" must be deleted.",
+      "commonTrap": "Long subjects make students feel that a pause, and therefore a comma, is needed before the verb. Commas follow grammar rules, not breathing. Find the subject and verb and make sure no lone comma sits between them.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-123",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-COM"
+      ],
+      "stem": "Which sentence should be revised to correct an error in comma use?\n\n(1) Gertrude Ederle, a swimmer from Manhattan, became the first woman to swim across the English Channel in 1926. (2) Her time of 14 hours and 39 minutes beat the men's record by almost two hours. (3) When she returned to New York, the city welcomed her with a ticker-tape parade. (4) Ederle, who had suffered from hearing loss since childhood later taught swimming to deaf children.",
+      "choices": [
+        {
+          "id": "ELA-REB-123-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false,
+          "explanation": "Sentence 1 is correct. The appositive \"a swimmer from Manhattan\" is set off by commas on both sides."
+        },
+        {
+          "id": "ELA-REB-123-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": false,
+          "explanation": "Sentence 2 is correct. It has no interrupting element that needs commas."
+        },
+        {
+          "id": "ELA-REB-123-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": false,
+          "explanation": "Sentence 3 is correct. A comma follows the introductory clause \"When she returned to New York.\""
+        },
+        {
+          "id": "ELA-REB-123-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": true,
+          "explanation": "Correct. The clause \"who had suffered from hearing loss since childhood\" interrupts the sentence, so it needs a comma on both sides. The closing comma after \"childhood\" is missing. Revised: \"Ederle, who had suffered from hearing loss since childhood, later taught swimming to deaf children.\""
+        }
+      ],
+      "solutionExplanation": "An extra piece of information in the middle of a sentence must be set off by a pair of commas, one before and one after. Sentence 4 opens the clause \"who had suffered from hearing loss since childhood\" with a comma but never closes it. Adding a comma after \"childhood\" fixes the error.",
+      "commonTrap": "Students check that a comma is present at the start of the clause and assume the sentence is fine. Interrupting clauses need commas on both sides, like parentheses.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-124",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-COM"
+      ],
+      "stem": "Which sentence should be revised to correct an error in comma use?\n\n(1) The eighth-grade trip to the Statue of Liberty is scheduled for the first Friday in May. (2) Students, who have not returned their permission slips, will not be allowed to board the ferry. (3) The trip, which costs twenty dollars, includes a guided tour of the pedestal. (4) Ms. Rivera, the trip coordinator, asked families to send in payments by April 15.",
+      "choices": [
+        {
+          "id": "ELA-REB-124-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false,
+          "explanation": "Sentence 1 is correct. It has no interrupting element that needs commas."
+        },
+        {
+          "id": "ELA-REB-124-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": true,
+          "explanation": "Correct. The clause \"who have not returned their permission slips\" is necessary because it tells which students cannot go. Setting it off with commas makes it seem like extra information, so the sentence says that all students have not returned their slips and none can board. Revised: \"Students who have not returned their permission slips will not be allowed to board the ferry.\""
+        },
+        {
+          "id": "ELA-REB-124-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": false,
+          "explanation": "Sentence 3 is correct. \"Which costs twenty dollars\" adds extra information about the one trip already identified, so commas are needed."
+        },
+        {
+          "id": "ELA-REB-124-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": false,
+          "explanation": "Sentence 4 is correct. \"The trip coordinator\" is an appositive that renames Ms. Rivera, so it is set off by commas."
+        }
+      ],
+      "solutionExplanation": "Commas set off information that could be removed without changing the meaning of the sentence. Information that identifies which person or thing is meant should not have commas. In sentence 2, \"who have not returned their permission slips\" limits the meaning to certain students, so it must not be set off with commas.",
+      "commonTrap": "Sentence 3 looks almost the same as sentence 2, so students may choose it. The difference is whether the clause is needed. There is only one trip, so \"which costs twenty dollars\" is extra. But not every student has missed the deadline, so the clause in sentence 2 is needed.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-125",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-COM"
+      ],
+      "stem": "Read this paragraph.\n\n(1) The Harlem Renaissance was a period of great artistic growth in the 1920s and 1930s. (2) Writers, musicians, and painters gathered in Harlem to share ideas. (3) Langston Hughes published his first book of poems in 1926 and it quickly earned praise from critics and readers alike. (4) His work often celebrated the lives of ordinary Black Americans.\n\nWhich revision corrects the error in sentence 3?",
+      "choices": [
+        {
+          "id": "ELA-REB-125-a",
+          "label": "A",
+          "text": "Langston Hughes published his first book of poems in 1926, and it quickly earned praise from critics and readers alike.",
+          "isCorrect": true,
+          "explanation": "Correct. A comma before \"and\" is needed when \"and\" joins two complete sentences."
+        },
+        {
+          "id": "ELA-REB-125-b",
+          "label": "B",
+          "text": "Langston Hughes published his first book of poems in 1926, it quickly earned praise from critics and readers alike.",
+          "isCorrect": false,
+          "explanation": "Removing \"and\" leaves two complete sentences joined by only a comma, which is a comma splice."
+        },
+        {
+          "id": "ELA-REB-125-c",
+          "label": "C",
+          "text": "Langston Hughes published his first book of poems in 1926 and it quickly earned praise from critics, and readers alike.",
+          "isCorrect": false,
+          "explanation": "This adds a comma between \"critics\" and \"readers,\" which are only two nouns, and still leaves out the comma before the first \"and.\""
+        },
+        {
+          "id": "ELA-REB-125-d",
+          "label": "D",
+          "text": "Langston Hughes published his first book of poems in 1926 and, it quickly earned praise from critics and readers alike.",
+          "isCorrect": false,
+          "explanation": "The comma belongs before the conjunction, not after it."
+        }
+      ],
+      "solutionExplanation": "Sentence 3 joins two complete sentences, \"Langston Hughes published his first book of poems in 1926\" and \"it quickly earned praise from critics and readers alike,\" with \"and.\" When a conjunction joins two complete sentences, a comma goes before the conjunction. Choice A adds that comma.",
+      "commonTrap": "Choice D is tempting for students who know a comma is needed but are unsure where it goes. The comma always comes before the conjunction that joins the two sentences.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-126",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-COLN"
+      ],
+      "stem": "Which sentence should be revised to correct an error in punctuation?\n\n(1) The Lunar New Year parade in Manhattan's Chinatown draws huge crowds each winter. (2) The parade includes: lion dancers, marching bands, and colorful floats. (3) Before the parade begins, firecrackers are set off to scare away bad luck. (4) Many families also visit relatives and share special meals during the holiday.",
+      "choices": [
+        {
+          "id": "ELA-REB-126-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false,
+          "explanation": "Sentence 1 is correct. The apostrophe in \"Manhattan's\" shows possession, and the sentence needs no other punctuation."
+        },
+        {
+          "id": "ELA-REB-126-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": true,
+          "explanation": "Correct. A colon must follow a complete sentence. \"The parade includes\" is not complete, because \"includes\" needs an object. Revised: \"The parade includes lion dancers, marching bands, and colorful floats.\""
+        },
+        {
+          "id": "ELA-REB-126-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": false,
+          "explanation": "Sentence 3 is correct. A comma follows the introductory clause \"Before the parade begins.\""
+        },
+        {
+          "id": "ELA-REB-126-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": false,
+          "explanation": "Sentence 4 is correct. \"Visit\" and \"share\" are joined by \"and,\" and no punctuation is needed."
+        }
+      ],
+      "solutionExplanation": "A colon can introduce a list only after a complete sentence. In sentence 2, the colon comes right after the verb \"includes,\" splitting the verb from its objects. Removing the colon fixes the error. Another fix would be \"The parade includes several attractions: lion dancers, marching bands, and colorful floats.\"",
+      "commonTrap": "Students often think a colon belongs before every list. A colon is correct only when the words before it could stand alone as a sentence.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-127",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-COLN"
+      ],
+      "stem": "Read this paragraph.\n\n(1) The Tenement Museum on the Lower East Side preserves apartments where immigrant families once lived. (2) Visitors can step inside rooms restored to look as they did in different decades. (3) Each tour focuses on one family and the challenges its members faced, such as: finding work, learning English, and keeping children healthy. (4) Many visitors leave with a new understanding of their own family's history.\n\nWhich revision corrects the error in sentence 3?",
+      "choices": [
+        {
+          "id": "ELA-REB-127-a",
+          "label": "A",
+          "text": "Each tour focuses on one family and the challenges its members faced: finding work, learning English, and keeping children healthy.",
+          "isCorrect": true,
+          "explanation": "Correct. The words before the colon form a complete sentence, and the list after the colon names the challenges."
+        },
+        {
+          "id": "ELA-REB-127-b",
+          "label": "B",
+          "text": "Each tour focuses on one family and the challenges its members faced such as: finding work, learning English, and keeping children healthy.",
+          "isCorrect": false,
+          "explanation": "The colon still follows \"such as,\" which cannot end a complete sentence. Removing the comma does not fix that."
+        },
+        {
+          "id": "ELA-REB-127-c",
+          "label": "C",
+          "text": "Each tour focuses on one family and the challenges its members faced; finding work, learning English, and keeping children healthy.",
+          "isCorrect": false,
+          "explanation": "A semicolon must join two complete sentences. The words after it are only a list, not a complete sentence."
+        },
+        {
+          "id": "ELA-REB-127-d",
+          "label": "D",
+          "text": "Each tour focuses on one family and the challenges its members faced, such as, finding work, learning English, and keeping children healthy.",
+          "isCorrect": false,
+          "explanation": "No comma belongs after \"such as.\" The phrase leads directly into its examples."
+        }
+      ],
+      "solutionExplanation": "A colon must follow a complete sentence. In sentence 3, the colon comes after \"such as,\" which leads into examples and cannot end a sentence. Choice A removes \"such as\" so that the colon follows the complete sentence \"Each tour focuses on one family and the challenges its members faced.\" Keeping \"such as\" with no colon would also work, but that option is not offered.",
+      "commonTrap": "Choice C is tempting because a semicolon looks like a colon. But a semicolon joins two complete sentences, and a list is not a complete sentence.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-128",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-COLN"
+      ],
+      "stem": "Which sentence should be revised to correct an error in punctuation?\n\n(1) The Holland Tunnel, which opened in 1927, was the first tunnel under the Hudson River built for cars. (2) Its engineers faced a serious problem: exhaust from thousands of cars could poison the drivers inside. (3) To solve it, they designed huge ventilation buildings with fans that could replace the air every ninety seconds. (4) The tunnel's design was so successful that it became a model for: tunnels in other cities around the world.",
+      "choices": [
+        {
+          "id": "ELA-REB-128-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false,
+          "explanation": "Sentence 1 is correct. The clause \"which opened in 1927\" adds extra information and is set off by commas on both sides."
+        },
+        {
+          "id": "ELA-REB-128-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": false,
+          "explanation": "Sentence 2 is correct. The words before the colon form a complete sentence, and the words after it explain what the problem was."
+        },
+        {
+          "id": "ELA-REB-128-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": false,
+          "explanation": "Sentence 3 is correct. A comma follows the introductory phrase \"To solve it,\" and \"it\" clearly refers to the problem in sentence 2."
+        },
+        {
+          "id": "ELA-REB-128-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": true,
+          "explanation": "Correct. The colon comes after the preposition \"for,\" splitting it from its object. \"It became a model for\" is not a complete sentence. Revised: \"The tunnel's design was so successful that it became a model for tunnels in other cities around the world.\""
+        }
+      ],
+      "solutionExplanation": "A colon must follow a complete sentence. In sentence 2, \"Its engineers faced a serious problem\" can stand alone, so the colon correctly introduces an explanation. In sentence 4, the colon comes after \"for,\" and the words before it cannot stand alone. Removing the colon fixes the error.",
+      "commonTrap": "Sentence 2 is the trap. Students who think colons are rare or only for lists may flag it. But a colon can introduce an explanation as long as a complete sentence comes before it, as it does in sentence 2.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-129",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-SEM"
+      ],
+      "stem": "Which sentence should be revised to correct an error in punctuation?\n\n(1) The main branch of the New York Public Library is guarded by two marble lions named Patience and Fortitude. (2) Mayor Fiorello La Guardia gave the lions their names in the 1930s; hoping they would inspire New Yorkers during the Great Depression. (3) Before that, people had called the lions by several other nicknames. (4) Today, the lions often wear large wreaths during the winter holidays.",
+      "choices": [
+        {
+          "id": "ELA-REB-129-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false,
+          "explanation": "Sentence 1 is correct. It has no punctuation inside the sentence that could be wrong."
+        },
+        {
+          "id": "ELA-REB-129-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": true,
+          "explanation": "Correct. A semicolon must join two complete sentences. \"Hoping they would inspire New Yorkers during the Great Depression\" is a phrase, not a complete sentence. Revised: \"Mayor Fiorello La Guardia gave the lions their names in the 1930s, hoping they would inspire New Yorkers during the Great Depression.\""
+        },
+        {
+          "id": "ELA-REB-129-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": false,
+          "explanation": "Sentence 3 is correct. A comma follows the short introductory phrase \"Before that.\""
+        },
+        {
+          "id": "ELA-REB-129-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": false,
+          "explanation": "Sentence 4 is correct. A comma follows the introductory word \"Today.\""
+        }
+      ],
+      "solutionExplanation": "A semicolon works like a period: the words on each side must be able to stand alone as a sentence. In sentence 2, the words after the semicolon begin with \"hoping\" and have no subject or main verb. A comma should replace the semicolon.",
+      "commonTrap": "Students may think a semicolon is a stronger comma that can go anywhere a pause is needed. Test both sides. If either side cannot stand alone, a semicolon is wrong.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-130",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-SEM",
+        "RE-COM"
+      ],
+      "stem": "Read this paragraph.\n\n(1) This summer, the city's youth orchestra will tour three cities. (2) The musicians will perform in Boston, Massachusetts, Philadelphia, Pennsylvania, and Baltimore, Maryland. (3) Each concert will feature music by American composers. (4) The orchestra will return to New York in time for its annual concert in Central Park.\n\nWhich revision corrects the error in sentence 2?",
+      "choices": [
+        {
+          "id": "ELA-REB-130-a",
+          "label": "A",
+          "text": "The musicians will perform in Boston, Massachusetts; Philadelphia, Pennsylvania; and Baltimore, Maryland.",
+          "isCorrect": true,
+          "explanation": "Correct. Semicolons separate the three items in the list, and commas separate each city from its state."
+        },
+        {
+          "id": "ELA-REB-130-b",
+          "label": "B",
+          "text": "The musicians will perform in Boston; Massachusetts, Philadelphia; Pennsylvania, and Baltimore; Maryland.",
+          "isCorrect": false,
+          "explanation": "The semicolons and commas are reversed. This splits each city from its own state and groups each state with the next city."
+        },
+        {
+          "id": "ELA-REB-130-c",
+          "label": "C",
+          "text": "The musicians will perform in: Boston, Massachusetts, Philadelphia, Pennsylvania, and Baltimore, Maryland.",
+          "isCorrect": false,
+          "explanation": "A colon cannot follow the preposition \"in,\" and the list is still hard to read because all the items are separated by commas."
+        },
+        {
+          "id": "ELA-REB-130-d",
+          "label": "D",
+          "text": "The musicians will perform in Boston, Massachusetts, Philadelphia, Pennsylvania; and Baltimore, Maryland.",
+          "isCorrect": false,
+          "explanation": "Only one semicolon is used, so Boston and Philadelphia still run together with commas."
+        }
+      ],
+      "solutionExplanation": "When items in a list already contain commas, such as a city and its state, semicolons separate the items so the reader can tell where each one ends. In sentence 2, all commas make it hard to see the three cities. Choice A places semicolons between the city-state pairs.",
+      "commonTrap": "Choice D is tempting because it uses a semicolon, so it looks like the fix. But semicolons must go between every item in the list, not just before the last one.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-131",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-SEM",
+        "RE-RUN"
+      ],
+      "stem": "Read this paragraph.\n\n(1) Mae Jemison grew up in Chicago and studied chemical engineering at Stanford University. (2) She later earned a medical degree and served as a Peace Corps doctor in West Africa. (3) Jemison had dreamed of traveling to space since childhood, therefore, she applied to NASA's astronaut program. (4) In 1992, she became the first Black woman to travel into space.\n\nWhich edit is needed to correct the punctuation in the paragraph?",
+      "choices": [
+        {
+          "id": "ELA-REB-131-a",
+          "label": "A",
+          "text": "Change the comma after \"childhood\" in sentence 3 to a semicolon.",
+          "isCorrect": true,
+          "explanation": "Correct. \"Therefore\" begins a second complete sentence. A semicolon before \"therefore\" joins the two sentences correctly, and the comma after \"therefore\" stays."
+        },
+        {
+          "id": "ELA-REB-131-b",
+          "label": "B",
+          "text": "Change the comma after \"therefore\" in sentence 3 to a semicolon.",
+          "isCorrect": false,
+          "explanation": "This would put \"therefore\" with the first sentence and leave a comma splice between \"childhood\" and \"therefore.\""
+        },
+        {
+          "id": "ELA-REB-131-c",
+          "label": "C",
+          "text": "Insert a semicolon after \"Chicago\" in sentence 1.",
+          "isCorrect": false,
+          "explanation": "The words after \"Chicago\" have no subject of their own, so they cannot stand alone. A semicolon there would be wrong."
+        },
+        {
+          "id": "ELA-REB-131-d",
+          "label": "D",
+          "text": "Change the comma after \"1992\" in sentence 4 to a semicolon.",
+          "isCorrect": false,
+          "explanation": "\"In 1992\" is an introductory phrase, not a complete sentence, so a comma is correct there."
+        }
+      ],
+      "solutionExplanation": "Sentence 3 contains two complete sentences: \"Jemison had dreamed of traveling to space since childhood\" and \"therefore, she applied to NASA's astronaut program.\" \"Therefore\" is a transition word, not a conjunction, so it cannot join the sentences with a comma. Placing a semicolon before \"therefore\" fixes the comma splice.",
+      "commonTrap": "Choice B is the trap. Students know a semicolon belongs near \"therefore\" but put it on the wrong side. The semicolon goes where the first sentence ends, before the transition word.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-132",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-APP"
+      ],
+      "stem": "Which sentence should be revised to correct an error in the use of an apostrophe?\n\n(1) The Yankees' new stadium opened in the Bronx in 2009. (2) It's located across the street from the site of the original Yankee Stadium. (3) The team's fans were glad that the new ballpark kept many of the old stadiums features. (4) Monument Park, which honors the team's greatest players, was moved to the new stadium.",
+      "choices": [
+        {
+          "id": "ELA-REB-132-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false,
+          "explanation": "Sentence 1 is correct. \"Yankees\" is a plural name, so its possessive is formed by adding an apostrophe after the s: \"Yankees'.\""
+        },
+        {
+          "id": "ELA-REB-132-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": false,
+          "explanation": "Sentence 2 is correct. \"It's\" is a contraction of \"it is,\" which fits: \"It is located across the street.\""
+        },
+        {
+          "id": "ELA-REB-132-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": true,
+          "explanation": "Correct. The features belong to the old stadium, so \"stadiums\" needs an apostrophe to show possession. Revised: \"The team's fans were glad that the new ballpark kept many of the old stadium's features.\""
+        },
+        {
+          "id": "ELA-REB-132-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": false,
+          "explanation": "Sentence 4 is correct. \"Team's\" is the singular possessive for the greatest players of one team."
+        }
+      ],
+      "solutionExplanation": "Use an apostrophe to show that something belongs to someone or something. In sentence 3, the features belong to the old stadium, so the word should be \"stadium's.\" Without the apostrophe, \"stadiums\" is just a plural noun.",
+      "commonTrap": "Students may flag \"It's\" in sentence 2 because \"its\" and \"it's\" are often mixed up. Test it by saying \"it is\": \"It is located across the street\" makes sense, so \"It's\" is correct.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-133",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-APP"
+      ],
+      "stem": "Read this paragraph.\n\n(1) Each spring, the Brooklyn Botanic Garden celebrates the blooming of its cherry trees. (2) The festivals most popular events include the childrens' origami workshop and a taiko drumming performance. (3) Thousands of visitors spread blankets on the lawn beneath the pink and white blossoms. (4) The garden's staff members say that the festival weekend is the busiest of the entire year.\n\nWhich revision corrects the errors in sentence 2?",
+      "choices": [
+        {
+          "id": "ELA-REB-133-a",
+          "label": "A",
+          "text": "The festivals most popular events include the children's origami workshop and a taiko drumming performance.",
+          "isCorrect": false,
+          "explanation": "This fixes \"children's\" but leaves \"festivals\" without the apostrophe it needs to show that the events belong to the festival."
+        },
+        {
+          "id": "ELA-REB-133-b",
+          "label": "B",
+          "text": "The festival's most popular events include the childrens origami workshop and a taiko drumming performance.",
+          "isCorrect": false,
+          "explanation": "\"Children\" is already plural, so its possessive is \"children's.\" \"Childrens\" with no apostrophe is not a word."
+        },
+        {
+          "id": "ELA-REB-133-c",
+          "label": "C",
+          "text": "The festival's most popular event's include the children's origami workshop and a taiko drumming performance.",
+          "isCorrect": false,
+          "explanation": "\"Events\" is a simple plural, not a possessive, so it should not have an apostrophe."
+        },
+        {
+          "id": "ELA-REB-133-d",
+          "label": "D",
+          "text": "The festival's most popular events include the children's origami workshop and a taiko drumming performance.",
+          "isCorrect": true,
+          "explanation": "Correct. \"Festival's\" shows that the events belong to the festival, and \"children's\" is the correct possessive of the plural \"children.\""
+        }
+      ],
+      "solutionExplanation": "Sentence 2 has two apostrophe errors. First, the events belong to the festival, so \"festivals\" should be \"festival's.\" Second, \"children\" is a plural that does not end in s, so its possessive is formed by adding 's: \"children's.\" Only choice D fixes both without adding an apostrophe where none belongs.",
+      "commonTrap": "Students often think every plural possessive puts the apostrophe after the s, so \"childrens'\" looks right. That rule applies only to plurals that end in s, like \"students'.\" For plurals such as \"children\" and \"people,\" add 's.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-134",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-APP"
+      ],
+      "stem": "Which sentence should be revised to correct an error in the use of an apostrophe?\n\n(1) Every Saturday, the farmers' market in Union Square fills with shoppers. (2) Its stalls offer apples from upstate orchards, cheese from local dairies, and fresh bread. (3) One vendor, whose family has farmed in the Hudson Valley for generations, sells more than thirty kinds of apple's. (4) Shoppers who arrive early can sample the vendors' newest products.",
+      "choices": [
+        {
+          "id": "ELA-REB-134-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false,
+          "explanation": "Sentence 1 is correct. The market belongs to many farmers, so the plural possessive \"farmers'\" is right."
+        },
+        {
+          "id": "ELA-REB-134-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": false,
+          "explanation": "Sentence 2 is correct. \"Its\" is the possessive pronoun, meaning the market's stalls. No apostrophe is used in a possessive pronoun."
+        },
+        {
+          "id": "ELA-REB-134-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": true,
+          "explanation": "Correct. \"Apples\" is a simple plural here. Nothing belongs to the apples, so no apostrophe is needed. Revised: \"...sells more than thirty kinds of apples.\""
+        },
+        {
+          "id": "ELA-REB-134-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": false,
+          "explanation": "Sentence 4 is correct. Many vendors sell at the market, so the plural possessive \"vendors'\" is right."
+        }
+      ],
+      "solutionExplanation": "An apostrophe shows possession or marks a contraction. It is never used just to make a word plural. In sentence 3, \"apple's\" is meant to be the plural \"apples,\" so the apostrophe must be removed.",
+      "commonTrap": "This paragraph is full of correct apostrophes in tricky places: plural possessives in sentences 1 and 4, and \"its\" with no apostrophe in sentence 2. Students who distrust every apostrophe may flag these, while the simple extra apostrophe in \"apple's\" goes unnoticed at the end of a long sentence.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-135",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-WC"
+      ],
+      "stem": "Read this sentence.\n\nThe scientist did some tests on the water from the river and found some bad stuff in it.\n\nWhich revision of the sentence uses the most precise language?",
+      "choices": [
+        {
+          "id": "ELA-REB-135-a",
+          "label": "A",
+          "text": "The scientist ran several tests on the river water and found some harmful things in it.",
+          "isCorrect": false,
+          "explanation": "\"Several tests\" and \"harmful things\" are still vague. The sentence does not say what was found."
+        },
+        {
+          "id": "ELA-REB-135-b",
+          "label": "B",
+          "text": "The scientist did careful tests on the water from the river and found some very bad things in it.",
+          "isCorrect": false,
+          "explanation": "\"Careful\" and \"very\" add emphasis, not information. \"Bad things\" is still vague."
+        },
+        {
+          "id": "ELA-REB-135-c",
+          "label": "C",
+          "text": "The scientist conducted numerous examinations of the river's water and discovered problematic materials within it.",
+          "isCorrect": false,
+          "explanation": "\"Numerous examinations\" and \"problematic materials\" sound formal, but they are as vague as the original."
+        },
+        {
+          "id": "ELA-REB-135-d",
+          "label": "D",
+          "text": "The scientist tested water samples from the Bronx River and found high levels of lead and bacteria.",
+          "isCorrect": true,
+          "explanation": "Correct. It names the river and states exactly what was found: high levels of lead and bacteria."
+        }
+      ],
+      "solutionExplanation": "Precise language replaces general words with specific ones. The vague parts of the original are \"some tests,\" \"the river,\" and \"some bad stuff.\" Choice D replaces them with \"tested water samples,\" \"the Bronx River,\" and \"high levels of lead and bacteria.\"",
+      "commonTrap": "Choice C is tempting because its vocabulary sounds advanced. Precise does not mean fancy. Ask whether the revision tells the reader something specific that the original did not.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-136",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-WC"
+      ],
+      "stem": "Read this sentence.\n\nThe new law will make a big difference for people who use the city's bike lanes.\n\nWhich revision of the sentence uses the most precise language?",
+      "choices": [
+        {
+          "id": "ELA-REB-136-a",
+          "label": "A",
+          "text": "The new law will require drivers to stay at least three feet away from cyclists in the city's bike lanes.",
+          "isCorrect": true,
+          "explanation": "Correct. It states exactly what the law does and who must follow it."
+        },
+        {
+          "id": "ELA-REB-136-b",
+          "label": "B",
+          "text": "The new law will have a tremendous impact on cyclists who use the city's bike lanes.",
+          "isCorrect": false,
+          "explanation": "\"Cyclists\" is more specific than \"people,\" but \"a tremendous impact\" is just a stronger way of saying \"a big difference.\" The law's effect is still unclear."
+        },
+        {
+          "id": "ELA-REB-136-c",
+          "label": "C",
+          "text": "The new law will significantly improve conditions for people who regularly ride in the city's bike lanes.",
+          "isCorrect": false,
+          "explanation": "\"Significantly improve conditions\" does not say what will change."
+        },
+        {
+          "id": "ELA-REB-136-d",
+          "label": "D",
+          "text": "The new law will make the city's bike lanes safer for the many people who depend on them every day.",
+          "isCorrect": false,
+          "explanation": "\"Safer\" names a general benefit but not how the law creates it, so the reader still does not know what the law does."
+        }
+      ],
+      "solutionExplanation": "The vague part of the original sentence is \"make a big difference.\" A precise revision explains what the difference is. Choice A is the only revision that states the law's specific requirement: drivers must stay at least three feet from cyclists.",
+      "commonTrap": "Choice D is tempting because \"safer\" is more specific than \"a big difference\" and sounds like a real result. But it still does not tell the reader what the law requires. The most precise choice gives the concrete detail.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-137",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-WC"
+      ],
+      "stem": "Read this sentence.\n\nThe team's performance got a lot better as the season went on.\n\nWhich revision of the sentence uses the most precise language?",
+      "choices": [
+        {
+          "id": "ELA-REB-137-a",
+          "label": "A",
+          "text": "The team's performance improved dramatically as the season progressed.",
+          "isCorrect": false,
+          "explanation": "\"Improved dramatically\" and \"progressed\" are more formal words for \"got a lot better\" and \"went on,\" but they add no specific information."
+        },
+        {
+          "id": "ELA-REB-137-b",
+          "label": "B",
+          "text": "The team won nine of its last ten games after losing six of its first eight.",
+          "isCorrect": true,
+          "explanation": "Correct. The win and loss records show exactly how much the team improved and when."
+        },
+        {
+          "id": "ELA-REB-137-c",
+          "label": "C",
+          "text": "The team became much more successful during the later part of the season.",
+          "isCorrect": false,
+          "explanation": "\"Much more successful\" is as general as \"got a lot better.\""
+        },
+        {
+          "id": "ELA-REB-137-d",
+          "label": "D",
+          "text": "The team's results showed steady, impressive growth over the course of the season.",
+          "isCorrect": false,
+          "explanation": "\"Steady, impressive growth\" sounds like a measurement, but it gives no actual results."
+        }
+      ],
+      "solutionExplanation": "To make a sentence more precise, replace a general claim with specific evidence. \"Got a lot better\" is general. Choice B shows the improvement with records from the start and end of the season.",
+      "commonTrap": "Choice D is tempting because \"steady\" and \"growth\" sound like the language of data. But the sentence never gives any data. Only choice B includes numbers that show the change.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-138",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-CL"
+      ],
+      "stem": "Read this sentence.\n\nIn my opinion, I think that the school should add more books to the library's collection of books.\n\nWhich revision of the sentence is the most concise without changing its meaning?",
+      "choices": [
+        {
+          "id": "ELA-REB-138-a",
+          "label": "A",
+          "text": "I think that, in my opinion, the school should add more books to the library's collection.",
+          "isCorrect": false,
+          "explanation": "This still says \"I think\" and \"in my opinion,\" which mean the same thing."
+        },
+        {
+          "id": "ELA-REB-138-b",
+          "label": "B",
+          "text": "I think the school should add more books to the library's collection.",
+          "isCorrect": true,
+          "explanation": "Correct. It keeps one opinion phrase and removes the repeated \"of books\" without losing any meaning."
+        },
+        {
+          "id": "ELA-REB-138-c",
+          "label": "C",
+          "text": "In my opinion, the school should add more books to the library's collection of books.",
+          "isCorrect": false,
+          "explanation": "This removes \"I think\" but keeps \"of books,\" which repeats \"books\" from earlier in the sentence."
+        },
+        {
+          "id": "ELA-REB-138-d",
+          "label": "D",
+          "text": "The school should add more books.",
+          "isCorrect": false,
+          "explanation": "This is shorter, but it changes the meaning. It no longer says that this is the writer's opinion or that the books are for the library."
+        }
+      ],
+      "solutionExplanation": "The original sentence has two redundancies. \"In my opinion\" and \"I think\" say the same thing, and \"collection of books\" repeats \"books.\" Choice B removes both while keeping every idea.",
+      "commonTrap": "Choice D is tempting because it is the shortest. But concise means no wasted words, not the fewest words. A revision that drops needed information changes the meaning.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-139",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-CL",
+        "RE-SEN"
+      ],
+      "stem": "Read this paragraph.\n\n(1) The Central Park Conservancy cares for the park's lawns, trees, and lakes. (2) The Conservancy was founded in 1980. (3) The Conservancy was founded by a group of citizens who were worried about the park's poor condition. (4) Today, it raises most of the money needed to maintain the park.\n\nWhich revision of sentences 2 and 3 best combines them?",
+      "choices": [
+        {
+          "id": "ELA-REB-139-a",
+          "label": "A",
+          "text": "The Conservancy was founded in 1980 by a group of citizens who were worried about the park's poor condition.",
+          "isCorrect": true,
+          "explanation": "Correct. It joins the two facts in one clear sentence and says \"was founded\" only once."
+        },
+        {
+          "id": "ELA-REB-139-b",
+          "label": "B",
+          "text": "The Conservancy was founded in 1980, and the Conservancy was founded by a group of citizens who were worried about the park's poor condition.",
+          "isCorrect": false,
+          "explanation": "This joins the sentences with \"and\" but still repeats \"the Conservancy was founded.\" It is no more concise than the original."
+        },
+        {
+          "id": "ELA-REB-139-c",
+          "label": "C",
+          "text": "Founded in 1980, a group of citizens who were worried about the park's poor condition started the Conservancy.",
+          "isCorrect": false,
+          "explanation": "This creates a dangling modifier. \"Founded in 1980\" is followed by \"a group of citizens,\" so it says the citizens were founded in 1980."
+        },
+        {
+          "id": "ELA-REB-139-d",
+          "label": "D",
+          "text": "The Conservancy was founded in 1980; it was founded by a group of citizens, and these citizens were worried about the park's poor condition.",
+          "isCorrect": false,
+          "explanation": "This is grammatically correct but wordy. It repeats \"founded\" and \"citizens\" instead of combining the ideas."
+        }
+      ],
+      "solutionExplanation": "Sentences 2 and 3 both say \"The Conservancy was founded.\" The best combination states that once and adds both details, the year and the founders. Choice A does this in a single sentence with no repetition and no grammar errors.",
+      "commonTrap": "Choice C is tempting because it is short and sounds sophisticated. But the opening phrase \"Founded in 1980\" describes the Conservancy, and the noun after the comma is \"a group of citizens.\" Shorter is not better if the sentence becomes illogical.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-140",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RE-CL"
+      ],
+      "stem": "Which sentence should be revised to eliminate unnecessary words?\n\n(1) Every year, the Village Halloween Parade winds up Sixth Avenue in Manhattan. (2) Thousands of marchers in costume walk beside enormous puppets operated by teams of volunteers. (3) The parade first began in 1974 as a small walk organized by a puppet maker for his children and neighbors. (4) Today, it attracts as many as two million spectators.",
+      "choices": [
+        {
+          "id": "ELA-REB-140-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false,
+          "explanation": "Sentence 1 has no unnecessary words. \"Every year\" tells how often the parade happens, and \"Sixth Avenue in Manhattan\" tells where."
+        },
+        {
+          "id": "ELA-REB-140-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": false,
+          "explanation": "Sentence 2 has no unnecessary words. Each phrase adds a new detail about the marchers or the puppets."
+        },
+        {
+          "id": "ELA-REB-140-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": true,
+          "explanation": "Correct. \"Began\" already means \"started for the first time,\" so \"first\" repeats the idea. Revised: \"The parade began in 1974 as a small walk organized by a puppet maker for his children and neighbors.\""
+        },
+        {
+          "id": "ELA-REB-140-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": false,
+          "explanation": "Sentence 4 has no unnecessary words. \"Today\" sets up a contrast with the parade's small beginning, and \"as many as two million\" gives the size of the crowd."
+        }
+      ],
+      "solutionExplanation": "A redundancy uses two words that mean the same thing. In sentence 3, \"first began\" is redundant, because anything that began did so for the first time. Deleting \"first\" makes the sentence concise without losing meaning.",
+      "commonTrap": "\"First began\" is so common in speech that it sounds natural, so students skip over it. Students may instead flag sentence 2 because it is long. Length is not the problem. Repeated meaning is.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-141",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "INDY-IC",
+      "tags": [
+        "RE-MOD"
+      ],
+      "stem": "Select the option that correctly completes the sentence.",
+      "ic": {
+        "instruction": "Choose the correct words for the blank.",
+        "segments": [
+          {
+            "type": "text",
+            "value": "Hoping to see the meteor shower, "
+          },
+          {
+            "type": "slot",
+            "slotId": "s1"
+          },
+          {
+            "type": "text",
+            "value": " climbed to the roof of our apartment building just after midnight."
+          }
+        ],
+        "slots": [
+          {
+            "slotId": "s1",
+            "options": [
+              {
+                "id": "s1-a",
+                "text": "my sister's telescope and I",
+                "explanation": "This says the telescope was hoping to see the meteor shower and climbed to the roof. A telescope cannot hope or climb."
+              },
+              {
+                "id": "s1-b",
+                "text": "the night sky drew my sister and me, so we",
+                "explanation": "The noun right after the opening phrase is \"the night sky,\" so the sentence says the sky was hoping to see the meteor shower. This is a dangling modifier."
+              },
+              {
+                "id": "s1-c",
+                "text": "my sister and I",
+                "explanation": "Correct. The people hoping to see the meteor shower, my sister and I, come right after the opening phrase, and they are the ones who climbed."
+              }
+            ]
+          }
+        ],
+        "correctMapping": {
+          "s1": "s1-c"
+        }
+      },
+      "solutionExplanation": "An opening phrase describes the noun that comes right after the comma. The people \"hoping to see the meteor shower\" are the writer and the writer's sister, so they must come next: \"Hoping to see the meteor shower, my sister and I climbed to the roof.\"",
+      "commonTrap": "The third option is tempting because it mentions the sister and the writer and sounds poetic. But the first noun after the comma is \"the night sky,\" and the sky was not hoping to see anything.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-142",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "INDY-IC",
+      "tags": [
+        "RE-TEN"
+      ],
+      "stem": "Select the options that correctly complete the sentence.",
+      "ic": {
+        "instruction": "Choose the correct verb for each blank.",
+        "segments": [
+          {
+            "type": "text",
+            "value": "When the blackout of 2003 "
+          },
+          {
+            "type": "slot",
+            "slotId": "s1"
+          },
+          {
+            "type": "text",
+            "value": " New York City, thousands of commuters "
+          },
+          {
+            "type": "slot",
+            "slotId": "s2"
+          },
+          {
+            "type": "text",
+            "value": " across the bridges to get home because the subways had stopped running."
+          }
+        ],
+        "slots": [
+          {
+            "slotId": "s1",
+            "options": [
+              {
+                "id": "s1-a",
+                "text": "hits",
+                "explanation": "\"Hits\" is present tense, but the blackout happened in 2003."
+              },
+              {
+                "id": "s1-b",
+                "text": "hit",
+                "explanation": "Correct. The simple past \"hit\" fits an event in 2003."
+              },
+              {
+                "id": "s1-c",
+                "text": "has hit",
+                "explanation": "\"Has hit\" is present perfect, which connects to the present. It does not fit a single event in 2003."
+              },
+              {
+                "id": "s1-d",
+                "text": "will hit",
+                "explanation": "\"Will hit\" is future tense, but the blackout already happened."
+              }
+            ]
+          },
+          {
+            "slotId": "s2",
+            "options": [
+              {
+                "id": "s2-a",
+                "text": "walk",
+                "explanation": "\"Walk\" is present tense, which shifts away from the past-tense events in the rest of the sentence."
+              },
+              {
+                "id": "s2-b",
+                "text": "walked",
+                "explanation": "Correct. The simple past \"walked\" matches \"hit\" and shows that the walking happened after the blackout and after the subways had stopped."
+              },
+              {
+                "id": "s2-c",
+                "text": "have walked",
+                "explanation": "\"Have walked\" is present perfect, which does not fit a story set in 2003."
+              },
+              {
+                "id": "s2-d",
+                "text": "had walked",
+                "explanation": "\"Had walked\" would mean the commuters walked home before the blackout hit, which makes no sense."
+              }
+            ]
+          }
+        ],
+        "correctMapping": {
+          "s1": "s1-b",
+          "s2": "s2-b"
+        }
+      },
+      "solutionExplanation": "The sentence describes a past event, so both blanks need past tense verbs: \"When the blackout of 2003 hit New York City, thousands of commuters walked across the bridges.\" The past perfect \"had stopped\" is already in the sentence to show that the subways stopped before the walk began. The walking itself should be in the simple past.",
+      "commonTrap": "Students who see \"had stopped\" may choose \"had walked\" to match it. But the past perfect marks the earlier of two past actions. The subways stopped first and the commuters walked second, so \"walked\" is correct.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-143",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "INDY-IC",
+      "tags": [
+        "RE-APP",
+        "RE-PRO"
+      ],
+      "stem": "Select the options that correctly complete the sentence.",
+      "ic": {
+        "instruction": "Choose the correct word for each blank.",
+        "segments": [
+          {
+            "type": "text",
+            "value": "Over the summer, the soccer "
+          },
+          {
+            "type": "slot",
+            "slotId": "s1"
+          },
+          {
+            "type": "text",
+            "value": " locker room was repainted, and "
+          },
+          {
+            "type": "slot",
+            "slotId": "s2"
+          },
+          {
+            "type": "text",
+            "value": " new benches arrived just before the first home game."
+          }
+        ],
+        "slots": [
+          {
+            "slotId": "s1",
+            "options": [
+              {
+                "id": "s1-a",
+                "text": "team's",
+                "explanation": "Correct. The locker room belongs to one team, so the singular possessive is \"team's.\""
+              },
+              {
+                "id": "s1-b",
+                "text": "teams",
+                "explanation": "\"Teams\" is a plural noun with no apostrophe, so it does not show that the locker room belongs to the team."
+              },
+              {
+                "id": "s1-c",
+                "text": "teams'",
+                "explanation": "\"Teams'\" is the plural possessive, which would mean the locker room belongs to several teams. The sentence refers to one soccer team."
+              }
+            ]
+          },
+          {
+            "slotId": "s2",
+            "options": [
+              {
+                "id": "s2-a",
+                "text": "it's",
+                "explanation": "\"It's\" means \"it is.\" \"It is new benches arrived\" makes no sense."
+              },
+              {
+                "id": "s2-b",
+                "text": "its",
+                "explanation": "Correct. \"Its\" is the possessive pronoun, showing that the new benches belong to the locker room."
+              },
+              {
+                "id": "s2-c",
+                "text": "its'",
+                "explanation": "\"Its'\" is not a word. The possessive pronoun \"its\" never takes an apostrophe."
+              }
+            ]
+          }
+        ],
+        "correctMapping": {
+          "s1": "s1-a",
+          "s2": "s2-b"
+        }
+      },
+      "solutionExplanation": "In the first blank, the locker room belongs to one soccer team, so the singular possessive \"team's\" is correct. In the second blank, the benches belong to the locker room. Possessive pronouns never use apostrophes, so the correct word is \"its.\"",
+      "commonTrap": "Students often choose \"it's\" because they know apostrophes show possession. But \"it's\" always means \"it is\" or \"it has.\" Possessive pronouns such as \"its,\" \"hers,\" and \"theirs\" have no apostrophe.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-144",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "INDY-IC",
+      "tags": [
+        "RE-SEM",
+        "RE-RUN"
+      ],
+      "stem": "Select the option that correctly completes the sentence.",
+      "ic": {
+        "instruction": "Choose the correct punctuation and transition for the blank.",
+        "segments": [
+          {
+            "type": "text",
+            "value": "The neighborhood library had planned to reopen in "
+          },
+          {
+            "type": "slot",
+            "slotId": "s1"
+          },
+          {
+            "type": "text",
+            "value": " the repairs took longer than expected, so the doors stayed closed until June."
+          }
+        ],
+        "slots": [
+          {
+            "slotId": "s1",
+            "options": [
+              {
+                "id": "s1-a",
+                "text": "March, however,",
+                "explanation": "This creates a comma splice. \"However\" is a transition word, not a conjunction, so commas alone cannot join two complete sentences."
+              },
+              {
+                "id": "s1-b",
+                "text": "March; however,",
+                "explanation": "Correct. The semicolon ends the first complete sentence, and the comma after \"however\" sets off the transition at the start of the second."
+              },
+              {
+                "id": "s1-c",
+                "text": "March however,",
+                "explanation": "With no punctuation before \"however,\" the two complete sentences run together. This is a run-on."
+              },
+              {
+                "id": "s1-d",
+                "text": "March; however;",
+                "explanation": "The semicolon after \"however\" is wrong. \"However\" is not a complete sentence, so it cannot stand between two semicolons."
+              }
+            ]
+          }
+        ],
+        "correctMapping": {
+          "s1": "s1-b"
+        }
+      },
+      "solutionExplanation": "\"The neighborhood library had planned to reopen in March\" is a complete sentence, and so is \"the repairs took longer than expected, so the doors stayed closed until June.\" When \"however\" begins the second sentence, the first must end with a semicolon or a period, and a comma follows \"however.\" The correct choice is \"March; however,\".",
+      "commonTrap": "\"March, however,\" is the trap. Students see \"however\" set off by commas in many correct sentences, where it interrupts a single clause. Here it comes between two complete sentences, so a semicolon is required before it.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-145",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "INDY-IC",
+      "tags": [
+        "RE-COLN"
+      ],
+      "stem": "Select the option that correctly completes the sentence.",
+      "ic": {
+        "instruction": "Choose the correct punctuation for the blank.",
+        "segments": [
+          {
+            "type": "text",
+            "value": "Before the hike, Ms. Patel reminded us to pack three "
+          },
+          {
+            "type": "slot",
+            "slotId": "s1"
+          },
+          {
+            "type": "text",
+            "value": " water, sunscreen, and a map of the trail."
+          }
+        ],
+        "slots": [
+          {
+            "slotId": "s1",
+            "options": [
+              {
+                "id": "s1-a",
+                "text": "essentials;",
+                "explanation": "A semicolon must join two complete sentences. \"Water, sunscreen, and a map of the trail\" is a list, not a sentence."
+              },
+              {
+                "id": "s1-b",
+                "text": "essentials,",
+                "explanation": "A comma makes \"three essentials\" look like one more item in the list, so a reader might count four items instead of three."
+              },
+              {
+                "id": "s1-c",
+                "text": "essentials:",
+                "explanation": "Correct. \"Before the hike, Ms. Patel reminded us to pack three essentials\" is a complete sentence, so a colon can introduce the list that names the essentials."
+              },
+              {
+                "id": "s1-d",
+                "text": "essentials such as:",
+                "explanation": "A colon cannot follow \"such as,\" because \"such as\" cannot end a complete sentence. \"Such as\" also suggests these are only some examples, but the sentence names exactly three essentials."
+              }
+            ]
+          }
+        ],
+        "correctMapping": {
+          "s1": "s1-c"
+        }
+      },
+      "solutionExplanation": "A colon introduces a list or explanation after a complete sentence. The words before the blank form a complete sentence and announce \"three essentials,\" and the words after it name them. A colon is the correct choice.",
+      "commonTrap": "Students who are unsure of colons may pick the comma because commas appear throughout lists. But a comma here blurs the line between the announcement and the list itself.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-146",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "INDY-IC",
+      "tags": [
+        "RE-COM"
+      ],
+      "stem": "Select the options that correctly complete the sentence.",
+      "ic": {
+        "instruction": "Choose the correct words and punctuation for each blank.",
+        "segments": [
+          {
+            "type": "text",
+            "value": "The "
+          },
+          {
+            "type": "slot",
+            "slotId": "s1"
+          },
+          {
+            "type": "text",
+            "value": " first opened at Coney Island in "
+          },
+          {
+            "type": "slot",
+            "slotId": "s2"
+          },
+          {
+            "type": "text",
+            "value": " still one of the most famous wooden roller coasters in the world."
+          }
+        ],
+        "slots": [
+          {
+            "slotId": "s1",
+            "options": [
+              {
+                "id": "s1-a",
+                "text": "Cyclone, which",
+                "explanation": "Correct. There is only one Cyclone, so the \"which\" clause adds extra information and must begin with a comma."
+              },
+              {
+                "id": "s1-b",
+                "text": "Cyclone which",
+                "explanation": "Leaving out the comma treats the clause as if it were needed to tell which Cyclone is meant. Since the name already identifies the ride, the clause is extra and needs commas."
+              },
+              {
+                "id": "s1-c",
+                "text": "Cyclone; which",
+                "explanation": "A semicolon must join two complete sentences. \"The Cyclone\" by itself is not a sentence."
+              }
+            ]
+          },
+          {
+            "slotId": "s2",
+            "options": [
+              {
+                "id": "s2-a",
+                "text": "1927 is",
+                "explanation": "Without a closing comma, the extra clause never ends, and the main verb \"is\" seems to belong to the clause."
+              },
+              {
+                "id": "s2-b",
+                "text": "1927, is",
+                "explanation": "Correct. The comma closes the \"which\" clause, so the main sentence reads \"The Cyclone is still one of the most famous wooden roller coasters.\""
+              },
+              {
+                "id": "s2-c",
+                "text": "1927; is",
+                "explanation": "A semicolon cannot separate the subject \"The Cyclone\" from its verb \"is.\""
+              }
+            ]
+          }
+        ],
+        "correctMapping": {
+          "s1": "s1-a",
+          "s2": "s2-b"
+        }
+      },
+      "solutionExplanation": "The clause \"which first opened at Coney Island in 1927\" adds extra information about the Cyclone. Because it interrupts the main sentence, \"The Cyclone is still one of the most famous wooden roller coasters in the world,\" it needs a comma on each side. The correct choices are \"Cyclone, which\" and \"1927, is.\"",
+      "commonTrap": "Many students choose the opening comma correctly but forget the closing one, because the comma before \"is\" seems to separate a subject from its verb. Here the comma closes the interrupting clause, so it is required.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-147",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "INDY-IC",
+      "tags": [
+        "RE-PRO"
+      ],
+      "stem": "Select the options that correctly complete the sentence.",
+      "ic": {
+        "instruction": "Choose the correct pronoun for each blank.",
+        "segments": [
+          {
+            "type": "text",
+            "value": "Coach Delgado, "
+          },
+          {
+            "type": "slot",
+            "slotId": "s1"
+          },
+          {
+            "type": "text",
+            "value": " had watched us practice all week, asked Maya and "
+          },
+          {
+            "type": "slot",
+            "slotId": "s2"
+          },
+          {
+            "type": "text",
+            "value": " to lead the warm-up before the championship game."
+          }
+        ],
+        "slots": [
+          {
+            "slotId": "s1",
+            "options": [
+              {
+                "id": "s1-a",
+                "text": "whom",
+                "explanation": "\"Whom\" is an object pronoun. Here the pronoun does the watching, so it is a subject."
+              },
+              {
+                "id": "s1-b",
+                "text": "who",
+                "explanation": "Correct. \"Who\" is the subject of \"had watched,\" so the subject form is needed."
+              },
+              {
+                "id": "s1-c",
+                "text": "which",
+                "explanation": "\"Which\" refers to things or animals, not people. Coach Delgado is a person."
+              }
+            ]
+          },
+          {
+            "slotId": "s2",
+            "options": [
+              {
+                "id": "s2-a",
+                "text": "I",
+                "explanation": "\"I\" is a subject pronoun. The coach asked Maya and the writer, so the pronoun is an object. Test it: \"asked I\" is wrong."
+              },
+              {
+                "id": "s2-b",
+                "text": "me",
+                "explanation": "Correct. \"Me\" is the object of \"asked.\" Removing \"Maya and\" gives \"asked me,\" which is correct."
+              },
+              {
+                "id": "s2-c",
+                "text": "myself",
+                "explanation": "\"Myself\" is used only when the subject of the sentence is \"I.\" The subject here is Coach Delgado."
+              }
+            ]
+          }
+        ],
+        "correctMapping": {
+          "s1": "s1-b",
+          "s2": "s2-b"
+        }
+      },
+      "solutionExplanation": "In the first blank, the pronoun is the subject of \"had watched,\" and it refers to a person, so \"who\" is correct. In the second blank, the pronoun receives the action of \"asked,\" so it must be the object pronoun \"me.\"",
+      "commonTrap": "Students often choose \"Maya and I\" because it sounds formal. Drop \"Maya and\" and test the pronoun alone. \"The coach asked I\" is clearly wrong.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-148",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "INDY-IC",
+      "tags": [
+        "RE-WC"
+      ],
+      "stem": "Select the options that correctly complete the sentence.",
+      "ic": {
+        "instruction": "Choose the correct word for each blank.",
+        "segments": [
+          {
+            "type": "text",
+            "value": "City officials hope the new flood walls will "
+          },
+          {
+            "type": "slot",
+            "slotId": "s1"
+          },
+          {
+            "type": "text",
+            "value": " damage from future storms, but critics say the project's "
+          },
+          {
+            "type": "slot",
+            "slotId": "s2"
+          },
+          {
+            "type": "text",
+            "value": " on nearby neighborhoods has not been carefully studied."
+          }
+        ],
+        "slots": [
+          {
+            "slotId": "s1",
+            "options": [
+              {
+                "id": "s1-a",
+                "text": "deduce",
+                "explanation": "\"Deduce\" means to figure something out by reasoning. Flood walls cannot figure out damage."
+              },
+              {
+                "id": "s1-b",
+                "text": "reduce",
+                "explanation": "Correct. \"Reduce\" means to make smaller, which is what flood walls are meant to do to storm damage."
+              },
+              {
+                "id": "s1-c",
+                "text": "produce",
+                "explanation": "\"Produce\" means to create. Officials would not hope that flood walls create damage."
+              }
+            ]
+          },
+          {
+            "slotId": "s2",
+            "options": [
+              {
+                "id": "s2-a",
+                "text": "affect",
+                "explanation": "\"Affect\" is almost always a verb meaning \"to influence.\" The blank follows \"the project's\" and needs a noun."
+              },
+              {
+                "id": "s2-b",
+                "text": "effort",
+                "explanation": "\"Effort\" means hard work or an attempt. \"The project's effort on nearby neighborhoods\" does not make sense."
+              },
+              {
+                "id": "s2-c",
+                "text": "effect",
+                "explanation": "Correct. \"Effect\" is a noun meaning \"result.\" The critics are concerned about the project's result on nearby neighborhoods."
+              }
+            ]
+          }
+        ],
+        "correctMapping": {
+          "s1": "s1-b",
+          "s2": "s2-c"
+        }
+      },
+      "solutionExplanation": "The first blank needs a verb that means \"make smaller,\" so \"reduce\" is correct. The second blank follows the possessive \"the project's,\" so it needs a noun. \"Effect\" is the noun that means \"result.\" \"Affect\" is usually a verb.",
+      "commonTrap": "\"Affect\" and \"effect\" are often confused. A quick test: if the word follows \"the,\" \"a,\" or a possessive like \"the project's,\" it is a noun, so use \"effect.\"",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-149",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "INDY-IC",
+      "tags": [
+        "RE-RUN"
+      ],
+      "stem": "Select the option that correctly completes the sentence.",
+      "ic": {
+        "instruction": "Choose the correct option for the blank.",
+        "segments": [
+          {
+            "type": "text",
+            "value": "The subway was delayed for almost an "
+          },
+          {
+            "type": "slot",
+            "slotId": "s1"
+          },
+          {
+            "type": "text",
+            "value": " arrived at the concert just as the band began to play."
+          }
+        ],
+        "slots": [
+          {
+            "slotId": "s1",
+            "options": [
+              {
+                "id": "s1-a",
+                "text": "hour, we",
+                "explanation": "This joins two complete sentences with only a comma, which is a comma splice."
+              },
+              {
+                "id": "s1-b",
+                "text": "hour, so we",
+                "explanation": "Correct. The comma and the conjunction \"so\" correctly join the two complete sentences and show that the delay caused the late arrival."
+              },
+              {
+                "id": "s1-c",
+                "text": "hour we",
+                "explanation": "This runs two complete sentences together with no punctuation or conjunction, which is a run-on."
+              },
+              {
+                "id": "s1-d",
+                "text": "hour so, we",
+                "explanation": "The comma belongs before \"so,\" not after it. Without a comma before \"so,\" the two sentences are not correctly joined."
+              }
+            ]
+          }
+        ],
+        "correctMapping": {
+          "s1": "s1-b"
+        }
+      },
+      "solutionExplanation": "\"The subway was delayed for almost an hour\" and \"we arrived at the concert just as the band began to play\" are both complete sentences. To join them, use a comma followed by a conjunction. \"So\" shows that the delay caused the late arrival, so \"hour, so we\" is correct.",
+      "commonTrap": "\"Hour, we\" is tempting because a comma marks the natural pause. But a pause is not enough to join two complete sentences. A conjunction such as \"so\" is required.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-REB-150",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "INDY-IC",
+      "tags": [
+        "RE-SVA"
+      ],
+      "stem": "Select the options that correctly complete the sentence.",
+      "ic": {
+        "instruction": "Choose the correct verb for each blank.",
+        "segments": [
+          {
+            "type": "text",
+            "value": "Neither the art teacher nor her students "
+          },
+          {
+            "type": "slot",
+            "slotId": "s1"
+          },
+          {
+            "type": "text",
+            "value": " sure where the new mural will go, but each of the three proposed walls "
+          },
+          {
+            "type": "slot",
+            "slotId": "s2"
+          },
+          {
+            "type": "text",
+            "value": " enough space for a design twenty feet wide."
+          }
+        ],
+        "slots": [
+          {
+            "slotId": "s1",
+            "options": [
+              {
+                "id": "s1-a",
+                "text": "is",
+                "explanation": "\"Is\" agrees with \"the art teacher,\" but with \"neither ... nor,\" the verb agrees with the subject closer to it, \"her students.\""
+              },
+              {
+                "id": "s1-b",
+                "text": "are",
+                "explanation": "Correct. With \"neither ... nor,\" the verb agrees with the nearer subject. \"Her students\" is plural, so the verb is \"are.\""
+              },
+              {
+                "id": "s1-c",
+                "text": "was",
+                "explanation": "\"Was\" is singular and past tense. It does not agree with \"her students,\" and it does not fit the present and future tenses used in the rest of the sentence."
+              }
+            ]
+          },
+          {
+            "slotId": "s2",
+            "options": [
+              {
+                "id": "s2-a",
+                "text": "have",
+                "explanation": "\"Have\" agrees with \"walls,\" but \"walls\" is inside a prepositional phrase. The subject is \"each,\" which is singular."
+              },
+              {
+                "id": "s2-b",
+                "text": "has",
+                "explanation": "Correct. The subject is \"each,\" which is singular, so the verb is \"has.\" \"Walls\" is part of the phrase \"of the three proposed walls\" and is not the subject."
+              },
+              {
+                "id": "s2-c",
+                "text": "having",
+                "explanation": "\"Having\" is an -ing form that cannot be a main verb by itself, so the second half of the sentence would have no verb."
+              }
+            ]
+          }
+        ],
+        "correctMapping": {
+          "s1": "s1-b",
+          "s2": "s2-b"
+        }
+      },
+      "solutionExplanation": "The sentence has two agreement problems. In the first clause, \"neither ... nor\" joins a singular subject and a plural subject, and the verb agrees with the nearer one, \"her students,\" so the verb is \"are.\" In the second clause, the subject is \"each,\" which is always singular, so the verb is \"has.\"",
+      "commonTrap": "The plural \"walls\" sits right before the second blank, which pulls students toward \"have.\" Cross out \"of the three proposed walls\" and the subject \"each\" is left, which needs \"has.\"",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    }
+  ]
+}
