@@ -1,0 +1,1061 @@
+{
+  "batch": "2026-10-11-top-up",
+  "description": "20 new original SHSAT items written by Claude with Jed Levine to the content/AUTHORING.md standard. Four ELA reading items complete more of the set on passage RC-P-001 (\"How a Swarm Chooses a Home\", copied verbatim from 2026-10-11-backlog-b so passageId links validate): central idea, paragraph function, inference, and a select-two text-structure item. Sixteen math items in algebra, applications, geometry (including two 3-D items and one coordinate item, all described in words), and data. Every math key and distractor path was recomputed by script, and every RC quotation was checked against the passage. Mix: 13 MC4, 2 INDY-WP, 2 INDY-EE, 2 INDY-MS, 1 INDY-CGT; 6 Module 1 and 14 Module 2. All items are Provisional until a second team member reviews them.",
+  "reviewStatusValues": {
+    "provisional": "Revised and approved by Jed with Claude. OK to publish in the app with a Provisional badge.",
+    "final": "Also reviewed by a second team member. Badge removed."
+  },
+  "passages": [
+    {
+      "id": "RC-P-001",
+      "title": "How a Swarm Chooses a Home",
+      "sourceMeta": "Original informational passage written for DrillMaster, 2026-10-11 (replaces placeholder tracker text).",
+      "body": "1 In late spring, a crowded honeybee colony sometimes does something remarkable. The old queen and about two-thirds of the workers, often more than ten thousand bees, leave the hive all at once. Within minutes they settle on a nearby tree branch in a dense, humming cluster. The bees that stayed behind will raise a new queen and keep the old hive. The swarm, however, has no home at all. It carries only the honey the bees packed into their stomachs before leaving, which is enough to last a few days. Before that supply runs out, the swarm must find a new place to live, and it must choose well. A space that is too small, too damp, or too open to the wind can doom the colony during its first winter.\n\n2 What makes this choice remarkable is that no single bee makes it. The queen does not lead the search; she simply waits in the middle of the cluster. Instead, the decision belongs to a few hundred of the colony's oldest foragers, bees that have spent weeks gathering food and know the surrounding countryside. These scouts fly out in every direction, searching for hollow trees, gaps in walls, and other sheltered spaces. When a scout finds a promising cavity, she inspects it carefully, walking across its inner surfaces for many minutes to judge its size, the width of its entrance, and how dry it is.\n\n3 A scout that returns to the swarm with good news does not simply lead the others to her discovery. She reports it. On the surface of the cluster, she performs a \"waggle dance,\" running forward in a straight line while shaking her body from side to side, then circling back and repeating the run. The angle of the run tells other bees the direction of the site compared with the position of the sun, and the length of each waggle tells them how far away it is. Most important, the number of times a scout repeats her dance reflects how good she judges the site to be. A scout that has found an excellent cavity may dance more than a hundred circuits. One that has found a poor cavity may dance only a few times and then stop.\n\n4 This difference in enthusiasm is what allows the swarm to choose. Bees that watch a dance often fly out to inspect the advertised site for themselves. If they also find it suitable, they return and dance for it too. A strong site therefore attracts more and more supporters, while a weak site's backers gradually fall silent. Each scout's dancing also grows weaker with each trip she makes, so no bee can keep promoting a site forever. Over several hours, or sometimes several days, the competing sites drop out one by one until a single location remains.\n\n5 The scouts do not need to count votes in the cluster to know when the debate is over. Instead, they pay attention to the crowd at the site itself. When a scout visiting a cavity finds roughly fifteen or twenty other scouts there at the same time, it is a sign that much of the search team now favors that spot. She flies back to the swarm and begins making a high-pitched piping sound, pressing her body against other bees. The piping signals the thousands of resting bees to warm up their flight muscles. Within an hour, the whole swarm lifts into the air, and the scouts guide it to its new home by streaking through the cloud of bees in the right direction.\n\n6 Biologists who have tested this process by offering swarms a set of artificial nest boxes have found that swarms usually pick the best box available, even when the differences between boxes are small. That success comes from the way the process is organized. Each scout knows only about the site she has visited, and none compares all the choices. Yet because good sites earn longer dances and poor ones are abandoned, the group as a whole reaches a sound decision. Some researchers have even suggested that human committees could learn from the bees: gather information independently, debate openly, and let the strongest evidence win."
+    }
+  ],
+  "questions": [
+    {
+      "id": "ELA-RC-173",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-MI"
+      ],
+      "passageId": "RC-P-001",
+      "stem": "Which statement best expresses the central idea of the passage?",
+      "choices": [
+        {
+          "id": "ELA-RC-173-a",
+          "label": "A",
+          "text": "Swarms must find a new home within a few days because the bees carry only a small supply of honey.",
+          "isCorrect": false,
+          "explanation": "This detail from paragraph 1 explains why the decision is urgent. It sets up the problem, but the rest of the passage is about how the bees solve it."
+        },
+        {
+          "id": "ELA-RC-173-b",
+          "label": "B",
+          "text": "A honeybee swarm chooses a new home through a group process in which scouts share information and check one another's discoveries until they settle on one site.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraphs 2 through 5 describe each step of this group process, and paragraph 6 explains that \"the group as a whole reaches a sound decision\" even though no single scout compares all the choices."
+        },
+        {
+          "id": "ELA-RC-173-c",
+          "label": "C",
+          "text": "Scout bees use the waggle dance to tell other bees the direction and distance of a possible home.",
+          "isCorrect": false,
+          "explanation": "This is a true detail from paragraph 3, but it describes only one step of the process. It leaves out how the swarm narrows the choices and decides when to move."
+        },
+        {
+          "id": "ELA-RC-173-d",
+          "label": "D",
+          "text": "People should make group decisions the way honeybees do, because the bees' method always produces the best choice.",
+          "isCorrect": false,
+          "explanation": "This overstates paragraph 6. The author says only that \"Some researchers have even suggested\" that people could learn from bees, and that swarms \"usually\" pick the best box, not always."
+        }
+      ],
+      "solutionExplanation": "Paragraph 1 sets up the swarm's problem: it \"must find a new place to live, and it must choose well.\" Paragraphs 2 through 5 explain how the scouts solve it: they search, report sites with dances, check one another's sites, and move once a crowd forms at one spot. Paragraph 6 sums up the result: although no scout compares all the choices, \"the group as a whole reaches a sound decision.\" The central idea is that the swarm chooses its home through a shared group process.",
+      "commonTrap": "Choice C is tempting because the waggle dance is the most detailed and memorable part of the passage. But the dance is only one step. A central idea has to cover the whole passage, from the search in paragraph 2 to the decision in paragraph 5 and the conclusion in paragraph 6.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-174",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-TXT"
+      ],
+      "passageId": "RC-P-001",
+      "stem": "How does paragraph 5 fit into the overall structure of the passage?",
+      "choices": [
+        {
+          "id": "ELA-RC-174-a",
+          "label": "A",
+          "text": "It shows that the scouts count the dances in the cluster to decide which site has won.",
+          "isCorrect": false,
+          "explanation": "This is the opposite of what the paragraph says. Paragraph 5 begins, \"The scouts do not need to count votes in the cluster to know when the debate is over.\""
+        },
+        {
+          "id": "ELA-RC-174-b",
+          "label": "B",
+          "text": "It describes how a scout inspects a cavity to judge its size, its entrance, and how dry it is.",
+          "isCorrect": false,
+          "explanation": "This describes paragraph 2, where a scout walks across a cavity's inner surfaces \"to judge its size, the width of its entrance, and how dry it is.\""
+        },
+        {
+          "id": "ELA-RC-174-c",
+          "label": "C",
+          "text": "It presents the results of experiments showing that swarms usually choose the best site.",
+          "isCorrect": false,
+          "explanation": "This describes paragraph 6, where biologists test swarms with \"artificial nest boxes.\" Paragraph 5 contains no experiments."
+        },
+        {
+          "id": "ELA-RC-174-d",
+          "label": "D",
+          "text": "It explains how the scouts recognize that the search is over and how the swarm then travels to the chosen site.",
+          "isCorrect": true,
+          "explanation": "Correct. The scouts notice a crowd of other scouts at one site, return to pipe, and then guide the swarm \"to its new home.\" This completes the process that paragraphs 2 through 4 begin."
+        }
+      ],
+      "solutionExplanation": "Paragraph 4 ends with the competing sites dropping out \"until a single location remains.\" Paragraph 5 answers the next question: how do the scouts know the debate is over? They notice \"roughly fifteen or twenty other scouts\" at one site, then fly back and begin piping. The paragraph ends with the swarm lifting into the air and the scouts guiding it to its new home. So paragraph 5 explains how the search ends and how the swarm moves.",
+      "commonTrap": "Choice A is tempting because paragraph 5 is about knowing when one site has won, and counting votes sounds like a reasonable way to do that. But the paragraph begins by saying the scouts \"do not need to count votes in the cluster.\" They judge the crowd at the site instead.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-175",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-INF"
+      ],
+      "passageId": "RC-P-001",
+      "stem": "Read this sentence from paragraph 5.\n\nWhen a scout visiting a cavity finds roughly fifteen or twenty other scouts there at the same time, it is a sign that much of the search team now favors that spot.\n\nBased on paragraphs 4 and 5, why do the scouts most likely wait for a crowd at a site before they begin piping?",
+      "choices": [
+        {
+          "id": "ELA-RC-175-a",
+          "label": "A",
+          "text": "A crowd shows that every scout in the search team has visited the site and agreed on it.",
+          "isCorrect": false,
+          "explanation": "This overstates the sentence, which says \"much of the search team,\" not every scout. Paragraph 6 also says that \"none compares all the choices.\""
+        },
+        {
+          "id": "ELA-RC-175-b",
+          "label": "B",
+          "text": "A crowd is needed to make the piping sound loud enough for the resting bees to hear.",
+          "isCorrect": false,
+          "explanation": "The piping happens back at the swarm, not at the site. In paragraph 5, a single scout \"flies back to the swarm and begins making a high-pitched piping sound.\""
+        },
+        {
+          "id": "ELA-RC-175-c",
+          "label": "C",
+          "text": "A crowd shows that many scouts have inspected the site for themselves and judged it to be good, not just one.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraph 4 says watchers \"fly out to inspect the advertised site for themselves\" and dance for it only if they also find it suitable. A crowd at the site means many separate checks agree."
+        },
+        {
+          "id": "ELA-RC-175-d",
+          "label": "D",
+          "text": "A single scout cannot find her way back to the swarm, so she must wait for others to guide her.",
+          "isCorrect": false,
+          "explanation": "Nothing in the passage suggests this. Paragraph 5 says the scout \"flies back to the swarm\" on her own, and scouts guide the swarm, not each other."
+        }
+      ],
+      "solutionExplanation": "Paragraph 4 explains how scouts gather at a site: \"Bees that watch a dance often fly out to inspect the advertised site for themselves. If they also find it suitable, they return and dance for it too.\" So each scout at a site has checked it on her own. A crowd of fifteen or twenty scouts means many separate bees have judged the site to be good. One scout's opinion could be wrong, but a crowd shows that \"much of the search team now favors that spot.\"",
+      "commonTrap": "Choice A is tempting because it sounds like the strongest kind of agreement. But the sentence says \"much of the search team,\" not all of it, and paragraph 6 says that \"none compares all the choices.\" The crowd shows wide support, not a unanimous vote.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-176",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "INDY-MS",
+      "tags": [
+        "RC-TXT"
+      ],
+      "passageId": "RC-P-001",
+      "stem": "Which two statements best describe how the author organizes the passage? Select two answers.",
+      "choices": [
+        {
+          "id": "ELA-RC-176-a",
+          "label": "A",
+          "text": "The author first explains why the swarm must find a new home and then describes, step by step, how the bees make their choice.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraph 1 explains the swarm's problem, and paragraphs 2 through 5 move in order from the scouts' search to the swarm's flight to \"its new home.\""
+        },
+        {
+          "id": "ELA-RC-176-b",
+          "label": "B",
+          "text": "The author presents a problem, offers several possible solutions to it, and then explains why each solution fails.",
+          "isCorrect": false,
+          "explanation": "Paragraph 1 does present a problem, but the passage describes only one solution, the bees' process, and paragraph 6 says it succeeds. Nothing in the passage fails."
+        },
+        {
+          "id": "ELA-RC-176-c",
+          "label": "C",
+          "text": "The author follows one particular swarm from the day it leaves its hive until the day it moves into its new home.",
+          "isCorrect": false,
+          "explanation": "The passage describes what swarms do in general. Paragraph 1 says a colony \"sometimes\" swarms, and paragraph 6 discusses many swarms tested by biologists."
+        },
+        {
+          "id": "ELA-RC-176-d",
+          "label": "D",
+          "text": "The author ends by stepping back from the details to explain why the process works and what people might learn from it.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraph 6 states, \"That success comes from the way the process is organized,\" and it suggests that \"human committees could learn from the bees.\""
+        },
+        {
+          "id": "ELA-RC-176-e",
+          "label": "E",
+          "text": "The author begins with the experiments that biologists performed and then uses them to explain each step of the process.",
+          "isCorrect": false,
+          "explanation": "The experiments with \"artificial nest boxes\" appear in the last paragraph, not the first. The passage begins with a colony leaving its hive."
+        }
+      ],
+      "ms": {
+        "selectCount": 2,
+        "instruction": "Select two answers."
+      },
+      "solutionExplanation": "Paragraph 1 presents the problem: the swarm \"must find a new place to live, and it must choose well.\" Paragraphs 2 through 5 then follow the process in order: scouts search, report with dances, recruit other scouts, and finally move the swarm. Paragraph 6 steps back from these details. It states, \"That success comes from the way the process is organized,\" and it suggests that \"human committees could learn from the bees.\" The correct answers are A and D.",
+      "commonTrap": "Choice C is tempting because paragraphs 1 through 5 read like a story, with \"the swarm\" lifting off at the end. But the author describes what swarms do in general. Paragraph 1 says a colony \"sometimes\" swarms, and paragraph 6 refers to many swarms tested with nest boxes.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-ALG-113",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "ALG-LIN"
+      ],
+      "stem": "What value of x satisfies the equation 5x − 2(x + 6) = 9?",
+      "choices": [
+        {
+          "id": "MATH-ALG-113-a",
+          "label": "A",
+          "text": "−1",
+          "isCorrect": false,
+          "explanation": "This comes from a sign error: −2 × 6 was written as +12, so 3x + 12 = 9 and 3x = −3."
+        },
+        {
+          "id": "MATH-ALG-113-b",
+          "label": "B",
+          "text": "3",
+          "isCorrect": false,
+          "explanation": "This comes from treating −2 times x as +2x, so 5x + 2x − 12 = 9, 7x = 21, and x = 3."
+        },
+        {
+          "id": "MATH-ALG-113-c",
+          "label": "C",
+          "text": "5",
+          "isCorrect": false,
+          "explanation": "This comes from multiplying only the x by −2, so 5x − 2x − 6 = 9, 3x = 15, and x = 5."
+        },
+        {
+          "id": "MATH-ALG-113-d",
+          "label": "D",
+          "text": "7",
+          "isCorrect": true,
+          "explanation": "Correct. 5x − 2x − 12 = 9, so 3x = 21 and x = 7."
+        }
+      ],
+      "solutionExplanation": "Distribute the −2 to both terms in the parentheses: −2(x + 6) = −2x − 12. The equation becomes 5x − 2x − 12 = 9, or 3x − 12 = 9. Add 12 to both sides: 3x = 21. Divide by 3: x = 7. Check: 5(7) − 2(7 + 6) = 35 − 26 = 9.",
+      "commonTrap": "Students multiply only the x by −2 and write 5x − 2x − 6 = 9, which leads to x = 5. The −2 must multiply both terms inside the parentheses.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-ALG-114",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "ALG-FUN",
+        "ALG-LIN"
+      ],
+      "stem": "The function f is defined by f(x) = 3x − 5. If f(a) = 16, what is the value of f(2a)?",
+      "choices": [
+        {
+          "id": "MATH-ALG-114-a",
+          "label": "A",
+          "text": "14",
+          "isCorrect": false,
+          "explanation": "This is the value of 2a. The question asks for f(2a), so 14 must still be put into the function."
+        },
+        {
+          "id": "MATH-ALG-114-b",
+          "label": "B",
+          "text": "17",
+          "isCorrect": false,
+          "explanation": "This comes from subtracting 5 instead of adding 5 when solving 3a − 5 = 16. That gives 3a = 11, so 2a = 22/3 and f(2a) = 22 − 5 = 17."
+        },
+        {
+          "id": "MATH-ALG-114-c",
+          "label": "C",
+          "text": "32",
+          "isCorrect": false,
+          "explanation": "This doubles the output: 2 × f(a) = 2 × 16. Doubling the input of 3x − 5 does not double the output, because the 5 is not doubled."
+        },
+        {
+          "id": "MATH-ALG-114-d",
+          "label": "D",
+          "text": "37",
+          "isCorrect": true,
+          "explanation": "Correct. 3a − 5 = 16 gives a = 7, and f(14) = 42 − 5 = 37."
+        }
+      ],
+      "solutionExplanation": "Since f(a) = 3a − 5, set 3a − 5 = 16. Add 5 to both sides: 3a = 21, so a = 7. Then 2a = 14, and f(14) = 3(14) − 5 = 42 − 5 = 37.",
+      "commonTrap": "Students assume that doubling the input doubles the output and answer 2 × 16 = 32. Because of the − 5, f(2a) = 6a − 5, which is not the same as 2f(a) = 6a − 10.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-ALG-115",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-EE",
+      "tags": [
+        "ALG-SYS",
+        "ALG-LIN"
+      ],
+      "stem": "The sum of two numbers is 50. Three times the smaller number is 10 more than the larger number. What is the larger number?",
+      "ee": {
+        "instruction": "Enter your answer as a number.",
+        "acceptableAnswers": [
+          "35",
+          "35.0"
+        ]
+      },
+      "commonWrongAnswers": [
+        {
+          "answer": "15",
+          "explanation": "This is the smaller number. The question asks for the larger number, 50 − 15 = 35."
+        },
+        {
+          "answer": "40",
+          "explanation": "This comes from writing 3s + 10 = L, which says the larger number is 10 more. Then 3s + 10 = 50 − s gives s = 10 and L = 40. The stem says three times the smaller number is the one that is 10 more."
+        }
+      ],
+      "solutionExplanation": "Let s be the smaller number and L the larger number. Then s + L = 50 and 3s = L + 10. From the first equation, L = 50 − s. Substitute: 3s = (50 − s) + 10, so 3s = 60 − s. Add s to both sides: 4s = 60, so s = 15. Then L = 50 − 15 = 35. Check: 3 × 15 = 45, which is 10 more than 35.",
+      "commonTrap": "\"Three times the smaller number is 10 more than the larger number\" means 3s = L + 10. Students who write 3s + 10 = L reverse the relationship and get 40.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-ALG-116",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-MS",
+      "tags": [
+        "ALG-LIN"
+      ],
+      "stem": "Which two values of x are solutions of the inequality −3(x − 2) > 18? Select two answers.",
+      "choices": [
+        {
+          "id": "MATH-ALG-116-a",
+          "label": "A",
+          "text": "−7",
+          "isCorrect": true,
+          "explanation": "Correct. −7 < −4. Check: −3(−9) = 27, and 27 > 18."
+        },
+        {
+          "id": "MATH-ALG-116-b",
+          "label": "B",
+          "text": "−5",
+          "isCorrect": true,
+          "explanation": "Correct. −5 < −4. Check: −3(−7) = 21, and 21 > 18."
+        },
+        {
+          "id": "MATH-ALG-116-c",
+          "label": "C",
+          "text": "−4",
+          "isCorrect": false,
+          "explanation": "This treats the boundary as a solution. When x = −4, −3(−6) = 18, and 18 is not greater than 18."
+        },
+        {
+          "id": "MATH-ALG-116-d",
+          "label": "D",
+          "text": "−1",
+          "isCorrect": false,
+          "explanation": "This comes from not reversing the sign when dividing by −3, which gives x > −4. Check: −3(−3) = 9, which is not greater than 18."
+        },
+        {
+          "id": "MATH-ALG-116-e",
+          "label": "E",
+          "text": "5",
+          "isCorrect": false,
+          "explanation": "This also comes from solving to x > −4 without reversing the sign. Check: −3(3) = −9, which is not greater than 18."
+        }
+      ],
+      "ms": {
+        "selectCount": 2,
+        "instruction": "Select two answers."
+      },
+      "solutionExplanation": "Distribute: −3x + 6 > 18. Subtract 6 from both sides: −3x > 12. Divide both sides by −3 and reverse the inequality sign: x < −4. Of the choices, only −7 and −5 are less than −4. Check: −3(−7 − 2) = 27 and −3(−5 − 2) = 21, and both are greater than 18.",
+      "commonTrap": "Students divide by −3 without reversing the inequality sign, get x > −4, and choose −1 and 5. Dividing or multiplying both sides of an inequality by a negative number reverses the sign.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-113",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "APP-PCT",
+        "NUM-FR"
+      ],
+      "stem": "Leo earned $240 at his summer job. He spent 3/8 of the money on a bike helmet and a lock. He saved 40% of the money that was left. How much money did Leo save?",
+      "choices": [
+        {
+          "id": "MATH-APP-113-a",
+          "label": "A",
+          "text": "$60",
+          "isCorrect": true,
+          "explanation": "Correct. $240 − $90 = $150 was left, and 40% of $150 is $60."
+        },
+        {
+          "id": "MATH-APP-113-b",
+          "label": "B",
+          "text": "$90",
+          "isCorrect": false,
+          "explanation": "This is the amount Leo spent, 3/8 × $240 = $90. The question asks how much he saved."
+        },
+        {
+          "id": "MATH-APP-113-c",
+          "label": "C",
+          "text": "$96",
+          "isCorrect": false,
+          "explanation": "This is 40% of the full $240. The 40% is taken of the money that was left, $150."
+        },
+        {
+          "id": "MATH-APP-113-d",
+          "label": "D",
+          "text": "$150",
+          "isCorrect": false,
+          "explanation": "This is the money left after the purchase. Leo saved only 40% of it."
+        }
+      ],
+      "solutionExplanation": "Leo spent 3/8 × $240 = $90, so $240 − $90 = $150 was left. He saved 40% of $150: 0.40 × $150 = $60.",
+      "commonTrap": "Students take 40% of the full $240 and get $96. The 40% applies only to the money left after Leo's purchase.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-114",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-WP",
+      "tags": [
+        "APP-RTD"
+      ],
+      "stem": "Train A leaves Millbrook at 9:00 a.m. and travels toward Easton at a constant speed of 60 miles per hour. Train B leaves Easton at 10:00 a.m. and travels toward Millbrook on a parallel track at a constant speed of 45 miles per hour. Millbrook and Easton are 375 miles apart. At what time do the two trains pass each other?",
+      "choices": [
+        {
+          "id": "MATH-APP-114-a",
+          "label": "A",
+          "text": "12:00 p.m.",
+          "isCorrect": false,
+          "explanation": "This adds the 3 hours to 9:00 a.m. The 3 hours begins at 10:00 a.m., after Train A's 60-mile head start."
+        },
+        {
+          "id": "MATH-APP-114-b",
+          "label": "B",
+          "text": "1:00 p.m.",
+          "isCorrect": true,
+          "explanation": "Correct. The trains are 315 miles apart at 10:00 a.m. and close the gap at 105 miles per hour, so they meet 3 hours later."
+        },
+        {
+          "id": "MATH-APP-114-c",
+          "label": "C",
+          "text": "3:15 p.m.",
+          "isCorrect": false,
+          "explanation": "This uses only Train A's speed for the 315 miles: 315 ÷ 60 = 5.25 hours, or 5 hours 15 minutes after 10:00 a.m. Both trains are closing the gap."
+        },
+        {
+          "id": "MATH-APP-114-d",
+          "label": "D",
+          "text": "4:00 p.m.",
+          "isCorrect": false,
+          "explanation": "This uses the average of the speeds, 52.5 miles per hour: 315 ÷ 52.5 = 6 hours after 10:00 a.m. Trains moving toward each other close the gap at the sum of their speeds."
+        }
+      ],
+      "wp": {},
+      "solutionExplanation": "From 9:00 to 10:00 a.m., only Train A is moving, and it travels 60 miles. At 10:00 a.m., the trains are 375 − 60 = 315 miles apart. After that, they move toward each other, so the distance between them shrinks by 60 + 45 = 105 miles each hour. They meet after 315 ÷ 105 = 3 hours, at 10:00 a.m. + 3 hours = 1:00 p.m.",
+      "commonTrap": "Students find the 3 hours correctly but add it to 9:00 a.m., the time Train A leaves. The 3 hours is counted from 10:00 a.m., when both trains are moving.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-115",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-WP",
+      "tags": [
+        "APP-FIN",
+        "APP-PCT"
+      ],
+      "stem": "Ravi earns a weekly salary of $300 plus a 6% commission on the amount of his sales above $2,000. Last week Ravi earned a total of $492. What was the total amount of his sales last week?",
+      "choices": [
+        {
+          "id": "MATH-APP-115-a",
+          "label": "A",
+          "text": "$2,320",
+          "isCorrect": false,
+          "explanation": "This writes 6% as 0.6 instead of 0.06: $192 ÷ 0.6 = $320, and $2,000 + $320 = $2,320."
+        },
+        {
+          "id": "MATH-APP-115-b",
+          "label": "B",
+          "text": "$3,200",
+          "isCorrect": false,
+          "explanation": "This is the amount of sales above $2,000. The total sales include the first $2,000."
+        },
+        {
+          "id": "MATH-APP-115-c",
+          "label": "C",
+          "text": "$5,200",
+          "isCorrect": true,
+          "explanation": "Correct. The commission is $192, which is 6% of $3,200, and $2,000 + $3,200 = $5,200."
+        },
+        {
+          "id": "MATH-APP-115-d",
+          "label": "D",
+          "text": "$10,200",
+          "isCorrect": false,
+          "explanation": "This treats the whole $492 as commission: $492 ÷ 0.06 = $8,200, and $8,200 + $2,000 = $10,200. The $300 salary must be subtracted first."
+        }
+      ],
+      "wp": {},
+      "solutionExplanation": "Subtract the salary: $492 − $300 = $192 is the commission. The commission is 6% of the sales above $2,000, so the sales above $2,000 were $192 ÷ 0.06 = $3,200. The total sales were $2,000 + $3,200 = $5,200. Check: 0.06 × $3,200 = $192, and $300 + $192 = $492.",
+      "commonTrap": "Students stop at $3,200, the amount the 6% is applied to. That is only the part of the sales above $2,000, so $2,000 must be added back.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-116",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "NUM-RAT",
+        "ALG-LIN"
+      ],
+      "stem": "In a chess club, the ratio of boys to girls is 3 to 5. Then 6 more boys join the club, and no one leaves. Now the ratio of boys to girls is 3 to 4. How many girls are in the club?",
+      "choices": [
+        {
+          "id": "MATH-APP-116-a",
+          "label": "A",
+          "text": "24",
+          "isCorrect": false,
+          "explanation": "This is the number of boys before the 6 new boys join, 3 × 8 = 24."
+        },
+        {
+          "id": "MATH-APP-116-b",
+          "label": "B",
+          "text": "30",
+          "isCorrect": false,
+          "explanation": "This treats the 6 new boys as one part of the original ratio, since the girls' part changes from 5 to 4, and finds 5 × 6 = 30. The two ratios do not use the same part size."
+        },
+        {
+          "id": "MATH-APP-116-c",
+          "label": "C",
+          "text": "40",
+          "isCorrect": true,
+          "explanation": "Correct. 4(3k + 6) = 15k gives k = 8, so there are 5 × 8 = 40 girls."
+        },
+        {
+          "id": "MATH-APP-116-d",
+          "label": "D",
+          "text": "64",
+          "isCorrect": false,
+          "explanation": "This is the total number of members before the new boys join, 24 + 40 = 64."
+        }
+      ],
+      "solutionExplanation": "Let the club start with 3k boys and 5k girls. After 6 boys join, (3k + 6) : 5k = 3 : 4. Cross-multiply: 4(3k + 6) = 3(5k), so 12k + 24 = 15k and k = 8. The number of girls is 5 × 8 = 40. Check: there were 24 boys, and 24 + 6 = 30. The ratio 30 : 40 is 3 : 4.",
+      "commonTrap": "Students see that the girls' part of the ratio changes from 5 to 4 and decide that 1 part equals the 6 new boys, which gives 5 × 6 = 30. The two ratios use different part sizes, so the parts cannot be compared directly.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-113",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-COO",
+        "GEO-TRI"
+      ],
+      "stem": "In the coordinate plane, what is the distance between the points (−3, 4) and (5, −2)?",
+      "choices": [
+        {
+          "id": "MATH-GEO-113-a",
+          "label": "A",
+          "text": "2√2",
+          "isCorrect": false,
+          "explanation": "This adds the coordinates instead of subtracting them: −3 + 5 = 2 and 4 + (−2) = 2, so √(2² + 2²) = √8 = 2√2."
+        },
+        {
+          "id": "MATH-GEO-113-b",
+          "label": "B",
+          "text": "10",
+          "isCorrect": true,
+          "explanation": "Correct. The legs are 8 and 6, and √(64 + 36) = 10."
+        },
+        {
+          "id": "MATH-GEO-113-c",
+          "label": "C",
+          "text": "14",
+          "isCorrect": false,
+          "explanation": "This adds the horizontal and vertical distances, 8 + 6. The straight-line distance is the hypotenuse, which is shorter."
+        },
+        {
+          "id": "MATH-GEO-113-d",
+          "label": "D",
+          "text": "100",
+          "isCorrect": false,
+          "explanation": "This is 8² + 6². The square root was not taken."
+        }
+      ],
+      "solutionExplanation": "The horizontal distance between the points is 5 − (−3) = 8, and the vertical distance is 4 − (−2) = 6. These are the legs of a right triangle whose hypotenuse is the distance between the points. By the Pythagorean theorem, the distance is √(8² + 6²) = √(64 + 36) = √100 = 10.",
+      "commonTrap": "Students add the horizontal and vertical distances, 8 + 6 = 14. The distance between the points is the hypotenuse of a right triangle with legs 8 and 6, not the sum of the legs.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-114",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-EE",
+      "tags": [
+        "GEO-3D"
+      ],
+      "stem": "A fish tank in the shape of a rectangular prism is 25 centimeters long, 20 centimeters wide, and 30 centimeters tall. The tank holds water to a depth of 18 centimeters. A solid metal cube with edges 10 centimeters long is placed in the tank. The cube sinks to the bottom and is completely underwater. What is the new depth of the water, in centimeters?",
+      "ee": {
+        "instruction": "Enter your answer as a number.",
+        "acceptableAnswers": [
+          "20",
+          "20.0"
+        ]
+      },
+      "commonWrongAnswers": [
+        {
+          "answer": "2",
+          "explanation": "This is how much the water rises, 1,000 ÷ 500. The question asks for the new depth, 18 + 2 = 20."
+        },
+        {
+          "answer": "28",
+          "explanation": "This adds the cube's edge length to the depth, 18 + 10. The rise is the cube's volume divided by the area of the base, which is 2 centimeters."
+        },
+        {
+          "answer": "19.2",
+          "explanation": "This uses the cube's surface area, 6 × 100 = 600, instead of its volume: 600 ÷ 500 = 1.2, and 18 + 1.2 = 19.2. The water pushed aside equals the cube's volume, 1,000 cubic centimeters."
+        }
+      ],
+      "solutionExplanation": "The cube pushes aside a volume of water equal to its own volume, 10 × 10 × 10 = 1,000 cubic centimeters. That water spreads over the base of the tank, which has area 25 × 20 = 500 square centimeters. The water level rises 1,000 ÷ 500 = 2 centimeters, so the new depth is 18 + 2 = 20 centimeters. This is less than the 30-centimeter height of the tank, and the 10-centimeter cube is underwater, as the stem says.",
+      "commonTrap": "Students think the water rises by the height of the cube and add 10 to get 28. The rise depends on the cube's volume spread over the whole base of the tank, 1,000 ÷ 500 = 2 centimeters.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-115",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-3D",
+        "GEO-CRC"
+      ],
+      "stem": "A can in the shape of a cylinder has a volume of 72π cubic inches and a height of 8 inches. A paper label covers the entire curved side of the can but not the top or the bottom. What is the area of the label, in square inches?",
+      "choices": [
+        {
+          "id": "MATH-GEO-115-a",
+          "label": "A",
+          "text": "24π",
+          "isCorrect": false,
+          "explanation": "This uses πrh = π(3)(8) and leaves out the 2 in the circumference, 2πr."
+        },
+        {
+          "id": "MATH-GEO-115-b",
+          "label": "B",
+          "text": "48π",
+          "isCorrect": true,
+          "explanation": "Correct. r = 3, so the label is 2π(3)(8) = 48π square inches."
+        },
+        {
+          "id": "MATH-GEO-115-c",
+          "label": "C",
+          "text": "66π",
+          "isCorrect": false,
+          "explanation": "This is the total surface area, 48π + 2π(3²) = 48π + 18π. The label does not cover the top or the bottom."
+        },
+        {
+          "id": "MATH-GEO-115-d",
+          "label": "D",
+          "text": "144π",
+          "isCorrect": false,
+          "explanation": "This uses r² = 9 as the radius: 2π(9)(8) = 144π. The radius is √9 = 3."
+        }
+      ],
+      "solutionExplanation": "The volume of a cylinder is πr²h. Since πr²(8) = 72π, r² = 9, so r = 3 inches. The curved side unrolls into a rectangle whose length is the circumference, 2πr = 6π inches, and whose width is the height, 8 inches. The area of the label is 6π × 8 = 48π square inches.",
+      "commonTrap": "Students find r² = 9 and use 9 as the radius, which gives 2π(9)(8) = 144π. The radius is the square root of 9, which is 3.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-116",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-TRI",
+        "GEO-QUAD"
+      ],
+      "stem": "A diagonal of a rectangle is 26 centimeters long. One side of the rectangle is 10 centimeters long. What is the perimeter of the rectangle, in centimeters?",
+      "choices": [
+        {
+          "id": "MATH-GEO-116-a",
+          "label": "A",
+          "text": "34",
+          "isCorrect": false,
+          "explanation": "This adds one length and one width, 10 + 24. A rectangle has two of each side, so the perimeter is 2 × 34."
+        },
+        {
+          "id": "MATH-GEO-116-b",
+          "label": "B",
+          "text": "52",
+          "isCorrect": false,
+          "explanation": "This uses 26 − 10 = 16 as the other side, so 2(10 + 16) = 52. The other side comes from 10² + w² = 26², which gives 24."
+        },
+        {
+          "id": "MATH-GEO-116-c",
+          "label": "C",
+          "text": "68",
+          "isCorrect": true,
+          "explanation": "Correct. The other side is √(676 − 100) = 24, and 2(10 + 24) = 68."
+        },
+        {
+          "id": "MATH-GEO-116-d",
+          "label": "D",
+          "text": "240",
+          "isCorrect": false,
+          "explanation": "This is the area of the rectangle, 10 × 24, not the perimeter."
+        }
+      ],
+      "solutionExplanation": "The diagonal divides the rectangle into two right triangles. The diagonal is the hypotenuse, and the sides of the rectangle are the legs. If the other side is w, then 10² + w² = 26², so w² = 676 − 100 = 576 and w = 24. The perimeter is 2(10 + 24) = 68 centimeters.",
+      "commonTrap": "Students subtract the lengths instead of using the Pythagorean theorem and take 26 − 10 = 16 as the other side, which gives 2(10 + 16) = 52. Side lengths of a right triangle are related by their squares, not by subtraction.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-119",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "DAT-PROB"
+      ],
+      "stem": "A bag contains 6 red marbles, 8 blue marbles, and some green marbles. One marble is chosen at random from the bag. The probability that it is blue is 2/5. How many green marbles are in the bag?",
+      "choices": [
+        {
+          "id": "MATH-DAT-119-a",
+          "label": "A",
+          "text": "6",
+          "isCorrect": true,
+          "explanation": "Correct. The bag has 8 ÷ (2/5) = 20 marbles, and 20 − 6 − 8 = 6 are green."
+        },
+        {
+          "id": "MATH-DAT-119-b",
+          "label": "B",
+          "text": "12",
+          "isCorrect": false,
+          "explanation": "This leaves the red marbles out of the total, setting 8 ÷ (8 + g) = 2/5, so 8 + g = 20 and g = 12."
+        },
+        {
+          "id": "MATH-DAT-119-c",
+          "label": "C",
+          "text": "14",
+          "isCorrect": false,
+          "explanation": "This treats 2/5 as the ratio of blue marbles to all the other marbles: 8 ÷ (6 + g) = 2/5, so 6 + g = 20 and g = 14. The probability compares blue to the total, including blue."
+        },
+        {
+          "id": "MATH-DAT-119-d",
+          "label": "D",
+          "text": "20",
+          "isCorrect": false,
+          "explanation": "This is the total number of marbles in the bag. The 6 red and 8 blue marbles must be subtracted."
+        }
+      ],
+      "solutionExplanation": "The probability of choosing blue is (number of blue marbles) ÷ (total number of marbles). So 8 ÷ total = 2/5, and the total is 8 × 5/2 = 20 marbles. The red and blue marbles make up 6 + 8 = 14 of them, so there are 20 − 14 = 6 green marbles.",
+      "commonTrap": "Students find the total of 20 marbles and stop, or they subtract only the 8 blue marbles and get 12. The total includes red, blue, and green, so both the 6 red and the 8 blue must be subtracted.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-120",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "DAT-STA"
+      ],
+      "stem": "In a science class, the 18 students in Section 1 had an average (arithmetic mean) score of 72 on a quiz. The students in Section 2 had an average score of 84 on the same quiz. The average score of all the students in both sections was 76. How many students are in Section 2?",
+      "choices": [
+        {
+          "id": "MATH-DAT-120-a",
+          "label": "A",
+          "text": "9",
+          "isCorrect": true,
+          "explanation": "Correct. 1,296 + 84n = 76(18 + n) gives 8n = 72, so n = 9."
+        },
+        {
+          "id": "MATH-DAT-120-b",
+          "label": "B",
+          "text": "18",
+          "isCorrect": false,
+          "explanation": "This assumes the sections are the same size. With equal sizes the combined average would be halfway between 72 and 84, which is 78, not 76."
+        },
+        {
+          "id": "MATH-DAT-120-c",
+          "label": "C",
+          "text": "27",
+          "isCorrect": false,
+          "explanation": "This is the total number of students in both sections, 18 + 9. The question asks only for Section 2."
+        },
+        {
+          "id": "MATH-DAT-120-d",
+          "label": "D",
+          "text": "36",
+          "isCorrect": false,
+          "explanation": "This sets up the balance the wrong way: 18 × 8 = 4n. The section farther from 76 must be the smaller one, so 18 × 4 = 8n."
+        }
+      ],
+      "solutionExplanation": "Let n be the number of students in Section 2. The total of all the scores is 18(72) + 84n, and it also equals 76(18 + n). So 1,296 + 84n = 1,368 + 76n. Subtract 76n and 1,296 from both sides: 8n = 72, so n = 9. Check: 1,296 + 9(84) = 2,052, and 2,052 ÷ 27 = 76.",
+      "commonTrap": "Students who use the balance method match the distances the wrong way. Section 1 is 4 points below 76 and Section 2 is 8 points above it, so 18 × 4 = 8n. Writing 18 × 8 = 4n gives 36, which would make the combined average 80.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-121",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-CGT",
+      "tags": [
+        "DAT-GR",
+        "DAT-STA"
+      ],
+      "stem": "The table shows the number of pets owned by each of 25 households on one street.\n\nWhat is the average (arithmetic mean) number of pets per household?",
+      "choices": [
+        {
+          "id": "MATH-DAT-121-a",
+          "label": "A",
+          "text": "1",
+          "isCorrect": false,
+          "explanation": "This is the mode, the number of pets owned by the most households (9). The question asks for the mean."
+        },
+        {
+          "id": "MATH-DAT-121-b",
+          "label": "B",
+          "text": "1.28",
+          "isCorrect": true,
+          "explanation": "Correct. The households own 32 pets, and 32 ÷ 25 = 1.28."
+        },
+        {
+          "id": "MATH-DAT-121-c",
+          "label": "C",
+          "text": "1.5",
+          "isCorrect": false,
+          "explanation": "This is the mean of the numbers in the first column, (0 + 1 + 2 + 3) ÷ 4. It ignores how many households own each number of pets."
+        },
+        {
+          "id": "MATH-DAT-121-d",
+          "label": "D",
+          "text": "1.68",
+          "isCorrect": false,
+          "explanation": "This leaves out the 6 households with 0 pets: 32 ÷ 19 ≈ 1.68. Those households count in the mean, so divide by 25."
+        }
+      ],
+      "cgt": {
+        "visual": {
+          "type": "table",
+          "caption": "Pets per Household",
+          "headers": [
+            "Number of Pets",
+            "Number of Households"
+          ],
+          "rows": [
+            [
+              "0",
+              "6"
+            ],
+            [
+              "1",
+              "9"
+            ],
+            [
+              "2",
+              "7"
+            ],
+            [
+              "3",
+              "3"
+            ]
+          ]
+        }
+      },
+      "solutionExplanation": "Multiply each number of pets by the number of households: 0 × 6 = 0, 1 × 9 = 9, 2 × 7 = 14, and 3 × 3 = 9. The 25 households own 0 + 9 + 14 + 9 = 32 pets in all. The mean is 32 ÷ 25 = 1.28 pets per household.",
+      "commonTrap": "Students leave out the 6 households with no pets because they add nothing to the total, and divide 32 by 19 to get about 1.68. Those households are still part of the data, so the total is divided by all 25.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-122",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "DAT-PROB"
+      ],
+      "stem": "A spinner has 4 equal sections numbered 1, 2, 3, and 4. A fair number cube has faces numbered 1 through 6. Ji-woo spins the spinner once and rolls the number cube once. What is the probability that the sum of the two numbers is greater than 7?",
+      "choices": [
+        {
+          "id": "MATH-DAT-122-a",
+          "label": "A",
+          "text": "1/4",
+          "isCorrect": true,
+          "explanation": "Correct. 6 of the 24 equally likely outcomes have a sum of 8 or more, and 6/24 = 1/4."
+        },
+        {
+          "id": "MATH-DAT-122-b",
+          "label": "B",
+          "text": "1/3",
+          "isCorrect": false,
+          "explanation": "This counts possible sums instead of outcomes. The sums 2 through 10 are 9 values, and 3 of them are greater than 7, but the sums are not equally likely."
+        },
+        {
+          "id": "MATH-DAT-122-c",
+          "label": "C",
+          "text": "5/12",
+          "isCorrect": false,
+          "explanation": "This also counts the 4 outcomes with a sum of exactly 7, giving 10/24. \"Greater than 7\" does not include 7."
+        },
+        {
+          "id": "MATH-DAT-122-d",
+          "label": "D",
+          "text": "3/5",
+          "isCorrect": false,
+          "explanation": "This divides the 6 favorable outcomes by 4 + 6 = 10. The number of outcomes is 4 × 6 = 24, not 4 + 6."
+        }
+      ],
+      "solutionExplanation": "There are 4 × 6 = 24 equally likely outcomes. List the outcomes (spinner, cube) with a sum greater than 7: (2, 6), (3, 5), (3, 6), (4, 4), (4, 5), and (4, 6). That is 6 outcomes, so the probability is 6/24 = 1/4.",
+      "commonTrap": "Students include a sum of 7 and count 10 outcomes, getting 10/24 = 5/12. \"Greater than 7\" means a sum of 8, 9, or 10.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    }
+  ]
+}

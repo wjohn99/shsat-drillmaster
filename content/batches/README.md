@@ -41,7 +41,7 @@ All items are `provisional`. Items carried over from the tracker keep their trac
 | `2026-10-11-rc-literary` | 36 | 5 stories and 1 poem (ELA-RC-137–172) |
 | `2026-10-11-math-num-dat` | 36 | Number, statistics, probability, tables and charts (MATH-NUM/DAT-101+) |
 | `2026-10-11-math-alg-app-geo` | 36 | Algebra, word problems, geometry described in words (MATH-ALG/APP/GEO-101+) |
-| `2026-10-11-top-up` | 20 | Extra items, explained below |
+| `2026-10-11-top-up` | 20 | 4 more questions on the bee-swarm passage (RC-P-001, which also appears in `backlog-b`; import it once) and 16 math, mostly Module 2, so practice gets a full 300 |
 
 ## Notes for the app
 
