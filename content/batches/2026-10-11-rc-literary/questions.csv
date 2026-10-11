@@ -1,0 +1,1201 @@
+Question ID,Passage ID,Author,Type,Module,Skill Tag,Format,Passage,Question,Choice A,Choice B,Choice C,Choice D,Correct Answer,Explanation,Common Trap,Reviewer,Status,Error,Suggested Change,Published Date,Choice A Explanation,Choice B Explanation,Choice C Explanation,Choice D Explanation,Choice E,Choice E Explanation,Choice F,Choice F Explanation,TEI Spec (JSON),Revised By,Revision Notes
+ELA-RC-137,RC-P107,Jed Levine,RC,Module 1,RC-THE,Multiple Choice Question,"In this story, an eighth grader presents her project at a middle school science fair in Queens, New York.
+
+Trial 2
+
+1 The gym at Hamilton Middle School smelled like floor wax and nervous people. On forty folding tables, tri-fold poster boards leaned open like books that wanted to be read. Lena Ortiz had spent three nights gluing hers together. In thick blue letters across the top, it asked, DOES MUSIC HELP PLANTS GROW?
+
+2 The answer, according to the poster, was yes. Beneath the title, a bar graph climbed like a staircase: plants that heard no music, plants that heard pop songs, and plants that heard Mozart, each bar taller than the last. Lena had arranged three healthy bean plants in paper cups at the front of the table. They looked green and confident. She did not feel either.
+
+3 What the poster did not show was the second trial. In March, Lena had run the whole experiment again to be sure, and the results had collapsed. The silent plants grew just as tall as the musical ones. Two of the Mozart plants wilted for no reason she could find. She had written every measurement in her green composition notebook, and then she had closed the notebook and slid it under the table, behind her backpack, where it sat now like a secret holding its breath.
+
+4 ""It's still true,"" her friend Danny had said when she told him. ""You just had a bad week. Show the good trial."" He had made it sound simple, the way people make everything sound simple when it is not their project.
+
+5 The judges moved down the row in pairs, carrying clipboards. When they reached Lena's table, one of them, a tall woman with short gray hair and reading glasses on a beaded chain, introduced herself as Dr. Pruitt, a retired chemist. The other judge was called away.
+
+6 Lena gave her speech. She had practiced it in the bathroom mirror until the words wore smooth grooves in her mouth. Hypothesis, materials, procedure, results. Dr. Pruitt listened without writing anything down, which was worse than if she had written a great deal.
+
+7 ""How many times did you run it?"" Dr. Pruitt asked.
+
+8 The gym seemed to get louder. Somewhere a baking-soda volcano erupted to scattered applause. Lena thought of Danny's advice. She thought of the bar graph, so tall and tidy. Then she thought of the notebook behind her backpack, and she found that she could not make her mouth say ""once.""
+
+9 ""Twice,"" she said. ""The second time it didn't work."" She pulled out the notebook and opened it to the March pages, where the numbers marched down the columns in her careful handwriting, refusing to agree with her poster.
+
+10 She waited for Dr. Pruitt to frown. Instead, the judge leaned in so close that her glasses swung forward on their chain. ""Now this is interesting,"" she said. ""What changed between the trials?""
+
+11 ""Nothing,"" Lena said. Then she stopped. ""Well, the windowsill. In March I moved them to the other side of the classroom because of the radiator."" She heard herself say it, and something clicked, like a key finding its lock. ""So maybe it wasn't the music at all. Maybe the first group was just warmer.""
+
+12 Dr. Pruitt smiled for the first time. ""Do you know how many experiments I ran in forty years that did exactly what I hoped the first time?"" She held up a hand and made a zero with her fingers. ""The surprises are where the science is. A result that disagrees with you is not a failure. It is information.""
+
+13 After the judges moved on, Lena looked at her poster for a long moment. Then she took a marker from her backpack and, beneath the bar graph, in letters smaller than the title but just as blue, she wrote: TRIAL 2: SEE NOTEBOOK. NEW QUESTION: WAS IT THE HEAT?
+
+14 She did not win a ribbon that afternoon. But on the subway home, with the notebook open across her knees, she began sketching a third trial, one with a thermometer beside every cup.",Which statement best expresses a theme of the passage?,An unexpected result can be more valuable than a neat one because it can lead to better questions.,Friends who give advice usually do not understand the problems we face.,Hard work and careful preparation are always rewarded with recognition.,Science fair judges care more about an honest speech than about accurate data.,A,"Dr. Pruitt states the lesson directly in paragraph 12: ""The surprises are where the science is. A result that disagrees with you is not a failure. It is information."" Lena acts on that idea. She adds ""NEW QUESTION: WAS IT THE HEAT?"" to her poster (paragraph 13) and begins ""sketching a third trial"" on the way home (paragraph 14). The failed trial does not end her project. It points her toward a better question.","The choice about friends' advice is tempting because Danny's advice really is part of the conflict. But a theme has to cover the whole story. Danny appears in two paragraphs, while the change in how Lena sees her failed trial runs from paragraph 3 to the last line.",,Provisional,,,,"Correct. Dr. Pruitt states the lesson directly in paragraph 12: ""The surprises are where the science is. A result that disagrees with you is not a failure. It is information."" Lena acts on that idea. She adds ""NEW QUESTION: WAS IT THE HEAT?"" to her poster (paragraph 13) and begins ""sketching a third trial"" on the way home (paragraph 14). The failed trial does not end her project. It points her toward a better question.","Incorrect. This choice takes a true detail and stretches it into a rule. Lena does think Danny made her problem ""sound simple"" (paragraph 4), but Danny appears only briefly. The passage is about what Lena learns from her failed trial, not about friends in general.","Incorrect. This choice reverses the outcome. Lena prepares carefully, but paragraph 14 says ""She did not win a ribbon that afternoon."" Her reward is a new question, not recognition.","Incorrect. This distorts what Dr. Pruitt values. She listens to the speech ""without writing anything down"" (paragraph 6) and becomes interested only when Lena shows the measurements in her notebook (paragraph 10). She cares about the data, not the speech.",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-138,RC-P107,Jed Levine,RC,Module 2,RC-ANL,Multiple Choice Question,"In this story, an eighth grader presents her project at a middle school science fair in Queens, New York.
+
+Trial 2
+
+1 The gym at Hamilton Middle School smelled like floor wax and nervous people. On forty folding tables, tri-fold poster boards leaned open like books that wanted to be read. Lena Ortiz had spent three nights gluing hers together. In thick blue letters across the top, it asked, DOES MUSIC HELP PLANTS GROW?
+
+2 The answer, according to the poster, was yes. Beneath the title, a bar graph climbed like a staircase: plants that heard no music, plants that heard pop songs, and plants that heard Mozart, each bar taller than the last. Lena had arranged three healthy bean plants in paper cups at the front of the table. They looked green and confident. She did not feel either.
+
+3 What the poster did not show was the second trial. In March, Lena had run the whole experiment again to be sure, and the results had collapsed. The silent plants grew just as tall as the musical ones. Two of the Mozart plants wilted for no reason she could find. She had written every measurement in her green composition notebook, and then she had closed the notebook and slid it under the table, behind her backpack, where it sat now like a secret holding its breath.
+
+4 ""It's still true,"" her friend Danny had said when she told him. ""You just had a bad week. Show the good trial."" He had made it sound simple, the way people make everything sound simple when it is not their project.
+
+5 The judges moved down the row in pairs, carrying clipboards. When they reached Lena's table, one of them, a tall woman with short gray hair and reading glasses on a beaded chain, introduced herself as Dr. Pruitt, a retired chemist. The other judge was called away.
+
+6 Lena gave her speech. She had practiced it in the bathroom mirror until the words wore smooth grooves in her mouth. Hypothesis, materials, procedure, results. Dr. Pruitt listened without writing anything down, which was worse than if she had written a great deal.
+
+7 ""How many times did you run it?"" Dr. Pruitt asked.
+
+8 The gym seemed to get louder. Somewhere a baking-soda volcano erupted to scattered applause. Lena thought of Danny's advice. She thought of the bar graph, so tall and tidy. Then she thought of the notebook behind her backpack, and she found that she could not make her mouth say ""once.""
+
+9 ""Twice,"" she said. ""The second time it didn't work."" She pulled out the notebook and opened it to the March pages, where the numbers marched down the columns in her careful handwriting, refusing to agree with her poster.
+
+10 She waited for Dr. Pruitt to frown. Instead, the judge leaned in so close that her glasses swung forward on their chain. ""Now this is interesting,"" she said. ""What changed between the trials?""
+
+11 ""Nothing,"" Lena said. Then she stopped. ""Well, the windowsill. In March I moved them to the other side of the classroom because of the radiator."" She heard herself say it, and something clicked, like a key finding its lock. ""So maybe it wasn't the music at all. Maybe the first group was just warmer.""
+
+12 Dr. Pruitt smiled for the first time. ""Do you know how many experiments I ran in forty years that did exactly what I hoped the first time?"" She held up a hand and made a zero with her fingers. ""The surprises are where the science is. A result that disagrees with you is not a failure. It is information.""
+
+13 After the judges moved on, Lena looked at her poster for a long moment. Then she took a marker from her backpack and, beneath the bar graph, in letters smaller than the title but just as blue, she wrote: TRIAL 2: SEE NOTEBOOK. NEW QUESTION: WAS IT THE HEAT?
+
+14 She did not win a ribbon that afternoon. But on the subway home, with the notebook open across her knees, she began sketching a third trial, one with a thermometer beside every cup.",Which statement best describes how Lena changes over the course of the passage?,She goes from feeling confident about her project to feeling discouraged after the judges leave.,She goes from trusting Danny's advice to believing that Danny was trying to ruin her project.,She goes from hiding the results of her second trial to treating those results as the starting point for a new investigation.,She goes from fearing public speaking to enjoying the attention of the judges.,C,"At the start, Lena hides the second trial. She slides the notebook ""under the table, behind her backpack"" (paragraph 3), and her poster shows only the first trial. By the end, she adds ""TRIAL 2: SEE NOTEBOOK. NEW QUESTION: WAS IT THE HEAT?"" to her poster (paragraph 13) and plans ""a third trial, one with a thermometer beside every cup"" (paragraph 14). The results she was ashamed of become the start of her next experiment.","The confident-to-discouraged choice is tempting because Lena does not win a ribbon, so students assume she ends the story disappointed. The last paragraph shows the opposite: she is already sketching a third trial.",,Provisional,,,,"Incorrect. This reverses her feelings. Paragraph 2 says the plants looked ""green and confident"" but ""She did not feel either."" After the judges leave, she is not discouraged. She revises her poster and plans a new trial (paragraphs 13 and 14).","Incorrect. This is an overstatement. Lena chooses not to follow Danny's advice, but nothing suggests she thinks he meant her harm. Paragraph 4 shows only that he made the problem ""sound simple.""","Correct. At the start, Lena hides the second trial. She slides the notebook ""under the table, behind her backpack"" (paragraph 3), and her poster shows only the first trial. By the end, she adds ""TRIAL 2: SEE NOTEBOOK. NEW QUESTION: WAS IT THE HEAT?"" to her poster (paragraph 13) and plans ""a third trial, one with a thermometer beside every cup"" (paragraph 14). The results she was ashamed of become the start of her next experiment.","Incorrect. Lena did practice her speech ""in the bathroom mirror"" (paragraph 6), but the passage never shows her enjoying attention. Her change is about how she sees her results, not about speaking in public.",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-139,RC-P107,Jed Levine,RC,Module 2,RC-TXT; RC-SEQ,Multiple Choice Question,"In this story, an eighth grader presents her project at a middle school science fair in Queens, New York.
+
+Trial 2
+
+1 The gym at Hamilton Middle School smelled like floor wax and nervous people. On forty folding tables, tri-fold poster boards leaned open like books that wanted to be read. Lena Ortiz had spent three nights gluing hers together. In thick blue letters across the top, it asked, DOES MUSIC HELP PLANTS GROW?
+
+2 The answer, according to the poster, was yes. Beneath the title, a bar graph climbed like a staircase: plants that heard no music, plants that heard pop songs, and plants that heard Mozart, each bar taller than the last. Lena had arranged three healthy bean plants in paper cups at the front of the table. They looked green and confident. She did not feel either.
+
+3 What the poster did not show was the second trial. In March, Lena had run the whole experiment again to be sure, and the results had collapsed. The silent plants grew just as tall as the musical ones. Two of the Mozart plants wilted for no reason she could find. She had written every measurement in her green composition notebook, and then she had closed the notebook and slid it under the table, behind her backpack, where it sat now like a secret holding its breath.
+
+4 ""It's still true,"" her friend Danny had said when she told him. ""You just had a bad week. Show the good trial."" He had made it sound simple, the way people make everything sound simple when it is not their project.
+
+5 The judges moved down the row in pairs, carrying clipboards. When they reached Lena's table, one of them, a tall woman with short gray hair and reading glasses on a beaded chain, introduced herself as Dr. Pruitt, a retired chemist. The other judge was called away.
+
+6 Lena gave her speech. She had practiced it in the bathroom mirror until the words wore smooth grooves in her mouth. Hypothesis, materials, procedure, results. Dr. Pruitt listened without writing anything down, which was worse than if she had written a great deal.
+
+7 ""How many times did you run it?"" Dr. Pruitt asked.
+
+8 The gym seemed to get louder. Somewhere a baking-soda volcano erupted to scattered applause. Lena thought of Danny's advice. She thought of the bar graph, so tall and tidy. Then she thought of the notebook behind her backpack, and she found that she could not make her mouth say ""once.""
+
+9 ""Twice,"" she said. ""The second time it didn't work."" She pulled out the notebook and opened it to the March pages, where the numbers marched down the columns in her careful handwriting, refusing to agree with her poster.
+
+10 She waited for Dr. Pruitt to frown. Instead, the judge leaned in so close that her glasses swung forward on their chain. ""Now this is interesting,"" she said. ""What changed between the trials?""
+
+11 ""Nothing,"" Lena said. Then she stopped. ""Well, the windowsill. In March I moved them to the other side of the classroom because of the radiator."" She heard herself say it, and something clicked, like a key finding its lock. ""So maybe it wasn't the music at all. Maybe the first group was just warmer.""
+
+12 Dr. Pruitt smiled for the first time. ""Do you know how many experiments I ran in forty years that did exactly what I hoped the first time?"" She held up a hand and made a zero with her fingers. ""The surprises are where the science is. A result that disagrees with you is not a failure. It is information.""
+
+13 After the judges moved on, Lena looked at her poster for a long moment. Then she took a marker from her backpack and, beneath the bar graph, in letters smaller than the title but just as blue, she wrote: TRIAL 2: SEE NOTEBOOK. NEW QUESTION: WAS IT THE HEAT?
+
+14 She did not win a ribbon that afternoon. But on the subway home, with the notebook open across her knees, she began sketching a third trial, one with a thermometer beside every cup.",How does paragraph 3 contribute to the development of the plot?,It explains the procedure Lena followed to create the bar graph on her poster.,It reveals a secret that creates the central conflict Lena must face when the judge questions her.,It shows that Lena is careless about recording her measurements.,It suggests that Lena will win a ribbon because her research is so thorough.,B,"Paragraph 3 reveals what the poster ""did not show"": a second trial in which ""the results had collapsed."" Lena has hidden the notebook ""behind her backpack."" This secret is the conflict of the story. When Dr. Pruitt asks ""How many times did you run it?"" (paragraph 7), Lena must decide whether to reveal it, and her choice to say ""Twice"" (paragraph 9) is the turning point.","Students who read paragraph 3 only for its facts may pick the choice about procedure, since the paragraph does discuss the experiment. A structure question asks what the paragraph does for the story. Here it sets up the secret that the rest of the plot turns on.",,Provisional,,,,"Incorrect. Paragraph 3 mentions that Lena ran the experiment again, but it does not explain how she did it. Its purpose is to reveal the results she is hiding, not to describe her method.","Correct. Paragraph 3 reveals what the poster ""did not show"": a second trial in which ""the results had collapsed."" Lena has hidden the notebook ""behind her backpack."" This secret is the conflict of the story. When Dr. Pruitt asks ""How many times did you run it?"" (paragraph 7), Lena must decide whether to reveal it, and her choice to say ""Twice"" (paragraph 9) is the turning point.","Incorrect. This reverses the evidence. Paragraph 3 says ""She had written every measurement"" in her notebook, and paragraph 9 mentions her ""careful handwriting."" Lena hides her data, but she recorded it carefully.","Incorrect. Nothing in paragraph 3 predicts a prize, and paragraph 14 says ""She did not win a ribbon that afternoon.""",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-140,RC-P107,Jed Levine,RC,Module 1,RC-VOC,Multiple Choice Question,"In this story, an eighth grader presents her project at a middle school science fair in Queens, New York.
+
+Trial 2
+
+1 The gym at Hamilton Middle School smelled like floor wax and nervous people. On forty folding tables, tri-fold poster boards leaned open like books that wanted to be read. Lena Ortiz had spent three nights gluing hers together. In thick blue letters across the top, it asked, DOES MUSIC HELP PLANTS GROW?
+
+2 The answer, according to the poster, was yes. Beneath the title, a bar graph climbed like a staircase: plants that heard no music, plants that heard pop songs, and plants that heard Mozart, each bar taller than the last. Lena had arranged three healthy bean plants in paper cups at the front of the table. They looked green and confident. She did not feel either.
+
+3 What the poster did not show was the second trial. In March, Lena had run the whole experiment again to be sure, and the results had collapsed. The silent plants grew just as tall as the musical ones. Two of the Mozart plants wilted for no reason she could find. She had written every measurement in her green composition notebook, and then she had closed the notebook and slid it under the table, behind her backpack, where it sat now like a secret holding its breath.
+
+4 ""It's still true,"" her friend Danny had said when she told him. ""You just had a bad week. Show the good trial."" He had made it sound simple, the way people make everything sound simple when it is not their project.
+
+5 The judges moved down the row in pairs, carrying clipboards. When they reached Lena's table, one of them, a tall woman with short gray hair and reading glasses on a beaded chain, introduced herself as Dr. Pruitt, a retired chemist. The other judge was called away.
+
+6 Lena gave her speech. She had practiced it in the bathroom mirror until the words wore smooth grooves in her mouth. Hypothesis, materials, procedure, results. Dr. Pruitt listened without writing anything down, which was worse than if she had written a great deal.
+
+7 ""How many times did you run it?"" Dr. Pruitt asked.
+
+8 The gym seemed to get louder. Somewhere a baking-soda volcano erupted to scattered applause. Lena thought of Danny's advice. She thought of the bar graph, so tall and tidy. Then she thought of the notebook behind her backpack, and she found that she could not make her mouth say ""once.""
+
+9 ""Twice,"" she said. ""The second time it didn't work."" She pulled out the notebook and opened it to the March pages, where the numbers marched down the columns in her careful handwriting, refusing to agree with her poster.
+
+10 She waited for Dr. Pruitt to frown. Instead, the judge leaned in so close that her glasses swung forward on their chain. ""Now this is interesting,"" she said. ""What changed between the trials?""
+
+11 ""Nothing,"" Lena said. Then she stopped. ""Well, the windowsill. In March I moved them to the other side of the classroom because of the radiator."" She heard herself say it, and something clicked, like a key finding its lock. ""So maybe it wasn't the music at all. Maybe the first group was just warmer.""
+
+12 Dr. Pruitt smiled for the first time. ""Do you know how many experiments I ran in forty years that did exactly what I hoped the first time?"" She held up a hand and made a zero with her fingers. ""The surprises are where the science is. A result that disagrees with you is not a failure. It is information.""
+
+13 After the judges moved on, Lena looked at her poster for a long moment. Then she took a marker from her backpack and, beneath the bar graph, in letters smaller than the title but just as blue, she wrote: TRIAL 2: SEE NOTEBOOK. NEW QUESTION: WAS IT THE HEAT?
+
+14 She did not win a ribbon that afternoon. But on the subway home, with the notebook open across her knees, she began sketching a third trial, one with a thermometer beside every cup.","Read this sentence from paragraph 3.
+
+""She had written every measurement in her green composition notebook, and then she had closed the notebook and slid it under the table, behind her backpack, where it sat now like a secret holding its breath.""
+
+What does the phrase ""like a secret holding its breath"" suggest about the notebook?",It is closed so tightly that no air can get inside it.,It makes Lena so nervous that she has trouble breathing during her speech.,It holds a secret that Lena has already forgotten about.,"It seems to wait tensely, as if it might be revealed at any moment.",D,"The notebook is personified as ""a secret holding its breath."" A person holds their breath while waiting tensely for something to happen. The phrase suggests that the hidden notebook is waiting, as if it could be revealed at any moment. That is exactly what happens in paragraph 9, when Lena ""pulled out the notebook.""","The literal reading, that the notebook is shut tight, is tempting because ""holding its breath"" sounds like something sealed. On the SHSAT, a simile like this almost always describes a feeling or mood, here the tension of a truth waiting to come out.",,Provisional,,,,"Incorrect. This is a literal reading of figurative language. A notebook cannot breathe. The phrase describes the tension of a hidden truth, not how tightly the notebook is closed.","Incorrect. This moves the description from the notebook to Lena. The phrase describes the notebook, and the passage never says Lena has trouble breathing while she speaks.","Incorrect. Lena has not forgotten. In paragraph 8 she ""thought of the notebook behind her backpack,"" and it decides what she says to the judge.","Correct. The notebook is personified as ""a secret holding its breath."" A person holds their breath while waiting tensely for something to happen. The phrase suggests that the hidden notebook is waiting, as if it could be revealed at any moment. That is exactly what happens in paragraph 9, when Lena ""pulled out the notebook.""",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-141,RC-P107,Jed Levine,RC,Module 2,RC-EV; RC-ANL,Multi-Select,"In this story, an eighth grader presents her project at a middle school science fair in Queens, New York.
+
+Trial 2
+
+1 The gym at Hamilton Middle School smelled like floor wax and nervous people. On forty folding tables, tri-fold poster boards leaned open like books that wanted to be read. Lena Ortiz had spent three nights gluing hers together. In thick blue letters across the top, it asked, DOES MUSIC HELP PLANTS GROW?
+
+2 The answer, according to the poster, was yes. Beneath the title, a bar graph climbed like a staircase: plants that heard no music, plants that heard pop songs, and plants that heard Mozart, each bar taller than the last. Lena had arranged three healthy bean plants in paper cups at the front of the table. They looked green and confident. She did not feel either.
+
+3 What the poster did not show was the second trial. In March, Lena had run the whole experiment again to be sure, and the results had collapsed. The silent plants grew just as tall as the musical ones. Two of the Mozart plants wilted for no reason she could find. She had written every measurement in her green composition notebook, and then she had closed the notebook and slid it under the table, behind her backpack, where it sat now like a secret holding its breath.
+
+4 ""It's still true,"" her friend Danny had said when she told him. ""You just had a bad week. Show the good trial."" He had made it sound simple, the way people make everything sound simple when it is not their project.
+
+5 The judges moved down the row in pairs, carrying clipboards. When they reached Lena's table, one of them, a tall woman with short gray hair and reading glasses on a beaded chain, introduced herself as Dr. Pruitt, a retired chemist. The other judge was called away.
+
+6 Lena gave her speech. She had practiced it in the bathroom mirror until the words wore smooth grooves in her mouth. Hypothesis, materials, procedure, results. Dr. Pruitt listened without writing anything down, which was worse than if she had written a great deal.
+
+7 ""How many times did you run it?"" Dr. Pruitt asked.
+
+8 The gym seemed to get louder. Somewhere a baking-soda volcano erupted to scattered applause. Lena thought of Danny's advice. She thought of the bar graph, so tall and tidy. Then she thought of the notebook behind her backpack, and she found that she could not make her mouth say ""once.""
+
+9 ""Twice,"" she said. ""The second time it didn't work."" She pulled out the notebook and opened it to the March pages, where the numbers marched down the columns in her careful handwriting, refusing to agree with her poster.
+
+10 She waited for Dr. Pruitt to frown. Instead, the judge leaned in so close that her glasses swung forward on their chain. ""Now this is interesting,"" she said. ""What changed between the trials?""
+
+11 ""Nothing,"" Lena said. Then she stopped. ""Well, the windowsill. In March I moved them to the other side of the classroom because of the radiator."" She heard herself say it, and something clicked, like a key finding its lock. ""So maybe it wasn't the music at all. Maybe the first group was just warmer.""
+
+12 Dr. Pruitt smiled for the first time. ""Do you know how many experiments I ran in forty years that did exactly what I hoped the first time?"" She held up a hand and made a zero with her fingers. ""The surprises are where the science is. A result that disagrees with you is not a failure. It is information.""
+
+13 After the judges moved on, Lena looked at her poster for a long moment. Then she took a marker from her backpack and, beneath the bar graph, in letters smaller than the title but just as blue, she wrote: TRIAL 2: SEE NOTEBOOK. NEW QUESTION: WAS IT THE HEAT?
+
+14 She did not win a ribbon that afternoon. But on the subway home, with the notebook open across her knees, she began sketching a third trial, one with a thermometer beside every cup.",Which two sentences from the passage best support the idea that Lena comes to see her failed trial in a new way? Select two answers.,"""They looked green and confident."" (paragraph 2)","""He had made it sound simple, the way people make everything sound simple when it is not their project."" (paragraph 4)","""She heard herself say it, and something clicked, like a key finding its lock."" (paragraph 11)","""Dr. Pruitt listened without writing anything down, which was worse than if she had written a great deal."" (paragraph 6)","C, E","The claim is that Lena comes to see the failed trial in a new way. In paragraph 11, while explaining the trials, she realizes the plants were moved near a radiator, and ""something clicked, like a key finding its lock."" The failed trial suddenly makes sense. In paragraph 13, she writes on her poster ""TRIAL 2: SEE NOTEBOOK. NEW QUESTION: WAS IT THE HEAT?"" The results she once hid are now displayed as the source of a new question.","The Danny sentence is tempting because it shows Lena questioning the plan to hide the trial. But doubting advice is not the same as seeing the trial differently. Only the ""key finding its lock"" moment and the new poster label show her new understanding.",,Provisional,,,,"Incorrect. This sentence describes the healthy plants on Lena's table, not her view of the failed trial. It comes before any change in her thinking.","Incorrect. This shows Lena's doubt about Danny's advice, but it does not show a new view of the failed trial. At this point she is still hiding the notebook.","Correct. As Lena explains that she moved the plants near the radiator, she suddenly understands that heat, not music, may explain her results. The failed trial now makes sense to her.",Incorrect. This shows Lena's nervousness during her speech. It says nothing about how she views the second trial.,"""Then she took a marker from her backpack and, beneath the bar graph, in letters smaller than the title but just as blue, she wrote: TRIAL 2: SEE NOTEBOOK. NEW QUESTION: WAS IT THE HEAT?"" (paragraph 13)",Correct. Lena now puts the failed trial on her poster for everyone to see and turns it into a new question. This is the opposite of hiding it behind her backpack.,,,"{""ms"": {""selectCount"": 2, ""instruction"": ""Select two answers."", ""solutionExplanation"": ""The claim is that Lena comes to see the failed trial in a new way. In paragraph 11, while explaining the trials, she realizes the plants were moved near a radiator, and \""something clicked, like a key finding its lock.\"" The failed trial suddenly makes sense. In paragraph 13, she writes on her poster \""TRIAL 2: SEE NOTEBOOK. NEW QUESTION: WAS IT THE HEAT?\"" The results she once hid are now displayed as the source of a new question.""}}","Jed Levine, Claude",New item.
+ELA-RC-142,RC-P107,Jed Levine,RC,Module 1,RC-INF,Multiple Choice Question,"In this story, an eighth grader presents her project at a middle school science fair in Queens, New York.
+
+Trial 2
+
+1 The gym at Hamilton Middle School smelled like floor wax and nervous people. On forty folding tables, tri-fold poster boards leaned open like books that wanted to be read. Lena Ortiz had spent three nights gluing hers together. In thick blue letters across the top, it asked, DOES MUSIC HELP PLANTS GROW?
+
+2 The answer, according to the poster, was yes. Beneath the title, a bar graph climbed like a staircase: plants that heard no music, plants that heard pop songs, and plants that heard Mozart, each bar taller than the last. Lena had arranged three healthy bean plants in paper cups at the front of the table. They looked green and confident. She did not feel either.
+
+3 What the poster did not show was the second trial. In March, Lena had run the whole experiment again to be sure, and the results had collapsed. The silent plants grew just as tall as the musical ones. Two of the Mozart plants wilted for no reason she could find. She had written every measurement in her green composition notebook, and then she had closed the notebook and slid it under the table, behind her backpack, where it sat now like a secret holding its breath.
+
+4 ""It's still true,"" her friend Danny had said when she told him. ""You just had a bad week. Show the good trial."" He had made it sound simple, the way people make everything sound simple when it is not their project.
+
+5 The judges moved down the row in pairs, carrying clipboards. When they reached Lena's table, one of them, a tall woman with short gray hair and reading glasses on a beaded chain, introduced herself as Dr. Pruitt, a retired chemist. The other judge was called away.
+
+6 Lena gave her speech. She had practiced it in the bathroom mirror until the words wore smooth grooves in her mouth. Hypothesis, materials, procedure, results. Dr. Pruitt listened without writing anything down, which was worse than if she had written a great deal.
+
+7 ""How many times did you run it?"" Dr. Pruitt asked.
+
+8 The gym seemed to get louder. Somewhere a baking-soda volcano erupted to scattered applause. Lena thought of Danny's advice. She thought of the bar graph, so tall and tidy. Then she thought of the notebook behind her backpack, and she found that she could not make her mouth say ""once.""
+
+9 ""Twice,"" she said. ""The second time it didn't work."" She pulled out the notebook and opened it to the March pages, where the numbers marched down the columns in her careful handwriting, refusing to agree with her poster.
+
+10 She waited for Dr. Pruitt to frown. Instead, the judge leaned in so close that her glasses swung forward on their chain. ""Now this is interesting,"" she said. ""What changed between the trials?""
+
+11 ""Nothing,"" Lena said. Then she stopped. ""Well, the windowsill. In March I moved them to the other side of the classroom because of the radiator."" She heard herself say it, and something clicked, like a key finding its lock. ""So maybe it wasn't the music at all. Maybe the first group was just warmer.""
+
+12 Dr. Pruitt smiled for the first time. ""Do you know how many experiments I ran in forty years that did exactly what I hoped the first time?"" She held up a hand and made a zero with her fingers. ""The surprises are where the science is. A result that disagrees with you is not a failure. It is information.""
+
+13 After the judges moved on, Lena looked at her poster for a long moment. Then she took a marker from her backpack and, beneath the bar graph, in letters smaller than the title but just as blue, she wrote: TRIAL 2: SEE NOTEBOOK. NEW QUESTION: WAS IT THE HEAT?
+
+14 She did not win a ribbon that afternoon. But on the subway home, with the notebook open across her knees, she began sketching a third trial, one with a thermometer beside every cup.","Read this sentence from paragraph 8.
+
+""Then she thought of the notebook behind her backpack, and she found that she could not make her mouth say 'once.'""
+
+What does this sentence suggest about Lena?",She has forgotten how many trials she ran because she is nervous.,"She is unwilling to hide the truth about her experiment, even though hiding it would be easier.",She believes Dr. Pruitt has already seen the notebook under the table.,She wants to prove to Danny that his advice was foolish.,B,"Lena knows she ran the experiment twice. Saying ""once"" would be easy, because it would match her poster and follow Danny's advice. The words ""she could not make her mouth say"" suggest that something in her resists the lie. In the next paragraph she tells the truth. She answers ""Twice"" and admits, ""The second time it didn't work."" Her honesty wins out over the easier choice.","The ""forgot"" choice tempts students who read ""could not make her mouth say"" literally, as if she were unable to remember or speak. The phrase describes an inner struggle: she will not say something she knows is false.",,Provisional,,,,"Incorrect. This is too literal. Lena knows exactly how many trials she ran, and she answers ""Twice"" in paragraph 9. She cannot say ""once"" because it would be a lie, not because she forgot.","Correct. Lena knows she ran the experiment twice. Saying ""once"" would be easy, because it would match her poster and follow Danny's advice. The words ""she could not make her mouth say"" suggest that something in her resists the lie. In the next paragraph she tells the truth. She answers ""Twice"" and admits, ""The second time it didn't work."" Her honesty wins out over the easier choice.",Incorrect. Nothing suggests Dr. Pruitt has seen the notebook. Lena has to pull it out and open it to the March pages in paragraph 9.,"Incorrect. Danny is not at the table, and Lena's choice is about the truth of her project, not about proving anything to him.",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-143,RC-P108,Jed Levine,RC,Module 1,RC-THE,Multiple Choice Question,"In this story, a boy named Tomás and his family are packing to move out of the Brooklyn apartment where he has lived his whole life.
+
+The Doorframe
+
+1 By Saturday morning the apartment had stopped looking like a home and started looking like a warehouse. Cardboard towers rose in every room, each labeled in my mother's square capitals: KITCHEN (FRAGILE), BOOKS, TOMÁS (WINTER). Our voices bounced off walls that had been stripped of photographs, and the rooms sounded larger and emptier than I had ever heard them, as if the apartment were already forgetting us.
+
+2 I had decided not to help. It was the only protest I had left. For two months I had argued against the move to my aunt's building in New Jersey: my school was here, my friends were here, the man at the bodega who saved me the last sesame bagel was here. My parents listened, nodded, and signed the lease anyway. So I sat on the radiator with my headphones on and watched everyone else work.
+
+3 My father packed the way he did everything, quickly and without comment. He wrapped plates in newspaper, taped boxes shut with one long screech of tape, and whistled under his breath. Watching him made me angrier. He didn't seem to care at all that we were leaving the only place I could remember.
+
+4 Around noon my mother tapped my shoulder and pointed to the kitchen doorway. ""The landlord's painting next week,"" she said. ""If you want anything from that, now's the time.""
+
+5 I knew what she meant without looking. On the left side of the doorframe, a ladder of pencil lines climbed from knee height to just below my shoulder. Each one had a date beside it and the letter T. My father had started them when I was two, standing me against the wood every September and laying a cereal box flat on my head to make the line straight.
+
+6 You cannot pack a doorframe. I stood in front of it with my hands in my pockets and felt something hot rise in my throat. In a week, a stranger with a roller would erase eleven years in a few strokes.
+
+7 Then my father was beside me, holding a roll of brown packing paper and a pencil. He didn't say anything. He tore off a long strip, held it flat against the wood, and nodded for me to trace. I pressed the pencil against the paper and found each groove by feel, the way you find a light switch in the dark. Age two. Age five, the year I broke my arm. Age nine, a sudden leap of three inches that my mother had called ""the beanstalk year.""
+
+8 Near the bottom of the frame, below my earliest line, I found marks I had never noticed. They were older and fainter, and beside them, in handwriting I recognized as my grandmother's, were the letters R.M.
+
+9 ""Rafael Morales,"" my father said quietly. ""This was her apartment before it was ours. I grew up in that kitchen.""
+
+10 I looked up at him. I had always known that, in the way you know facts about your parents without ever really thinking about them. But I had never pictured him small enough to stand against this frame. His jaw was tight. For the first time all morning, he wasn't whistling.
+
+11 ""You didn't say anything,"" I said. ""All this time. You acted like it was nothing.""
+
+12 He shrugged, but it was a slow shrug, heavier than usual. ""Somebody had to keep taping boxes,"" he said. ""If I stopped, I wasn't sure I'd start again.""
+
+13 We traced his marks too, onto the same strip of paper, his faint lines below my dark ones, like the roots of a plant beneath its stem. When we finished, he rolled the paper carefully and handed it to me. ""Your job,"" he said. ""Don't let it get crushed.""
+
+14 I carried that roll down three flights of stairs myself, holding it upright in both hands the way you would carry a lit candle. Then I went back up and started taping boxes.",Which statement best expresses a theme of the passage?,Children should accept their parents' decisions without complaint.,Moving is always harder for children than it is for adults.,Sharing memories of a place can help people face the loss of leaving it.,Old apartments should be preserved because of their history.,C,"Tomás begins the day refusing to help, angry about leaving ""the only place I could remember"" (paragraph 3). The turning point comes when he and his father trace the height marks, including the father's own childhood marks, onto paper. The shared memory lets both of them admit their sadness, and by the end Tomás ""started taping boxes"" (paragraph 14). The record of the place goes with them, and that helps them face leaving it.",The choice about obeying parents tempts students because Tomás's last action is to help pack. But the story is not about obedience. What changes him is understanding that his father shares his loss.,,Provisional,,,,"Incorrect. Tomás does start helping at the end, but the story never says he was wrong to feel upset. He changes because of a shared memory with his father, not because he learns to stop complaining.","Incorrect. This reverses a key point. The father is also deeply affected: ""His jaw was tight"" (paragraph 10), and he admits, ""If I stopped, I wasn't sure I'd start again"" (paragraph 12).","Correct. Tomás begins the day refusing to help, angry about leaving ""the only place I could remember"" (paragraph 3). The turning point comes when he and his father trace the height marks, including the father's own childhood marks, onto paper. The shared memory lets both of them admit their sadness, and by the end Tomás ""started taping boxes"" (paragraph 14). The record of the place goes with them, and that helps them face leaving it.",Incorrect. The story never argues for saving buildings. The landlord's painting is simply a fact that pushes Tomás to deal with the doorframe (paragraph 4).,,,,,,"Jed Levine, Claude",New item.
+ELA-RC-144,RC-P108,Jed Levine,RC,Module 2,RC-ANL,Drag and Drop,"In this story, a boy named Tomás and his family are packing to move out of the Brooklyn apartment where he has lived his whole life.
+
+The Doorframe
+
+1 By Saturday morning the apartment had stopped looking like a home and started looking like a warehouse. Cardboard towers rose in every room, each labeled in my mother's square capitals: KITCHEN (FRAGILE), BOOKS, TOMÁS (WINTER). Our voices bounced off walls that had been stripped of photographs, and the rooms sounded larger and emptier than I had ever heard them, as if the apartment were already forgetting us.
+
+2 I had decided not to help. It was the only protest I had left. For two months I had argued against the move to my aunt's building in New Jersey: my school was here, my friends were here, the man at the bodega who saved me the last sesame bagel was here. My parents listened, nodded, and signed the lease anyway. So I sat on the radiator with my headphones on and watched everyone else work.
+
+3 My father packed the way he did everything, quickly and without comment. He wrapped plates in newspaper, taped boxes shut with one long screech of tape, and whistled under his breath. Watching him made me angrier. He didn't seem to care at all that we were leaving the only place I could remember.
+
+4 Around noon my mother tapped my shoulder and pointed to the kitchen doorway. ""The landlord's painting next week,"" she said. ""If you want anything from that, now's the time.""
+
+5 I knew what she meant without looking. On the left side of the doorframe, a ladder of pencil lines climbed from knee height to just below my shoulder. Each one had a date beside it and the letter T. My father had started them when I was two, standing me against the wood every September and laying a cereal box flat on my head to make the line straight.
+
+6 You cannot pack a doorframe. I stood in front of it with my hands in my pockets and felt something hot rise in my throat. In a week, a stranger with a roller would erase eleven years in a few strokes.
+
+7 Then my father was beside me, holding a roll of brown packing paper and a pencil. He didn't say anything. He tore off a long strip, held it flat against the wood, and nodded for me to trace. I pressed the pencil against the paper and found each groove by feel, the way you find a light switch in the dark. Age two. Age five, the year I broke my arm. Age nine, a sudden leap of three inches that my mother had called ""the beanstalk year.""
+
+8 Near the bottom of the frame, below my earliest line, I found marks I had never noticed. They were older and fainter, and beside them, in handwriting I recognized as my grandmother's, were the letters R.M.
+
+9 ""Rafael Morales,"" my father said quietly. ""This was her apartment before it was ours. I grew up in that kitchen.""
+
+10 I looked up at him. I had always known that, in the way you know facts about your parents without ever really thinking about them. But I had never pictured him small enough to stand against this frame. His jaw was tight. For the first time all morning, he wasn't whistling.
+
+11 ""You didn't say anything,"" I said. ""All this time. You acted like it was nothing.""
+
+12 He shrugged, but it was a slow shrug, heavier than usual. ""Somebody had to keep taping boxes,"" he said. ""If I stopped, I wasn't sure I'd start again.""
+
+13 We traced his marks too, onto the same strip of paper, his faint lines below my dark ones, like the roots of a plant beneath its stem. When we finished, he rolled the paper carefully and handed it to me. ""Your job,"" he said. ""Don't let it get crushed.""
+
+14 I carried that roll down three flights of stairs myself, holding it upright in both hands the way you would carry a lit candle. Then I went back up and started taping boxes.",The narrator's feelings change as the passage moves forward. Match each paragraph with the feeling the narrator shows most strongly in that paragraph.,,,,,See TEI Spec,"Paragraph 2: Tomás has ""decided not to help"" and calls it ""the only protest I had left,"" which shows stubborn resentment. Paragraph 6: ""You cannot pack a doorframe,"" and he feels ""something hot rise in my throat"" knowing a stranger will ""erase eleven years in a few strokes,"" which shows helpless grief. Paragraph 14: he carries the roll down the stairs ""holding it upright in both hands the way you would carry a lit candle,"" then starts taping boxes, which shows careful responsibility.","Students often place ""embarrassed guilt"" in paragraph 14 because Tomás finally starts helping, so they assume he feels bad about refusing earlier. The text shows care, not shame: he holds the roll ""upright in both hands"" like something precious.",,Provisional,,,,,,,,,,,,"{""dnd"": {""instruction"": ""Move the correct feeling into each box. Not all feelings will be used."", ""pool"": [{""id"": ""f1"", ""text"": ""stubborn resentment"", ""explanation"": ""Belongs with paragraph 2. Tomás has \""decided not to help\"" and calls this \""the only protest I had left.\"" He sits on the radiator and watches everyone else work.""}, {""id"": ""f2"", ""text"": ""helpless grief"", ""explanation"": ""Belongs with paragraph 6. \""You cannot pack a doorframe.\"" He feels \""something hot rise in my throat\"" because a stranger will \""erase eleven years in a few strokes,\"" and he can do nothing to stop it.""}, {""id"": ""f3"", ""text"": ""careful responsibility"", ""explanation"": ""Belongs with paragraph 14. Tomás carries the roll himself, \""holding it upright in both hands,\"" doing the job his father gave him, and then he goes back up to help pack.""}, {""id"": ""f4"", ""text"": ""quiet amusement"", ""explanation"": ""Not used. Nothing in these paragraphs is presented as funny. The playful phrase \""the beanstalk year\"" belongs to his mother in paragraph 7, and even there Tomás is not amused.""}, {""id"": ""f5"", ""text"": ""embarrassed guilt"", ""explanation"": ""Not used. Tomás does start helping in paragraph 14, but the passage never says he feels ashamed. He helps because he understands his father, not because he is embarrassed.""}], ""zones"": [{""id"": ""z1"", ""prompt"": ""Paragraph 2""}, {""id"": ""z2"", ""prompt"": ""Paragraph 6""}, {""id"": ""z3"", ""prompt"": ""Paragraph 14""}], ""correctMapping"": {""z1"": ""f1"", ""z2"": ""f2"", ""z3"": ""f3""}, ""solutionExplanation"": ""Paragraph 2: Tomás has \""decided not to help\"" and calls it \""the only protest I had left,\"" which shows stubborn resentment. Paragraph 6: \""You cannot pack a doorframe,\"" and he feels \""something hot rise in my throat\"" knowing a stranger will \""erase eleven years in a few strokes,\"" which shows helpless grief. Paragraph 14: he carries the roll down the stairs \""holding it upright in both hands the way you would carry a lit candle,\"" then starts taping boxes, which shows careful responsibility.""}}","Jed Levine, Claude",New item.
+ELA-RC-145,RC-P108,Jed Levine,RC,Module 2,RC-TXT,Multiple Choice Question,"In this story, a boy named Tomás and his family are packing to move out of the Brooklyn apartment where he has lived his whole life.
+
+The Doorframe
+
+1 By Saturday morning the apartment had stopped looking like a home and started looking like a warehouse. Cardboard towers rose in every room, each labeled in my mother's square capitals: KITCHEN (FRAGILE), BOOKS, TOMÁS (WINTER). Our voices bounced off walls that had been stripped of photographs, and the rooms sounded larger and emptier than I had ever heard them, as if the apartment were already forgetting us.
+
+2 I had decided not to help. It was the only protest I had left. For two months I had argued against the move to my aunt's building in New Jersey: my school was here, my friends were here, the man at the bodega who saved me the last sesame bagel was here. My parents listened, nodded, and signed the lease anyway. So I sat on the radiator with my headphones on and watched everyone else work.
+
+3 My father packed the way he did everything, quickly and without comment. He wrapped plates in newspaper, taped boxes shut with one long screech of tape, and whistled under his breath. Watching him made me angrier. He didn't seem to care at all that we were leaving the only place I could remember.
+
+4 Around noon my mother tapped my shoulder and pointed to the kitchen doorway. ""The landlord's painting next week,"" she said. ""If you want anything from that, now's the time.""
+
+5 I knew what she meant without looking. On the left side of the doorframe, a ladder of pencil lines climbed from knee height to just below my shoulder. Each one had a date beside it and the letter T. My father had started them when I was two, standing me against the wood every September and laying a cereal box flat on my head to make the line straight.
+
+6 You cannot pack a doorframe. I stood in front of it with my hands in my pockets and felt something hot rise in my throat. In a week, a stranger with a roller would erase eleven years in a few strokes.
+
+7 Then my father was beside me, holding a roll of brown packing paper and a pencil. He didn't say anything. He tore off a long strip, held it flat against the wood, and nodded for me to trace. I pressed the pencil against the paper and found each groove by feel, the way you find a light switch in the dark. Age two. Age five, the year I broke my arm. Age nine, a sudden leap of three inches that my mother had called ""the beanstalk year.""
+
+8 Near the bottom of the frame, below my earliest line, I found marks I had never noticed. They were older and fainter, and beside them, in handwriting I recognized as my grandmother's, were the letters R.M.
+
+9 ""Rafael Morales,"" my father said quietly. ""This was her apartment before it was ours. I grew up in that kitchen.""
+
+10 I looked up at him. I had always known that, in the way you know facts about your parents without ever really thinking about them. But I had never pictured him small enough to stand against this frame. His jaw was tight. For the first time all morning, he wasn't whistling.
+
+11 ""You didn't say anything,"" I said. ""All this time. You acted like it was nothing.""
+
+12 He shrugged, but it was a slow shrug, heavier than usual. ""Somebody had to keep taping boxes,"" he said. ""If I stopped, I wasn't sure I'd start again.""
+
+13 We traced his marks too, onto the same strip of paper, his faint lines below my dark ones, like the roots of a plant beneath its stem. When we finished, he rolled the paper carefully and handed it to me. ""Your job,"" he said. ""Don't let it get crushed.""
+
+14 I carried that roll down three flights of stairs myself, holding it upright in both hands the way you would carry a lit candle. Then I went back up and started taping boxes.",How do paragraphs 8 and 9 contribute to the passage?,"They reveal that the doorframe also holds the father's childhood, which leads Tomás to see his father's behavior differently.",They introduce Tomás's grandmother as the character whose feelings matter most in the story.,They explain why the landlord has decided to paint the apartment.,They prove that Tomás was wrong to want to stay in Brooklyn.,A,"In paragraphs 8 and 9, Tomás finds older marks labeled ""R.M."" and learns they are his father's: ""This was her apartment before it was ours. I grew up in that kitchen."" This discovery leads Tomás to see his father differently. Right after it, he notices ""His jaw was tight"" and that his father ""wasn't whistling"" (paragraph 10), and the two finally talk about how they feel.","The grandmother choice is tempting because her handwriting is the surprising new detail. But the marks matter because they belong to the father, and they change how Tomás understands him.",,Provisional,,,,"Correct. In paragraphs 8 and 9, Tomás finds older marks labeled ""R.M."" and learns they are his father's: ""This was her apartment before it was ours. I grew up in that kitchen."" This discovery leads Tomás to see his father differently. Right after it, he notices ""His jaw was tight"" and that his father ""wasn't whistling"" (paragraph 10), and the two finally talk about how they feel.",Incorrect. The grandmother appears only through her handwriting and the fact that the apartment was hers. The story's focus stays on Tomás and his father.,Incorrect. The landlord's painting is mentioned in paragraph 4 and is never explained. Paragraphs 8 and 9 are about the family's history in the apartment.,"Incorrect. This overstates the effect. The discovery deepens the sense of loss, since the family has lived there for two generations. It does not show that Tomás's feelings were wrong.",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-146,RC-P108,Jed Levine,RC,Module 1,RC-VOC,Multiple Choice Question,"In this story, a boy named Tomás and his family are packing to move out of the Brooklyn apartment where he has lived his whole life.
+
+The Doorframe
+
+1 By Saturday morning the apartment had stopped looking like a home and started looking like a warehouse. Cardboard towers rose in every room, each labeled in my mother's square capitals: KITCHEN (FRAGILE), BOOKS, TOMÁS (WINTER). Our voices bounced off walls that had been stripped of photographs, and the rooms sounded larger and emptier than I had ever heard them, as if the apartment were already forgetting us.
+
+2 I had decided not to help. It was the only protest I had left. For two months I had argued against the move to my aunt's building in New Jersey: my school was here, my friends were here, the man at the bodega who saved me the last sesame bagel was here. My parents listened, nodded, and signed the lease anyway. So I sat on the radiator with my headphones on and watched everyone else work.
+
+3 My father packed the way he did everything, quickly and without comment. He wrapped plates in newspaper, taped boxes shut with one long screech of tape, and whistled under his breath. Watching him made me angrier. He didn't seem to care at all that we were leaving the only place I could remember.
+
+4 Around noon my mother tapped my shoulder and pointed to the kitchen doorway. ""The landlord's painting next week,"" she said. ""If you want anything from that, now's the time.""
+
+5 I knew what she meant without looking. On the left side of the doorframe, a ladder of pencil lines climbed from knee height to just below my shoulder. Each one had a date beside it and the letter T. My father had started them when I was two, standing me against the wood every September and laying a cereal box flat on my head to make the line straight.
+
+6 You cannot pack a doorframe. I stood in front of it with my hands in my pockets and felt something hot rise in my throat. In a week, a stranger with a roller would erase eleven years in a few strokes.
+
+7 Then my father was beside me, holding a roll of brown packing paper and a pencil. He didn't say anything. He tore off a long strip, held it flat against the wood, and nodded for me to trace. I pressed the pencil against the paper and found each groove by feel, the way you find a light switch in the dark. Age two. Age five, the year I broke my arm. Age nine, a sudden leap of three inches that my mother had called ""the beanstalk year.""
+
+8 Near the bottom of the frame, below my earliest line, I found marks I had never noticed. They were older and fainter, and beside them, in handwriting I recognized as my grandmother's, were the letters R.M.
+
+9 ""Rafael Morales,"" my father said quietly. ""This was her apartment before it was ours. I grew up in that kitchen.""
+
+10 I looked up at him. I had always known that, in the way you know facts about your parents without ever really thinking about them. But I had never pictured him small enough to stand against this frame. His jaw was tight. For the first time all morning, he wasn't whistling.
+
+11 ""You didn't say anything,"" I said. ""All this time. You acted like it was nothing.""
+
+12 He shrugged, but it was a slow shrug, heavier than usual. ""Somebody had to keep taping boxes,"" he said. ""If I stopped, I wasn't sure I'd start again.""
+
+13 We traced his marks too, onto the same strip of paper, his faint lines below my dark ones, like the roots of a plant beneath its stem. When we finished, he rolled the paper carefully and handed it to me. ""Your job,"" he said. ""Don't let it get crushed.""
+
+14 I carried that roll down three flights of stairs myself, holding it upright in both hands the way you would carry a lit candle. Then I went back up and started taping boxes.","Read this sentence from paragraph 13.
+
+""We traced his marks too, onto the same strip of paper, his faint lines below my dark ones, like the roots of a plant beneath its stem.""
+
+What does the comparison to ""the roots of a plant"" suggest?",The packing paper will be used to wrap the family's houseplants.,The father's past is the foundation that Tomás's own growth comes from.,The father's marks are more important than Tomás's marks.,Tomás has nearly stopped growing taller.,B,"Roots grow underground, below the stem, and they feed and hold up the plant. Placing the father's ""faint lines below my dark ones"" like roots suggests that the father's childhood in the apartment is the foundation that Tomás's own growth comes from. The image connects the two generations on one strip of paper.","Students who see the father's marks placed ""below"" may think the image ranks them as more or less important. Roots are not lesser than a stem. They are what the stem grows from, which is the connection the image draws.",,Provisional,,,,"Incorrect. This is a literal reading. No real plants are mentioned. The comparison describes how the marks relate to each other, not what the paper will be used for.","Correct. Roots grow underground, below the stem, and they feed and hold up the plant. Placing the father's ""faint lines below my dark ones"" like roots suggests that the father's childhood in the apartment is the foundation that Tomás's own growth comes from. The image connects the two generations on one strip of paper.",Incorrect. Roots and stem are parts of the same plant. The image connects the two sets of marks. It does not rank one above the other.,Incorrect. Nothing in the comparison or the passage suggests that Tomás's growth is ending. The image is about where his growth comes from.,,,,,,"Jed Levine, Claude",New item.
+ELA-RC-147,RC-P108,Jed Levine,RC,Module 1,RC-EV,Multiple Choice Question,"In this story, a boy named Tomás and his family are packing to move out of the Brooklyn apartment where he has lived his whole life.
+
+The Doorframe
+
+1 By Saturday morning the apartment had stopped looking like a home and started looking like a warehouse. Cardboard towers rose in every room, each labeled in my mother's square capitals: KITCHEN (FRAGILE), BOOKS, TOMÁS (WINTER). Our voices bounced off walls that had been stripped of photographs, and the rooms sounded larger and emptier than I had ever heard them, as if the apartment were already forgetting us.
+
+2 I had decided not to help. It was the only protest I had left. For two months I had argued against the move to my aunt's building in New Jersey: my school was here, my friends were here, the man at the bodega who saved me the last sesame bagel was here. My parents listened, nodded, and signed the lease anyway. So I sat on the radiator with my headphones on and watched everyone else work.
+
+3 My father packed the way he did everything, quickly and without comment. He wrapped plates in newspaper, taped boxes shut with one long screech of tape, and whistled under his breath. Watching him made me angrier. He didn't seem to care at all that we were leaving the only place I could remember.
+
+4 Around noon my mother tapped my shoulder and pointed to the kitchen doorway. ""The landlord's painting next week,"" she said. ""If you want anything from that, now's the time.""
+
+5 I knew what she meant without looking. On the left side of the doorframe, a ladder of pencil lines climbed from knee height to just below my shoulder. Each one had a date beside it and the letter T. My father had started them when I was two, standing me against the wood every September and laying a cereal box flat on my head to make the line straight.
+
+6 You cannot pack a doorframe. I stood in front of it with my hands in my pockets and felt something hot rise in my throat. In a week, a stranger with a roller would erase eleven years in a few strokes.
+
+7 Then my father was beside me, holding a roll of brown packing paper and a pencil. He didn't say anything. He tore off a long strip, held it flat against the wood, and nodded for me to trace. I pressed the pencil against the paper and found each groove by feel, the way you find a light switch in the dark. Age two. Age five, the year I broke my arm. Age nine, a sudden leap of three inches that my mother had called ""the beanstalk year.""
+
+8 Near the bottom of the frame, below my earliest line, I found marks I had never noticed. They were older and fainter, and beside them, in handwriting I recognized as my grandmother's, were the letters R.M.
+
+9 ""Rafael Morales,"" my father said quietly. ""This was her apartment before it was ours. I grew up in that kitchen.""
+
+10 I looked up at him. I had always known that, in the way you know facts about your parents without ever really thinking about them. But I had never pictured him small enough to stand against this frame. His jaw was tight. For the first time all morning, he wasn't whistling.
+
+11 ""You didn't say anything,"" I said. ""All this time. You acted like it was nothing.""
+
+12 He shrugged, but it was a slow shrug, heavier than usual. ""Somebody had to keep taping boxes,"" he said. ""If I stopped, I wasn't sure I'd start again.""
+
+13 We traced his marks too, onto the same strip of paper, his faint lines below my dark ones, like the roots of a plant beneath its stem. When we finished, he rolled the paper carefully and handed it to me. ""Your job,"" he said. ""Don't let it get crushed.""
+
+14 I carried that roll down three flights of stairs myself, holding it upright in both hands the way you would carry a lit candle. Then I went back up and started taping boxes.",Which sentence from the passage best shows that the move affects Tomás's father more than he first lets on?,"""He wrapped plates in newspaper, taped boxes shut with one long screech of tape, and whistled under his breath."" (paragraph 3)","""My parents listened, nodded, and signed the lease anyway."" (paragraph 2)","""I had always known that, in the way you know facts about your parents without ever really thinking about them."" (paragraph 10)","""His jaw was tight. For the first time all morning, he wasn't whistling."" (paragraph 10)",D,"All morning, Tomás reads his father's whistling and fast packing as a sign that ""He didn't seem to care at all"" (paragraph 3). In paragraph 10, once the father's marks are found, Tomás notices ""His jaw was tight. For the first time all morning, he wasn't whistling."" The tight jaw and the missing whistle show feelings the father had been hiding.","The whistling sentence from paragraph 3 is tempting because it describes the father directly. But it shows what he lets on, not what he feels. The question asks for the moment the hidden feeling shows through.",,Provisional,,,,"Incorrect. This shows the father's calm surface, the behavior that makes Tomás think his father does not care. It does not show the hidden feelings underneath.","Incorrect. This shows the parents' decision to move, not how the father feels about leaving.",Incorrect. This sentence is about Tomás's own awareness of where his father grew up. It does not show the father's emotion.,"Correct. All morning, Tomás reads his father's whistling and fast packing as a sign that ""He didn't seem to care at all"" (paragraph 3). In paragraph 10, once the father's marks are found, Tomás notices ""His jaw was tight. For the first time all morning, he wasn't whistling."" The tight jaw and the missing whistle show feelings the father had been hiding.",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-148,RC-P108,Jed Levine,RC,Module 2,RC-INF; RC-ANL,Multiple Choice Question,"In this story, a boy named Tomás and his family are packing to move out of the Brooklyn apartment where he has lived his whole life.
+
+The Doorframe
+
+1 By Saturday morning the apartment had stopped looking like a home and started looking like a warehouse. Cardboard towers rose in every room, each labeled in my mother's square capitals: KITCHEN (FRAGILE), BOOKS, TOMÁS (WINTER). Our voices bounced off walls that had been stripped of photographs, and the rooms sounded larger and emptier than I had ever heard them, as if the apartment were already forgetting us.
+
+2 I had decided not to help. It was the only protest I had left. For two months I had argued against the move to my aunt's building in New Jersey: my school was here, my friends were here, the man at the bodega who saved me the last sesame bagel was here. My parents listened, nodded, and signed the lease anyway. So I sat on the radiator with my headphones on and watched everyone else work.
+
+3 My father packed the way he did everything, quickly and without comment. He wrapped plates in newspaper, taped boxes shut with one long screech of tape, and whistled under his breath. Watching him made me angrier. He didn't seem to care at all that we were leaving the only place I could remember.
+
+4 Around noon my mother tapped my shoulder and pointed to the kitchen doorway. ""The landlord's painting next week,"" she said. ""If you want anything from that, now's the time.""
+
+5 I knew what she meant without looking. On the left side of the doorframe, a ladder of pencil lines climbed from knee height to just below my shoulder. Each one had a date beside it and the letter T. My father had started them when I was two, standing me against the wood every September and laying a cereal box flat on my head to make the line straight.
+
+6 You cannot pack a doorframe. I stood in front of it with my hands in my pockets and felt something hot rise in my throat. In a week, a stranger with a roller would erase eleven years in a few strokes.
+
+7 Then my father was beside me, holding a roll of brown packing paper and a pencil. He didn't say anything. He tore off a long strip, held it flat against the wood, and nodded for me to trace. I pressed the pencil against the paper and found each groove by feel, the way you find a light switch in the dark. Age two. Age five, the year I broke my arm. Age nine, a sudden leap of three inches that my mother had called ""the beanstalk year.""
+
+8 Near the bottom of the frame, below my earliest line, I found marks I had never noticed. They were older and fainter, and beside them, in handwriting I recognized as my grandmother's, were the letters R.M.
+
+9 ""Rafael Morales,"" my father said quietly. ""This was her apartment before it was ours. I grew up in that kitchen.""
+
+10 I looked up at him. I had always known that, in the way you know facts about your parents without ever really thinking about them. But I had never pictured him small enough to stand against this frame. His jaw was tight. For the first time all morning, he wasn't whistling.
+
+11 ""You didn't say anything,"" I said. ""All this time. You acted like it was nothing.""
+
+12 He shrugged, but it was a slow shrug, heavier than usual. ""Somebody had to keep taping boxes,"" he said. ""If I stopped, I wasn't sure I'd start again.""
+
+13 We traced his marks too, onto the same strip of paper, his faint lines below my dark ones, like the roots of a plant beneath its stem. When we finished, he rolled the paper carefully and handed it to me. ""Your job,"" he said. ""Don't let it get crushed.""
+
+14 I carried that roll down three flights of stairs myself, holding it upright in both hands the way you would carry a lit candle. Then I went back up and started taping boxes.","In paragraph 12, the father says, ""If I stopped, I wasn't sure I'd start again."" What does this statement suggest about him?",He kept busy so that his sadness about leaving would not overwhelm him.,He was rushing because the moving truck was about to arrive.,He did not want to move and was planning to stay behind in Brooklyn.,He blamed Tomás's mother for the family's decision to move.,A,"The father kept packing ""quickly and without comment"" (paragraph 3) and whistled all morning. When he explains, ""Somebody had to keep taping boxes,"" and adds, ""If I stopped, I wasn't sure I'd start again,"" he admits that staying busy kept his sadness under control. His ""slow shrug, heavier than usual"" (paragraph 12) shows the weight he had been carrying.","The moving-truck choice is tempting because ""stopped"" and ""start again"" sound like they describe work. In context, the father is answering Tomás's charge that he ""acted like it was nothing,"" so the line is about his feelings.",,Provisional,,,,"Correct. The father kept packing ""quickly and without comment"" (paragraph 3) and whistled all morning. When he explains, ""Somebody had to keep taping boxes,"" and adds, ""If I stopped, I wasn't sure I'd start again,"" he admits that staying busy kept his sadness under control. His ""slow shrug, heavier than usual"" (paragraph 12) shows the weight he had been carrying.","Incorrect. This reads the line as a practical schedule problem. No truck or deadline is mentioned, and the father's ""slow shrug, heavier than usual"" points to emotion, not time pressure.","Incorrect. This overstates his feelings. He is sad about leaving, but he keeps packing and gives Tomás a job for the move. Nothing suggests he plans to stay.","Incorrect. The passage never shows any blame. Both parents ""listened, nodded, and signed the lease"" (paragraph 2).",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-149,RC-P109,Jed Levine,RC,Module 1,RC-MI,Multiple Choice Question,"In this story, an eighth grader on her school's chess team loses her top position to a younger player.
+
+First Board
+
+1 For two years, Nadia Haddad had sat at first board. On the chess team at her middle school in Brooklyn, that meant the first table, the hardest opponent, and the clock that everyone watched. She liked the weight of it. Before every match she lined up her pieces so that each knight faced exactly forward, as if they were soldiers waiting for inspection.
+
+2 Then Owen Park arrived in sixth grade, small and loud and wearing a sweatshirt with a cartoon dinosaur on it. In his first week he beat three seventh graders. In his third week he beat Nadia, in a game so fast and so strange that she spent the whole subway ride home replaying it on her phone, trying to find the moment it had gone wrong.
+
+3 Coach Bekele posted the new lineup on the classroom door the following Monday. OWEN PARK, BOARD 1. NADIA HADDAD, BOARD 2. Nadia read it twice, as though the letters might rearrange themselves if she stared hard enough. They did not.
+
+4 ""It's just a list,"" her friend Kezia said.
+
+5 ""It's not just a list,"" Nadia said. She did not explain, because she did not know how to say that first board had become a kind of address, the place where she lived.
+
+6 It got worse. The next week, Coach Bekele handed her a folder of Owen's tournament games. ""You're my best analyst,"" he said. ""Figure out his weaknesses before the city finals. Other schools will be studying him, and I want us to know first.""
+
+7 Nadia took the folder home and spread the score sheets across her bedroom floor. She expected to find sloppiness. Owen played fast, and fast players made mistakes. At first she found plenty of them: a bishop left unprotected here, a pawn pushed too far there. She circled each one in red with grim satisfaction.
+
+8 But as the evening went on, she noticed something else. Owen's mistakes did not seem to bother him. After losing a piece, he did not retreat into a shell and defend. He attacked. He sent his queen into the middle of the board and dared his opponents to deal with it, and more often than not they flinched. His losses were spectacular, but so were his wins, and there were many more wins.
+
+9 Nadia sat back against her bed. She thought of her own games: the careful walls of pawns, the knights tucked safely at home, the draws she had accepted when she was ahead because a draw could not hurt her ranking. She had always called it discipline. Looking at Owen's games, scattered and fearless across the carpet, she began to suspect it had another name.
+
+10 She did not sleep well. In the morning she brought the folder back with two pages of notes. The first page listed Owen's weaknesses, as she had been asked. The second page was titled, in her neatest handwriting, WHAT I SHOULD STEAL.
+
+11 Coach Bekele read both pages without speaking. Then he looked at her over the top of the paper. ""This second page,"" he said. ""That's the most useful thing anyone's given me all year.""
+
+12 At practice that afternoon, Nadia sat down across from Owen. He grinned at her and bounced a pawn in his palm like a coin he was about to flip.
+
+13 ""Rematch?"" he asked.
+
+14 ""Not exactly,"" she said. ""I want you to show me what you were thinking in your game against Lefferts Academy. Move nine. The queen."" She paused. ""And I'll show you why you shouldn't have left your bishop alone on move six.""
+
+15 Owen considered this with great seriousness, then nodded. They bent over the board together, and for the next hour, the question of who sat at first board seemed to Nadia like a much smaller question than it had been on Monday. It was still there. It still mattered. But it had shrunk to the size of a single square, and the rest of the board was wide open.",Which statement best describes the central idea of the passage?,A girl wins back her place at first board by studying her rival's games and finding the weaknesses that others missed.,A talented young player proves to his older teammates that speed matters more than skill in chess.,A coach teaches his players that their positions in the team lineup do not really matter.,"While studying a rival's games, a girl realizes her own caution may have held her back, and she chooses to learn from him instead of resenting him.",D,"Nadia loses first board to Owen and resents it (""It's not just a list,"" paragraph 5). Assigned to study his games, she sees that he plays without fear, and she begins to suspect her ""discipline"" ""had another name"" (paragraph 9). She writes ""WHAT I SHOULD STEAL"" (paragraph 10) and asks Owen to teach her (paragraph 14). The passage is mainly about this shift from resentment to learning.","The ""wins back first board"" choice tempts students who expect a rivalry story to end in victory. This passage turns away from that ending. The lineup never changes. Nadia's thinking does.",,Provisional,,,,"Incorrect. Nadia does list Owen's weaknesses, but she never wins back first board. In paragraph 15 the question of who sits there is ""still there,"" just smaller.","Incorrect. This distorts Owen's role. His games show boldness, not speed winning over skill, and Nadia still finds real mistakes in them (paragraph 7).","Incorrect. Coach Bekele never says this, and Nadia's ranking ""still mattered"" at the end (paragraph 15).","Correct. Nadia loses first board to Owen and resents it (""It's not just a list,"" paragraph 5). Assigned to study his games, she sees that he plays without fear, and she begins to suspect her ""discipline"" ""had another name"" (paragraph 9). She writes ""WHAT I SHOULD STEAL"" (paragraph 10) and asks Owen to teach her (paragraph 14). The passage is mainly about this shift from resentment to learning.",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-150,RC-P109,Jed Levine,RC,Module 2,RC-ANL; RC-INF,Multi-Select,"In this story, an eighth grader on her school's chess team loses her top position to a younger player.
+
+First Board
+
+1 For two years, Nadia Haddad had sat at first board. On the chess team at her middle school in Brooklyn, that meant the first table, the hardest opponent, and the clock that everyone watched. She liked the weight of it. Before every match she lined up her pieces so that each knight faced exactly forward, as if they were soldiers waiting for inspection.
+
+2 Then Owen Park arrived in sixth grade, small and loud and wearing a sweatshirt with a cartoon dinosaur on it. In his first week he beat three seventh graders. In his third week he beat Nadia, in a game so fast and so strange that she spent the whole subway ride home replaying it on her phone, trying to find the moment it had gone wrong.
+
+3 Coach Bekele posted the new lineup on the classroom door the following Monday. OWEN PARK, BOARD 1. NADIA HADDAD, BOARD 2. Nadia read it twice, as though the letters might rearrange themselves if she stared hard enough. They did not.
+
+4 ""It's just a list,"" her friend Kezia said.
+
+5 ""It's not just a list,"" Nadia said. She did not explain, because she did not know how to say that first board had become a kind of address, the place where she lived.
+
+6 It got worse. The next week, Coach Bekele handed her a folder of Owen's tournament games. ""You're my best analyst,"" he said. ""Figure out his weaknesses before the city finals. Other schools will be studying him, and I want us to know first.""
+
+7 Nadia took the folder home and spread the score sheets across her bedroom floor. She expected to find sloppiness. Owen played fast, and fast players made mistakes. At first she found plenty of them: a bishop left unprotected here, a pawn pushed too far there. She circled each one in red with grim satisfaction.
+
+8 But as the evening went on, she noticed something else. Owen's mistakes did not seem to bother him. After losing a piece, he did not retreat into a shell and defend. He attacked. He sent his queen into the middle of the board and dared his opponents to deal with it, and more often than not they flinched. His losses were spectacular, but so were his wins, and there were many more wins.
+
+9 Nadia sat back against her bed. She thought of her own games: the careful walls of pawns, the knights tucked safely at home, the draws she had accepted when she was ahead because a draw could not hurt her ranking. She had always called it discipline. Looking at Owen's games, scattered and fearless across the carpet, she began to suspect it had another name.
+
+10 She did not sleep well. In the morning she brought the folder back with two pages of notes. The first page listed Owen's weaknesses, as she had been asked. The second page was titled, in her neatest handwriting, WHAT I SHOULD STEAL.
+
+11 Coach Bekele read both pages without speaking. Then he looked at her over the top of the paper. ""This second page,"" he said. ""That's the most useful thing anyone's given me all year.""
+
+12 At practice that afternoon, Nadia sat down across from Owen. He grinned at her and bounced a pawn in his palm like a coin he was about to flip.
+
+13 ""Rematch?"" he asked.
+
+14 ""Not exactly,"" she said. ""I want you to show me what you were thinking in your game against Lefferts Academy. Move nine. The queen."" She paused. ""And I'll show you why you shouldn't have left your bishop alone on move six.""
+
+15 Owen considered this with great seriousness, then nodded. They bent over the board together, and for the next hour, the question of who sat at first board seemed to Nadia like a much smaller question than it had been on Monday. It was still there. It still mattered. But it had shrunk to the size of a single square, and the rest of the board was wide open.",Which two statements best describe how Nadia changes over the course of the passage? Select two answers.,She decides that her place in the lineup no longer matters to her at all.,She moves from resenting Owen's promotion to treating him as someone she can learn from.,She becomes convinced that Owen's frequent mistakes make him a weak player.,She begins to question whether the careful style she called discipline was really a form of fear.,"B, D","Nadia starts out resenting Owen's promotion: the lineup feels like losing ""the place where she lived"" (paragraph 5). By the end, she asks Owen to show her his thinking (paragraph 14), treating him as someone to learn from. She also questions her own style. She ""had always called it discipline,"" but after seeing Owen's ""fearless"" games, she ""began to suspect it had another name"" (paragraph 9), suggesting her caution was really fear of losing.","The ""no longer matters at all"" choice is the most tempting wrong answer because the last paragraph says first board seemed ""a much smaller question."" Smaller is not gone: the same paragraph says ""It still mattered.""",,Provisional,,,,"Incorrect. This is an overstatement. Paragraph 15 says the question of first board ""was still there. It still mattered."" It has only become smaller.","Correct. She is hurt by the new lineup in paragraphs 3 through 5, but in paragraph 14 she asks Owen to explain his thinking about ""Move nine. The queen.""","Incorrect. This reverses her conclusion. She does circle his mistakes at first, but paragraph 8 says ""there were many more wins,"" and she ends up wanting to learn from him.","Correct. In paragraph 9 she ""had always called it discipline,"" but next to Owen's ""fearless"" games she ""began to suspect it had another name."" Her accepted draws ""because a draw could not hurt her ranking"" point to fear of losing.",She loses trust in Coach Bekele's judgment and stops listening to his advice.,"Incorrect. Nothing supports this. Nadia completes his assignment and brings him her notes, and he praises her work (paragraph 11).",,,"{""ms"": {""selectCount"": 2, ""instruction"": ""Select two answers."", ""solutionExplanation"": ""Nadia starts out resenting Owen's promotion: the lineup feels like losing \""the place where she lived\"" (paragraph 5). By the end, she asks Owen to show her his thinking (paragraph 14), treating him as someone to learn from. She also questions her own style. She \""had always called it discipline,\"" but after seeing Owen's \""fearless\"" games, she \""began to suspect it had another name\"" (paragraph 9), suggesting her caution was really fear of losing.""}}","Jed Levine, Claude",New item.
+ELA-RC-151,RC-P109,Jed Levine,RC,Module 2,RC-SEQ; RC-TXT,Multiple Choice Question,"In this story, an eighth grader on her school's chess team loses her top position to a younger player.
+
+First Board
+
+1 For two years, Nadia Haddad had sat at first board. On the chess team at her middle school in Brooklyn, that meant the first table, the hardest opponent, and the clock that everyone watched. She liked the weight of it. Before every match she lined up her pieces so that each knight faced exactly forward, as if they were soldiers waiting for inspection.
+
+2 Then Owen Park arrived in sixth grade, small and loud and wearing a sweatshirt with a cartoon dinosaur on it. In his first week he beat three seventh graders. In his third week he beat Nadia, in a game so fast and so strange that she spent the whole subway ride home replaying it on her phone, trying to find the moment it had gone wrong.
+
+3 Coach Bekele posted the new lineup on the classroom door the following Monday. OWEN PARK, BOARD 1. NADIA HADDAD, BOARD 2. Nadia read it twice, as though the letters might rearrange themselves if she stared hard enough. They did not.
+
+4 ""It's just a list,"" her friend Kezia said.
+
+5 ""It's not just a list,"" Nadia said. She did not explain, because she did not know how to say that first board had become a kind of address, the place where she lived.
+
+6 It got worse. The next week, Coach Bekele handed her a folder of Owen's tournament games. ""You're my best analyst,"" he said. ""Figure out his weaknesses before the city finals. Other schools will be studying him, and I want us to know first.""
+
+7 Nadia took the folder home and spread the score sheets across her bedroom floor. She expected to find sloppiness. Owen played fast, and fast players made mistakes. At first she found plenty of them: a bishop left unprotected here, a pawn pushed too far there. She circled each one in red with grim satisfaction.
+
+8 But as the evening went on, she noticed something else. Owen's mistakes did not seem to bother him. After losing a piece, he did not retreat into a shell and defend. He attacked. He sent his queen into the middle of the board and dared his opponents to deal with it, and more often than not they flinched. His losses were spectacular, but so were his wins, and there were many more wins.
+
+9 Nadia sat back against her bed. She thought of her own games: the careful walls of pawns, the knights tucked safely at home, the draws she had accepted when she was ahead because a draw could not hurt her ranking. She had always called it discipline. Looking at Owen's games, scattered and fearless across the carpet, she began to suspect it had another name.
+
+10 She did not sleep well. In the morning she brought the folder back with two pages of notes. The first page listed Owen's weaknesses, as she had been asked. The second page was titled, in her neatest handwriting, WHAT I SHOULD STEAL.
+
+11 Coach Bekele read both pages without speaking. Then he looked at her over the top of the paper. ""This second page,"" he said. ""That's the most useful thing anyone's given me all year.""
+
+12 At practice that afternoon, Nadia sat down across from Owen. He grinned at her and bounced a pawn in his palm like a coin he was about to flip.
+
+13 ""Rematch?"" he asked.
+
+14 ""Not exactly,"" she said. ""I want you to show me what you were thinking in your game against Lefferts Academy. Move nine. The queen."" She paused. ""And I'll show you why you shouldn't have left your bishop alone on move six.""
+
+15 Owen considered this with great seriousness, then nodded. They bent over the board together, and for the next hour, the question of who sat at first board seemed to Nadia like a much smaller question than it had been on Monday. It was still there. It still mattered. But it had shrunk to the size of a single square, and the rest of the board was wide open.",How does paragraph 6 contribute to the development of the plot?,It shows that Coach Bekele regrets moving Nadia to second board.,It reveals that Nadia secretly plans to make Owen lose at the city finals.,"It gives Nadia a task that forces her to study Owen's games closely, which leads to her change in thinking.",It explains why Owen plays faster than the other members of the team.,C,"In paragraph 6, Coach Bekele asks Nadia to ""Figure out his weaknesses"" and hands her a folder of Owen's games. Nadia sees this as making things worse (""It got worse""), but the assignment forces her to study Owen's games closely. That close study is what leads to her realization in paragraphs 8 and 9 and her change at the end.","Students who take ""It got worse"" at face value may think paragraph 6 just adds another insult. Its real job in the plot is to put Owen's games in front of Nadia, which makes her change possible.",,Provisional,,,,"Incorrect. Coach Bekele calls Nadia ""my best analyst,"" but nothing suggests he regrets the new lineup. He asks her to help the team prepare for the finals.","Incorrect. The coach wants the team to know Owen's weaknesses because ""Other schools will be studying him."" Nadia never plans to hurt Owen's chances.","Correct. In paragraph 6, Coach Bekele asks Nadia to ""Figure out his weaknesses"" and hands her a folder of Owen's games. Nadia sees this as making things worse (""It got worse""), but the assignment forces her to study Owen's games closely. That close study is what leads to her realization in paragraphs 8 and 9 and her change at the end.",Incorrect. Paragraph 6 does not explain Owen's speed. It sets up Nadia's assignment.,,,,,,"Jed Levine, Claude",New item.
+ELA-RC-152,RC-P109,Jed Levine,RC,Module 1,RC-VOC,Multiple Choice Question,"In this story, an eighth grader on her school's chess team loses her top position to a younger player.
+
+First Board
+
+1 For two years, Nadia Haddad had sat at first board. On the chess team at her middle school in Brooklyn, that meant the first table, the hardest opponent, and the clock that everyone watched. She liked the weight of it. Before every match she lined up her pieces so that each knight faced exactly forward, as if they were soldiers waiting for inspection.
+
+2 Then Owen Park arrived in sixth grade, small and loud and wearing a sweatshirt with a cartoon dinosaur on it. In his first week he beat three seventh graders. In his third week he beat Nadia, in a game so fast and so strange that she spent the whole subway ride home replaying it on her phone, trying to find the moment it had gone wrong.
+
+3 Coach Bekele posted the new lineup on the classroom door the following Monday. OWEN PARK, BOARD 1. NADIA HADDAD, BOARD 2. Nadia read it twice, as though the letters might rearrange themselves if she stared hard enough. They did not.
+
+4 ""It's just a list,"" her friend Kezia said.
+
+5 ""It's not just a list,"" Nadia said. She did not explain, because she did not know how to say that first board had become a kind of address, the place where she lived.
+
+6 It got worse. The next week, Coach Bekele handed her a folder of Owen's tournament games. ""You're my best analyst,"" he said. ""Figure out his weaknesses before the city finals. Other schools will be studying him, and I want us to know first.""
+
+7 Nadia took the folder home and spread the score sheets across her bedroom floor. She expected to find sloppiness. Owen played fast, and fast players made mistakes. At first she found plenty of them: a bishop left unprotected here, a pawn pushed too far there. She circled each one in red with grim satisfaction.
+
+8 But as the evening went on, she noticed something else. Owen's mistakes did not seem to bother him. After losing a piece, he did not retreat into a shell and defend. He attacked. He sent his queen into the middle of the board and dared his opponents to deal with it, and more often than not they flinched. His losses were spectacular, but so were his wins, and there were many more wins.
+
+9 Nadia sat back against her bed. She thought of her own games: the careful walls of pawns, the knights tucked safely at home, the draws she had accepted when she was ahead because a draw could not hurt her ranking. She had always called it discipline. Looking at Owen's games, scattered and fearless across the carpet, she began to suspect it had another name.
+
+10 She did not sleep well. In the morning she brought the folder back with two pages of notes. The first page listed Owen's weaknesses, as she had been asked. The second page was titled, in her neatest handwriting, WHAT I SHOULD STEAL.
+
+11 Coach Bekele read both pages without speaking. Then he looked at her over the top of the paper. ""This second page,"" he said. ""That's the most useful thing anyone's given me all year.""
+
+12 At practice that afternoon, Nadia sat down across from Owen. He grinned at her and bounced a pawn in his palm like a coin he was about to flip.
+
+13 ""Rematch?"" he asked.
+
+14 ""Not exactly,"" she said. ""I want you to show me what you were thinking in your game against Lefferts Academy. Move nine. The queen."" She paused. ""And I'll show you why you shouldn't have left your bishop alone on move six.""
+
+15 Owen considered this with great seriousness, then nodded. They bent over the board together, and for the next hour, the question of who sat at first board seemed to Nadia like a much smaller question than it had been on Monday. It was still there. It still mattered. But it had shrunk to the size of a single square, and the rest of the board was wide open.","Read this sentence from paragraph 5.
+
+""She did not explain, because she did not know how to say that first board had become a kind of address, the place where she lived.""
+
+What does this description suggest about first board?",It had become an important part of how Nadia saw herself.,It was located so close to her home that she could walk there.,It was where she spent so much time that school felt like her home.,It was a position she was ready to give up to a younger player.,A,"An address is where a person lives. Calling first board ""a kind of address, the place where she lived"" suggests that the position had become part of who Nadia is, not just a spot on a list. That is why she insists ""It's not just a list"" (paragraph 5).","Two choices read ""address"" and ""the place where she lived"" as real places. The phrase is a metaphor. Strong readers ask what the comparison says about Nadia's feelings.",,Provisional,,,,"Correct. An address is where a person lives. Calling first board ""a kind of address, the place where she lived"" suggests that the position had become part of who Nadia is, not just a spot on a list. That is why she insists ""It's not just a list"" (paragraph 5).","Incorrect. This reads ""address"" literally. First board is a position on the team, not a physical place near her home.","Incorrect. This is another literal reading. The sentence is about what the position means to her, not how many hours she spends at school.","Incorrect. This reverses her attitude. She insists ""It's not just a list"" because the position means so much to her.",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-153,RC-P109,Jed Levine,RC,Module 2,RC-EV,Multiple Choice Question,"In this story, an eighth grader on her school's chess team loses her top position to a younger player.
+
+First Board
+
+1 For two years, Nadia Haddad had sat at first board. On the chess team at her middle school in Brooklyn, that meant the first table, the hardest opponent, and the clock that everyone watched. She liked the weight of it. Before every match she lined up her pieces so that each knight faced exactly forward, as if they were soldiers waiting for inspection.
+
+2 Then Owen Park arrived in sixth grade, small and loud and wearing a sweatshirt with a cartoon dinosaur on it. In his first week he beat three seventh graders. In his third week he beat Nadia, in a game so fast and so strange that she spent the whole subway ride home replaying it on her phone, trying to find the moment it had gone wrong.
+
+3 Coach Bekele posted the new lineup on the classroom door the following Monday. OWEN PARK, BOARD 1. NADIA HADDAD, BOARD 2. Nadia read it twice, as though the letters might rearrange themselves if she stared hard enough. They did not.
+
+4 ""It's just a list,"" her friend Kezia said.
+
+5 ""It's not just a list,"" Nadia said. She did not explain, because she did not know how to say that first board had become a kind of address, the place where she lived.
+
+6 It got worse. The next week, Coach Bekele handed her a folder of Owen's tournament games. ""You're my best analyst,"" he said. ""Figure out his weaknesses before the city finals. Other schools will be studying him, and I want us to know first.""
+
+7 Nadia took the folder home and spread the score sheets across her bedroom floor. She expected to find sloppiness. Owen played fast, and fast players made mistakes. At first she found plenty of them: a bishop left unprotected here, a pawn pushed too far there. She circled each one in red with grim satisfaction.
+
+8 But as the evening went on, she noticed something else. Owen's mistakes did not seem to bother him. After losing a piece, he did not retreat into a shell and defend. He attacked. He sent his queen into the middle of the board and dared his opponents to deal with it, and more often than not they flinched. His losses were spectacular, but so were his wins, and there were many more wins.
+
+9 Nadia sat back against her bed. She thought of her own games: the careful walls of pawns, the knights tucked safely at home, the draws she had accepted when she was ahead because a draw could not hurt her ranking. She had always called it discipline. Looking at Owen's games, scattered and fearless across the carpet, she began to suspect it had another name.
+
+10 She did not sleep well. In the morning she brought the folder back with two pages of notes. The first page listed Owen's weaknesses, as she had been asked. The second page was titled, in her neatest handwriting, WHAT I SHOULD STEAL.
+
+11 Coach Bekele read both pages without speaking. Then he looked at her over the top of the paper. ""This second page,"" he said. ""That's the most useful thing anyone's given me all year.""
+
+12 At practice that afternoon, Nadia sat down across from Owen. He grinned at her and bounced a pawn in his palm like a coin he was about to flip.
+
+13 ""Rematch?"" he asked.
+
+14 ""Not exactly,"" she said. ""I want you to show me what you were thinking in your game against Lefferts Academy. Move nine. The queen."" She paused. ""And I'll show you why you shouldn't have left your bishop alone on move six.""
+
+15 Owen considered this with great seriousness, then nodded. They bent over the board together, and for the next hour, the question of who sat at first board seemed to Nadia like a much smaller question than it had been on Monday. It was still there. It still mattered. But it had shrunk to the size of a single square, and the rest of the board was wide open.",Which detail from the passage best supports the idea that Nadia's style of play had been too cautious?,"""Before every match she lined up her pieces so that each knight faced exactly forward"" (paragraph 1)","""the draws she had accepted when she was ahead because a draw could not hurt her ranking"" (paragraph 9)","""She circled each one in red with grim satisfaction."" (paragraph 7)","""In his third week he beat Nadia, in a game so fast and so strange"" (paragraph 2)",B,"Paragraph 9 lists ""the draws she had accepted when she was ahead because a draw could not hurt her ranking."" Accepting a tie while winning, only to protect a ranking, is overly cautious play. It is the clearest sign that her ""discipline"" may really be fear of losing.","The knights-lined-up detail is tempting because it shows a careful personality, and students link careful with cautious. But the question is about her play during games. Only the accepted draws show caution at the board.",,Provisional,,,,"Incorrect. This shows that Nadia is neat and orderly before a game, but it says nothing about how cautiously she plays once the game begins.","Correct. Paragraph 9 lists ""the draws she had accepted when she was ahead because a draw could not hurt her ranking."" Accepting a tie while winning, only to protect a ranking, is overly cautious play. It is the clearest sign that her ""discipline"" may really be fear of losing.","Incorrect. This shows Nadia's pleasure in finding Owen's mistakes, not her own style of play.",Incorrect. This describes Owen's style and his win. It does not show that Nadia's play was cautious.,,,,,,"Jed Levine, Claude",New item.
+ELA-RC-154,RC-P109,Jed Levine,RC,Module 1,RC-INF,Multiple Choice Question,"In this story, an eighth grader on her school's chess team loses her top position to a younger player.
+
+First Board
+
+1 For two years, Nadia Haddad had sat at first board. On the chess team at her middle school in Brooklyn, that meant the first table, the hardest opponent, and the clock that everyone watched. She liked the weight of it. Before every match she lined up her pieces so that each knight faced exactly forward, as if they were soldiers waiting for inspection.
+
+2 Then Owen Park arrived in sixth grade, small and loud and wearing a sweatshirt with a cartoon dinosaur on it. In his first week he beat three seventh graders. In his third week he beat Nadia, in a game so fast and so strange that she spent the whole subway ride home replaying it on her phone, trying to find the moment it had gone wrong.
+
+3 Coach Bekele posted the new lineup on the classroom door the following Monday. OWEN PARK, BOARD 1. NADIA HADDAD, BOARD 2. Nadia read it twice, as though the letters might rearrange themselves if she stared hard enough. They did not.
+
+4 ""It's just a list,"" her friend Kezia said.
+
+5 ""It's not just a list,"" Nadia said. She did not explain, because she did not know how to say that first board had become a kind of address, the place where she lived.
+
+6 It got worse. The next week, Coach Bekele handed her a folder of Owen's tournament games. ""You're my best analyst,"" he said. ""Figure out his weaknesses before the city finals. Other schools will be studying him, and I want us to know first.""
+
+7 Nadia took the folder home and spread the score sheets across her bedroom floor. She expected to find sloppiness. Owen played fast, and fast players made mistakes. At first she found plenty of them: a bishop left unprotected here, a pawn pushed too far there. She circled each one in red with grim satisfaction.
+
+8 But as the evening went on, she noticed something else. Owen's mistakes did not seem to bother him. After losing a piece, he did not retreat into a shell and defend. He attacked. He sent his queen into the middle of the board and dared his opponents to deal with it, and more often than not they flinched. His losses were spectacular, but so were his wins, and there were many more wins.
+
+9 Nadia sat back against her bed. She thought of her own games: the careful walls of pawns, the knights tucked safely at home, the draws she had accepted when she was ahead because a draw could not hurt her ranking. She had always called it discipline. Looking at Owen's games, scattered and fearless across the carpet, she began to suspect it had another name.
+
+10 She did not sleep well. In the morning she brought the folder back with two pages of notes. The first page listed Owen's weaknesses, as she had been asked. The second page was titled, in her neatest handwriting, WHAT I SHOULD STEAL.
+
+11 Coach Bekele read both pages without speaking. Then he looked at her over the top of the paper. ""This second page,"" he said. ""That's the most useful thing anyone's given me all year.""
+
+12 At practice that afternoon, Nadia sat down across from Owen. He grinned at her and bounced a pawn in his palm like a coin he was about to flip.
+
+13 ""Rematch?"" he asked.
+
+14 ""Not exactly,"" she said. ""I want you to show me what you were thinking in your game against Lefferts Academy. Move nine. The queen."" She paused. ""And I'll show you why you shouldn't have left your bishop alone on move six.""
+
+15 Owen considered this with great seriousness, then nodded. They bent over the board together, and for the next hour, the question of who sat at first board seemed to Nadia like a much smaller question than it had been on Monday. It was still there. It still mattered. But it had shrunk to the size of a single square, and the rest of the board was wide open.","In paragraph 10, Nadia titles the second page of her notes ""WHAT I SHOULD STEAL."" This title mainly suggests that Nadia",plans to take Owen's score sheets and claim his wins as her own.,wants Coach Bekele to believe that Owen has been cheating.,is willing to borrow ideas from Owen's bold style to improve her own game.,has given up on finding any weaknesses in Owen's play.,C,"Nadia's first page lists Owen's weaknesses, but her second page is titled ""WHAT I SHOULD STEAL."" Here ""steal"" means borrow ideas. After seeing that Owen attacks fearlessly and wins far more than he loses, Nadia is willing to adopt parts of his bold style. In paragraph 14 she asks him to explain his thinking.","The literal reading of ""steal"" is the trap. Students should ask what Nadia wants to take from Owen: his fearless way of playing, not his property.",,Provisional,,,,"Incorrect. This reads ""steal"" literally. Nadia returns the folder to Coach Bekele, and nothing suggests she wants credit for Owen's games.","Incorrect. Nothing in the passage suggests cheating. The coach calls the page ""the most useful thing anyone's given me all year,"" which would not fit an accusation.","Correct. Nadia's first page lists Owen's weaknesses, but her second page is titled ""WHAT I SHOULD STEAL."" Here ""steal"" means borrow ideas. After seeing that Owen attacks fearlessly and wins far more than he loses, Nadia is willing to adopt parts of his bold style. In paragraph 14 she asks him to explain his thinking.","Incorrect. Her first page ""listed Owen's weaknesses, as she had been asked."" She found weaknesses and also found things worth learning.",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-155,RC-P110,Jed Levine,RC,Module 1,RC-THE,Multiple Choice Question,"In this story, a girl records her grandmother's favorite story for a school project. ""Lola"" is a Filipino word for grandmother.
+
+The Ferry Story
+
+1 Every Thanksgiving, after the pie and before the dishes, my grandmother told the ferry story. My cousins and I could recite it along with her, and when we were younger, we sometimes did, which made Lola pretend to be offended.
+
+2 The story went like this. In 1971, Lola arrived in New York from Manila with one suitcase and eleven dollars. On her first morning, she rode the Staten Island Ferry, because it was the only thing in the city she could afford. Halfway across the harbor, the Statue of Liberty appeared out of the fog, and a stranger, an old man in a fishing cap, turned to her and said, ""Well. You made it."" That was the whole story. It did not have an ending, exactly, but Lola always told it as though it did.
+
+3 So when Ms. Adeyemi assigned an oral history project, I chose Lola because it seemed easy. I already knew the story. All I had to do was record it, type it up, and add a few paragraphs about immigration in the 1970s.
+
+4 I set my phone on the kitchen table between us. Lola folded her hands and told the story, and I listened with half my attention, already planning my introduction.
+
+5 That night, typing up the recording, I noticed the problem. In this version, the morning was not foggy. It was ""bright, so bright the water hurt my eyes."" She had not had eleven dollars, but ""four dollars and a bus token."" And the old man in the fishing cap had become a woman with a baby, who said, ""Welcome home.""
+
+6 I played it back three times. Then I found a video my uncle had taken at Thanksgiving two years ago. Fog. Eleven dollars. Fishing cap. ""Well. You made it.""
+
+7 My stomach sank. My whole project depended on the story being true, and now I had two stories, and they could not both be. I imagined someone in class asking which version was real, and me standing there with nothing to say.
+
+8 The next afternoon I sat across from Lola again, without the phone. ""Your story changed,"" I said. I tried to say it gently, but it came out sounding like an accusation.
+
+9 She did not look surprised. She poured two cups of tea. ""Of course it did,"" she said. ""Who was I telling it to?""
+
+10 I didn't understand, and she could see that. ""At Thanksgiving,"" she said, ""I tell it to your uncles, who worry too much about money. So there is very little money, and an old man who tells me I made it, because making it is what they need to hear about. Yesterday I told it to you. You are starting high school in the fall. You are nervous, though you don't say so. So I gave you a bright morning and a woman who said welcome.""
+
+11 ""But which one really happened?"" I asked.
+
+12 Lola smiled the way she did when one of us lost at cards and didn't yet know why. ""Both,"" she said. ""Neither. I was nineteen and frightened, and I don't remember the weather. What I remember is that someone on that boat was kind to me, and that I decided, right there in the middle of the water, that I would stay.""
+
+13 I sat with that for a long time. The tea went cold between my hands.
+
+14 In the end, I typed up both versions and set them side by side. Underneath, where my paragraphs about the 1970s were supposed to go, I wrote about a story that bends to fit whoever is listening, the way a river bends to fit its banks without ever stopping being a river. Ms. Adeyemi gave me an A, but that was not the part I kept thinking about. I kept thinking about the bright water, and the woman with the baby, and the fact that my grandmother had known I was nervous before I told anyone.",Which statement best expresses a theme of the passage?,Stories that change over time are lies and cannot be trusted.,A family story can hold an important truth even when its details change.,Arriving in a new country can be a frightening experience.,Older people remember the past more clearly than young people expect.,B,"The two versions of Lola's story have different weather, money, and strangers, yet Lola says the important part never changes: ""someone on that boat was kind to me, and that I decided, right there in the middle of the water, that I would stay"" (paragraph 12). The narrator ends by describing a story that ""bends to fit whoever is listening"" without ""ever stopping being a river"" (paragraph 14). The story's truth survives its changing details.","The ""frightening experience"" choice is tempting because it is true in the story. A theme has to explain why the story was told. This one is about what makes a story true, not about immigration in general.",,Provisional,,,,"Incorrect. This is the narrator's fear in paragraph 7, not the lesson of the story. By the end she sees the changing story as meaningful, not false.","Correct. The two versions of Lola's story have different weather, money, and strangers, yet Lola says the important part never changes: ""someone on that boat was kind to me, and that I decided, right there in the middle of the water, that I would stay"" (paragraph 12). The narrator ends by describing a story that ""bends to fit whoever is listening"" without ""ever stopping being a river"" (paragraph 14). The story's truth survives its changing details.","Incorrect. Lola does say she was ""nineteen and frightened"" (paragraph 12), but this is a true detail, not the message of the whole passage.","Incorrect. This reverses what Lola says: ""I don't remember the weather"" (paragraph 12).",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-156,RC-P110,Jed Levine,RC,Module 2,RC-ANL,Multiple Choice Question,"In this story, a girl records her grandmother's favorite story for a school project. ""Lola"" is a Filipino word for grandmother.
+
+The Ferry Story
+
+1 Every Thanksgiving, after the pie and before the dishes, my grandmother told the ferry story. My cousins and I could recite it along with her, and when we were younger, we sometimes did, which made Lola pretend to be offended.
+
+2 The story went like this. In 1971, Lola arrived in New York from Manila with one suitcase and eleven dollars. On her first morning, she rode the Staten Island Ferry, because it was the only thing in the city she could afford. Halfway across the harbor, the Statue of Liberty appeared out of the fog, and a stranger, an old man in a fishing cap, turned to her and said, ""Well. You made it."" That was the whole story. It did not have an ending, exactly, but Lola always told it as though it did.
+
+3 So when Ms. Adeyemi assigned an oral history project, I chose Lola because it seemed easy. I already knew the story. All I had to do was record it, type it up, and add a few paragraphs about immigration in the 1970s.
+
+4 I set my phone on the kitchen table between us. Lola folded her hands and told the story, and I listened with half my attention, already planning my introduction.
+
+5 That night, typing up the recording, I noticed the problem. In this version, the morning was not foggy. It was ""bright, so bright the water hurt my eyes."" She had not had eleven dollars, but ""four dollars and a bus token."" And the old man in the fishing cap had become a woman with a baby, who said, ""Welcome home.""
+
+6 I played it back three times. Then I found a video my uncle had taken at Thanksgiving two years ago. Fog. Eleven dollars. Fishing cap. ""Well. You made it.""
+
+7 My stomach sank. My whole project depended on the story being true, and now I had two stories, and they could not both be. I imagined someone in class asking which version was real, and me standing there with nothing to say.
+
+8 The next afternoon I sat across from Lola again, without the phone. ""Your story changed,"" I said. I tried to say it gently, but it came out sounding like an accusation.
+
+9 She did not look surprised. She poured two cups of tea. ""Of course it did,"" she said. ""Who was I telling it to?""
+
+10 I didn't understand, and she could see that. ""At Thanksgiving,"" she said, ""I tell it to your uncles, who worry too much about money. So there is very little money, and an old man who tells me I made it, because making it is what they need to hear about. Yesterday I told it to you. You are starting high school in the fall. You are nervous, though you don't say so. So I gave you a bright morning and a woman who said welcome.""
+
+11 ""But which one really happened?"" I asked.
+
+12 Lola smiled the way she did when one of us lost at cards and didn't yet know why. ""Both,"" she said. ""Neither. I was nineteen and frightened, and I don't remember the weather. What I remember is that someone on that boat was kind to me, and that I decided, right there in the middle of the water, that I would stay.""
+
+13 I sat with that for a long time. The tea went cold between my hands.
+
+14 In the end, I typed up both versions and set them side by side. Underneath, where my paragraphs about the 1970s were supposed to go, I wrote about a story that bends to fit whoever is listening, the way a river bends to fit its banks without ever stopping being a river. Ms. Adeyemi gave me an A, but that was not the part I kept thinking about. I kept thinking about the bright water, and the woman with the baby, and the fact that my grandmother had known I was nervous before I told anyone.",Which statement best describes how the narrator's view of the ferry story changes?,"She first admires the story, but she comes to suspect that her grandmother invented the entire trip.","She first finds the story boring, but she comes to resent her grandmother for changing it.","She first doubts the story, but she comes to believe that every detail of the Thanksgiving version is accurate.","She first treats it as a familiar set of facts that will make her project easy, but she comes to see it as a gift her grandmother shapes for each listener.",D,"At first the narrator chooses Lola's story ""because it seemed easy"" and listens ""with half my attention"" (paragraphs 3 and 4). She treats it as a set of facts to record. After Lola explains that she shapes the story for each listener, the narrator understands that Lola chose a ""bright morning"" because her granddaughter was nervous (paragraph 10). By the end, the narrator values the story as a gift: her grandmother ""had known I was nervous before I told anyone"" (paragraph 14).","The ""boring, then resentful"" choice is tempting because each half matches a moment in the passage. But it stops too early. The narrator's accusation in paragraph 8 is a middle step, not where she ends up.",,Provisional,,,,"Incorrect. This reverses the ending. Lola confirms that the trip happened and that ""someone on that boat was kind to me"" (paragraph 12). The narrator ends up valuing the story more, not doubting it.","Incorrect. The first half is close, since she listens with ""half my attention"" (paragraph 4). But her resentment in paragraph 8 fades. She ends up thinking about her grandmother's kindness, not her own anger.","Incorrect. She never decides that one version is the accurate one. She types up ""both versions"" side by side (paragraph 14), and Lola says the answer is ""Both"" and ""Neither"" (paragraph 12).","Correct. At first the narrator chooses Lola's story ""because it seemed easy"" and listens ""with half my attention"" (paragraphs 3 and 4). She treats it as a set of facts to record. After Lola explains that she shapes the story for each listener, the narrator understands that Lola chose a ""bright morning"" because her granddaughter was nervous (paragraph 10). By the end, the narrator values the story as a gift: her grandmother ""had known I was nervous before I told anyone"" (paragraph 14).",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-157,RC-P110,Jed Levine,RC,Module 1,RC-SEQ,Drag and Drop,"In this story, a girl records her grandmother's favorite story for a school project. ""Lola"" is a Filipino word for grandmother.
+
+The Ferry Story
+
+1 Every Thanksgiving, after the pie and before the dishes, my grandmother told the ferry story. My cousins and I could recite it along with her, and when we were younger, we sometimes did, which made Lola pretend to be offended.
+
+2 The story went like this. In 1971, Lola arrived in New York from Manila with one suitcase and eleven dollars. On her first morning, she rode the Staten Island Ferry, because it was the only thing in the city she could afford. Halfway across the harbor, the Statue of Liberty appeared out of the fog, and a stranger, an old man in a fishing cap, turned to her and said, ""Well. You made it."" That was the whole story. It did not have an ending, exactly, but Lola always told it as though it did.
+
+3 So when Ms. Adeyemi assigned an oral history project, I chose Lola because it seemed easy. I already knew the story. All I had to do was record it, type it up, and add a few paragraphs about immigration in the 1970s.
+
+4 I set my phone on the kitchen table between us. Lola folded her hands and told the story, and I listened with half my attention, already planning my introduction.
+
+5 That night, typing up the recording, I noticed the problem. In this version, the morning was not foggy. It was ""bright, so bright the water hurt my eyes."" She had not had eleven dollars, but ""four dollars and a bus token."" And the old man in the fishing cap had become a woman with a baby, who said, ""Welcome home.""
+
+6 I played it back three times. Then I found a video my uncle had taken at Thanksgiving two years ago. Fog. Eleven dollars. Fishing cap. ""Well. You made it.""
+
+7 My stomach sank. My whole project depended on the story being true, and now I had two stories, and they could not both be. I imagined someone in class asking which version was real, and me standing there with nothing to say.
+
+8 The next afternoon I sat across from Lola again, without the phone. ""Your story changed,"" I said. I tried to say it gently, but it came out sounding like an accusation.
+
+9 She did not look surprised. She poured two cups of tea. ""Of course it did,"" she said. ""Who was I telling it to?""
+
+10 I didn't understand, and she could see that. ""At Thanksgiving,"" she said, ""I tell it to your uncles, who worry too much about money. So there is very little money, and an old man who tells me I made it, because making it is what they need to hear about. Yesterday I told it to you. You are starting high school in the fall. You are nervous, though you don't say so. So I gave you a bright morning and a woman who said welcome.""
+
+11 ""But which one really happened?"" I asked.
+
+12 Lola smiled the way she did when one of us lost at cards and didn't yet know why. ""Both,"" she said. ""Neither. I was nineteen and frightened, and I don't remember the weather. What I remember is that someone on that boat was kind to me, and that I decided, right there in the middle of the water, that I would stay.""
+
+13 I sat with that for a long time. The tea went cold between my hands.
+
+14 In the end, I typed up both versions and set them side by side. Underneath, where my paragraphs about the 1970s were supposed to go, I wrote about a story that bends to fit whoever is listening, the way a river bends to fit its banks without ever stopping being a river. Ms. Adeyemi gave me an A, but that was not the part I kept thinking about. I kept thinking about the bright water, and the woman with the baby, and the fact that my grandmother had known I was nervous before I told anyone.",Put the events from the passage in the order in which they happen.,,,,,See TEI Spec,"The narrator records Lola at the kitchen table (paragraph 4). That night, typing up the recording, she notices new details (paragraph 5). Then she finds her uncle's video of the older version (paragraph 6). The next afternoon, Lola explains that she shapes the story for whoever is listening (paragraph 10).",Students sometimes place the classroom presentation in the sequence because paragraph 7 describes it vividly. The narrator only imagines it. An event that a character pictures has not happened in the plot.,,Provisional,,,,,,,,,,,,"{""dnd"": {""instruction"": ""Move one event into each box. Not all events will be used."", ""pool"": [{""id"": ""e1"", ""text"": ""The narrator records Lola telling the story at the kitchen table."", ""explanation"": ""First. In paragraph 4 the narrator sets her phone on the table and Lola tells the story.""}, {""id"": ""e2"", ""text"": ""The narrator notices new details while typing up the recording."", ""explanation"": ""Second. In paragraph 5, \""That night, typing up the recording, I noticed the problem.\""""}, {""id"": ""e3"", ""text"": ""The narrator listens to the version in her uncle's Thanksgiving video."", ""explanation"": ""Third. In paragraph 6, after playing her recording back, she finds the video from two years ago.""}, {""id"": ""e4"", ""text"": ""Lola explains that she shapes the story for whoever is listening."", ""explanation"": ""Fourth. This happens \""The next afternoon\"" (paragraph 8), when Lola explains her choices in paragraph 10.""}, {""id"": ""e5"", ""text"": ""The narrator presents both versions to her class and answers questions."", ""explanation"": ""Not used. In paragraph 7 the narrator only imagines a classmate asking which version is real. The passage never shows her presenting to the class.""}, {""id"": ""e6"", ""text"": ""Lola refuses to let the narrator record the story."", ""explanation"": ""Not used. Lola agrees to be recorded. In paragraph 4 she \""folded her hands and told the story.\""""}], ""zones"": [{""id"": ""z1"", ""prompt"": ""First""}, {""id"": ""z2"", ""prompt"": ""Second""}, {""id"": ""z3"", ""prompt"": ""Third""}, {""id"": ""z4"", ""prompt"": ""Fourth""}], ""correctMapping"": {""z1"": ""e1"", ""z2"": ""e2"", ""z3"": ""e3"", ""z4"": ""e4""}, ""solutionExplanation"": ""The narrator records Lola at the kitchen table (paragraph 4). That night, typing up the recording, she notices new details (paragraph 5). Then she finds her uncle's video of the older version (paragraph 6). The next afternoon, Lola explains that she shapes the story for whoever is listening (paragraph 10).""}}","Jed Levine, Claude",New item.
+ELA-RC-158,RC-P110,Jed Levine,RC,Module 2,RC-VOC,Multiple Choice Question,"In this story, a girl records her grandmother's favorite story for a school project. ""Lola"" is a Filipino word for grandmother.
+
+The Ferry Story
+
+1 Every Thanksgiving, after the pie and before the dishes, my grandmother told the ferry story. My cousins and I could recite it along with her, and when we were younger, we sometimes did, which made Lola pretend to be offended.
+
+2 The story went like this. In 1971, Lola arrived in New York from Manila with one suitcase and eleven dollars. On her first morning, she rode the Staten Island Ferry, because it was the only thing in the city she could afford. Halfway across the harbor, the Statue of Liberty appeared out of the fog, and a stranger, an old man in a fishing cap, turned to her and said, ""Well. You made it."" That was the whole story. It did not have an ending, exactly, but Lola always told it as though it did.
+
+3 So when Ms. Adeyemi assigned an oral history project, I chose Lola because it seemed easy. I already knew the story. All I had to do was record it, type it up, and add a few paragraphs about immigration in the 1970s.
+
+4 I set my phone on the kitchen table between us. Lola folded her hands and told the story, and I listened with half my attention, already planning my introduction.
+
+5 That night, typing up the recording, I noticed the problem. In this version, the morning was not foggy. It was ""bright, so bright the water hurt my eyes."" She had not had eleven dollars, but ""four dollars and a bus token."" And the old man in the fishing cap had become a woman with a baby, who said, ""Welcome home.""
+
+6 I played it back three times. Then I found a video my uncle had taken at Thanksgiving two years ago. Fog. Eleven dollars. Fishing cap. ""Well. You made it.""
+
+7 My stomach sank. My whole project depended on the story being true, and now I had two stories, and they could not both be. I imagined someone in class asking which version was real, and me standing there with nothing to say.
+
+8 The next afternoon I sat across from Lola again, without the phone. ""Your story changed,"" I said. I tried to say it gently, but it came out sounding like an accusation.
+
+9 She did not look surprised. She poured two cups of tea. ""Of course it did,"" she said. ""Who was I telling it to?""
+
+10 I didn't understand, and she could see that. ""At Thanksgiving,"" she said, ""I tell it to your uncles, who worry too much about money. So there is very little money, and an old man who tells me I made it, because making it is what they need to hear about. Yesterday I told it to you. You are starting high school in the fall. You are nervous, though you don't say so. So I gave you a bright morning and a woman who said welcome.""
+
+11 ""But which one really happened?"" I asked.
+
+12 Lola smiled the way she did when one of us lost at cards and didn't yet know why. ""Both,"" she said. ""Neither. I was nineteen and frightened, and I don't remember the weather. What I remember is that someone on that boat was kind to me, and that I decided, right there in the middle of the water, that I would stay.""
+
+13 I sat with that for a long time. The tea went cold between my hands.
+
+14 In the end, I typed up both versions and set them side by side. Underneath, where my paragraphs about the 1970s were supposed to go, I wrote about a story that bends to fit whoever is listening, the way a river bends to fit its banks without ever stopping being a river. Ms. Adeyemi gave me an A, but that was not the part I kept thinking about. I kept thinking about the bright water, and the woman with the baby, and the fact that my grandmother had known I was nervous before I told anyone.","Read this sentence from paragraph 14.
+
+""Underneath, where my paragraphs about the 1970s were supposed to go, I wrote about a story that bends to fit whoever is listening, the way a river bends to fit its banks without ever stopping being a river.""
+
+What does the comparison to a river suggest about Lola's story?",It changes its details to suit each listener while keeping the same essential meaning.,It becomes weaker and less clear each time Lola tells it.,It is mostly about the water Lola crossed on the ferry.,"It is impossible to control, like a river that floods its banks.",A,"A river changes its shape to follow its banks, but it is still the same river. The narrator compares Lola's story to this: it ""bends to fit whoever is listening"" by changing details like the weather and the stranger, but its core, that someone was kind and Lola chose to stay, does not change.","The flooding choice tempts students who picture a river as wild and powerful. The sentence describes a river fitting itself to its banks. That calm, purposeful bending matches how Lola chooses details for each listener.",,Provisional,,,,"Correct. A river changes its shape to follow its banks, but it is still the same river. The narrator compares Lola's story to this: it ""bends to fit whoever is listening"" by changing details like the weather and the stranger, but its core, that someone was kind and Lola chose to stay, does not change.","Incorrect. The river image stresses that the story never stops ""being a river."" Nothing suggests the story fades or weakens.","Incorrect. This is a literal reading. The ferry crossed water, but the river comparison describes how the story changes, not what it is about.","Incorrect. The sentence describes a river that ""bends to fit its banks,"" not one that floods them. Lola shapes each telling on purpose.",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-159,RC-P110,Jed Levine,RC,Module 2,RC-EV,Multiple Choice Question,"In this story, a girl records her grandmother's favorite story for a school project. ""Lola"" is a Filipino word for grandmother.
+
+The Ferry Story
+
+1 Every Thanksgiving, after the pie and before the dishes, my grandmother told the ferry story. My cousins and I could recite it along with her, and when we were younger, we sometimes did, which made Lola pretend to be offended.
+
+2 The story went like this. In 1971, Lola arrived in New York from Manila with one suitcase and eleven dollars. On her first morning, she rode the Staten Island Ferry, because it was the only thing in the city she could afford. Halfway across the harbor, the Statue of Liberty appeared out of the fog, and a stranger, an old man in a fishing cap, turned to her and said, ""Well. You made it."" That was the whole story. It did not have an ending, exactly, but Lola always told it as though it did.
+
+3 So when Ms. Adeyemi assigned an oral history project, I chose Lola because it seemed easy. I already knew the story. All I had to do was record it, type it up, and add a few paragraphs about immigration in the 1970s.
+
+4 I set my phone on the kitchen table between us. Lola folded her hands and told the story, and I listened with half my attention, already planning my introduction.
+
+5 That night, typing up the recording, I noticed the problem. In this version, the morning was not foggy. It was ""bright, so bright the water hurt my eyes."" She had not had eleven dollars, but ""four dollars and a bus token."" And the old man in the fishing cap had become a woman with a baby, who said, ""Welcome home.""
+
+6 I played it back three times. Then I found a video my uncle had taken at Thanksgiving two years ago. Fog. Eleven dollars. Fishing cap. ""Well. You made it.""
+
+7 My stomach sank. My whole project depended on the story being true, and now I had two stories, and they could not both be. I imagined someone in class asking which version was real, and me standing there with nothing to say.
+
+8 The next afternoon I sat across from Lola again, without the phone. ""Your story changed,"" I said. I tried to say it gently, but it came out sounding like an accusation.
+
+9 She did not look surprised. She poured two cups of tea. ""Of course it did,"" she said. ""Who was I telling it to?""
+
+10 I didn't understand, and she could see that. ""At Thanksgiving,"" she said, ""I tell it to your uncles, who worry too much about money. So there is very little money, and an old man who tells me I made it, because making it is what they need to hear about. Yesterday I told it to you. You are starting high school in the fall. You are nervous, though you don't say so. So I gave you a bright morning and a woman who said welcome.""
+
+11 ""But which one really happened?"" I asked.
+
+12 Lola smiled the way she did when one of us lost at cards and didn't yet know why. ""Both,"" she said. ""Neither. I was nineteen and frightened, and I don't remember the weather. What I remember is that someone on that boat was kind to me, and that I decided, right there in the middle of the water, that I would stay.""
+
+13 I sat with that for a long time. The tea went cold between my hands.
+
+14 In the end, I typed up both versions and set them side by side. Underneath, where my paragraphs about the 1970s were supposed to go, I wrote about a story that bends to fit whoever is listening, the way a river bends to fit its banks without ever stopping being a river. Ms. Adeyemi gave me an A, but that was not the part I kept thinking about. I kept thinking about the bright water, and the woman with the baby, and the fact that my grandmother had known I was nervous before I told anyone.",Which sentence from the passage best supports the idea that Lola changes her story to fit what her listener needs?,"""I was nineteen and frightened, and I don't remember the weather."" (paragraph 12)","""She did not look surprised."" (paragraph 9)","""You are nervous, though you don't say so. So I gave you a bright morning and a woman who said welcome."" (paragraph 10)","""Every Thanksgiving, after the pie and before the dishes, my grandmother told the ferry story."" (paragraph 1)",C,"In paragraph 10 Lola explains why the narrator heard a different version: ""You are nervous, though you don't say so. So I gave you a bright morning and a woman who said welcome."" The word ""So"" connects the listener's need (nervousness) to Lola's choice of details. This directly shows her fitting the story to the listener.","The ""I don't remember the weather"" quotation is the strongest trap. It is close in topic, since it explains why the details change. But the claim is about fitting the listener's needs, and only the paragraph 10 quotation connects a listener to a chosen detail.",,Provisional,,,,"Incorrect. This explains why the details can vary, since Lola does not remember them. It does not show that she chooses details based on her listener.","Incorrect. This shows that Lola expected the question, but it does not explain how or why she changes the story.","Correct. In paragraph 10 Lola explains why the narrator heard a different version: ""You are nervous, though you don't say so. So I gave you a bright morning and a woman who said welcome."" The word ""So"" connects the listener's need (nervousness) to Lola's choice of details. This directly shows her fitting the story to the listener.","Incorrect. This shows that the story is a family tradition, not that Lola adjusts it for different listeners.",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-160,RC-P110,Jed Levine,RC,Module 1,RC-INF,Multiple Choice Question,"In this story, a girl records her grandmother's favorite story for a school project. ""Lola"" is a Filipino word for grandmother.
+
+The Ferry Story
+
+1 Every Thanksgiving, after the pie and before the dishes, my grandmother told the ferry story. My cousins and I could recite it along with her, and when we were younger, we sometimes did, which made Lola pretend to be offended.
+
+2 The story went like this. In 1971, Lola arrived in New York from Manila with one suitcase and eleven dollars. On her first morning, she rode the Staten Island Ferry, because it was the only thing in the city she could afford. Halfway across the harbor, the Statue of Liberty appeared out of the fog, and a stranger, an old man in a fishing cap, turned to her and said, ""Well. You made it."" That was the whole story. It did not have an ending, exactly, but Lola always told it as though it did.
+
+3 So when Ms. Adeyemi assigned an oral history project, I chose Lola because it seemed easy. I already knew the story. All I had to do was record it, type it up, and add a few paragraphs about immigration in the 1970s.
+
+4 I set my phone on the kitchen table between us. Lola folded her hands and told the story, and I listened with half my attention, already planning my introduction.
+
+5 That night, typing up the recording, I noticed the problem. In this version, the morning was not foggy. It was ""bright, so bright the water hurt my eyes."" She had not had eleven dollars, but ""four dollars and a bus token."" And the old man in the fishing cap had become a woman with a baby, who said, ""Welcome home.""
+
+6 I played it back three times. Then I found a video my uncle had taken at Thanksgiving two years ago. Fog. Eleven dollars. Fishing cap. ""Well. You made it.""
+
+7 My stomach sank. My whole project depended on the story being true, and now I had two stories, and they could not both be. I imagined someone in class asking which version was real, and me standing there with nothing to say.
+
+8 The next afternoon I sat across from Lola again, without the phone. ""Your story changed,"" I said. I tried to say it gently, but it came out sounding like an accusation.
+
+9 She did not look surprised. She poured two cups of tea. ""Of course it did,"" she said. ""Who was I telling it to?""
+
+10 I didn't understand, and she could see that. ""At Thanksgiving,"" she said, ""I tell it to your uncles, who worry too much about money. So there is very little money, and an old man who tells me I made it, because making it is what they need to hear about. Yesterday I told it to you. You are starting high school in the fall. You are nervous, though you don't say so. So I gave you a bright morning and a woman who said welcome.""
+
+11 ""But which one really happened?"" I asked.
+
+12 Lola smiled the way she did when one of us lost at cards and didn't yet know why. ""Both,"" she said. ""Neither. I was nineteen and frightened, and I don't remember the weather. What I remember is that someone on that boat was kind to me, and that I decided, right there in the middle of the water, that I would stay.""
+
+13 I sat with that for a long time. The tea went cold between my hands.
+
+14 In the end, I typed up both versions and set them side by side. Underneath, where my paragraphs about the 1970s were supposed to go, I wrote about a story that bends to fit whoever is listening, the way a river bends to fit its banks without ever stopping being a river. Ms. Adeyemi gave me an A, but that was not the part I kept thinking about. I kept thinking about the bright water, and the woman with the baby, and the fact that my grandmother had known I was nervous before I told anyone.","In paragraph 7, the narrator's stomach sinks mainly because she",suspects that her grandmother is becoming ill and forgetting things.,realizes that she accidentally deleted part of the recording.,is upset that her uncle recorded the story without asking permission.,worries that her project will fall apart if she cannot say which version of the story is true.,D,"Paragraph 7 gives the reason directly after ""My stomach sank"": ""My whole project depended on the story being true, and now I had two stories, and they could not both be."" She then imagines a classmate asking which version was real and having ""nothing to say."" She is worried that her project will fall apart.","The illness choice tempts students who bring in outside assumptions about grandparents and memory. The passage states the narrator's reason in the very next sentence: her project ""depended on the story being true.""",,Provisional,,,,"Incorrect. Nothing in paragraph 7 mentions illness. The narrator's worry is about her project, as the next sentence explains.","Incorrect. The recording is complete. She ""played it back three times"" in paragraph 6.",Incorrect. The narrator uses her uncle's video to compare versions. She never objects to it.,"Correct. Paragraph 7 gives the reason directly after ""My stomach sank"": ""My whole project depended on the story being true, and now I had two stories, and they could not both be."" She then imagines a classmate asking which version was real and having ""nothing to say."" She is worried that her project will fall apart.",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-161,RC-P111,Jed Levine,RC,Module 1,RC-THE,Multiple Choice Question,"In this story, a teenager spends the summer as an apprentice in a furniture maker's shop in the Bronx.
+
+What Hurry Costs
+
+1 For the first three weeks of my apprenticeship, Mr. Albescu did not let me cut a single board. I swept. I sorted screws into coffee cans by size. Mostly, I sanded. He would hand me a plank and a block wrapped in sandpaper, say, ""Until it feels like the inside of your wrist,"" and walk away.
+
+2 The shop on Webster Avenue smelled of sawdust and linseed oil and the coffee Mr. Albescu brewed so strong it could have stripped paint. Along the back wall hung his tools, each in its own outline traced in black marker, so that an empty space shouted whenever something was missing. In the middle of the room stood the table saw, which I was not allowed to touch.
+
+3 I had taken the job because I wanted to build things. My cousin had posted a video of a coffee table he built in a single weekend, and I imagined myself doing the same. Instead I spent my days rubbing the same board back and forth until my arms ached, while the saw sat in the corner like a dog I was forbidden to pet.
+
+4 ""When do I get to make something?"" I finally asked him at the end of the third week.
+
+5 Mr. Albescu ran his thumb along the board I had been sanding and frowned slightly, the way a doctor frowns at an X-ray. ""You are making something,"" he said. ""You are making your hands.""
+
+6 I thought this was the kind of thing old men said to avoid answering questions.
+
+7 The following Monday he was called away to deliver a cabinet in Riverdale. ""Sand the tabletop,"" he told me. ""Nothing else."" The door closed behind him, and the shop went quiet.
+
+8 I lasted about twenty minutes. Then I took a scrap of oak from the pile and marked a line. I had watched him use the saw a hundred times. I knew where his hands went. I switched it on, and the blade woke up with a whine that filled the whole room.
+
+9 The cut wandered. I felt it pull to the left, and when I switched the saw off, the edge of the board curved like a lazy river. Worse, the blade had left a dark burn mark where I had pushed too hard. I stood there with my heart pounding, listening for his truck.
+
+10 I tried to hide it at the bottom of the scrap pile. But when Mr. Albescu came back, he looked once around the shop, the way he always did, and then he walked to the pile and pulled out my board as if it had called his name.
+
+11 I waited for him to shout. Instead he turned the board over in his hands for a long time. Then he walked to a small pine cabinet that had stood in the corner all summer, pulled out its bottom drawer, and set the drawer on the workbench beside my board. The drawer was crooked. Its front sat at a slight angle, and one corner joint gapped open wide enough to slide a coin into.
+
+12 ""My first piece,"" he said. ""I was fifteen. My teacher told me to wait, and I did not wait."" He tapped the gap. ""I keep it so I remember what hurry costs.""
+
+13 I looked at the crooked drawer, and then at the tools on the wall, each one returned to its outline, and for the first time I understood that the patience in this room had not always been there. It had been built, the way you build anything, one slow stroke at a time.
+
+14 He handed me the sanding block. ""The tabletop,"" he said. ""Until it feels like the inside of your wrist.""
+
+15 This time I did not argue. I picked up the block and began, and I tried to feel the wood the way he did, listening with my fingers for the places that were not yet smooth.",Which statement best expresses a theme of the passage?,Young people should never be allowed to use dangerous tools.,True experts are people who have never made serious mistakes.,Online videos make difficult tasks look easier than they are.,"Real skill is built slowly, and mistakes can teach the value of patience.",D,"The narrator wants to skip ahead to building, rushes a cut on the saw, and ruins the board. Mr. Albescu responds by showing the crooked drawer he made as a hurried fifteen-year-old: ""I keep it so I remember what hurry costs"" (paragraph 12). The narrator then understands that patience ""had been built, the way you build anything, one slow stroke at a time"" (paragraph 13). Skill grows slowly, and a mistake can teach that lesson.",The online-video choice tempts students because it is reasonable and appears in the passage. But the video is mentioned once and never returns. A theme has to be developed across the whole story.,,Provisional,,,,"Incorrect. This stretches a detail into a rule. The narrator is not allowed to touch the saw yet, but the story is about learning patience, not a permanent ban on tools.","Incorrect. This reverses the story's point. Mr. Albescu, the expert, keeps his own crooked drawer to remember a serious mistake (paragraph 12).","Incorrect. The cousin's video appears only in paragraph 3 as part of the narrator's expectations. It is a minor detail, not the message of the passage.","Correct. The narrator wants to skip ahead to building, rushes a cut on the saw, and ruins the board. Mr. Albescu responds by showing the crooked drawer he made as a hurried fifteen-year-old: ""I keep it so I remember what hurry costs"" (paragraph 12). The narrator then understands that patience ""had been built, the way you build anything, one slow stroke at a time"" (paragraph 13). Skill grows slowly, and a mistake can teach that lesson.",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-162,RC-P111,Jed Levine,RC,Module 2,RC-ANL,Multiple Choice Question,"In this story, a teenager spends the summer as an apprentice in a furniture maker's shop in the Bronx.
+
+What Hurry Costs
+
+1 For the first three weeks of my apprenticeship, Mr. Albescu did not let me cut a single board. I swept. I sorted screws into coffee cans by size. Mostly, I sanded. He would hand me a plank and a block wrapped in sandpaper, say, ""Until it feels like the inside of your wrist,"" and walk away.
+
+2 The shop on Webster Avenue smelled of sawdust and linseed oil and the coffee Mr. Albescu brewed so strong it could have stripped paint. Along the back wall hung his tools, each in its own outline traced in black marker, so that an empty space shouted whenever something was missing. In the middle of the room stood the table saw, which I was not allowed to touch.
+
+3 I had taken the job because I wanted to build things. My cousin had posted a video of a coffee table he built in a single weekend, and I imagined myself doing the same. Instead I spent my days rubbing the same board back and forth until my arms ached, while the saw sat in the corner like a dog I was forbidden to pet.
+
+4 ""When do I get to make something?"" I finally asked him at the end of the third week.
+
+5 Mr. Albescu ran his thumb along the board I had been sanding and frowned slightly, the way a doctor frowns at an X-ray. ""You are making something,"" he said. ""You are making your hands.""
+
+6 I thought this was the kind of thing old men said to avoid answering questions.
+
+7 The following Monday he was called away to deliver a cabinet in Riverdale. ""Sand the tabletop,"" he told me. ""Nothing else."" The door closed behind him, and the shop went quiet.
+
+8 I lasted about twenty minutes. Then I took a scrap of oak from the pile and marked a line. I had watched him use the saw a hundred times. I knew where his hands went. I switched it on, and the blade woke up with a whine that filled the whole room.
+
+9 The cut wandered. I felt it pull to the left, and when I switched the saw off, the edge of the board curved like a lazy river. Worse, the blade had left a dark burn mark where I had pushed too hard. I stood there with my heart pounding, listening for his truck.
+
+10 I tried to hide it at the bottom of the scrap pile. But when Mr. Albescu came back, he looked once around the shop, the way he always did, and then he walked to the pile and pulled out my board as if it had called his name.
+
+11 I waited for him to shout. Instead he turned the board over in his hands for a long time. Then he walked to a small pine cabinet that had stood in the corner all summer, pulled out its bottom drawer, and set the drawer on the workbench beside my board. The drawer was crooked. Its front sat at a slight angle, and one corner joint gapped open wide enough to slide a coin into.
+
+12 ""My first piece,"" he said. ""I was fifteen. My teacher told me to wait, and I did not wait."" He tapped the gap. ""I keep it so I remember what hurry costs.""
+
+13 I looked at the crooked drawer, and then at the tools on the wall, each one returned to its outline, and for the first time I understood that the patience in this room had not always been there. It had been built, the way you build anything, one slow stroke at a time.
+
+14 He handed me the sanding block. ""The tabletop,"" he said. ""Until it feels like the inside of your wrist.""
+
+15 This time I did not argue. I picked up the block and began, and I tried to feel the wood the way he did, listening with my fingers for the places that were not yet smooth.",How does the narrator's attitude toward sanding change over the course of the passage?,The narrator first enjoys sanding but later finds it boring compared with using the saw.,The narrator first sees sanding as a pointless delay but later treats it as a way to develop the careful touch the craft requires.,The narrator first considers sanding too difficult but later realizes it is the easiest task in the shop.,The narrator first sands to please Mr. Albescu but later sands out of fear of losing the job.,B,"Early on, sanding is something the narrator puts up with while wanting the saw. Days spent ""rubbing the same board back and forth until my arms ached"" (paragraph 3) lead to the question ""When do I get to make something?"" (paragraph 4). After the ruined board and the crooked drawer, the narrator sands without arguing and tries ""to feel the wood the way he did, listening with my fingers"" (paragraph 15). Sanding has become training for the hands, as Mr. Albescu said: ""You are making your hands.""","The fear-of-being-fired choice is tempting because the narrator is clearly scared after the ruined cut (""my heart pounding""). But that fear comes before Mr. Albescu returns. The change at the end comes from what the drawer teaches.",,Provisional,,,,Incorrect. This reverses the order. The narrator is frustrated with sanding from the start (paragraph 3) and accepts it at the end (paragraph 15).,"Correct. Early on, sanding is something the narrator puts up with while wanting the saw. Days spent ""rubbing the same board back and forth until my arms ached"" (paragraph 3) lead to the question ""When do I get to make something?"" (paragraph 4). After the ruined board and the crooked drawer, the narrator sands without arguing and tries ""to feel the wood the way he did, listening with my fingers"" (paragraph 15). Sanding has become training for the hands, as Mr. Albescu said: ""You are making your hands.""","Incorrect. The narrator's complaint is that sanding is slow and dull, not difficult. At the end, sanding is treated as serious work, not as easy.","Incorrect. Nothing suggests the narrator fears being fired. Mr. Albescu responds calmly, and the narrator's new effort comes from understanding, not fear.",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-163,RC-P111,Jed Levine,RC,Module 1,RC-TXT; RC-SEQ,Multiple Choice Question,"In this story, a teenager spends the summer as an apprentice in a furniture maker's shop in the Bronx.
+
+What Hurry Costs
+
+1 For the first three weeks of my apprenticeship, Mr. Albescu did not let me cut a single board. I swept. I sorted screws into coffee cans by size. Mostly, I sanded. He would hand me a plank and a block wrapped in sandpaper, say, ""Until it feels like the inside of your wrist,"" and walk away.
+
+2 The shop on Webster Avenue smelled of sawdust and linseed oil and the coffee Mr. Albescu brewed so strong it could have stripped paint. Along the back wall hung his tools, each in its own outline traced in black marker, so that an empty space shouted whenever something was missing. In the middle of the room stood the table saw, which I was not allowed to touch.
+
+3 I had taken the job because I wanted to build things. My cousin had posted a video of a coffee table he built in a single weekend, and I imagined myself doing the same. Instead I spent my days rubbing the same board back and forth until my arms ached, while the saw sat in the corner like a dog I was forbidden to pet.
+
+4 ""When do I get to make something?"" I finally asked him at the end of the third week.
+
+5 Mr. Albescu ran his thumb along the board I had been sanding and frowned slightly, the way a doctor frowns at an X-ray. ""You are making something,"" he said. ""You are making your hands.""
+
+6 I thought this was the kind of thing old men said to avoid answering questions.
+
+7 The following Monday he was called away to deliver a cabinet in Riverdale. ""Sand the tabletop,"" he told me. ""Nothing else."" The door closed behind him, and the shop went quiet.
+
+8 I lasted about twenty minutes. Then I took a scrap of oak from the pile and marked a line. I had watched him use the saw a hundred times. I knew where his hands went. I switched it on, and the blade woke up with a whine that filled the whole room.
+
+9 The cut wandered. I felt it pull to the left, and when I switched the saw off, the edge of the board curved like a lazy river. Worse, the blade had left a dark burn mark where I had pushed too hard. I stood there with my heart pounding, listening for his truck.
+
+10 I tried to hide it at the bottom of the scrap pile. But when Mr. Albescu came back, he looked once around the shop, the way he always did, and then he walked to the pile and pulled out my board as if it had called his name.
+
+11 I waited for him to shout. Instead he turned the board over in his hands for a long time. Then he walked to a small pine cabinet that had stood in the corner all summer, pulled out its bottom drawer, and set the drawer on the workbench beside my board. The drawer was crooked. Its front sat at a slight angle, and one corner joint gapped open wide enough to slide a coin into.
+
+12 ""My first piece,"" he said. ""I was fifteen. My teacher told me to wait, and I did not wait."" He tapped the gap. ""I keep it so I remember what hurry costs.""
+
+13 I looked at the crooked drawer, and then at the tools on the wall, each one returned to its outline, and for the first time I understood that the patience in this room had not always been there. It had been built, the way you build anything, one slow stroke at a time.
+
+14 He handed me the sanding block. ""The tabletop,"" he said. ""Until it feels like the inside of your wrist.""
+
+15 This time I did not argue. I picked up the block and began, and I tried to feel the wood the way he did, listening with my fingers for the places that were not yet smooth.",How do paragraphs 11 and 12 contribute to the passage?,"They show that Mr. Albescu once made the same kind of mistake, which turns the moment from a punishment into a lesson.",They explain how to repair a drawer whose corner joint has come apart.,They show that Mr. Albescu is furious about the damage to his saw.,They reveal that the pine cabinet was built by Mr. Albescu's teacher.,A,"The narrator expects Mr. Albescu to shout (paragraph 11). Instead, he brings out his own crooked first drawer and explains, ""My teacher told me to wait, and I did not wait"" (paragraph 12). Revealing that he once made the same kind of mistake turns a moment of possible punishment into a lesson. That lesson leads straight to the narrator's realization in paragraph 13.","Students who skim may think the drawer belongs to Mr. Albescu's teacher, since the teacher is mentioned in the same line. Read the exact words: ""My first piece."" The drawer is his own mistake, which is why it teaches the narrator so much.",,Provisional,,,,"Correct. The narrator expects Mr. Albescu to shout (paragraph 11). Instead, he brings out his own crooked first drawer and explains, ""My teacher told me to wait, and I did not wait"" (paragraph 12). Revealing that he once made the same kind of mistake turns a moment of possible punishment into a lesson. That lesson leads straight to the narrator's realization in paragraph 13.","Incorrect. The gap in the drawer is described, but no repair is explained. Mr. Albescu keeps the drawer unrepaired on purpose, as a reminder.","Incorrect. This reverses his reaction. Paragraph 11 begins ""I waited for him to shout. Instead,"" and the saw was never damaged.","Incorrect. Mr. Albescu calls the drawer ""My first piece"" (paragraph 12). His teacher is mentioned only as the person who told him to wait.",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-164,RC-P111,Jed Levine,RC,Module 1,RC-VOC,Multiple Choice Question,"In this story, a teenager spends the summer as an apprentice in a furniture maker's shop in the Bronx.
+
+What Hurry Costs
+
+1 For the first three weeks of my apprenticeship, Mr. Albescu did not let me cut a single board. I swept. I sorted screws into coffee cans by size. Mostly, I sanded. He would hand me a plank and a block wrapped in sandpaper, say, ""Until it feels like the inside of your wrist,"" and walk away.
+
+2 The shop on Webster Avenue smelled of sawdust and linseed oil and the coffee Mr. Albescu brewed so strong it could have stripped paint. Along the back wall hung his tools, each in its own outline traced in black marker, so that an empty space shouted whenever something was missing. In the middle of the room stood the table saw, which I was not allowed to touch.
+
+3 I had taken the job because I wanted to build things. My cousin had posted a video of a coffee table he built in a single weekend, and I imagined myself doing the same. Instead I spent my days rubbing the same board back and forth until my arms ached, while the saw sat in the corner like a dog I was forbidden to pet.
+
+4 ""When do I get to make something?"" I finally asked him at the end of the third week.
+
+5 Mr. Albescu ran his thumb along the board I had been sanding and frowned slightly, the way a doctor frowns at an X-ray. ""You are making something,"" he said. ""You are making your hands.""
+
+6 I thought this was the kind of thing old men said to avoid answering questions.
+
+7 The following Monday he was called away to deliver a cabinet in Riverdale. ""Sand the tabletop,"" he told me. ""Nothing else."" The door closed behind him, and the shop went quiet.
+
+8 I lasted about twenty minutes. Then I took a scrap of oak from the pile and marked a line. I had watched him use the saw a hundred times. I knew where his hands went. I switched it on, and the blade woke up with a whine that filled the whole room.
+
+9 The cut wandered. I felt it pull to the left, and when I switched the saw off, the edge of the board curved like a lazy river. Worse, the blade had left a dark burn mark where I had pushed too hard. I stood there with my heart pounding, listening for his truck.
+
+10 I tried to hide it at the bottom of the scrap pile. But when Mr. Albescu came back, he looked once around the shop, the way he always did, and then he walked to the pile and pulled out my board as if it had called his name.
+
+11 I waited for him to shout. Instead he turned the board over in his hands for a long time. Then he walked to a small pine cabinet that had stood in the corner all summer, pulled out its bottom drawer, and set the drawer on the workbench beside my board. The drawer was crooked. Its front sat at a slight angle, and one corner joint gapped open wide enough to slide a coin into.
+
+12 ""My first piece,"" he said. ""I was fifteen. My teacher told me to wait, and I did not wait."" He tapped the gap. ""I keep it so I remember what hurry costs.""
+
+13 I looked at the crooked drawer, and then at the tools on the wall, each one returned to its outline, and for the first time I understood that the patience in this room had not always been there. It had been built, the way you build anything, one slow stroke at a time.
+
+14 He handed me the sanding block. ""The tabletop,"" he said. ""Until it feels like the inside of your wrist.""
+
+15 This time I did not argue. I picked up the block and began, and I tried to feel the wood the way he did, listening with my fingers for the places that were not yet smooth.","Read this sentence from paragraph 3.
+
+""Instead I spent my days rubbing the same board back and forth until my arms ached, while the saw sat in the corner like a dog I was forbidden to pet.""
+
+What does the comparison suggest about the saw?","It was old and noisy, like a dog that barks all day.",It was dangerous and likely to attack anyone who came near it.,It tempted the narrator even though the narrator was not allowed to use it.,It belonged to someone other than Mr. Albescu.,C,"A dog you are forbidden to pet is close by and appealing, but off-limits. The simile shows that the saw tempted the narrator the whole time it sat in the corner, even though it was ""not allowed"" (paragraph 2). That temptation pays off in paragraph 8, when the narrator uses the saw anyway.","The ""dangerous"" choice is tempting because table saws really are dangerous. But the simile is about wanting to pet the dog. Ask what feeling the comparison gives the narrator: desire for something off-limits.",,Provisional,,,,"Incorrect. Nothing in the comparison refers to noise or age. The phrase ""forbidden to pet"" points to wanting something you cannot touch.","Incorrect. This misreads the image. People want to pet friendly dogs, not dangerous ones. The comparison is about temptation, not threat.","Correct. A dog you are forbidden to pet is close by and appealing, but off-limits. The simile shows that the saw tempted the narrator the whole time it sat in the corner, even though it was ""not allowed"" (paragraph 2). That temptation pays off in paragraph 8, when the narrator uses the saw anyway.","Incorrect. Nothing suggests the saw belongs to anyone else. The narrator watched Mr. Albescu ""use the saw a hundred times"" (paragraph 8).",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-165,RC-P111,Jed Levine,RC,Module 2,RC-EV; RC-ANL,Multi-Select,"In this story, a teenager spends the summer as an apprentice in a furniture maker's shop in the Bronx.
+
+What Hurry Costs
+
+1 For the first three weeks of my apprenticeship, Mr. Albescu did not let me cut a single board. I swept. I sorted screws into coffee cans by size. Mostly, I sanded. He would hand me a plank and a block wrapped in sandpaper, say, ""Until it feels like the inside of your wrist,"" and walk away.
+
+2 The shop on Webster Avenue smelled of sawdust and linseed oil and the coffee Mr. Albescu brewed so strong it could have stripped paint. Along the back wall hung his tools, each in its own outline traced in black marker, so that an empty space shouted whenever something was missing. In the middle of the room stood the table saw, which I was not allowed to touch.
+
+3 I had taken the job because I wanted to build things. My cousin had posted a video of a coffee table he built in a single weekend, and I imagined myself doing the same. Instead I spent my days rubbing the same board back and forth until my arms ached, while the saw sat in the corner like a dog I was forbidden to pet.
+
+4 ""When do I get to make something?"" I finally asked him at the end of the third week.
+
+5 Mr. Albescu ran his thumb along the board I had been sanding and frowned slightly, the way a doctor frowns at an X-ray. ""You are making something,"" he said. ""You are making your hands.""
+
+6 I thought this was the kind of thing old men said to avoid answering questions.
+
+7 The following Monday he was called away to deliver a cabinet in Riverdale. ""Sand the tabletop,"" he told me. ""Nothing else."" The door closed behind him, and the shop went quiet.
+
+8 I lasted about twenty minutes. Then I took a scrap of oak from the pile and marked a line. I had watched him use the saw a hundred times. I knew where his hands went. I switched it on, and the blade woke up with a whine that filled the whole room.
+
+9 The cut wandered. I felt it pull to the left, and when I switched the saw off, the edge of the board curved like a lazy river. Worse, the blade had left a dark burn mark where I had pushed too hard. I stood there with my heart pounding, listening for his truck.
+
+10 I tried to hide it at the bottom of the scrap pile. But when Mr. Albescu came back, he looked once around the shop, the way he always did, and then he walked to the pile and pulled out my board as if it had called his name.
+
+11 I waited for him to shout. Instead he turned the board over in his hands for a long time. Then he walked to a small pine cabinet that had stood in the corner all summer, pulled out its bottom drawer, and set the drawer on the workbench beside my board. The drawer was crooked. Its front sat at a slight angle, and one corner joint gapped open wide enough to slide a coin into.
+
+12 ""My first piece,"" he said. ""I was fifteen. My teacher told me to wait, and I did not wait."" He tapped the gap. ""I keep it so I remember what hurry costs.""
+
+13 I looked at the crooked drawer, and then at the tools on the wall, each one returned to its outline, and for the first time I understood that the patience in this room had not always been there. It had been built, the way you build anything, one slow stroke at a time.
+
+14 He handed me the sanding block. ""The tabletop,"" he said. ""Until it feels like the inside of your wrist.""
+
+15 This time I did not argue. I picked up the block and began, and I tried to feel the wood the way he did, listening with my fingers for the places that were not yet smooth.",Which two sentences best support the idea that the narrator's attitude toward the work has changed by the end of the passage? Select two answers.,"""This time I did not argue."" (paragraph 15)","""I thought this was the kind of thing old men said to avoid answering questions."" (paragraph 6)","""I had watched him use the saw a hundred times."" (paragraph 8)","""I picked up the block and began, and I tried to feel the wood the way he did, listening with my fingers for the places that were not yet smooth."" (paragraph 15)","A, D","The claim is about the narrator's attitude at the end. In paragraph 15, ""This time I did not argue"" contrasts with the earlier complaint, ""When do I get to make something?"" (paragraph 4). The narrator also tries ""to feel the wood the way he did, listening with my fingers for the places that were not yet smooth,"" which shows real attention to the work instead of impatience.","The paragraph 6 sentence is tempting because it clearly states an attitude. But it is the before picture. The question asks for evidence of the change by the end, so the answers must come from after the turning point.",,Provisional,,,,"Correct. The words ""This time"" point back to the earlier complaint in paragraph 4. The narrator now accepts the sanding task.","Incorrect. This shows the narrator's earlier attitude, dismissing Mr. Albescu's advice. It is the attitude the narrator later moves away from.",Incorrect. This shows the overconfidence that leads to the ruined cut. It comes before the change.,"Correct. The narrator now pays close attention to the wood, the way Mr. Albescu does. This is the careful touch he meant by ""You are making your hands.""","""I switched it on, and the blade woke up with a whine that filled the whole room."" (paragraph 8)",Incorrect. This describes the saw starting during the narrator's impatient attempt. It shows no change in attitude.,,,"{""ms"": {""selectCount"": 2, ""instruction"": ""Select two answers."", ""solutionExplanation"": ""The claim is about the narrator's attitude at the end. In paragraph 15, \""This time I did not argue\"" contrasts with the earlier complaint, \""When do I get to make something?\"" (paragraph 4). The narrator also tries \""to feel the wood the way he did, listening with my fingers for the places that were not yet smooth,\"" which shows real attention to the work instead of impatience.""}}","Jed Levine, Claude",New item.
+ELA-RC-166,RC-P111,Jed Levine,RC,Module 2,RC-INF,Multiple Choice Question,"In this story, a teenager spends the summer as an apprentice in a furniture maker's shop in the Bronx.
+
+What Hurry Costs
+
+1 For the first three weeks of my apprenticeship, Mr. Albescu did not let me cut a single board. I swept. I sorted screws into coffee cans by size. Mostly, I sanded. He would hand me a plank and a block wrapped in sandpaper, say, ""Until it feels like the inside of your wrist,"" and walk away.
+
+2 The shop on Webster Avenue smelled of sawdust and linseed oil and the coffee Mr. Albescu brewed so strong it could have stripped paint. Along the back wall hung his tools, each in its own outline traced in black marker, so that an empty space shouted whenever something was missing. In the middle of the room stood the table saw, which I was not allowed to touch.
+
+3 I had taken the job because I wanted to build things. My cousin had posted a video of a coffee table he built in a single weekend, and I imagined myself doing the same. Instead I spent my days rubbing the same board back and forth until my arms ached, while the saw sat in the corner like a dog I was forbidden to pet.
+
+4 ""When do I get to make something?"" I finally asked him at the end of the third week.
+
+5 Mr. Albescu ran his thumb along the board I had been sanding and frowned slightly, the way a doctor frowns at an X-ray. ""You are making something,"" he said. ""You are making your hands.""
+
+6 I thought this was the kind of thing old men said to avoid answering questions.
+
+7 The following Monday he was called away to deliver a cabinet in Riverdale. ""Sand the tabletop,"" he told me. ""Nothing else."" The door closed behind him, and the shop went quiet.
+
+8 I lasted about twenty minutes. Then I took a scrap of oak from the pile and marked a line. I had watched him use the saw a hundred times. I knew where his hands went. I switched it on, and the blade woke up with a whine that filled the whole room.
+
+9 The cut wandered. I felt it pull to the left, and when I switched the saw off, the edge of the board curved like a lazy river. Worse, the blade had left a dark burn mark where I had pushed too hard. I stood there with my heart pounding, listening for his truck.
+
+10 I tried to hide it at the bottom of the scrap pile. But when Mr. Albescu came back, he looked once around the shop, the way he always did, and then he walked to the pile and pulled out my board as if it had called his name.
+
+11 I waited for him to shout. Instead he turned the board over in his hands for a long time. Then he walked to a small pine cabinet that had stood in the corner all summer, pulled out its bottom drawer, and set the drawer on the workbench beside my board. The drawer was crooked. Its front sat at a slight angle, and one corner joint gapped open wide enough to slide a coin into.
+
+12 ""My first piece,"" he said. ""I was fifteen. My teacher told me to wait, and I did not wait."" He tapped the gap. ""I keep it so I remember what hurry costs.""
+
+13 I looked at the crooked drawer, and then at the tools on the wall, each one returned to its outline, and for the first time I understood that the patience in this room had not always been there. It had been built, the way you build anything, one slow stroke at a time.
+
+14 He handed me the sanding block. ""The tabletop,"" he said. ""Until it feels like the inside of your wrist.""
+
+15 This time I did not argue. I picked up the block and began, and I tried to feel the wood the way he did, listening with my fingers for the places that were not yet smooth.","Based on paragraphs 10 through 14, why does Mr. Albescu most likely respond calmly to the ruined board?","He believes the board can easily be repaired, so no real harm was done.",He recognizes his own youthful impatience in the narrator's mistake and wants to teach rather than punish.,He has decided the narrator is not suited to woodworking and sees no point in arguing.,He is too tired from his delivery to react strongly to anything.,B,"Mr. Albescu ""turned the board over in his hands for a long time"" (paragraph 11) and then brings out his own first piece, made when ""My teacher told me to wait, and I did not wait"" (paragraph 12). He sees his younger self in the narrator's mistake. Instead of shouting, he uses the moment to teach, and he hands back the sanding block (paragraph 14), showing he still wants the narrator to learn.","The ""board can be repaired"" choice tempts students who look for a practical reason. But Mr. Albescu answers the mistake with a story about his own first piece, which shows his calm comes from understanding, not from the damage being small.",,Provisional,,,,"Incorrect. Nothing suggests he plans to fix the board. He studies it and then compares it to his own crooked drawer, which he never repaired.","Correct. Mr. Albescu ""turned the board over in his hands for a long time"" (paragraph 11) and then brings out his own first piece, made when ""My teacher told me to wait, and I did not wait"" (paragraph 12). He sees his younger self in the narrator's mistake. Instead of shouting, he uses the moment to teach, and he hands back the sanding block (paragraph 14), showing he still wants the narrator to learn.","Incorrect. This contradicts paragraph 14, where he hands the narrator the sanding block and repeats his instructions. He expects the narrator to keep learning.","Incorrect. The passage never mentions that he is tired. He notices the hidden board right away ""as if it had called his name"" (paragraph 10).",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-167,RC-P112,Jed Levine,RC,Module 1,RC-THE,Multiple Choice Question,"In this poem, the speaker remembers a summer day when her father taught her to float in the ocean.
+
+Learning to Float
+
+     My father walked me out past the breakers
+     at Rockaway, the August water slapping
+     against my ribs, his hand flat under my back.
+     ""Lie back,"" he said. ""The ocean wants to hold you.""
+ 5   I did not believe him. I believed in fists,
+     in kicking, in the hard work of not sinking.
+     I thrashed like a fish dropped on a dock,
+     swallowed salt, grabbed his arm with both hands,
+     and every time I fought, the sea pulled down
+10   as if my fear had weight and it could feel it.
+     ""You're fighting it,"" he said. ""Stop fighting it.""
+
+     How do you stop fighting something
+     bigger than all of Queens, something
+     that has swallowed ships and never sleeps?
+15   I lay back angry, certain I would sink.
+     But then his hand slid out from under me,
+     and I did not go under. I did not.
+     The water rose up warm around my ears,
+     and the beach went small and far away,
+20   the gulls, the radios, the lifeguard's whistle,
+     until there was only sky, enormous, blue,
+     and the slow lift and settle of my breath.
+     The sea had been holding me all along.
+     It was only my struggle it could not carry.
+
+25   Now, when the world comes at me in waves,
+     a test, a slammed door, a night without sleep,
+     I hear him: Lie back. Let it hold you.
+     I spread my arms. I let the water rise.
+     I trust what I could not see from the shore:
+30   some things will carry us best
+     when we stop trying to carry ourselves.",Which statement best expresses a theme of the poem?,The ocean is dangerous and should always be feared.,Children must eventually learn to survive without their parents.,"Learning to trust, instead of struggling, can allow a person to be supported.",Hard work and determination are the keys to overcoming fear.,C,"The speaker ""believed in fists, / in kicking, in the hard work of not sinking"" (lines 5–6), but fighting only made the sea pull her down. When she stops fighting, she floats: ""The sea had been holding me all along"" (line 23). The last lines state the lesson: ""some things will carry us best / when we stop trying to carry ourselves"" (lines 30–31). Trusting, rather than struggling, lets her be supported.",The choice about surviving without parents tempts students because the turn happens when the father lets go. But the final stanza brings his voice back as a guide. The lesson is about trusting what holds you up.,,Provisional,,,,"Incorrect. This is the speaker's view in lines 12–14, before the turn. The poem moves past this fear when the speaker discovers that ""The sea had been holding me all along"" (line 23).","Incorrect. The father's hand does slide away (line 16), but his voice stays with her: ""I hear him"" (line 27). The poem is about trust, not about leaving parents behind.","Correct. The speaker ""believed in fists, / in kicking, in the hard work of not sinking"" (lines 5–6), but fighting only made the sea pull her down. When she stops fighting, she floats: ""The sea had been holding me all along"" (line 23). The last lines state the lesson: ""some things will carry us best / when we stop trying to carry ourselves"" (lines 30–31). Trusting, rather than struggling, lets her be supported.","Incorrect. This reverses the poem's lesson. What she calls ""the hard work of not sinking"" (line 6) is exactly what fails. She floats only when she stops fighting.",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-168,RC-P112,Jed Levine,RC,Module 2,RC-ANL,Drag and Drop,"In this poem, the speaker remembers a summer day when her father taught her to float in the ocean.
+
+Learning to Float
+
+     My father walked me out past the breakers
+     at Rockaway, the August water slapping
+     against my ribs, his hand flat under my back.
+     ""Lie back,"" he said. ""The ocean wants to hold you.""
+ 5   I did not believe him. I believed in fists,
+     in kicking, in the hard work of not sinking.
+     I thrashed like a fish dropped on a dock,
+     swallowed salt, grabbed his arm with both hands,
+     and every time I fought, the sea pulled down
+10   as if my fear had weight and it could feel it.
+     ""You're fighting it,"" he said. ""Stop fighting it.""
+
+     How do you stop fighting something
+     bigger than all of Queens, something
+     that has swallowed ships and never sleeps?
+15   I lay back angry, certain I would sink.
+     But then his hand slid out from under me,
+     and I did not go under. I did not.
+     The water rose up warm around my ears,
+     and the beach went small and far away,
+20   the gulls, the radios, the lifeguard's whistle,
+     until there was only sky, enormous, blue,
+     and the slow lift and settle of my breath.
+     The sea had been holding me all along.
+     It was only my struggle it could not carry.
+
+25   Now, when the world comes at me in waves,
+     a test, a slammed door, a night without sleep,
+     I hear him: Lie back. Let it hold you.
+     I spread my arms. I let the water rise.
+     I trust what I could not see from the shore:
+30   some things will carry us best
+     when we stop trying to carry ourselves.",The speaker's feelings change over the course of the poem. Match each group of lines with the feeling the speaker shows most strongly in those lines.,,,,,See TEI Spec,"Lines 5–10: she ""thrashed like a fish dropped on a dock,"" ""grabbed his arm with both hands,"" and fought the water, which shows panicked resistance. Lines 16–22: she discovers ""I did not go under. I did not,"" and the noise fades until there is ""only sky"" and ""the slow lift and settle of my breath,"" which shows surprised calm. Lines 25–31: facing new troubles, ""I spread my arms. I let the water rise,"" which shows steady trust.","Students sometimes put ""bitter disappointment"" with lines 16 through 22 because the father's hand slides away, which sounds like being abandoned. Read the next line: ""I did not go under."" The moment brings relief, not bitterness.",,Provisional,,,,,,,,,,,,"{""dnd"": {""instruction"": ""Move the correct feeling into each box. Not all feelings will be used."", ""pool"": [{""id"": ""f1"", ""text"": ""panicked resistance"", ""explanation"": ""Belongs with lines 5 through 10. The speaker \""thrashed like a fish dropped on a dock,\"" \""swallowed salt,\"" and \""grabbed his arm with both hands.\"" She fights the water in fear.""}, {""id"": ""f2"", ""text"": ""surprised calm"", ""explanation"": ""Belongs with lines 16 through 22. The repeated \""I did not go under. I did not\"" shows her surprise, and \""the slow lift and settle of my breath\"" shows her new calm.""}, {""id"": ""f3"", ""text"": ""steady trust"", ""explanation"": ""Belongs with lines 25 through 31. When troubles come, she chooses to \""spread my arms\"" and \""let the water rise,\"" trusting what she learned.""}, {""id"": ""f4"", ""text"": ""bitter disappointment"", ""explanation"": ""Not used. The speaker is never disappointed in her father or the sea. Even when his hand slides away (line 16), the result is relief, not bitterness.""}, {""id"": ""f5"", ""text"": ""proud competitiveness"", ""explanation"": ""Not used. There is no contest or rival in the poem. The speaker's struggle is with her own fear.""}], ""zones"": [{""id"": ""z1"", ""prompt"": ""Lines 5 through 10""}, {""id"": ""z2"", ""prompt"": ""Lines 16 through 22""}, {""id"": ""z3"", ""prompt"": ""Lines 25 through 31""}], ""correctMapping"": {""z1"": ""f1"", ""z2"": ""f2"", ""z3"": ""f3""}, ""solutionExplanation"": ""Lines 5–10: she \""thrashed like a fish dropped on a dock,\"" \""grabbed his arm with both hands,\"" and fought the water, which shows panicked resistance. Lines 16–22: she discovers \""I did not go under. I did not,\"" and the noise fades until there is \""only sky\"" and \""the slow lift and settle of my breath,\"" which shows surprised calm. Lines 25–31: facing new troubles, \""I spread my arms. I let the water rise,\"" which shows steady trust.""}}","Jed Levine, Claude",New item.
+ELA-RC-169,RC-P112,Jed Levine,RC,Module 2,RC-TXT,Multiple Choice Question,"In this poem, the speaker remembers a summer day when her father taught her to float in the ocean.
+
+Learning to Float
+
+     My father walked me out past the breakers
+     at Rockaway, the August water slapping
+     against my ribs, his hand flat under my back.
+     ""Lie back,"" he said. ""The ocean wants to hold you.""
+ 5   I did not believe him. I believed in fists,
+     in kicking, in the hard work of not sinking.
+     I thrashed like a fish dropped on a dock,
+     swallowed salt, grabbed his arm with both hands,
+     and every time I fought, the sea pulled down
+10   as if my fear had weight and it could feel it.
+     ""You're fighting it,"" he said. ""Stop fighting it.""
+
+     How do you stop fighting something
+     bigger than all of Queens, something
+     that has swallowed ships and never sleeps?
+15   I lay back angry, certain I would sink.
+     But then his hand slid out from under me,
+     and I did not go under. I did not.
+     The water rose up warm around my ears,
+     and the beach went small and far away,
+20   the gulls, the radios, the lifeguard's whistle,
+     until there was only sky, enormous, blue,
+     and the slow lift and settle of my breath.
+     The sea had been holding me all along.
+     It was only my struggle it could not carry.
+
+25   Now, when the world comes at me in waves,
+     a test, a slammed door, a night without sleep,
+     I hear him: Lie back. Let it hold you.
+     I spread my arms. I let the water rise.
+     I trust what I could not see from the shore:
+30   some things will carry us best
+     when we stop trying to carry ourselves.",How do lines 25–31 contribute to the poem?,They describe a second trip to Rockaway when the speaker was older.,They apply the lesson the speaker learned in the ocean to difficulties in her present life.,They show that the speaker has forgotten her father's advice.,They suggest that the speaker still fights against her problems the way she once fought the water.,B,"Lines 25–31 move from the beach to the speaker's present: ""Now, when the world comes at me in waves, / a test, a slammed door, a night without sleep."" The ""waves"" are now everyday troubles. She applies her father's advice, ""Lie back. Let it hold you,"" to these new challenges, so the final stanza turns a childhood memory into a lesson for life.","The ""second trip"" choice is tempting because the last stanza still uses ocean words like ""waves"" and ""water."" Line 26 shows those words are now figurative: the waves are ""a test, a slammed door, a night without sleep.""",,Provisional,,,,"Incorrect. This reads ""waves"" and ""water"" literally. The waves are ""a test, a slammed door, a night without sleep"" (line 26), which are not ocean waves.","Correct. Lines 25–31 move from the beach to the speaker's present: ""Now, when the world comes at me in waves, / a test, a slammed door, a night without sleep."" The ""waves"" are now everyday troubles. She applies her father's advice, ""Lie back. Let it hold you,"" to these new challenges, so the final stanza turns a childhood memory into a lesson for life.","Incorrect. This reverses the stanza. The speaker says ""I hear him"" and repeats his words in line 27.","Incorrect. This reverses her attitude. In line 28 she says, ""I spread my arms. I let the water rise,"" which shows trust, not struggle.",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-170,RC-P112,Jed Levine,RC,Module 1,RC-VOC,Multiple Choice Question,"In this poem, the speaker remembers a summer day when her father taught her to float in the ocean.
+
+Learning to Float
+
+     My father walked me out past the breakers
+     at Rockaway, the August water slapping
+     against my ribs, his hand flat under my back.
+     ""Lie back,"" he said. ""The ocean wants to hold you.""
+ 5   I did not believe him. I believed in fists,
+     in kicking, in the hard work of not sinking.
+     I thrashed like a fish dropped on a dock,
+     swallowed salt, grabbed his arm with both hands,
+     and every time I fought, the sea pulled down
+10   as if my fear had weight and it could feel it.
+     ""You're fighting it,"" he said. ""Stop fighting it.""
+
+     How do you stop fighting something
+     bigger than all of Queens, something
+     that has swallowed ships and never sleeps?
+15   I lay back angry, certain I would sink.
+     But then his hand slid out from under me,
+     and I did not go under. I did not.
+     The water rose up warm around my ears,
+     and the beach went small and far away,
+20   the gulls, the radios, the lifeguard's whistle,
+     until there was only sky, enormous, blue,
+     and the slow lift and settle of my breath.
+     The sea had been holding me all along.
+     It was only my struggle it could not carry.
+
+25   Now, when the world comes at me in waves,
+     a test, a slammed door, a night without sleep,
+     I hear him: Lie back. Let it hold you.
+     I spread my arms. I let the water rise.
+     I trust what I could not see from the shore:
+30   some things will carry us best
+     when we stop trying to carry ourselves.","In line 10, what does the phrase ""as if my fear had weight and it could feel it"" suggest?",The speaker's panic seemed to be what pulled her under.,The speaker was carrying something heavy into the water.,The ocean was angry with the speaker for being afraid.,The speaker's father could tell that she was frightened.,A,"Line 9 says that ""every time I fought, the sea pulled down,"" and line 10 adds ""as if my fear had weight and it could feel it."" Fear has no real weight, so the image suggests that the speaker's panic was what dragged her down. Line 24 confirms this: ""It was only my struggle it could not carry.""","Students who read ""it could feel it"" as giving the sea feelings may decide the sea is angry or hostile. The line is about cause and effect: the more she panicked, the more she sank.",,Provisional,,,,"Correct. Line 9 says that ""every time I fought, the sea pulled down,"" and line 10 adds ""as if my fear had weight and it could feel it."" Fear has no real weight, so the image suggests that the speaker's panic was what dragged her down. Line 24 confirms this: ""It was only my struggle it could not carry.""","Incorrect. This reads ""weight"" literally. Nothing in the poem says she carries an object. The weight belongs to her fear.","Incorrect. The sea ""could feel"" her fear, but nothing says it was angry. The poem later shows the sea ""had been holding me all along"" (line 23).","Incorrect. This misreads ""it."" The word refers to ""the sea"" in line 9, not to the father.",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-171,RC-P112,Jed Levine,RC,Module 1,RC-EV,Multiple Choice Question,"In this poem, the speaker remembers a summer day when her father taught her to float in the ocean.
+
+Learning to Float
+
+     My father walked me out past the breakers
+     at Rockaway, the August water slapping
+     against my ribs, his hand flat under my back.
+     ""Lie back,"" he said. ""The ocean wants to hold you.""
+ 5   I did not believe him. I believed in fists,
+     in kicking, in the hard work of not sinking.
+     I thrashed like a fish dropped on a dock,
+     swallowed salt, grabbed his arm with both hands,
+     and every time I fought, the sea pulled down
+10   as if my fear had weight and it could feel it.
+     ""You're fighting it,"" he said. ""Stop fighting it.""
+
+     How do you stop fighting something
+     bigger than all of Queens, something
+     that has swallowed ships and never sleeps?
+15   I lay back angry, certain I would sink.
+     But then his hand slid out from under me,
+     and I did not go under. I did not.
+     The water rose up warm around my ears,
+     and the beach went small and far away,
+20   the gulls, the radios, the lifeguard's whistle,
+     until there was only sky, enormous, blue,
+     and the slow lift and settle of my breath.
+     The sea had been holding me all along.
+     It was only my struggle it could not carry.
+
+25   Now, when the world comes at me in waves,
+     a test, a slammed door, a night without sleep,
+     I hear him: Lie back. Let it hold you.
+     I spread my arms. I let the water rise.
+     I trust what I could not see from the shore:
+30   some things will carry us best
+     when we stop trying to carry ourselves.","Which line best supports the idea that the speaker's struggling, not the ocean itself, caused her to sink?","""bigger than all of Queens, something"" (line 13)","""swallowed salt, grabbed his arm with both hands,"" (line 8)","""and the beach went small and far away,"" (line 19)","""It was only my struggle it could not carry."" (line 24)",D,"Line 24, ""It was only my struggle it could not carry,"" says that the sea could carry the speaker but not her struggling. Her sinking came from fighting, not from the ocean. This directly supports the idea.","Line 8 is tempting because it clearly shows struggle. But the claim has two parts: she struggled, and the struggle caused the sinking. Only line 24 makes that cause-and-effect connection.",,Provisional,,,,"Incorrect. This line explains why the speaker fears the ocean. It supports the opposite idea, that the ocean is too powerful to trust.","Incorrect. This line shows the speaker struggling, but it does not connect her struggle to her sinking.",Incorrect. This line describes what she hears and sees while floating. It says nothing about why she sank before.,"Correct. Line 24, ""It was only my struggle it could not carry,"" says that the sea could carry the speaker but not her struggling. Her sinking came from fighting, not from the ocean. This directly supports the idea.",,,,,,"Jed Levine, Claude",New item.
+ELA-RC-172,RC-P112,Jed Levine,RC,Module 2,RC-INF,Multiple Choice Question,"In this poem, the speaker remembers a summer day when her father taught her to float in the ocean.
+
+Learning to Float
+
+     My father walked me out past the breakers
+     at Rockaway, the August water slapping
+     against my ribs, his hand flat under my back.
+     ""Lie back,"" he said. ""The ocean wants to hold you.""
+ 5   I did not believe him. I believed in fists,
+     in kicking, in the hard work of not sinking.
+     I thrashed like a fish dropped on a dock,
+     swallowed salt, grabbed his arm with both hands,
+     and every time I fought, the sea pulled down
+10   as if my fear had weight and it could feel it.
+     ""You're fighting it,"" he said. ""Stop fighting it.""
+
+     How do you stop fighting something
+     bigger than all of Queens, something
+     that has swallowed ships and never sleeps?
+15   I lay back angry, certain I would sink.
+     But then his hand slid out from under me,
+     and I did not go under. I did not.
+     The water rose up warm around my ears,
+     and the beach went small and far away,
+20   the gulls, the radios, the lifeguard's whistle,
+     until there was only sky, enormous, blue,
+     and the slow lift and settle of my breath.
+     The sea had been holding me all along.
+     It was only my struggle it could not carry.
+
+25   Now, when the world comes at me in waves,
+     a test, a slammed door, a night without sleep,
+     I hear him: Lie back. Let it hold you.
+     I spread my arms. I let the water rise.
+     I trust what I could not see from the shore:
+30   some things will carry us best
+     when we stop trying to carry ourselves.","In line 27, the speaker says, ""I hear him: Lie back. Let it hold you."" This line suggests that",her father still goes with her to the beach whenever she swims.,she cannot stop remembering how frightened she was that day.,her father's lesson has become a voice she relies on when life feels overwhelming.,she resents that her father's advice follows her everywhere.,C,"Years later, ""when the world comes at me in waves,"" the speaker says ""I hear him: Lie back. Let it hold you"" (lines 25–27). The father is not really there. His words have become an inner voice she turns to when life feels overwhelming, and she follows them: ""I spread my arms"" (line 28).","The literal reading, that her father is physically there, is the trap. The stanza begins with ""Now"" and lists everyday troubles, so the voice she hears is a memory she carries.",,Provisional,,,,"Incorrect. This reads ""I hear him"" literally. Line 26 shows the setting is now everyday life (""a test, a slammed door""), not a beach trip with her father.","Incorrect. The memory she hears is the calming advice, not the fear. It helps her ""let the water rise"" (line 28).","Correct. Years later, ""when the world comes at me in waves,"" the speaker says ""I hear him: Lie back. Let it hold you"" (lines 25–27). The father is not really there. His words have become an inner voice she turns to when life feels overwhelming, and she follows them: ""I spread my arms"" (line 28).",Incorrect. This reverses her attitude. She follows the advice willingly and trusts it (line 29).,,,,,,"Jed Levine, Claude",New item.
