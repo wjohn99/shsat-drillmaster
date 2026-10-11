@@ -1,0 +1,1990 @@
+{
+  "batch": "2026-10-11-rc-informational",
+  "description": "Six original informational Reading Comprehension sets (ecology, NYC history, a scientist profile, public health, materials science, social science), six questions each. Each set runs from central idea to structure, evidence, vocabulary, and inference, and includes at least one technology-enhanced item (multi-select or drag-and-drop). Written by Jed Levine with Claude. All items are Provisional until a second team member reviews them.",
+  "passages": [
+    {
+      "id": "RC-P101",
+      "title": "The Otter and the Forest",
+      "sourceMeta": "Original DrillMaster passage",
+      "body": "1 Along the rocky coasts of the North Pacific, forests grow underwater. Giant kelp and other large brown seaweeds rise from the seafloor toward the light, forming tall, swaying canopies that shelter fish, crabs, snails, and seals. For much of the twentieth century, scientists assumed that the health of these kelp forests depended mainly on physical conditions such as water temperature, sunlight, and nutrients. A small, furry mammal would eventually change that view.\n\n2 The sea otter is the smallest marine mammal in North America, but it has an enormous appetite. Unlike seals and whales, otters have no thick layer of blubber to keep them warm. Instead, they rely on the densest fur of any animal and on a fast metabolism. To fuel that metabolism, an adult otter must eat roughly a quarter of its body weight every day. Much of that food consists of sea urchins, spiny animals that graze on kelp. An otter often eats while floating on its back at the surface, using its own chest as a dinner table.\n\n3 The otter's fur nearly led to its disappearance. Beginning in the 1700s, hunters pursued sea otters across the Pacific for their valuable pelts. By the early 1900s, only a few small, scattered groups survived. An international treaty in 1911 banned most otter hunting, and the animals slowly began to return to parts of their former range. Their recovery created an unexpected opportunity for science.\n\n4 In the early 1970s, ecologist James Estes began studying islands in Alaska's Aleutian chain. Some of the islands had healthy otter populations; others had few or none. The difference beneath the waves was striking. Around islands with otters, kelp forests flourished. Around islands without otters, sea urchins carpeted the bottom, and the kelp had been chewed down to bare rock. Divers called these places \"urchin barrens.\" Because the islands were similar in climate and geology, the otters themselves appeared to be the deciding factor.\n\n5 Estes's findings fit an idea that another ecologist, Robert Paine, had recently introduced. Paine had removed a predatory sea star from patches of shoreline in Washington State and watched the variety of life there collapse as mussels took over. He described such predators as \"keystone species,\" after the central stone at the top of an arch that holds the other stones in place. A keystone species has an effect on its community far larger than its numbers would suggest. Remove it, and the whole structure can fall apart.\n\n6 The otter story showed how such effects can travel down a food chain. Otters eat urchins; urchins eat kelp. When otters are present, they keep urchin numbers in check, and the kelp thrives. When otters vanish, urchins multiply and strip the forest, and the fish and other creatures that depend on the kelp for food and shelter lose their homes as well. Ecologists call this chain reaction a \"trophic cascade,\" because the influence of the top predator tumbles down through each level below it.\n\n7 Years later, the otter story took a surprising turn. In the 1990s, otter numbers in parts of the Aleutians dropped sharply. Estes and his colleagues gathered evidence that killer whales, which had not been known to hunt otters regularly, had begun eating them, possibly because the whales' usual prey had become scarce. As the otters disappeared, urchin barrens spread once again. A change in one predator's diet had rippled through the ecosystem.\n\n8 Today, the lessons of the sea otter shape conservation efforts well beyond the Pacific coast. Scientists now recognize that protecting a single species can sometimes protect an entire habitat, and that losing one can unravel connections that took centuries to form. The kelp forest, it turns out, was never just a matter of sunlight and seawater. It was also a matter of who was eating whom."
+    },
+    {
+      "id": "RC-P102",
+      "title": "Water for a Growing City",
+      "sourceMeta": "Original DrillMaster passage",
+      "body": "1 In the early 1800s, New York City had a water problem that grew worse every year. The city's population was rising rapidly, but most residents still drew their water from wells and public pumps. As more people crowded onto the southern tip of Manhattan, those wells became polluted by waste seeping into the ground. Much of the water tasted bad, and some of it was dangerous to drink. Wealthier families sometimes paid for water hauled in by cart, but most New Yorkers had no choice except the neighborhood pump.\n\n2 The consequences were severe. In 1832, an outbreak of cholera swept through the city and killed thousands of people. At the time, no one understood that the disease spread through contaminated water, but many New Yorkers sensed that the city's filthy streets and foul water were connected to its suffering. Fire posed another constant danger. In a city built largely of wood, firefighters needed plentiful water, and they often did not have it.\n\n3 City leaders debated what to do. Some proposed digging more wells or pumping water from nearby rivers, but those sources were either too small or too salty. A bolder plan called for bringing fresh water from the Croton River, about forty miles to the north in Westchester County. In the spring of 1835, voters approved the project. Months later, in December 1835, a fire broke out in lower Manhattan on a bitterly cold night. With hydrants and wells frozen, firefighters could do little to stop the flames, which destroyed hundreds of buildings. The Great Fire, as it came to be called, made the need for a reliable water supply impossible to ignore.\n\n4 The task of building the aqueduct fell to an engineer named John B. Jervis, who had gained experience building canals and railroads. Jervis faced an enormous challenge: he had to move huge quantities of water across forty miles of hills, valleys, and streams. His solution was elegant in its simplicity. Workers built a dam on the Croton River to create a lake, and from there a covered masonry tunnel carried the water south toward the city. The tunnel sloped downward so gently and steadily that the water flowed on its own the entire way.\n\n5 Building the aqueduct required years of labor from thousands of workers, many of them recent immigrants from Ireland. They cut through hillsides, filled in low ground, and laid millions of bricks by hand. Where the route crossed valleys and streams, they built stone bridges and embankments so that the tunnel's gentle slope would not be broken. The most difficult crossing was the Harlem River, which separates Manhattan from the mainland. A temporary pipe carried the water across at first. High Bridge, a stone bridge that still stands today as the oldest bridge in the city, was not completed until several years after the aqueduct opened.\n\n6 On October 14, 1842, the city celebrated the arrival of Croton water with a parade that stretched for miles. Church bells rang, cannons fired, and fountains shot water high into the air. The water flowed into a large receiving reservoir in what is now Central Park and then to a distributing reservoir at Fifth Avenue and 42nd Street, whose massive walls resembled those of an ancient Egyptian temple. On pleasant afternoons, New Yorkers strolled along the top of those walls to admire the view.\n\n7 The effects of the aqueduct reached far beyond a single celebration. Clean water allowed the city to fight fires more effectively and made indoor plumbing and public baths possible for more people. It also allowed New York to keep growing. Within a few decades, demand had risen so much that the city had to build a larger aqueduct and, eventually, an even larger system of reservoirs and tunnels.\n\n8 Today, the old receiving reservoir has been filled in and replaced by the Great Lawn in Central Park, and the New York Public Library's main building stands where the distributing reservoir once rose. Yet the legacy of the Croton Aqueduct remains. New York still gets much of its water from distant reservoirs upstate, a system that began with Jervis's tunnel."
+    },
+    {
+      "id": "RC-P103",
+      "title": "Maria Mitchell's Comet",
+      "sourceMeta": "Original DrillMaster passage",
+      "body": "1 On the night of October 1, 1847, a twenty-nine-year-old woman climbed to the roof of a bank building on Nantucket, an island off the coast of Massachusetts. She carried a telescope, as she did on most clear nights. Sweeping the sky, she noticed a faint, fuzzy spot of light where she knew no star belonged. Maria Mitchell had discovered a comet, and her life would never be the same.\n\n2 Mitchell's path to that rooftop began in childhood. Nantucket was a center of the whaling industry, and ship captains depended on astronomy to find their position at sea. Her father, William Mitchell, was an amateur astronomer who checked the accuracy of the captains' chronometers, the precise clocks they used for navigation, by observing the stars. He taught his daughter to use his instruments, and by the time she was a teenager, she was helping with his calculations. Her family was Quaker, and the Quaker belief that girls deserved the same education as boys gave her opportunities that many young women of her era lacked.\n\n3 As a young woman, Mitchell worked as the librarian of the Nantucket Atheneum, a position she held for about twenty years. The job left her time to read widely in mathematics and science, and her evenings were free for observing. Night after night, she studied the sky with such care that she came to know its patterns the way other people know the streets of their hometown. That familiarity is what allowed her to recognize, in 1847, that a small, fuzzy spot of light did not belong.\n\n4 Her discovery brought international recognition. Years earlier, the king of Denmark had promised a gold medal to the first person to discover a comet with a telescope, that is, a comet too faint to be seen with the naked eye. There was some confusion at first, because an astronomer in Rome had reported the same comet before news of Mitchell's sighting reached Europe. Once it was clear that she had seen it first, the medal was awarded to Mitchell. Newspapers on both sides of the Atlantic reported the news, and in 1848 she became the first woman elected to the American Academy of Arts and Sciences.\n\n5 Mitchell could have enjoyed her fame quietly. Instead, she used it to open doors for others. In 1865, she became the first professor of astronomy at Vassar College, one of the first colleges in the United States founded to give women an education equal to that offered at men's colleges. She was also named director of the college observatory. Mitchell believed that science was learned by doing, not by memorizing. Her students did not simply read about the heavens; they spent long nights at the telescope, recorded careful observations, and made their own calculations.\n\n6 Mitchell held her students to high standards. She encouraged them to question what they read rather than simply accept it, and she taught them that good observation required patience. \"We especially need imagination in science,\" she once said. \"It is not all mathematics, nor all logic, but it is somewhat beauty and poetry.\" In 1878, she led a group of students on a long journey west to Denver, Colorado, to observe a total eclipse of the sun.\n\n7 Mitchell also spoke out about the unequal treatment of women. When she learned that she was being paid less than male professors who had less experience, she protested and eventually won a raise. She helped found an organization devoted to advancing women's opportunities and served as its president. She argued that no one could judge what women were capable of in science until women had been given a fair chance to try.\n\n8 When Mitchell died in 1889, many of her former students had become teachers, scientists, and leaders in their own right. Her comet, too small to be seen without a telescope, had long since faded from view. But the path she opened for women in astronomy remained, and it grew wider with each generation that followed."
+    },
+    {
+      "id": "RC-P104",
+      "title": "The End of Smallpox",
+      "sourceMeta": "Original DrillMaster passage",
+      "body": "1 For thousands of years, smallpox was one of the most feared diseases on Earth. It caused a high fever and a painful rash of fluid-filled blisters that spread across the body. Roughly three out of every ten people who caught the most common form of the disease died, and many survivors were left with deep scars or blindness. In the twentieth century alone, smallpox killed hundreds of millions of people. Today, it kills no one. The story of how that happened is one of the greatest achievements in the history of public health.\n\n2 The first great step came in 1796, when the English doctor Edward Jenner tested an idea based on country wisdom. Milkmaids who caught cowpox, a mild disease, seemed never to catch smallpox. Jenner deliberately infected a boy with material from a cowpox sore and later showed that the boy did not become sick when exposed to smallpox. Jenner's method, which became known as vaccination from the Latin word for cow, spread around the world. Over the next century and a half, vaccination drove smallpox out of many wealthy countries.\n\n3 Yet in much of the world, the disease remained common. In 1967, when the World Health Organization launched an intensified campaign to wipe out smallpox everywhere, the disease was still found in more than thirty countries, and an estimated ten million to fifteen million people were infected each year. Many experts doubted the effort could succeed. No disease had ever been eliminated from the entire planet.\n\n4 Smallpox, however, had weaknesses that made it a good target. The virus infected only humans, so it could not hide in animals and return later. Its rash was easy to recognize, which meant that health workers could identify cases quickly, even in remote villages. And a single dose of the vaccine provided strong protection for years.\n\n5 Even with these advantages, the early strategy of vaccinating as many people as possible proved difficult. In crowded regions with few roads and limited supplies, reaching every person was nearly impossible. So health workers adopted a different approach, often called ring vaccination. Instead of trying to vaccinate everyone, teams searched for new cases. When they found one, they isolated the sick person and quickly vaccinated everyone around that person: family members, neighbors, and anyone else who might have been exposed. Each ring of protected people formed a barrier the virus could not cross. An American doctor working in Nigeria, William Foege, helped show that this approach could stop outbreaks even when vaccine was in short supply.\n\n6 New tools helped the strategy succeed. A freeze-dried vaccine could be stored for long periods in hot climates without refrigeration. A simple device called the bifurcated needle, a short steel rod with two prongs at one end, held a tiny drop of vaccine between its prongs. Workers could learn to use it in minutes, and it required far less vaccine per person than older methods. Thousands of local health workers carried these needles from village to village, often on foot.\n\n7 Step by step, the disease retreated. South America became free of smallpox, and then Asia. The last naturally occurring case was found in October 1977 in a hospital cook named Ali Maow Maalin in Somalia. He recovered, and health workers vaccinated everyone he had been in contact with. After two more years of careful searching turned up no new cases, a commission of experts confirmed that smallpox was gone. In 1980, the World Health Organization officially declared the world free of smallpox.\n\n8 The victory over smallpox changed what people believed was possible. It proved that nations could cooperate across borders, even during periods of political tension, to defeat a common enemy. It also taught lessons that guide public health workers today: that finding cases quickly can matter as much as treating them, and that simple, well-designed tools in trained hands can accomplish what expensive technology alone cannot. Only one other disease, a cattle illness called rinderpest, has since been wiped out."
+    },
+    {
+      "id": "RC-P105",
+      "title": "The Secret of Roman Concrete",
+      "sourceMeta": "Original DrillMaster passage",
+      "body": "1 In the center of Rome stands the Pantheon, a temple completed nearly nineteen hundred years ago. Its great dome, more than 140 feet across, is made of concrete, and it contains no steel bars to strengthen it. Some modern concrete structures, by contrast, show serious damage within a few decades. For years, engineers and scientists have asked a simple question with a surprisingly complicated answer: why has so much Roman concrete lasted so long?\n\n2 Concrete is a mixture of a binder, which acts like glue, and pieces of rock or rubble, called aggregate. Most modern concrete uses Portland cement as its binder, a material invented in the 1800s. The Romans, however, made their binder from lime, produced by heating limestone, combined with volcanic ash. Some of the best ash came from the area around the Bay of Naples, near a town now called Pozzuoli. The Roman writer Vitruvius described this ash and praised the strength it gave to buildings.\n\n3 Roman builders were especially proud of concrete that hardened underwater. They used it to build harbors and piers along the Mediterranean coast, packing a mixture of lime, volcanic ash, and chunks of volcanic rock into wooden frames lowered into the sea. The Roman writer Pliny the Elder claimed that such concrete became a single mass of stone that grew stronger every day. Modern concrete in seawater often weakens over time, as salt water seeps in and attacks the steel bars inside it. Yet some Roman harbor structures, after two thousand years of pounding waves, remain solid.\n\n4 In 2017, a team led by geologist Marie Jackson published a study that helped explain this mystery. Examining samples from ancient Roman piers, the researchers found that seawater flowing through the concrete had dissolved parts of the volcanic ash. As the dissolved material reacted, new minerals slowly grew in the tiny spaces within the concrete. One of these minerals, a rare crystal called aluminous tobermorite, is difficult to produce even in a modern laboratory. In the Roman concrete, the crystals formed naturally over many years, filling cracks and binding the material more tightly together. In other words, the very seawater that damages modern concrete appears to have made the Roman version stronger.\n\n5 A second clue emerged in 2023. For a long time, researchers had noticed small white lumps of lime scattered through Roman concrete. Many assumed the lumps were a sign of careless mixing or poor-quality materials. A team of scientists at the Massachusetts Institute of Technology proposed a different explanation. They argued that Roman builders may have mixed their concrete using quicklime, a highly reactive form of lime that produces intense heat when it touches water. This \"hot mixing\" would naturally leave behind white lumps of lime.\n\n6 Those lumps, the researchers found, could act like tiny repair kits. When a crack formed and water seeped in, the water reached the lime in the lumps. The lime dissolved and then reacted to form calcium carbonate, a hard mineral that sealed the crack. To test the idea, the team made concrete using a hot-mixing method, cracked it on purpose, and ran water through the cracks. Within two weeks, the cracks had closed, while cracks in similar samples made without lime lumps did not.\n\n7 None of this means that Roman concrete is better in every way. It is generally weaker than modern concrete under heavy loads, and it sets more slowly, which makes it unsuitable for many of today's skyscrapers and highways. The Romans also improved their methods through trial and error over centuries, and the structures that survive today are, in part, simply the ones that happened to be built well. Countless others have long since collapsed.\n\n8 Still, the ancient recipe offers valuable ideas. Producing Portland cement releases large amounts of carbon dioxide, and replacing crumbling structures adds to that cost. Concrete that repairs its own cracks could last far longer, reducing the need for new construction. Engineers today are experimenting with mixtures inspired by Roman methods. The builders of the Pantheon knew nothing of modern chemistry, but they may still have something to teach those who study it."
+    },
+    {
+      "id": "RC-P106",
+      "title": "Too Many Choices?",
+      "sourceMeta": "Original DrillMaster passage",
+      "body": "1 Imagine walking into a grocery store and finding a table offering free samples of jam. If the table displayed twenty-four flavors, would you be more likely to buy a jar than if it displayed only six? Most people would guess yes. More options, after all, should make it easier to find something you like, and many stores proudly advertise their wide selection as a reason to shop there. A famous experiment, however, suggested the opposite.\n\n2 In 2000, psychologists Sheena Iyengar and Mark Lepper published the results of a study conducted at an upscale grocery store in California. On some days, the researchers set up a tasting booth with twenty-four varieties of jam; on other days, the booth offered only six. Shoppers who stopped at the booth received a coupon toward the purchase of any jam of that brand. The large display attracted more attention: about 60 percent of passing shoppers stopped at it, compared with about 40 percent at the small display. But when it came to buying, the pattern reversed. About 30 percent of the shoppers who stopped at the small display later bought jam, while only about 3 percent of those at the large display did.\n\n3 The researchers proposed that too many choices can overwhelm people. When faced with a long list of similar options, shoppers may worry about picking the wrong one, find the comparison exhausting, or simply put off deciding. The idea, which came to be known as \"choice overload,\" spread quickly. It appeared in popular books, business magazines, and lectures, and some companies used it as a reason to trim their product lines. The jam study became one of the most widely cited experiments in its field.\n\n4 As often happens in science, however, the story turned out to be more complicated. Over the following years, other researchers tried to repeat the effect in different settings, using a wide range of products and decisions. Some found that large assortments did discourage people from choosing, just as the jam study had. Others found no effect at all, and a few found that more options actually left people more satisfied.\n\n5 In 2010, a team of researchers combined the results of dozens of these experiments in a single analysis. Their conclusion surprised many: on average, the effect of having many options was close to zero. Choice overload, it seemed, was not a universal rule of human behavior. The finding did not mean that the original jam study was wrong, only that its result could not be counted on to appear everywhere.\n\n6 Later work has tried to explain why the effect appears in some situations but not in others. One review suggested that choice overload is most likely when the options are hard to compare, when people do not already know what they prefer, and when the decision itself feels difficult. A shopper who already knows she loves strawberry jam may not be troubled by twenty-four flavors at all. A shopper with no favorite, facing two dozen unfamiliar jars, may give up and walk away.\n\n7 This more detailed picture has practical value. Instead of simply cutting the number of choices, a store or website can make choices easier to handle. Grouping options into clear categories, highlighting a few recommendations, or describing differences in plain language may help people find what they want without feeling lost. A large selection, in other words, is not necessarily the problem. A confusing one may be.\n\n8 The history of the jam study also offers a lesson about how science works. A single striking experiment can capture the public imagination, but one result, however memorable, is only the beginning of an investigation. Only when many researchers test an idea in many settings does a clearer and more accurate understanding emerge."
+    }
+  ],
+  "questions": [
+    {
+      "id": "ELA-RC-101",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-MI"
+      ],
+      "passageId": "RC-P101",
+      "stem": "Which statement best expresses the central idea of the passage?",
+      "choices": [
+        {
+          "id": "ELA-RC-101-a",
+          "label": "A",
+          "text": "Sea otters can survive in cold ocean water because of their dense fur and fast metabolism.",
+          "isCorrect": false,
+          "explanation": "Incorrect. True detail, not the central idea. Paragraph 2 says otters \"rely on the densest fur of any animal and on a fast metabolism,\" but this fact only explains why otters eat so many urchins. It leaves out the passage's focus on how otters shape the kelp forest."
+        },
+        {
+          "id": "ELA-RC-101-b",
+          "label": "B",
+          "text": "Research on sea otters showed that one predator can determine the health of an entire ecosystem by controlling the animals below it in a food chain.",
+          "isCorrect": true,
+          "explanation": "Correct. The passage moves from the old belief that kelp health depended on \"physical conditions\" (paragraph 1), to Estes's finding that \"the otters themselves appeared to be the deciding factor\" (paragraph 4), to the ideas of keystone species and trophic cascades (paragraphs 5 through 7), and ends with \"It was also a matter of who was eating whom\" (paragraph 8)."
+        },
+        {
+          "id": "ELA-RC-101-c",
+          "label": "C",
+          "text": "Hunting nearly wiped out sea otters, but an international treaty allowed them to recover throughout the Pacific.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Too narrow, and it overstates the text. Paragraph 3 covers the hunting and the 1911 treaty, but otters only \"slowly began to return to parts of their former range,\" not the whole Pacific. The recovery matters to the passage mainly because it \"created an unexpected opportunity for science.\""
+        },
+        {
+          "id": "ELA-RC-101-d",
+          "label": "D",
+          "text": "The health of kelp forests depends mostly on water temperature, sunlight, and nutrients.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Reverses the passage's point. Paragraph 1 presents this as what scientists \"assumed\" for much of the twentieth century, and the rest of the passage overturns that view: \"The kelp forest, it turns out, was never just a matter of sunlight and seawater.\""
+        }
+      ],
+      "solutionExplanation": "A central idea has to cover the whole passage. Paragraph 1 states the old view, that kelp health \"depended mainly on physical conditions,\" and announces that \"A small, furry mammal would eventually change that view.\" Paragraphs 4 through 7 show how otters, by eating urchins, decide whether a coast has a kelp forest or an \"urchin barren.\" Paragraph 8 states the lesson: \"protecting a single species can sometimes protect an entire habitat.\" Only choice B captures this idea.",
+      "commonTrap": "Choice A is tempting because the fur and metabolism details in paragraph 2 are vivid and accurate. But they are background that explains the otter's appetite. A central idea must account for the kelp forests, the keystone idea, and the trophic cascade, and choice A mentions none of them.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-102",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-TXT"
+      ],
+      "passageId": "RC-P101",
+      "stem": "How does paragraph 5 contribute to the development of ideas in the passage?",
+      "choices": [
+        {
+          "id": "ELA-RC-102-a",
+          "label": "A",
+          "text": "It challenges Estes's conclusions by describing an experiment that produced different results.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Reverses the relationship. Paragraph 5 opens by saying \"Estes's findings fit an idea\" that Paine had introduced. Paine's experiment supports Estes's work rather than challenging it."
+        },
+        {
+          "id": "ELA-RC-102-b",
+          "label": "B",
+          "text": "It argues that sea stars are more important to ocean life than sea otters are.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported comparison. The paragraph presents the sea star as another example of a keystone species. It never ranks sea stars above otters."
+        },
+        {
+          "id": "ELA-RC-102-c",
+          "label": "C",
+          "text": "It explains how the word \"keystone\" came from the design of stone arches.",
+          "isCorrect": false,
+          "explanation": "Incorrect. True detail, but too narrow. The paragraph does mention \"the central stone at the top of an arch,\" but only to explain a scientific term. The paragraph's job is to link Estes's findings to the keystone idea."
+        },
+        {
+          "id": "ELA-RC-102-d",
+          "label": "D",
+          "text": "It connects Estes's observations to a broader scientific idea that explains why one species can have such a large effect.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraph 5 introduces Paine's term \"keystone species\" and defines it: \"A keystone species has an effect on its community far larger than its numbers would suggest.\" This general idea explains what Estes saw around the Aleutian islands."
+        }
+      ],
+      "solutionExplanation": "Paragraph 4 describes what Estes observed. Paragraph 5 begins, \"Estes's findings fit an idea that another ecologist, Robert Paine, had recently introduced,\" and then explains that idea: \"A keystone species has an effect on its community far larger than its numbers would suggest.\" The paragraph places Estes's specific observations inside a larger concept, which paragraph 6 then applies to the otter food chain.",
+      "commonTrap": "Choice C is tempting because the arch comparison is the most memorable detail in paragraph 5. But a question about how a paragraph contributes asks for its role in the passage, not its most interesting fact. The arch detail only explains where a term came from.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-103",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-EV"
+      ],
+      "passageId": "RC-P101",
+      "stem": "Which sentence from the passage best supports the idea that otters, rather than differences in the environment, explained why some Aleutian islands had kelp forests and others did not?",
+      "choices": [
+        {
+          "id": "ELA-RC-103-a",
+          "label": "A",
+          "text": "Some of the islands had healthy otter populations; others had few or none.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Sets up the comparison but proves nothing. This sentence says nothing about the kelp or about the islands' environments, so it cannot show that otters were the cause."
+        },
+        {
+          "id": "ELA-RC-103-b",
+          "label": "B",
+          "text": "Around islands with otters, kelp forests flourished.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Supports only half of the claim. This sentence shows that otters and kelp appeared together, but it does not rule out that something else about those islands, such as climate, caused the difference. The claim specifically says \"rather than differences in the environment.\""
+        },
+        {
+          "id": "ELA-RC-103-c",
+          "label": "C",
+          "text": "Because the islands were similar in climate and geology, the otters themselves appeared to be the deciding factor.",
+          "isCorrect": true,
+          "explanation": "Correct. This sentence rules out environmental differences (\"similar in climate and geology\") and names the otters as \"the deciding factor,\" so it supports both halves of the claim."
+        },
+        {
+          "id": "ELA-RC-103-d",
+          "label": "D",
+          "text": "Much of that food consists of sea urchins, spiny animals that graze on kelp.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Relevant background, wrong focus. This sentence from paragraph 2 explains the food chain that links otters to kelp, but it says nothing about the Aleutian islands or about differences between their environments."
+        }
+      ],
+      "solutionExplanation": "The claim has two parts: otters explained the difference, and environmental conditions did not. Paragraph 4 ends, \"Because the islands were similar in climate and geology, the otters themselves appeared to be the deciding factor.\" This is the only choice that addresses both parts. The other sentences show that otters and kelp are connected but do not rule out other causes.",
+      "commonTrap": "Choice B is tempting because it directly links otters to healthy kelp. But a pattern alone does not prove a cause. Only choice C explains why scientists could rule out differences in climate and geology, which is the second half of the claim.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-104",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-VOC"
+      ],
+      "passageId": "RC-P101",
+      "stem": "As used in paragraph 6, the phrase \"in check\" most nearly means",
+      "choices": [
+        {
+          "id": "ELA-RC-104-a",
+          "label": "A",
+          "text": "held within limits.",
+          "isCorrect": true,
+          "explanation": "Correct. The next sentence gives the contrast: \"When otters vanish, urchins multiply.\" So when otters are present, urchin numbers are kept from growing out of control."
+        },
+        {
+          "id": "ELA-RC-104-b",
+          "label": "B",
+          "text": "under close observation.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Right word, wrong meaning. To \"check\" something can mean to inspect it, but otters do not watch urchins. They eat them, which limits their numbers."
+        },
+        {
+          "id": "ELA-RC-104-c",
+          "label": "C",
+          "text": "marked as finished.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Right word, wrong meaning. This is the sense of a check mark on a list, which has nothing to do with predators and prey."
+        },
+        {
+          "id": "ELA-RC-104-d",
+          "label": "D",
+          "text": "brought to a complete stop.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Too extreme. Otters limit urchin numbers, but the passage never says otters wipe out urchins or stop them entirely."
+        }
+      ],
+      "solutionExplanation": "Paragraph 6 says, \"When otters are present, they keep urchin numbers in check, and the kelp thrives. When otters vanish, urchins multiply and strip the forest.\" The contrast shows that \"in check\" means limited or controlled. With otters, urchin numbers stay low; without them, urchins \"multiply.\"",
+      "commonTrap": "Choice D is tempting because otters clearly reduce urchins. But \"in check\" means controlled, not eliminated. The kelp thrives because urchins are kept within limits, not because they are gone.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-105",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-INF"
+      ],
+      "passageId": "RC-P101",
+      "stem": "Based on paragraph 7, which statement about trophic cascades can most reasonably be inferred?",
+      "choices": [
+        {
+          "id": "ELA-RC-105-a",
+          "label": "A",
+          "text": "A trophic cascade can begin with a change that starts outside the otter, urchin, and kelp food chain.",
+          "isCorrect": true,
+          "explanation": "Correct. Killer whales are not part of the chain described in paragraph 6 (\"Otters eat urchins; urchins eat kelp\"), yet once they \"had begun eating\" otters, \"urchin barrens spread once again.\" A change from outside the chain set off the same chain reaction."
+        },
+        {
+          "id": "ELA-RC-105-b",
+          "label": "B",
+          "text": "Killer whales have replaced sea otters as the keystone species of the Aleutian Islands.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported claim. The passage says killer whales began eating otters \"possibly because the whales' usual prey had become scarce.\" It never calls killer whales a keystone species or says they took over the otters' role."
+        },
+        {
+          "id": "ELA-RC-105-c",
+          "label": "C",
+          "text": "Once urchin barrens form, kelp forests can never grow back.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Contradicted by the text. Barrens \"spread once again\" in the 1990s, which means they had shrunk while otters were recovering. That could only happen if kelp had grown back."
+        },
+        {
+          "id": "ELA-RC-105-d",
+          "label": "D",
+          "text": "Otter numbers dropped in the 1990s because sea urchins had become too scarce to eat.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Reverses the relationship. It was the killer whales' \"usual prey\" that may have become scarce. Urchins increased, not decreased, as otters disappeared."
+        }
+      ],
+      "solutionExplanation": "Paragraph 6 lays out the chain: \"Otters eat urchins; urchins eat kelp.\" Paragraph 7 adds a new animal. Killer whales, \"which had not been known to hunt otters regularly,\" began eating them, and \"As the otters disappeared, urchin barrens spread once again.\" The passage concludes that \"A change in one predator's diet had rippled through the ecosystem.\" Because the killer whales were outside the original chain, a reader can infer that a cascade can be started by a change from outside it.",
+      "commonTrap": "Choice B is tempting because killer whales are the new predator in paragraph 7, and the passage has just defined \"keystone species.\" But the passage never applies that term to killer whales. It only says their change in diet \"rippled through the ecosystem.\"",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-106",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "INDY-MS",
+      "tags": [
+        "RC-EV"
+      ],
+      "passageId": "RC-P101",
+      "stem": "Which two details from the passage best support the idea that losing a predator can harm many other living things in its community? Select two answers.",
+      "choices": [
+        {
+          "id": "ELA-RC-106-a",
+          "label": "A",
+          "text": "Otters have no thick layer of blubber to keep them warm.",
+          "isCorrect": false,
+          "explanation": "Incorrect. True detail, irrelevant to the claim. This fact from paragraph 2 explains why otters must eat so much. It says nothing about what happens when a predator disappears."
+        },
+        {
+          "id": "ELA-RC-106-b",
+          "label": "B",
+          "text": "When Paine removed a predatory sea star, the variety of life on the shoreline collapsed as mussels took over.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraph 5 says Paine \"watched the variety of life there collapse as mussels took over.\" Removing one predator reduced the number of kinds of living things in the community."
+        },
+        {
+          "id": "ELA-RC-106-c",
+          "label": "C",
+          "text": "An international treaty in 1911 banned most otter hunting.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Wrong focus. This detail from paragraph 3 explains how otters began to recover. It does not show the effects of losing a predator."
+        },
+        {
+          "id": "ELA-RC-106-d",
+          "label": "D",
+          "text": "Around islands without otters, urchins covered the seafloor and the kelp was eaten down to bare rock.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraph 4 says that around islands without otters, \"sea urchins carpeted the bottom, and the kelp had been chewed down to bare rock.\" Without the predator, the forest that shelters \"fish, crabs, snails, and seals\" (paragraph 1) was gone."
+        },
+        {
+          "id": "ELA-RC-106-e",
+          "label": "E",
+          "text": "Killer whales may have begun eating otters because the whales' usual prey had become scarce.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Close, but it gives a cause, not an effect. This detail from paragraph 7 explains why otters may have declined. By itself it does not describe harm to other living things; that comes in the next sentence, which is not part of this choice."
+        }
+      ],
+      "ms": {
+        "selectCount": 2,
+        "instruction": "Select two answers."
+      },
+      "solutionExplanation": "The claim is about what happens to a community after its predator is removed. Paragraph 5 describes Paine's experiment, in which removing a sea star made \"the variety of life there collapse.\" Paragraph 4 describes islands without otters, where \"the kelp had been chewed down to bare rock.\" Both details show many living things suffering once a predator is gone. The correct answers are B and D.",
+      "commonTrap": "Choice E is tempting because it comes from paragraph 7, which does describe a cascade. But the choice only explains why otters may have disappeared. Evidence for this claim must show the result of losing a predator, not the reason the predator was lost.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-107",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-MI"
+      ],
+      "passageId": "RC-P102",
+      "stem": "Which statement best expresses the central idea of the passage?",
+      "choices": [
+        {
+          "id": "ELA-RC-107-a",
+          "label": "A",
+          "text": "The Croton Aqueduct solved New York City's dangerous shortage of clean water and helped the city become healthier, safer, and larger.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraphs 1 through 3 describe the problem, paragraphs 4 through 6 describe how the aqueduct was built and opened, and paragraph 7 describes the results: \"Clean water allowed the city to fight fires more effectively and made indoor plumbing and public baths possible for more people. It also allowed New York to keep growing.\""
+        },
+        {
+          "id": "ELA-RC-107-b",
+          "label": "B",
+          "text": "The Great Fire of 1835 convinced New Yorkers to vote for an aqueduct.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Reverses the order of events, and it is too narrow. Paragraph 3 says voters approved the project \"In the spring of 1835\" and that the fire came \"Months later, in December 1835.\" The fire made the need \"impossible to ignore,\" but the vote had already happened."
+        },
+        {
+          "id": "ELA-RC-107-c",
+          "label": "C",
+          "text": "John B. Jervis was the most talented engineer in American history.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported extreme claim. Paragraph 4 says Jervis \"had gained experience building canals and railroads\" and calls his solution \"elegant in its simplicity,\" but the passage never compares him with other engineers."
+        },
+        {
+          "id": "ELA-RC-107-d",
+          "label": "D",
+          "text": "Immigrant workers built many of New York City's most important public works.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Too broad. Paragraph 5 says many of the aqueduct's workers were \"recent immigrants from Ireland,\" but the passage is about one project and does not discuss the city's other public works."
+        }
+      ],
+      "solutionExplanation": "The passage follows a problem-and-solution structure. Paragraphs 1 and 2 describe polluted wells, a deadly cholera outbreak, and the danger of fire. Paragraphs 3 through 6 describe the plan, the Great Fire, Jervis's design, the workers, and the 1842 celebration. Paragraphs 7 and 8 describe the lasting effects, including better firefighting, indoor plumbing, and growth. Choice A is the only statement broad enough to cover all of this.",
+      "commonTrap": "Choice B is tempting because the Great Fire is the most dramatic event in the passage, and it seems natural that a disaster would push voters to act. But paragraph 3 places the vote first: \"In the spring of 1835, voters approved the project. Months later, in December 1835, a fire broke out.\"",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-108",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "INDY-DND",
+      "tags": [
+        "RC-SEQ"
+      ],
+      "passageId": "RC-P102",
+      "stem": "The passage describes several events in the history of New York City's water supply. Drag the events into the boxes to show the order in which they happened, from first to last.",
+      "dnd": {
+        "instruction": "Drag one event into each box. Each event is used once.",
+        "pool": [
+          {
+            "id": "e1",
+            "text": "A cholera outbreak kills thousands of New Yorkers.",
+            "explanation": "First. Paragraph 2 dates the outbreak to \"1832,\" the earliest of these events."
+          },
+          {
+            "id": "e2",
+            "text": "Voters approve a plan to bring water from the Croton River.",
+            "explanation": "Second. Paragraph 3 says, \"In the spring of 1835, voters approved the project.\""
+          },
+          {
+            "id": "e3",
+            "text": "A fire on a freezing night destroys hundreds of buildings.",
+            "explanation": "Third. The Great Fire happened \"Months later, in December 1835\" (paragraph 3), after the vote. Students who assume the fire caused the vote often place it second."
+          },
+          {
+            "id": "e4",
+            "text": "A parade celebrates the arrival of Croton water in the city.",
+            "explanation": "Fourth. Paragraph 6 dates the celebration to \"October 14, 1842.\""
+          },
+          {
+            "id": "e5",
+            "text": "High Bridge is completed across the Harlem River.",
+            "explanation": "Fifth. Paragraph 5 says High Bridge \"was not completed until several years after the aqueduct opened.\" Students who follow paragraph order may put it before the 1842 parade, which is described later in the passage."
+          }
+        ],
+        "zones": [
+          {
+            "id": "z1",
+            "prompt": "First"
+          },
+          {
+            "id": "z2",
+            "prompt": "Second"
+          },
+          {
+            "id": "z3",
+            "prompt": "Third"
+          },
+          {
+            "id": "z4",
+            "prompt": "Fourth"
+          },
+          {
+            "id": "z5",
+            "prompt": "Fifth"
+          }
+        ],
+        "correctMapping": {
+          "z1": "e1",
+          "z2": "e2",
+          "z3": "e3",
+          "z4": "e4",
+          "z5": "e5"
+        }
+      },
+      "solutionExplanation": "Use the dates and time words in the passage. The cholera outbreak came \"In 1832\" (paragraph 2). Voters approved the project \"In the spring of 1835,\" and the fire followed \"Months later, in December 1835\" (paragraph 3). The parade took place on \"October 14, 1842\" (paragraph 6). High Bridge \"was not completed until several years after the aqueduct opened\" (paragraph 5), so it comes last.",
+      "commonTrap": "Two traps work together here. Many students assume the Great Fire led to the vote, so they swap the second and third events. Others follow the order of the paragraphs and place High Bridge (paragraph 5) before the parade (paragraph 6), missing the phrase \"several years after the aqueduct opened.\"",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-109",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-TXT"
+      ],
+      "passageId": "RC-P102",
+      "stem": "Why does the author most likely include the description of the Great Fire in paragraph 3?",
+      "choices": [
+        {
+          "id": "ELA-RC-109-a",
+          "label": "A",
+          "text": "to explain why voters chose the Croton River instead of sources closer to the city",
+          "isCorrect": false,
+          "explanation": "Incorrect. Wrong cause. Paragraph 3 says closer sources were rejected because they \"were either too small or too salty.\" Also, the vote came before the fire, so the fire could not explain the voters' choice."
+        },
+        {
+          "id": "ELA-RC-109-b",
+          "label": "B",
+          "text": "to show that a lack of water caused the fire to start",
+          "isCorrect": false,
+          "explanation": "Incorrect. Reverses cause and effect. The frozen water supply made the fire hard to fight: \"firefighters could do little to stop the flames.\" The passage never says the lack of water started the fire."
+        },
+        {
+          "id": "ELA-RC-109-c",
+          "label": "C",
+          "text": "to emphasize how urgently the city needed the water supply that voters had already approved",
+          "isCorrect": true,
+          "explanation": "Correct. The fire happened \"Months later\" than the vote, and it \"made the need for a reliable water supply impossible to ignore.\" The author uses it to show that the approved project was badly needed."
+        },
+        {
+          "id": "ELA-RC-109-d",
+          "label": "D",
+          "text": "to introduce the engineer who designed the aqueduct",
+          "isCorrect": false,
+          "explanation": "Incorrect. Wrong paragraph. Jervis is introduced in paragraph 4, and the passage does not connect him to the fire."
+        }
+      ],
+      "solutionExplanation": "Paragraph 3 first reports that \"In the spring of 1835, voters approved the project.\" The fire comes \"Months later,\" when, \"With hydrants and wells frozen, firefighters could do little to stop the flames.\" The paragraph ends by saying the fire \"made the need for a reliable water supply impossible to ignore.\" The fire is included to stress how urgent the already approved project was.",
+      "commonTrap": "Choice A is tempting because students often assume the fire came first and pushed the city into action. The paragraph makes the order clear: the vote came \"In the spring of 1835,\" and the fire came \"Months later.\" An event cannot explain a choice that was made before it happened.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-110",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-EV"
+      ],
+      "passageId": "RC-P102",
+      "stem": "Which sentence from the passage best supports the idea that the aqueduct did not need machines to move water to the city?",
+      "choices": [
+        {
+          "id": "ELA-RC-110-a",
+          "label": "A",
+          "text": "Workers built a dam on the Croton River to create a lake, and from there a covered masonry tunnel carried the water south toward the city.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Describes the route, not the force. This sentence says where the water went, but not what made it move."
+        },
+        {
+          "id": "ELA-RC-110-b",
+          "label": "B",
+          "text": "The tunnel sloped downward so gently and steadily that the water flowed on its own the entire way.",
+          "isCorrect": true,
+          "explanation": "Correct. \"Flowed on its own the entire way\" means nothing pushed the water. The downward slope let it travel the whole forty miles without machines."
+        },
+        {
+          "id": "ELA-RC-110-c",
+          "label": "C",
+          "text": "They cut through hillsides, filled in low ground, and laid millions of bricks by hand.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Right words, wrong meaning. \"By hand\" describes how workers built the tunnel, not how water moved through it once it was finished."
+        },
+        {
+          "id": "ELA-RC-110-d",
+          "label": "D",
+          "text": "A temporary pipe carried the water across at first.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Irrelevant detail. This sentence describes how water crossed the Harlem River before High Bridge was finished. It says nothing about whether machines were needed."
+        }
+      ],
+      "solutionExplanation": "The claim is about what moved the water. Paragraph 4 explains Jervis's design: \"The tunnel sloped downward so gently and steadily that the water flowed on its own the entire way.\" Water that flows \"on its own\" needs no machine to push it. The other sentences describe the route, the construction, or one river crossing.",
+      "commonTrap": "Choice C is tempting because \"by hand\" sounds like the opposite of using machines. But that phrase describes the workers building the tunnel, not the water moving through it. Always check what a phrase is describing before using it as evidence.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-111",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-VOC"
+      ],
+      "passageId": "RC-P102",
+      "stem": "As used in paragraph 1, the word \"drew\" most nearly means",
+      "choices": [
+        {
+          "id": "ELA-RC-111-a",
+          "label": "A",
+          "text": "sketched.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Right word, wrong meaning. \"Drew\" can mean made a picture, but residents were not making pictures of wells."
+        },
+        {
+          "id": "ELA-RC-111-b",
+          "label": "B",
+          "text": "attracted.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Right word, wrong meaning. \"Drew\" can mean attracted, as in \"drew a crowd,\" but this meaning does not fit taking water from a well."
+        },
+        {
+          "id": "ELA-RC-111-c",
+          "label": "C",
+          "text": "obtained.",
+          "isCorrect": true,
+          "explanation": "Correct. Residents \"drew their water from wells and public pumps,\" meaning they got their water from those sources. The paragraph later adds that most New Yorkers \"had no choice except the neighborhood pump.\""
+        },
+        {
+          "id": "ELA-RC-111-d",
+          "label": "D",
+          "text": "prolonged.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Right word, wrong meaning. \"Drew out\" can mean made something last longer, as in \"drew out a meeting,\" but nothing in the sentence is being made longer."
+        }
+      ],
+      "solutionExplanation": "Paragraph 1 says, \"most residents still drew their water from wells and public pumps.\" Wells and pumps are places people go to get water, and the paragraph ends by saying most New Yorkers \"had no choice except the neighborhood pump.\" In this context, \"drew\" means obtained or took.",
+      "commonTrap": "Choice B is tempting because \"attracted\" is a common meaning of \"drew,\" and a well could seem to draw people toward it. But the subject is the residents and the object is their water: residents did not attract water, they took it from wells.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-112",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-INF"
+      ],
+      "passageId": "RC-P102",
+      "stem": "Based on paragraphs 7 and 8, which statement about the Croton Aqueduct can most reasonably be inferred?",
+      "choices": [
+        {
+          "id": "ELA-RC-112-a",
+          "label": "A",
+          "text": "Its success helped the city grow so much that the original aqueduct eventually could not meet the city's needs.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraph 7 says the aqueduct \"allowed New York to keep growing\" and that \"Within a few decades, demand had risen so much that the city had to build a larger aqueduct.\" The growth the aqueduct made possible eventually outpaced it."
+        },
+        {
+          "id": "ELA-RC-112-b",
+          "label": "B",
+          "text": "It was abandoned soon after it opened because its design did not work.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Contradicted by the text. Paragraph 7 lists the aqueduct's benefits, and a larger aqueduct was needed only \"Within a few decades,\" because demand had grown, not because the design failed."
+        },
+        {
+          "id": "ELA-RC-112-c",
+          "label": "C",
+          "text": "Once it became too small, the city stopped relying on distant sources of water.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Contradicted by paragraph 8, which says \"New York still gets much of its water from distant reservoirs upstate.\""
+        },
+        {
+          "id": "ELA-RC-112-d",
+          "label": "D",
+          "text": "Its reservoirs were removed because New Yorkers disliked their Egyptian-style walls.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported. Paragraph 6 says New Yorkers \"strolled along the top of those walls to admire the view,\" and the passage gives no reason for the reservoirs' removal."
+        }
+      ],
+      "solutionExplanation": "Paragraph 7 links two ideas. The aqueduct \"allowed New York to keep growing,\" and \"Within a few decades, demand had risen so much that the city had to build a larger aqueduct.\" Putting these together, a reader can infer that the aqueduct's own success led to growth that it could not keep up with. Paragraph 8 confirms that the approach continued: the city \"still gets much of its water from distant reservoirs upstate.\"",
+      "commonTrap": "Choice C is tempting because paragraph 8 says the original reservoirs are gone, so students may assume the whole approach was dropped. But paragraph 8 also says the city \"still gets much of its water from distant reservoirs upstate,\" a system that \"began with Jervis's tunnel.\"",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-113",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-MI"
+      ],
+      "passageId": "RC-P103",
+      "stem": "Which statement best expresses the central idea of the passage?",
+      "choices": [
+        {
+          "id": "ELA-RC-113-a",
+          "label": "A",
+          "text": "Maria Mitchell's discovery of a comet was the most important event in the history of American science.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported extreme claim. Paragraph 4 says the discovery \"brought international recognition,\" but the passage never compares it with every other event in American science."
+        },
+        {
+          "id": "ELA-RC-113-b",
+          "label": "B",
+          "text": "Nantucket's whaling industry made the island a leading center of scientific research.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Distorts a detail. Paragraph 2 says \"ship captains depended on astronomy to find their position at sea,\" which explains Mitchell's early training. The passage does not call Nantucket a center of research, and the detail is too narrow to be the central idea."
+        },
+        {
+          "id": "ELA-RC-113-c",
+          "label": "C",
+          "text": "Maria Mitchell's patient study of the sky led to a famous discovery, and she used her success to expand opportunities for women in science.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraphs 1 through 4 trace how years of observation led to her comet discovery and its honors. Paragraphs 5 through 8 show how \"she used it to open doors for others\" by teaching women at Vassar and speaking out about \"the unequal treatment of women.\""
+        },
+        {
+          "id": "ELA-RC-113-d",
+          "label": "D",
+          "text": "Maria Mitchell discovered a comet mainly because she happened to be on the roof on the right night.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Contradicted by the text. Paragraph 3 says Mitchell's years of careful study gave her a \"familiarity\" with the sky, and \"That familiarity is what allowed her to recognize\" the comet. Her discovery was not mainly luck."
+        }
+      ],
+      "solutionExplanation": "The passage has two halves. The first half (paragraphs 1 through 4) shows how Mitchell's training and years of careful observation led to her 1847 discovery and its honors. The second half (paragraphs 5 through 8) shows that \"Instead\" of enjoying fame quietly, \"she used it to open doors for others.\" Paragraph 8 ends with \"the path she opened for women in astronomy.\" Choice C is the only statement that covers both halves.",
+      "commonTrap": "Choice D is tempting because paragraph 1 makes the discovery sound sudden: on one night, she \"noticed a faint, fuzzy spot of light.\" But paragraph 3 explains that her discovery came from years of study: \"That familiarity is what allowed her to recognize\" the comet.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-114",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-TXT"
+      ],
+      "passageId": "RC-P103",
+      "stem": "How does paragraph 3 contribute to the development of ideas in the passage?",
+      "choices": [
+        {
+          "id": "ELA-RC-114-a",
+          "label": "A",
+          "text": "It explains that Mitchell's discovery grew out of years of careful, familiar study of the sky.",
+          "isCorrect": true,
+          "explanation": "Correct. The paragraph says she \"came to know its patterns the way other people know the streets of their hometown,\" and \"That familiarity is what allowed her to recognize, in 1847, that a small, fuzzy spot of light did not belong.\""
+        },
+        {
+          "id": "ELA-RC-114-b",
+          "label": "B",
+          "text": "It shows that Mitchell's job as a librarian kept her from pursuing astronomy.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Reverses the relationship. Paragraph 3 says the job \"left her time to read widely in mathematics and science, and her evenings were free for observing.\" The job supported her astronomy."
+        },
+        {
+          "id": "ELA-RC-114-c",
+          "label": "C",
+          "text": "It describes the telescope and other instruments Mitchell used on the roof.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Not in the paragraph. Paragraph 3 does not describe any instruments. Her father's instruments are mentioned in paragraph 2."
+        },
+        {
+          "id": "ELA-RC-114-d",
+          "label": "D",
+          "text": "It introduces Mitchell's later work as a professor at Vassar College.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Wrong paragraph. Her work at Vassar is introduced in paragraph 5."
+        }
+      ],
+      "solutionExplanation": "Paragraph 1 describes the night of the discovery. Paragraph 3 goes back to explain how it was possible: Mitchell studied the sky \"Night after night\" until she knew \"its patterns the way other people know the streets of their hometown.\" The paragraph ends by tying this back to the discovery: \"That familiarity is what allowed her to recognize, in 1847, that a small, fuzzy spot of light did not belong.\"",
+      "commonTrap": "Choice B is tempting because a full-time library job sounds like a detour from science. But the paragraph says the opposite: the job \"left her time to read widely in mathematics and science, and her evenings were free for observing.\"",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-115",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-EV"
+      ],
+      "passageId": "RC-P103",
+      "stem": "Which sentence from the passage best supports the idea that Mitchell's upbringing gave her advantages that were unusual for girls of her time?",
+      "choices": [
+        {
+          "id": "ELA-RC-115-a",
+          "label": "A",
+          "text": "Nantucket was a center of the whaling industry, and ship captains depended on astronomy to find their position at sea.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Wrong focus. This sentence describes the island and its captains, not any advantage Mitchell had compared with other girls."
+        },
+        {
+          "id": "ELA-RC-115-b",
+          "label": "B",
+          "text": "He taught his daughter to use his instruments, and by the time she was a teenager, she was helping with his calculations.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Supports only half of the claim. This sentence shows that Mitchell had an advantage, but it says nothing about whether that advantage was unusual. The claim requires a comparison with other girls of her time."
+        },
+        {
+          "id": "ELA-RC-115-c",
+          "label": "C",
+          "text": "Her family was Quaker, and the Quaker belief that girls deserved the same education as boys gave her opportunities that many young women of her era lacked.",
+          "isCorrect": true,
+          "explanation": "Correct. This sentence describes an advantage from her upbringing (\"opportunities\") and states that it was unusual (\"that many young women of her era lacked\")."
+        },
+        {
+          "id": "ELA-RC-115-d",
+          "label": "D",
+          "text": "As a young woman, Mitchell worked as the librarian of the Nantucket Atheneum, a position she held for about twenty years.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Wrong time period. This sentence describes Mitchell's adult job, not her upbringing, and it does not compare her with other women."
+        }
+      ],
+      "solutionExplanation": "The claim has two parts: Mitchell's upbringing gave her advantages, and those advantages were unusual. The last sentence of paragraph 2 addresses both. It names an advantage, \"the Quaker belief that girls deserved the same education as boys,\" and says it \"gave her opportunities that many young women of her era lacked.\"",
+      "commonTrap": "Choice B is tempting because learning to use astronomical instruments as a child is clearly an advantage. But the claim also says the advantage was \"unusual for girls of her time,\" and only choice C makes that comparison.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-116",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-VOC"
+      ],
+      "passageId": "RC-P103",
+      "stem": "As used in paragraph 4, the word \"recognition\" most nearly means",
+      "choices": [
+        {
+          "id": "ELA-RC-116-a",
+          "label": "A",
+          "text": "the act of identifying something seen before.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Right word, wrong meaning. Paragraph 3 uses \"recognize\" in this sense: Mitchell could \"recognize\" that a spot of light \"did not belong.\" In paragraph 4, though, it is the discovery that \"brought international recognition,\" and the rest of the paragraph describes a medal, news coverage, and an honor."
+        },
+        {
+          "id": "ELA-RC-116-b",
+          "label": "B",
+          "text": "careful examination.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Plausible in a science passage, but wrong here. Mitchell's work involved careful examination of the sky, but \"brought international recognition\" describes what the world gave her after the discovery, not what she did."
+        },
+        {
+          "id": "ELA-RC-116-c",
+          "label": "C",
+          "text": "official permission.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported by context. No one in paragraph 4 gives Mitchell permission to do anything. She receives awards for something she already did."
+        },
+        {
+          "id": "ELA-RC-116-d",
+          "label": "D",
+          "text": "praise and honor.",
+          "isCorrect": true,
+          "explanation": "Correct. After the discovery \"brought international recognition,\" the paragraph lists a gold medal, newspaper coverage \"on both sides of the Atlantic,\" and her election to the American Academy of Arts and Sciences."
+        }
+      ],
+      "solutionExplanation": "Paragraph 4 begins, \"Her discovery brought international recognition,\" and then gives examples: the king of Denmark's gold medal, newspapers \"on both sides of the Atlantic,\" and her election as \"the first woman elected to the American Academy of Arts and Sciences.\" These are all forms of praise and honor.",
+      "commonTrap": "Choice A is tempting because paragraph 3, just before, uses \"recognize\" to mean identify. Students carry that meaning forward. But in paragraph 4 the discovery is what \"brought\" recognition to Mitchell, and the examples that follow are honors.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-117",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-INF"
+      ],
+      "passageId": "RC-P103",
+      "stem": "Based on paragraph 7, which statement best describes Mitchell's view of women in science?",
+      "choices": [
+        {
+          "id": "ELA-RC-117-a",
+          "label": "A",
+          "text": "She believed women were naturally better at astronomy than men.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported extreme claim. Mitchell argued for fair treatment and a fair chance, not that women were superior."
+        },
+        {
+          "id": "ELA-RC-117-b",
+          "label": "B",
+          "text": "She believed women's accomplishments in science had been limited by a lack of fair opportunity.",
+          "isCorrect": true,
+          "explanation": "Correct. Mitchell argued that \"no one could judge what women were capable of in science until women had been given a fair chance to try.\" This suggests she believed women had not yet had that chance, so their accomplishments did not show their true ability."
+        },
+        {
+          "id": "ELA-RC-117-c",
+          "label": "C",
+          "text": "She believed equal pay mattered more to women than equal education did.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported comparison. Paragraph 7 mentions her fight over pay, but the passage never says she ranked pay above education. Her career at Vassar shows that she cared deeply about education."
+        },
+        {
+          "id": "ELA-RC-117-d",
+          "label": "D",
+          "text": "She believed that once she won a raise, women no longer faced unfair treatment in science.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported. Paragraph 7 also says she \"helped found an organization devoted to advancing women's opportunities,\" which would make little sense if she thought the problem had been solved."
+        }
+      ],
+      "solutionExplanation": "Paragraph 7 gives three pieces of information: she protested unequal pay, she helped found an organization \"devoted to advancing women's opportunities,\" and she argued that \"no one could judge what women were capable of in science until women had been given a fair chance to try.\" Together these suggest she believed women had been held back by a lack of opportunity, not by a lack of ability.",
+      "commonTrap": "Choice D is tempting because the raise is described as a victory: she \"eventually won a raise.\" But one person's raise did not end unfair treatment, and the rest of the paragraph shows Mitchell continuing to work for women's opportunities.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-118",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "INDY-MS",
+      "tags": [
+        "RC-EV"
+      ],
+      "passageId": "RC-P103",
+      "stem": "Which two sentences from the passage best support the idea that Mitchell believed students should learn science through hands-on experience? Select two answers.",
+      "choices": [
+        {
+          "id": "ELA-RC-118-a",
+          "label": "A",
+          "text": "The job left her time to read widely in mathematics and science, and her evenings were free for observing.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Wrong focus. This sentence from paragraph 3 describes Mitchell's own life as a librarian, not what she believed about how students should learn."
+        },
+        {
+          "id": "ELA-RC-118-b",
+          "label": "B",
+          "text": "She was also named director of the college observatory.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Right setting, but no belief. Running the observatory gave Mitchell a place to teach, but this sentence does not show how she thought students should learn."
+        },
+        {
+          "id": "ELA-RC-118-c",
+          "label": "C",
+          "text": "Mitchell believed that science was learned by doing, not by memorizing.",
+          "isCorrect": true,
+          "explanation": "Correct. This sentence states her belief directly: science is \"learned by doing.\""
+        },
+        {
+          "id": "ELA-RC-118-d",
+          "label": "D",
+          "text": "Her students did not simply read about the heavens; they spent long nights at the telescope, recorded careful observations, and made their own calculations.",
+          "isCorrect": true,
+          "explanation": "Correct. This sentence shows the belief in action. Her students observed and calculated for themselves instead of only reading."
+        },
+        {
+          "id": "ELA-RC-118-e",
+          "label": "E",
+          "text": "When she learned that she was being paid less than male professors who had less experience, she protested and eventually won a raise.",
+          "isCorrect": false,
+          "explanation": "Incorrect. True detail, irrelevant to the claim. This sentence from paragraph 7 is about fair pay, not teaching methods."
+        }
+      ],
+      "ms": {
+        "selectCount": 2,
+        "instruction": "Select two answers."
+      },
+      "solutionExplanation": "Paragraph 5 contains both pieces of evidence. First, it states the belief: \"Mitchell believed that science was learned by doing, not by memorizing.\" Then it shows what that looked like: her students \"spent long nights at the telescope, recorded careful observations, and made their own calculations.\" The correct answers are C and D.",
+      "commonTrap": "Choice B is tempting because an observatory is where hands-on astronomy happens, and it appears in the same paragraph as the correct answers. But being named director is a job title, not evidence of how she believed students should learn.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-119",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-MI"
+      ],
+      "passageId": "RC-P104",
+      "stem": "Which statement best expresses the central idea of the passage?",
+      "choices": [
+        {
+          "id": "ELA-RC-119-a",
+          "label": "A",
+          "text": "Edward Jenner's discovery of vaccination was enough to end smallpox around the world.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Too narrow, and contradicted by the text. Jenner's method drove smallpox out of \"many wealthy countries,\" but paragraph 3 says, \"Yet in much of the world, the disease remained common.\" Ending it took a later worldwide campaign."
+        },
+        {
+          "id": "ELA-RC-119-b",
+          "label": "B",
+          "text": "Smallpox was a greater danger in wealthy countries than in poorer ones.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Reverses the text. Paragraph 2 says vaccination \"drove smallpox out of many wealthy countries,\" while the disease \"remained common\" in much of the rest of the world."
+        },
+        {
+          "id": "ELA-RC-119-c",
+          "label": "C",
+          "text": "Ring vaccination is the best way to fight every infectious disease.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported extreme claim. The passage explains why ring vaccination worked against smallpox in particular. It never says the method works best for every disease."
+        },
+        {
+          "id": "ELA-RC-119-d",
+          "label": "D",
+          "text": "Smallpox was wiped out through a worldwide campaign that combined a smart strategy, simple tools, and the disease's own weaknesses.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraph 4 explains the disease's \"weaknesses,\" paragraph 5 describes ring vaccination, paragraph 6 describes the \"New tools,\" and paragraph 7 ends with the world declared \"free of smallpox.\""
+        }
+      ],
+      "solutionExplanation": "Paragraph 1 introduces the eradication of smallpox as \"one of the greatest achievements in the history of public health.\" The rest of the passage explains how it happened: the disease's \"weaknesses\" (paragraph 4), the ring vaccination strategy (paragraph 5), and \"New tools\" such as the bifurcated needle (paragraph 6), leading to the 1980 declaration (paragraph 7). Choice D summarizes these parts.",
+      "commonTrap": "Choice A is tempting because Jenner's discovery is the first great step in the passage, and vaccination remains central throughout. But paragraph 3 says the disease \"remained common\" in much of the world long after Jenner. The central idea must include the later campaign.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-120",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-TXT"
+      ],
+      "passageId": "RC-P104",
+      "stem": "How does paragraph 4 relate to paragraph 3?",
+      "choices": [
+        {
+          "id": "ELA-RC-120-a",
+          "label": "A",
+          "text": "It answers the doubts described in paragraph 3 by explaining features of smallpox that made eradication possible.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraph 3 ends with doubt: \"Many experts doubted the effort could succeed.\" Paragraph 4 begins with \"however\" and explains that smallpox \"had weaknesses that made it a good target.\""
+        },
+        {
+          "id": "ELA-RC-120-b",
+          "label": "B",
+          "text": "It explains why vaccination had failed in the wealthy countries described earlier in the passage.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Contradicted by the text. Paragraph 2 says vaccination succeeded in wealthy countries: it \"drove smallpox out of many wealthy countries.\""
+        },
+        {
+          "id": "ELA-RC-120-c",
+          "label": "C",
+          "text": "It adds details about the symptoms that made smallpox so deadly.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Right words, wrong function. Paragraph 4 mentions the rash, but only to show that it \"was easy to recognize,\" which helped workers find cases. The paragraph is about why the disease could be beaten, not why it was deadly."
+        },
+        {
+          "id": "ELA-RC-120-d",
+          "label": "D",
+          "text": "It describes the ring vaccination strategy that health workers developed.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Wrong paragraph. Ring vaccination is described in paragraph 5."
+        }
+      ],
+      "solutionExplanation": "Paragraph 3 explains why eradication seemed unlikely: the disease was in \"more than thirty countries,\" \"Many experts doubted the effort could succeed,\" and \"No disease had ever been eliminated from the entire planet.\" Paragraph 4 turns with \"however\" and lists three reasons for hope: the virus \"infected only humans,\" its rash \"was easy to recognize,\" and one dose of vaccine \"provided strong protection for years.\" Paragraph 4 answers the doubts of paragraph 3.",
+      "commonTrap": "Choice C is tempting because paragraph 4 mentions the rash, which also appears in paragraph 1's description of the disease's symptoms. But in paragraph 4, the rash is a weakness of the disease: it let health workers \"identify cases quickly.\" A detail's function depends on how it is used.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-121",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-EV"
+      ],
+      "passageId": "RC-P104",
+      "stem": "Which sentence from the passage best supports the idea that one of smallpox's symptoms helped health workers fight the disease?",
+      "choices": [
+        {
+          "id": "ELA-RC-121-a",
+          "label": "A",
+          "text": "It caused a high fever and a painful rash of fluid-filled blisters that spread across the body.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Right topic, wrong point. This sentence from paragraph 1 describes the symptoms to show how terrible the disease was, not how they helped health workers."
+        },
+        {
+          "id": "ELA-RC-121-b",
+          "label": "B",
+          "text": "The virus infected only humans, so it could not hide in animals and return later.",
+          "isCorrect": false,
+          "explanation": "Incorrect. True weakness, but not a symptom. This sentence explains a different advantage, that the virus had no animal hosts."
+        },
+        {
+          "id": "ELA-RC-121-c",
+          "label": "C",
+          "text": "Its rash was easy to recognize, which meant that health workers could identify cases quickly, even in remote villages.",
+          "isCorrect": true,
+          "explanation": "Correct. This sentence names a symptom (the rash) and explains how it helped: workers \"could identify cases quickly.\""
+        },
+        {
+          "id": "ELA-RC-121-d",
+          "label": "D",
+          "text": "When they found one, they isolated the sick person and quickly vaccinated everyone around that person: family members, neighbors, and anyone else who might have been exposed.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Describes the response, not the symptom. This sentence explains what workers did after finding a case, but it does not mention any symptom."
+        }
+      ],
+      "solutionExplanation": "The claim connects a symptom to the fight against the disease. Paragraph 4 says, \"Its rash was easy to recognize, which meant that health workers could identify cases quickly, even in remote villages.\" This sentence names the symptom and explains the benefit. Quick identification mattered because the ring strategy in paragraph 5 depended on finding new cases.",
+      "commonTrap": "Choice A is tempting because it describes the rash in detail. But it presents the rash as part of the disease's suffering. Evidence for this claim has to show the symptom helping health workers, which only choice C does.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-122",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-VOC"
+      ],
+      "passageId": "RC-P104",
+      "stem": "As used in paragraph 7, the word \"retreated\" most nearly means",
+      "choices": [
+        {
+          "id": "ELA-RC-122-a",
+          "label": "A",
+          "text": "rested in a quiet place.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Right word, wrong meaning. A \"retreat\" can be a quiet getaway, but a disease does not rest."
+        },
+        {
+          "id": "ELA-RC-122-b",
+          "label": "B",
+          "text": "became less widespread.",
+          "isCorrect": true,
+          "explanation": "Correct. The next sentence explains: \"South America became free of smallpox, and then Asia.\" The disease was disappearing from one region after another."
+        },
+        {
+          "id": "ELA-RC-122-c",
+          "label": "C",
+          "text": "returned to where it began.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Too literal. \"Retreat\" can mean move backward, but the passage does not say smallpox went back to any starting place. It simply disappeared from more and more places."
+        },
+        {
+          "id": "ELA-RC-122-d",
+          "label": "D",
+          "text": "became more dangerous.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Opposite meaning. Paragraph 7 describes the disease shrinking until the world was declared \"free of smallpox.\""
+        }
+      ],
+      "solutionExplanation": "Paragraph 7 says, \"Step by step, the disease retreated. South America became free of smallpox, and then Asia.\" The second sentence shows what \"retreated\" means here: the disease lost ground, region by region, until none was left.",
+      "commonTrap": "Choice C is tempting because \"retreat\" often means to move backward, as an army does. But the passage shows smallpox disappearing from regions, not moving back to an earlier place. Context shows that the meaning is \"became less widespread.\"",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-123",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-INF"
+      ],
+      "passageId": "RC-P104",
+      "stem": "Based on paragraphs 5 and 6, which inference is best supported?",
+      "choices": [
+        {
+          "id": "ELA-RC-123-a",
+          "label": "A",
+          "text": "The new tools made ring vaccination easier to carry out in places with limited supplies and few highly trained workers.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraph 5 describes regions \"with few roads and limited supplies.\" Paragraph 6 says the freeze-dried vaccine needed no refrigeration, workers \"could learn to use\" the needle \"in minutes,\" and it \"required far less vaccine per person.\" These tools fit exactly those conditions."
+        },
+        {
+          "id": "ELA-RC-123-b",
+          "label": "B",
+          "text": "The freeze-dried vaccine protected people from smallpox better than earlier vaccines had.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Right words, wrong meaning. The freeze-dried vaccine's advantage was that it \"could be stored for long periods in hot climates without refrigeration.\" The passage says nothing about it giving stronger protection."
+        },
+        {
+          "id": "ELA-RC-123-c",
+          "label": "C",
+          "text": "Health workers stopped searching for new cases once the bifurcated needle was introduced.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported, and contradicted later. Paragraph 6 says the tools \"helped the strategy succeed,\" meaning the search for cases continued, and paragraph 7 describes \"two more years of careful searching.\""
+        },
+        {
+          "id": "ELA-RC-123-d",
+          "label": "D",
+          "text": "Vaccinating large numbers of people had never reduced smallpox anywhere in the world.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported extreme claim. Paragraph 2 says vaccination \"drove smallpox out of many wealthy countries.\" Paragraph 5 says mass vaccination was difficult in some regions, not that it never worked."
+        }
+      ],
+      "solutionExplanation": "Paragraph 5 describes the problem: \"In crowded regions with few roads and limited supplies, reaching every person was nearly impossible.\" Paragraph 6 opens, \"New tools helped the strategy succeed,\" and each tool solves part of that problem. The vaccine worked \"without refrigeration,\" the needle could be learned \"in minutes,\" and it \"required far less vaccine per person.\" A reader can infer that these tools made ring vaccination practical in hard conditions.",
+      "commonTrap": "Choice B is tempting because the freeze-dried vaccine sounds like an improvement, so students assume it worked better. But the passage only says it could be stored in heat without refrigeration. A tool can be easier to use without being more effective.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-124",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "INDY-DND",
+      "tags": [
+        "RC-TXT"
+      ],
+      "passageId": "RC-P104",
+      "stem": "Each description below tells the main role of one paragraph in the passage. Drag a description into the box for each paragraph.",
+      "dnd": {
+        "instruction": "Drag one description into each box. One description will not be used.",
+        "pool": [
+          {
+            "id": "d1",
+            "text": "describes an early discovery that removed the disease from part of the world",
+            "explanation": "Paragraph 2. It describes Jenner's 1796 test and says that \"vaccination drove smallpox out of many wealthy countries.\""
+          },
+          {
+            "id": "d2",
+            "text": "identifies traits of the disease that made it possible to defeat",
+            "explanation": "Paragraph 4. It begins, \"Smallpox, however, had weaknesses that made it a good target,\" and lists them."
+          },
+          {
+            "id": "d3",
+            "text": "explains how new inventions helped workers in difficult conditions",
+            "explanation": "Paragraph 6. It begins, \"New tools helped the strategy succeed,\" and describes a vaccine that needed no refrigeration and a needle workers \"could learn to use\" in minutes."
+          },
+          {
+            "id": "d4",
+            "text": "considers the wider lessons of the achievement",
+            "explanation": "Paragraph 8. It says the victory \"changed what people believed was possible\" and lists \"lessons that guide public health workers today.\""
+          },
+          {
+            "id": "d5",
+            "text": "compares smallpox with other diseases that still threaten people today",
+            "explanation": "Not used. Paragraph 8 mentions rinderpest only as the one other disease that \"has since been wiped out.\" No paragraph compares smallpox with diseases that still threaten people."
+          }
+        ],
+        "zones": [
+          {
+            "id": "p2",
+            "prompt": "Paragraph 2"
+          },
+          {
+            "id": "p4",
+            "prompt": "Paragraph 4"
+          },
+          {
+            "id": "p6",
+            "prompt": "Paragraph 6"
+          },
+          {
+            "id": "p8",
+            "prompt": "Paragraph 8"
+          }
+        ],
+        "correctMapping": {
+          "p2": "d1",
+          "p4": "d2",
+          "p6": "d3",
+          "p8": "d4"
+        }
+      },
+      "solutionExplanation": "Use each paragraph's opening sentence as a guide. Paragraph 2 describes Jenner's discovery, which \"drove smallpox out of many wealthy countries.\" Paragraph 4 opens, \"Smallpox, however, had weaknesses that made it a good target.\" Paragraph 6 opens, \"New tools helped the strategy succeed.\" Paragraph 8 opens, \"The victory over smallpox changed what people believed was possible,\" and draws lessons for today. The description about comparing smallpox with other diseases fits no paragraph.",
+      "commonTrap": "The unused description is the trap. Students see \"rinderpest\" in paragraph 8 and assume the paragraph compares diseases, so they place that description there instead of the one about wider lessons. But rinderpest appears only in the last sentence, as the one other disease that has been wiped out, not as a disease that still threatens people.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-125",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-MI"
+      ],
+      "passageId": "RC-P105",
+      "stem": "Which statement best expresses the central idea of the passage?",
+      "choices": [
+        {
+          "id": "ELA-RC-125-a",
+          "label": "A",
+          "text": "Roman concrete is stronger and more useful than modern concrete in every way.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported extreme claim, contradicted by the text. Paragraph 7 says, \"None of this means that Roman concrete is better in every way,\" and notes that it is \"generally weaker than modern concrete under heavy loads.\""
+        },
+        {
+          "id": "ELA-RC-125-b",
+          "label": "B",
+          "text": "Vitruvius and Pliny the Elder explained exactly why volcanic ash made Roman concrete strong.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Distorts the text. Vitruvius \"praised the strength\" the ash gave, and Pliny \"claimed\" the concrete grew stronger, but neither explained why. The explanations came from studies in 2017 and 2023."
+        },
+        {
+          "id": "ELA-RC-125-c",
+          "label": "C",
+          "text": "The Pantheon has the largest concrete dome ever built.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported and too narrow. Paragraph 1 says the dome is \"more than 140 feet across,\" but never calls it the largest, and the Pantheon is only the passage's opening example."
+        },
+        {
+          "id": "ELA-RC-125-d",
+          "label": "D",
+          "text": "Scientists have found chemical reasons for the long life of Roman concrete, and these findings may help engineers create longer-lasting materials.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraphs 4 through 6 describe two discoveries that explain the concrete's durability, and paragraph 8 says \"Engineers today are experimenting with mixtures inspired by Roman methods.\""
+        }
+      ],
+      "solutionExplanation": "Paragraph 1 asks the question the passage sets out to answer: \"why has so much Roman concrete lasted so long?\" Paragraphs 4 through 6 give two scientific answers: minerals that grew as seawater moved through the concrete, and lime lumps that sealed cracks. Paragraph 7 notes the concrete's limits, and paragraph 8 explains how the findings could help engineers today. Choice D covers both the explanation and its modern value.",
+      "commonTrap": "Choice A is tempting because the passage praises Roman concrete for lasting two thousand years. But paragraph 7 directly rejects this extreme claim: \"None of this means that Roman concrete is better in every way.\"",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-126",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-TXT"
+      ],
+      "passageId": "RC-P105",
+      "stem": "What is the main purpose of paragraph 7?",
+      "choices": [
+        {
+          "id": "ELA-RC-126-a",
+          "label": "A",
+          "text": "to provide more evidence that seawater made Roman concrete stronger",
+          "isCorrect": false,
+          "explanation": "Incorrect. Wrong paragraph. The seawater evidence appears in paragraph 4. Paragraph 7 discusses weaknesses, not strengths."
+        },
+        {
+          "id": "ELA-RC-126-b",
+          "label": "B",
+          "text": "to qualify the passage's praise of Roman concrete by pointing out its limits",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraph 7 begins, \"None of this means that Roman concrete is better in every way,\" and then lists drawbacks: it is \"generally weaker\" under heavy loads and \"sets more slowly,\" and the survivors may simply be \"the ones that happened to be built well.\""
+        },
+        {
+          "id": "ELA-RC-126-c",
+          "label": "C",
+          "text": "to argue that engineers should stop using modern concrete",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported. Paragraph 7 says Roman concrete is \"unsuitable for many of today's skyscrapers and highways,\" which is a reason to keep modern concrete for those uses. Paragraph 8 suggests borrowing Roman ideas, not abandoning modern concrete."
+        },
+        {
+          "id": "ELA-RC-126-d",
+          "label": "D",
+          "text": "to explain why the Romans eventually stopped building with concrete",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported. The passage never says when or whether the Romans stopped using concrete."
+        }
+      ],
+      "solutionExplanation": "Paragraphs 3 through 6 build a strong case for Roman concrete. Paragraph 7 balances that case. It opens, \"None of this means that Roman concrete is better in every way,\" and gives three limits: it is weaker under heavy loads, it \"sets more slowly,\" and the surviving structures may be only \"the ones that happened to be built well.\" To qualify a claim means to limit it, which is the paragraph's purpose.",
+      "commonTrap": "Choice C is tempting because paragraph 8 mentions the costs of Portland cement, and students may read that as an argument against modern concrete. But paragraph 7 actually gives reasons modern concrete is still needed, and paragraph 8 only suggests that engineers can learn from Roman methods.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-127",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-EV"
+      ],
+      "passageId": "RC-P105",
+      "stem": "Which sentence from the passage provides the strongest experimental evidence that lime lumps help concrete repair its own cracks?",
+      "choices": [
+        {
+          "id": "ELA-RC-127-a",
+          "label": "A",
+          "text": "Many assumed the lumps were a sign of careless mixing or poor-quality materials.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Describes the older belief, which the experiment challenged. It is not evidence for the repair idea."
+        },
+        {
+          "id": "ELA-RC-127-b",
+          "label": "B",
+          "text": "The lime dissolved and then reacted to form calcium carbonate, a hard mineral that sealed the crack.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Explains the process but does not test it. The question asks for experimental evidence, which means the result of a test, not a description of how the process is thought to work."
+        },
+        {
+          "id": "ELA-RC-127-c",
+          "label": "C",
+          "text": "To test the idea, the team made concrete using a hot-mixing method, cracked it on purpose, and ran water through the cracks.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Describes the method but not the result. This sentence does not tell what happened to the cracks."
+        },
+        {
+          "id": "ELA-RC-127-d",
+          "label": "D",
+          "text": "Within two weeks, the cracks had closed, while cracks in similar samples made without lime lumps did not.",
+          "isCorrect": true,
+          "explanation": "Correct. This sentence reports the experiment's result and compares it with samples that had no lime lumps. That comparison shows the lumps made the difference."
+        }
+      ],
+      "solutionExplanation": "Experimental evidence is the outcome of a test. Paragraph 6 describes the test and then gives its result: \"Within two weeks, the cracks had closed, while cracks in similar samples made without lime lumps did not.\" Because samples without lime lumps did not heal, the lumps appear to be the reason the cracks closed.",
+      "commonTrap": "Choice B is tempting because it explains exactly how the lumps seal cracks, and it sounds scientific. But it describes the proposed process, not a test of it. Choice C is close too, but a method without a result proves nothing.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-128",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-VOC"
+      ],
+      "passageId": "RC-P105",
+      "stem": "As used in paragraph 7, the word \"sets\" most nearly means",
+      "choices": [
+        {
+          "id": "ELA-RC-128-a",
+          "label": "A",
+          "text": "hardens.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraph 7 says Roman concrete \"sets more slowly,\" which makes it \"unsuitable\" for projects like highways that must be ready quickly. Paragraph 3 also describes concrete that \"hardened underwater.\""
+        },
+        {
+          "id": "ELA-RC-128-b",
+          "label": "B",
+          "text": "is put in place.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Right word, wrong meaning. This is the sense of \"set the table.\" Paragraph 7 compares how quickly two kinds of concrete become firm, not how they are placed."
+        },
+        {
+          "id": "ELA-RC-128-c",
+          "label": "C",
+          "text": "sinks below the horizon.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Right word, wrong meaning. The sun \"sets,\" but this meaning does not fit a building material."
+        },
+        {
+          "id": "ELA-RC-128-d",
+          "label": "D",
+          "text": "is arranged in order.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Right word, wrong meaning. Things can be set in order, but the sentence is about how quickly concrete becomes solid."
+        }
+      ],
+      "solutionExplanation": "Paragraph 7 says Roman concrete \"is generally weaker than modern concrete under heavy loads, and it sets more slowly.\" Wet concrete becomes solid over time, and paragraph 3 refers to concrete that \"hardened underwater.\" In this context, \"sets\" means hardens.",
+      "commonTrap": "Choice B is tempting because concrete is literally put in place during building, so \"is put in place\" seems related. But \"sets more slowly\" describes a change that happens to the concrete over time, which is hardening.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-129",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-INF"
+      ],
+      "passageId": "RC-P105",
+      "stem": "Based on paragraph 7, which statement can most reasonably be inferred?",
+      "choices": [
+        {
+          "id": "ELA-RC-129-a",
+          "label": "A",
+          "text": "Most of the concrete structures the Romans built are still standing today.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Contradicted by the text. Paragraph 7 says, \"Countless others have long since collapsed.\""
+        },
+        {
+          "id": "ELA-RC-129-b",
+          "label": "B",
+          "text": "Roman builders understood the chemistry that made their concrete last.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Contradicted by the text. The Romans improved their methods \"through trial and error,\" and paragraph 8 says they \"knew nothing of modern chemistry.\""
+        },
+        {
+          "id": "ELA-RC-129-c",
+          "label": "C",
+          "text": "Modern skyscrapers will collapse sooner than the Pantheon did.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported prediction. The passage says some modern structures \"show serious damage within a few decades,\" but it makes no prediction about skyscrapers."
+        },
+        {
+          "id": "ELA-RC-129-d",
+          "label": "D",
+          "text": "Looking only at surviving Roman structures may make Roman concrete seem more durable than it usually was.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraph 7 says the survivors are \"in part, simply the ones that happened to be built well\" and that \"Countless others have long since collapsed.\" If only the best examples remain, judging by them alone could overstate how durable Roman concrete was in general."
+        }
+      ],
+      "solutionExplanation": "Paragraph 7 says, \"the structures that survive today are, in part, simply the ones that happened to be built well. Countless others have long since collapsed.\" The reader can infer that the surviving structures are not a fair sample of all Roman concrete. Judging only by them could make the material seem more durable than it usually was.",
+      "commonTrap": "Choice B is tempting because paragraph 5 suggests Roman builders may have used hot mixing, which sounds like an expert technique. But paragraph 7 says they worked \"through trial and error,\" and paragraph 8 says they \"knew nothing of modern chemistry.\" Using a method that works is not the same as understanding why it works.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-130",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "INDY-MS",
+      "tags": [
+        "RC-EV"
+      ],
+      "passageId": "RC-P105",
+      "stem": "Which two details from the passage describe ways that water helped strengthen Roman concrete? Select two answers.",
+      "choices": [
+        {
+          "id": "ELA-RC-130-a",
+          "label": "A",
+          "text": "Seawater flowing through harbor concrete dissolved parts of the volcanic ash, allowing new minerals to grow in tiny spaces.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraph 4 says seawater \"had dissolved parts of the volcanic ash,\" and new minerals grew, \"filling cracks and binding the material more tightly together.\""
+        },
+        {
+          "id": "ELA-RC-130-b",
+          "label": "B",
+          "text": "Salt water that seeps into modern concrete attacks the steel bars inside it.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Reverses the claim. This detail from paragraph 3 describes water weakening modern concrete, not strengthening Roman concrete."
+        },
+        {
+          "id": "ELA-RC-130-c",
+          "label": "C",
+          "text": "Roman builders packed their concrete mixture into wooden frames lowered into the sea.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Right setting, wrong point. This detail from paragraph 3 describes how harbor concrete was put in place. It does not explain how water strengthened it."
+        },
+        {
+          "id": "ELA-RC-130-d",
+          "label": "D",
+          "text": "Water that seeped into cracks dissolved lime from white lumps, forming a hard mineral that sealed the cracks.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraph 6 says \"the water reached the lime in the lumps,\" and the lime \"reacted to form calcium carbonate, a hard mineral that sealed the crack.\""
+        },
+        {
+          "id": "ELA-RC-130-e",
+          "label": "E",
+          "text": "The Pantheon's dome contains no steel bars to strengthen it.",
+          "isCorrect": false,
+          "explanation": "Incorrect. True detail, irrelevant to the claim. This detail from paragraph 1 is about how the dome was built and does not involve water at all."
+        }
+      ],
+      "ms": {
+        "selectCount": 2,
+        "instruction": "Select two answers."
+      },
+      "solutionExplanation": "The passage describes two ways water strengthened Roman concrete. In paragraph 4, seawater dissolved volcanic ash so that new minerals grew, \"filling cracks and binding the material more tightly together.\" In paragraph 6, water entering a crack dissolved lime that then formed \"calcium carbonate, a hard mineral that sealed the crack.\" The correct answers are A and D.",
+      "commonTrap": "Choice B is tempting because it mentions salt water seeping into concrete, just like the correct answers. But it describes modern concrete being damaged. The passage contrasts the two: the seawater \"that damages modern concrete appears to have made the Roman version stronger.\"",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-131",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-MI"
+      ],
+      "passageId": "RC-P106",
+      "stem": "Which statement best expresses the central idea of the passage?",
+      "choices": [
+        {
+          "id": "ELA-RC-131-a",
+          "label": "A",
+          "text": "Stores should always offer fewer products if they want customers to buy more.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported extreme claim. Paragraph 7 suggests the opposite approach: \"Instead of simply cutting the number of choices, a store or website can make choices easier to handle.\""
+        },
+        {
+          "id": "ELA-RC-131-b",
+          "label": "B",
+          "text": "Large displays attract more shoppers than small displays do.",
+          "isCorrect": false,
+          "explanation": "Incorrect. True detail, not the central idea. Paragraph 2 says the large display drew \"about 60 percent of passing shoppers,\" but this is one result from one study, not the point of the whole passage."
+        },
+        {
+          "id": "ELA-RC-131-c",
+          "label": "C",
+          "text": "The jam study was badly designed, so its results should be ignored.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Contradicted by the text. Paragraph 5 says the later analysis \"did not mean that the original jam study was wrong.\""
+        },
+        {
+          "id": "ELA-RC-131-d",
+          "label": "D",
+          "text": "An early study suggested that too many options discourage people from choosing, but later research showed that the effect depends on the situation.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraphs 2 and 3 describe the jam study and the idea of \"choice overload.\" Paragraphs 4 through 6 show that later research found mixed results and that the effect appears \"in some situations but not in others.\""
+        }
+      ],
+      "solutionExplanation": "The passage traces how an idea changed over time. Paragraph 2 describes a striking result, and paragraph 3 explains how \"choice overload\" became popular. Paragraphs 4 and 5 show that later studies found mixed results and that the average effect \"was close to zero.\" Paragraph 6 explains that the effect appears \"in some situations but not in others.\" Choice D captures this whole development.",
+      "commonTrap": "Choice A is tempting because it matches the famous lesson of the jam study, the one that \"spread quickly\" in paragraph 3. But the rest of the passage complicates that lesson, and paragraph 7 directly argues against \"simply cutting the number of choices.\"",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-132",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-TXT"
+      ],
+      "passageId": "RC-P106",
+      "stem": "How does paragraph 4 relate to paragraph 3?",
+      "choices": [
+        {
+          "id": "ELA-RC-132-a",
+          "label": "A",
+          "text": "It offers further evidence that confirms the idea of choice overload described in paragraph 3.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Reverses the relationship. Paragraph 4 begins, \"the story turned out to be more complicated,\" and reports that some studies found \"no effect at all.\""
+        },
+        {
+          "id": "ELA-RC-132-b",
+          "label": "B",
+          "text": "It explains why some companies decided to trim their product lines.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Wrong paragraph. Paragraph 3, not paragraph 4, mentions companies trimming their product lines."
+        },
+        {
+          "id": "ELA-RC-132-c",
+          "label": "C",
+          "text": "It complicates the popular idea described in paragraph 3 by reporting mixed results from later studies.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraph 3 describes how \"choice overload\" became widely accepted. Paragraph 4 reports that later studies disagreed: some found the effect, \"Others found no effect at all,\" and a few found the opposite."
+        },
+        {
+          "id": "ELA-RC-132-d",
+          "label": "D",
+          "text": "It proves that the results of the jam study were false.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported extreme claim. Some later studies did find the effect \"just as the jam study had,\" and paragraph 5 says the original study was not \"wrong.\""
+        }
+      ],
+      "solutionExplanation": "Paragraph 3 explains that \"choice overload\" became popular and \"widely cited.\" Paragraph 4 opens with \"however\" and says \"the story turned out to be more complicated.\" It then reports mixed results: some studies found the effect, \"Others found no effect at all, and a few found that more options actually left people more satisfied.\" Paragraph 4 complicates, but does not disprove, the idea from paragraph 3.",
+      "commonTrap": "Choice D is tempting because paragraph 4 clearly pushes back against the jam study. But mixed results are not proof that a study was false. Some later studies found the same effect, and paragraph 5 states that the original study was not \"wrong.\"",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-133",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "INDY-DND",
+      "tags": [
+        "RC-EV"
+      ],
+      "passageId": "RC-P106",
+      "stem": "The passage describes evidence from several studies. Drag each piece of evidence into the box for the claim it best supports.",
+      "dnd": {
+        "instruction": "Drag one piece of evidence into each box. One piece of evidence will not be used.",
+        "pool": [
+          {
+            "id": "v1",
+            "text": "About 60 percent of passing shoppers stopped at the large display, compared with about 40 percent at the small display.",
+            "explanation": "Supports the claim that a large display can attract more attention. Paragraph 2 introduces these numbers with \"The large display attracted more attention.\""
+          },
+          {
+            "id": "v2",
+            "text": "About 30 percent of shoppers who stopped at the small display bought jam, compared with about 3 percent at the large display.",
+            "explanation": "Supports the claim that fewer options led more people to buy. These are purchase rates, not stopping rates, so they belong with the buying claim, not the attention claim."
+          },
+          {
+            "id": "v3",
+            "text": "A 2010 analysis that combined dozens of experiments found that the average effect was close to zero.",
+            "explanation": "Supports the claim about many experiments. Paragraph 5 says that \"on average, the effect of having many options was close to zero.\""
+          },
+          {
+            "id": "v4",
+            "text": "A review found that the effect is most likely when options are hard to compare and people do not know what they prefer.",
+            "explanation": "Supports the claim that choice overload depends on the situation. Paragraph 6 lists the conditions under which it is \"most likely.\""
+          },
+          {
+            "id": "v5",
+            "text": "The idea of choice overload appeared in popular books, business magazines, and lectures.",
+            "explanation": "Not used. This detail from paragraph 3 shows that the idea became popular, but popularity is not evidence that a claim is true."
+          }
+        ],
+        "zones": [
+          {
+            "id": "c1",
+            "prompt": "Claim: A large display can attract more attention than a small one."
+          },
+          {
+            "id": "c2",
+            "prompt": "Claim: In at least one setting, fewer options led more people to buy."
+          },
+          {
+            "id": "c3",
+            "prompt": "Claim: Across many experiments, having many options had little effect on average."
+          },
+          {
+            "id": "c4",
+            "prompt": "Claim: Choice overload is more likely in some situations than in others."
+          }
+        ],
+        "correctMapping": {
+          "c1": "v1",
+          "c2": "v2",
+          "c3": "v3",
+          "c4": "v4"
+        }
+      },
+      "solutionExplanation": "Match each claim to the evidence that measures the same thing. Attention is measured by how many shoppers stopped: \"about 60 percent\" versus \"about 40 percent\" (paragraph 2). Buying is measured by purchase rates: \"About 30 percent\" versus \"only about 3 percent\" (paragraph 2). The claim about many experiments matches the 2010 analysis (paragraph 5), and the claim about situations matches the later review (paragraph 6). The detail about books and magazines shows popularity, not evidence.",
+      "commonTrap": "Students often swap the two sets of percentages from paragraph 2 because both compare the large and small displays. The key is what was measured: the 60 and 40 percent figures count shoppers who stopped (attention), while the 30 and 3 percent figures count shoppers who bought jam.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-134",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-VOC"
+      ],
+      "passageId": "RC-P106",
+      "stem": "As used in paragraph 8, the word \"striking\" most nearly means",
+      "choices": [
+        {
+          "id": "ELA-RC-134-a",
+          "label": "A",
+          "text": "hitting with force.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Right word, wrong meaning. \"Striking\" can mean hitting, but an experiment cannot hit anything."
+        },
+        {
+          "id": "ELA-RC-134-b",
+          "label": "B",
+          "text": "attention-grabbing.",
+          "isCorrect": true,
+          "explanation": "Correct. The sentence says a striking experiment \"can capture the public imagination\" and calls it \"memorable.\" Both describe something that grabs attention."
+        },
+        {
+          "id": "ELA-RC-134-c",
+          "label": "C",
+          "text": "refusing to work.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Right word, wrong meaning. Workers who are \"striking\" refuse to work, but this meaning has nothing to do with an experiment."
+        },
+        {
+          "id": "ELA-RC-134-d",
+          "label": "D",
+          "text": "carefully planned.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Plausible for an experiment, but not supported by the sentence. Nothing in paragraph 8 describes how the study was planned. The sentence focuses on how the result affected the public."
+        }
+      ],
+      "solutionExplanation": "Paragraph 8 says, \"A single striking experiment can capture the public imagination, but one result, however memorable, is only the beginning of an investigation.\" The words \"capture the public imagination\" and \"memorable\" show that \"striking\" means attention-grabbing or remarkable.",
+      "commonTrap": "Choice D is tempting because experiments are usually carefully planned, so the meaning seems to fit. But a vocabulary-in-context question asks what the word means in this sentence, and the clues \"capture the public imagination\" and \"memorable\" point to attention-grabbing.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-135",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-INF"
+      ],
+      "passageId": "RC-P106",
+      "stem": "This question has two parts. Answer Part A, then Part B.\n\nPart A: Based on paragraph 5, what does the author suggest about the results of the original jam study?",
+      "choices": [
+        {
+          "id": "ELA-RC-135-a",
+          "label": "A",
+          "text": "They were shown to be wrong by the 2010 analysis.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Contradicted by the text. The author says directly that the 2010 finding \"did not mean that the original jam study was wrong.\""
+        },
+        {
+          "id": "ELA-RC-135-b",
+          "label": "B",
+          "text": "They have been matched by every study conducted since.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Contradicted by the text. Paragraph 4 says some later studies \"found no effect at all.\""
+        },
+        {
+          "id": "ELA-RC-135-c",
+          "label": "C",
+          "text": "They proved that choice overload is a universal rule of human behavior.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Reverses the text. Paragraph 5 says, \"Choice overload, it seemed, was not a universal rule of human behavior.\""
+        },
+        {
+          "id": "ELA-RC-135-d",
+          "label": "D",
+          "text": "They showed a real effect, but one that does not appear in every situation.",
+          "isCorrect": true,
+          "explanation": "Correct. The author says the original study was not \"wrong,\" \"only that its result could not be counted on to appear everywhere.\""
+        }
+      ],
+      "solutionExplanation": "Paragraph 5 reports that the 2010 analysis found an average effect \"close to zero.\" The author then heads off a misunderstanding: \"The finding did not mean that the original jam study was wrong, only that its result could not be counted on to appear everywhere.\" So the author suggests the jam study found something real, but the effect does not show up in every situation.",
+      "commonTrap": "Choice A is tempting because an average effect \"close to zero\" sounds like a failure. Students conclude the original study must have been wrong. The author rules this out in the very next sentence.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "ELA-RC-136",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-EV"
+      ],
+      "passageId": "RC-P106",
+      "stem": "Part B: Which sentence from the passage best supports the answer to Part A?",
+      "choices": [
+        {
+          "id": "ELA-RC-136-a",
+          "label": "A",
+          "text": "The jam study became one of the most widely cited experiments in its field.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Popularity is not accuracy. Being widely cited shows the study was influential, not that its effect was real or limited to some situations."
+        },
+        {
+          "id": "ELA-RC-136-b",
+          "label": "B",
+          "text": "Their conclusion surprised many: on average, the effect of having many options was close to zero.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Supports only half of the answer. This sentence suggests the effect does not appear everywhere, but on its own it could suggest the jam study was wrong. It does not show that the original effect was real."
+        },
+        {
+          "id": "ELA-RC-136-c",
+          "label": "C",
+          "text": "The finding did not mean that the original jam study was wrong, only that its result could not be counted on to appear everywhere.",
+          "isCorrect": true,
+          "explanation": "Correct. This sentence supports both halves of the Part A answer: the study was not \"wrong\" (the effect was real), and its result \"could not be counted on to appear everywhere\" (it does not appear in every situation)."
+        },
+        {
+          "id": "ELA-RC-136-d",
+          "label": "D",
+          "text": "The large display attracted more attention: about 60 percent of passing shoppers stopped at it, compared with about 40 percent at the small display.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Wrong focus. This sentence reports one finding of the original study but says nothing about whether its results hold up in other situations."
+        }
+      ],
+      "solutionExplanation": "The Part A answer has two parts: the jam study found a real effect, and the effect does not appear in every situation. The last sentence of paragraph 5 supports both: \"The finding did not mean that the original jam study was wrong, only that its result could not be counted on to appear everywhere.\"",
+      "commonTrap": "Choice B is tempting because it comes from the same paragraph and reports the key finding of the 2010 analysis. But an average close to zero, by itself, points toward the study being wrong. Only choice C supports the full answer to Part A.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    }
+  ]
+}
