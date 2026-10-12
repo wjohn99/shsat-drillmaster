@@ -42,6 +42,7 @@ All items are `provisional`. Items carried over from the tracker keep their trac
 | `2026-10-11-math-num-dat` | 36 | Number, statistics, probability, tables and charts (MATH-NUM/DAT-101+) |
 | `2026-10-11-math-alg-app-geo` | 36 | Algebra, word problems, geometry described in words (MATH-ALG/APP/GEO-101+) |
 | `2026-10-11-top-up` | 20 | 4 more questions on the bee-swarm passage (RC-P-001, which also appears in `backlog-b`; import it once) and 16 math, mostly Module 2, so practice gets a full 300 |
+| `2026-10-12-published-unapproved` | 14 | The 14 July-published items that never got Jed's final sign-off, revised. 13 of them are also diagnostic items (all but MATH-GEO-007), so they replace the diagnostic versions too. |
 
 ## Notes for the app
 
