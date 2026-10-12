@@ -1,0 +1,1915 @@
+{
+  "batch": "2026-10-11-math-alg-app-geo",
+  "description": "36 new original SHSAT Math items in algebra, applications, and geometry (12 each), written by Jed Levine with Claude. Mix of MC4_A-D, INDY-WP, INDY-EE, INDY-DND, and INDY-MS; 18 Module 1 and 18 Module 2. Geometry items are fully described in words (no diagrams). All items are Provisional until a second team member reviews them and marks them Final.",
+  "reviewStatusValues": {
+    "provisional": "Revised and approved by Jed with Claude. OK to publish in the app with a Provisional badge.",
+    "final": "Also reviewed by a second team member. Badge removed."
+  },
+  "questions": [
+    {
+      "id": "MATH-ALG-101",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "ALG-LIN"
+      ],
+      "stem": "What value of x satisfies the equation 3(x − 4) = 2x + 5?",
+      "choices": [
+        {
+          "id": "MATH-ALG-101-a",
+          "label": "A",
+          "text": "−7",
+          "isCorrect": false,
+          "explanation": "This comes from moving −12 to the other side without changing its sign: x = 5 − 12 = −7. Subtracting 12 on one side means adding 12 on the other."
+        },
+        {
+          "id": "MATH-ALG-101-b",
+          "label": "B",
+          "text": "17/5",
+          "isCorrect": false,
+          "explanation": "This comes from adding 2x to the left side instead of subtracting it: 3x + 2x = 5 + 12, so 5x = 17. To collect the x-terms, subtract 2x from both sides."
+        },
+        {
+          "id": "MATH-ALG-101-c",
+          "label": "C",
+          "text": "9",
+          "isCorrect": false,
+          "explanation": "This comes from multiplying only the x by 3: 3x − 4 = 2x + 5, so x = 9. The 3 must multiply both terms inside the parentheses."
+        },
+        {
+          "id": "MATH-ALG-101-d",
+          "label": "D",
+          "text": "17",
+          "isCorrect": true,
+          "explanation": "Correct. 3x − 12 = 2x + 5, so x − 12 = 5 and x = 17."
+        }
+      ],
+      "solutionExplanation": "Distribute the 3: 3x − 12 = 2x + 5. Subtract 2x from both sides: x − 12 = 5. Add 12 to both sides: x = 17. Check: 3(17 − 4) = 3(13) = 39 and 2(17) + 5 = 39.",
+      "commonTrap": "Students multiply only the x by 3 and write 3x − 4, which leads to 9. The 3 multiplies every term inside the parentheses, so the constant is −12.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-ALG-102",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "ALG-LIN"
+      ],
+      "stem": "Which inequality describes all solutions of −2x + 7 > 15?",
+      "choices": [
+        {
+          "id": "MATH-ALG-102-a",
+          "label": "A",
+          "text": "x < −11",
+          "isCorrect": false,
+          "explanation": "This comes from adding 7 to both sides instead of subtracting it: −2x > 22, so x < −11."
+        },
+        {
+          "id": "MATH-ALG-102-b",
+          "label": "B",
+          "text": "x < −4",
+          "isCorrect": true,
+          "explanation": "Correct. Subtracting 7 gives −2x > 8. Dividing by −2 reverses the inequality: x < −4."
+        },
+        {
+          "id": "MATH-ALG-102-c",
+          "label": "C",
+          "text": "x > −4",
+          "isCorrect": false,
+          "explanation": "This comes from dividing by −2 without reversing the inequality sign."
+        },
+        {
+          "id": "MATH-ALG-102-d",
+          "label": "D",
+          "text": "x > 4",
+          "isCorrect": false,
+          "explanation": "This comes from dropping the negative sign on −2x and solving 2x > 8."
+        }
+      ],
+      "solutionExplanation": "Subtract 7 from both sides: −2x > 8. Divide both sides by −2. Dividing an inequality by a negative number reverses the sign, so x < −4. Check with x = −5: −2(−5) + 7 = 17, and 17 > 15.",
+      "commonTrap": "Students divide by −2 and keep the > sign, which gives x > −4. Multiplying or dividing both sides of an inequality by a negative number reverses the inequality.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-ALG-103",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "ALG-EXP"
+      ],
+      "stem": "Which expression is equivalent to 4(2x − 3) − (x − 5)?",
+      "choices": [
+        {
+          "id": "MATH-ALG-103-a",
+          "label": "A",
+          "text": "7x − 17",
+          "isCorrect": false,
+          "explanation": "This comes from not distributing the subtraction to the −5: 8x − 12 − x − 5. Subtracting −5 is the same as adding 5."
+        },
+        {
+          "id": "MATH-ALG-103-b",
+          "label": "B",
+          "text": "7x − 7",
+          "isCorrect": true,
+          "explanation": "Correct. 8x − 12 − x + 5 = 7x − 7."
+        },
+        {
+          "id": "MATH-ALG-103-c",
+          "label": "C",
+          "text": "7x + 2",
+          "isCorrect": false,
+          "explanation": "This comes from multiplying only the 2x by 4: 8x − 3 − x + 5 = 7x + 2. The 4 must also multiply the −3."
+        },
+        {
+          "id": "MATH-ALG-103-d",
+          "label": "D",
+          "text": "9x − 7",
+          "isCorrect": false,
+          "explanation": "This comes from adding x instead of subtracting it: 8x − 12 + x + 5 = 9x − 7. The subtraction sign applies to the x as well as the −5."
+        }
+      ],
+      "solutionExplanation": "Distribute the 4: 4(2x − 3) = 8x − 12. Distribute the subtraction: −(x − 5) = −x + 5. Combine like terms: 8x − x − 12 + 5 = 7x − 7.",
+      "commonTrap": "The subtraction in front of (x − 5) changes the sign of both terms inside. Students who change only the first sign get 7x − 17.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-ALG-104",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-EE",
+      "tags": [
+        "ALG-EXP"
+      ],
+      "stem": "If 3a − 2b = 7, what is the value of 9a − 6b + 4?",
+      "ee": {
+        "instruction": "Enter your answer as a number.",
+        "acceptableAnswers": [
+          "25",
+          "25.0"
+        ]
+      },
+      "commonWrongAnswers": [
+        {
+          "answer": "21",
+          "explanation": "This is the value of 9a − 6b, which is 3 × 7. The + 4 was left off."
+        },
+        {
+          "answer": "11",
+          "explanation": "This comes from adding 4 to 7 without noticing that 9a − 6b is 3 times 3a − 2b."
+        },
+        {
+          "answer": "33",
+          "explanation": "This comes from multiplying 3 by (7 + 4). Only 9a − 6b equals 3 times 7. The 4 is added after multiplying."
+        }
+      ],
+      "solutionExplanation": "Notice that 9a − 6b = 3(3a − 2b). Since 3a − 2b = 7, it follows that 9a − 6b = 3 × 7 = 21. Then 9a − 6b + 4 = 21 + 4 = 25.",
+      "commonTrap": "Students try to find a and b separately, which is not possible from one equation. The key is to see that 9a − 6b is 3 times 3a − 2b.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-ALG-105",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "ALG-SYS"
+      ],
+      "stem": "If y = x + 3 and 2x + y = 18, what is the value of y?",
+      "choices": [
+        {
+          "id": "MATH-ALG-105-a",
+          "label": "A",
+          "text": "5",
+          "isCorrect": false,
+          "explanation": "This is the value of x. The question asks for y."
+        },
+        {
+          "id": "MATH-ALG-105-b",
+          "label": "B",
+          "text": "8",
+          "isCorrect": true,
+          "explanation": "Correct. 2x + (x + 3) = 18 gives x = 5, so y = 5 + 3 = 8."
+        },
+        {
+          "id": "MATH-ALG-105-c",
+          "label": "C",
+          "text": "9",
+          "isCorrect": false,
+          "explanation": "This comes from dropping the + 3 when substituting: 2x + x = 18 gives x = 6. Then y = 6 + 3 = 9."
+        },
+        {
+          "id": "MATH-ALG-105-d",
+          "label": "D",
+          "text": "10",
+          "isCorrect": false,
+          "explanation": "This comes from adding 3 to 18 instead of subtracting: 3x = 21, so x = 7 and y = 10."
+        }
+      ],
+      "solutionExplanation": "Substitute x + 3 for y in the second equation: 2x + (x + 3) = 18. Then 3x + 3 = 18, so 3x = 15 and x = 5. Finally, y = 5 + 3 = 8. Check: 2(5) + 8 = 18.",
+      "commonTrap": "Students solve for x and stop, choosing 5. Reread the question to see which variable it asks for.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-ALG-106",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-WP",
+      "tags": [
+        "ALG-SYS"
+      ],
+      "stem": "A museum sold 120 tickets on Saturday. Adult tickets cost $9 each and student tickets cost $5 each. The museum collected $760 from ticket sales. How many student tickets were sold?",
+      "choices": [
+        {
+          "id": "MATH-ALG-106-a",
+          "label": "A",
+          "text": "40",
+          "isCorrect": false,
+          "explanation": "This is the number of adult tickets. It answers for the wrong type of ticket."
+        },
+        {
+          "id": "MATH-ALG-106-b",
+          "label": "B",
+          "text": "60",
+          "isCorrect": false,
+          "explanation": "This assumes the tickets were split evenly. But 60($9) + 60($5) = $840, not $760."
+        },
+        {
+          "id": "MATH-ALG-106-c",
+          "label": "C",
+          "text": "80",
+          "isCorrect": true,
+          "explanation": "Correct. 9a + 5(120 − a) = 760 gives a = 40 adult tickets, so 120 − 40 = 80 student tickets."
+        },
+        {
+          "id": "MATH-ALG-106-d",
+          "label": "D",
+          "text": "100",
+          "isCorrect": false,
+          "explanation": "This comes from multiplying only the 120 by 5: 9a + 600 − a = 760, so a = 20 and 120 − 20 = 100. The 5 must also multiply the a."
+        }
+      ],
+      "solutionExplanation": "Let a be the number of adult tickets. Then 120 − a tickets were student tickets. The money collected gives 9a + 5(120 − a) = 760. Distribute: 9a + 600 − 5a = 760, so 4a = 160 and a = 40. The number of student tickets is 120 − 40 = 80. Check: 40($9) + 80($5) = $360 + $400 = $760.",
+      "commonTrap": "Students solve correctly for the adult tickets and choose 40. The question asks for student tickets, so subtract from 120.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-ALG-107",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "ALG-FUN"
+      ],
+      "stem": "The first term of a sequence is 7. Each term after the first is 4 more than the term before it. What is the 20th term of the sequence?",
+      "choices": [
+        {
+          "id": "MATH-ALG-107-a",
+          "label": "A",
+          "text": "76",
+          "isCorrect": false,
+          "explanation": "This is the total amount added, 19 × 4, without the first term of 7."
+        },
+        {
+          "id": "MATH-ALG-107-b",
+          "label": "B",
+          "text": "80",
+          "isCorrect": false,
+          "explanation": "This comes from multiplying 20 × 4 and ignoring the first term."
+        },
+        {
+          "id": "MATH-ALG-107-c",
+          "label": "C",
+          "text": "83",
+          "isCorrect": true,
+          "explanation": "Correct. The 20th term is 7 + 19 × 4 = 7 + 76 = 83."
+        },
+        {
+          "id": "MATH-ALG-107-d",
+          "label": "D",
+          "text": "87",
+          "isCorrect": false,
+          "explanation": "This comes from adding 4 twenty times: 7 + 20 × 4. Only 19 steps separate the 1st term from the 20th."
+        }
+      ],
+      "solutionExplanation": "To get from the 1st term to the 20th term, add 4 a total of 20 − 1 = 19 times. The 20th term is 7 + 19 × 4 = 7 + 76 = 83. Check with a small case: the 2nd term is 7 + 1 × 4 = 11.",
+      "commonTrap": "Students add 4 twenty times instead of nineteen and get 87. The first term already counts as one of the 20 terms, so only 19 steps are needed.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-ALG-108",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-EE",
+      "tags": [
+        "ALG-FUN",
+        "NUM-INT"
+      ],
+      "stem": "In a sequence, each term after the first is found by multiplying the term before it by −2. The 5th term of the sequence is 48. What is the first term?",
+      "ee": {
+        "instruction": "Enter your answer as a number.",
+        "acceptableAnswers": [
+          "3",
+          "3.0"
+        ]
+      },
+      "commonWrongAnswers": [
+        {
+          "answer": "−3",
+          "explanation": "This comes from treating (−2) × (−2) × (−2) × (−2) as −16. An even number of negative factors gives a positive product, 16."
+        },
+        {
+          "answer": "−1.5",
+          "explanation": "This comes from dividing by −2 five times instead of four. Only 4 steps separate the 1st term from the 5th."
+        }
+      ],
+      "solutionExplanation": "From the 1st term to the 5th term, the sequence is multiplied by −2 four times, which is a total factor of (−2)(−2)(−2)(−2) = 16. So the first term is 48 ÷ 16 = 3. Check: 3, −6, 12, −24, 48.",
+      "commonTrap": "Students count five multiplications instead of four, or lose track of the sign. Writing out the terms backward from 48 (48, −24, 12, −6, 3) avoids both errors.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-ALG-109",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "INDY-DND",
+      "tags": [
+        "ALG-LIN"
+      ],
+      "stem": "Drag the solution of each equation into the box next to it.",
+      "dnd": {
+        "instruction": "Move the correct answer into each box. Not all answers will be used.",
+        "pool": [
+          {
+            "id": "p1",
+            "text": "1",
+            "explanation": "Wrong for x/3 + 2 = 5. It comes from dividing 3 by 3 after subtracting 2. To undo x/3, multiply by 3: x = 9."
+          },
+          {
+            "id": "p2",
+            "text": "2",
+            "explanation": "Wrong for 5x − 3 = 2x + 9. It comes from subtracting 3 from 9 instead of adding: 3x = 6. The correct step is 3x = 12."
+          },
+          {
+            "id": "p3",
+            "text": "3",
+            "explanation": "Wrong for 3(x − 2) = 15. It comes from subtracting 6 from 15 instead of adding: 3x = 9. The correct step is 3x = 21."
+          },
+          {
+            "id": "p4",
+            "text": "4",
+            "explanation": "Correct for 5x − 3 = 2x + 9. Subtract 2x and add 3: 3x = 12, so x = 4."
+          },
+          {
+            "id": "p5",
+            "text": "6",
+            "explanation": "Correct for 2x + 5 = 17. Subtract 5: 2x = 12, so x = 6."
+          },
+          {
+            "id": "p6",
+            "text": "7",
+            "explanation": "Correct for 3(x − 2) = 15. Distribute: 3x − 6 = 15, so 3x = 21 and x = 7."
+          },
+          {
+            "id": "p7",
+            "text": "9",
+            "explanation": "Correct for x/3 + 2 = 5. Subtract 2: x/3 = 3, so x = 9."
+          },
+          {
+            "id": "p8",
+            "text": "11",
+            "explanation": "Wrong for 2x + 5 = 17. It comes from adding 5 to 17 instead of subtracting: 2x = 22."
+          }
+        ],
+        "zones": [
+          {
+            "id": "z1",
+            "prompt": "2x + 5 = 17"
+          },
+          {
+            "id": "z2",
+            "prompt": "5x − 3 = 2x + 9"
+          },
+          {
+            "id": "z3",
+            "prompt": "x/3 + 2 = 5"
+          },
+          {
+            "id": "z4",
+            "prompt": "3(x − 2) = 15"
+          }
+        ],
+        "correctMapping": {
+          "z1": "p5",
+          "z2": "p4",
+          "z3": "p7",
+          "z4": "p6"
+        }
+      },
+      "solutionExplanation": "2x + 5 = 17: subtract 5 to get 2x = 12, so x = 6. 5x − 3 = 2x + 9: subtract 2x and add 3 to get 3x = 12, so x = 4. x/3 + 2 = 5: subtract 2 to get x/3 = 3, then multiply by 3, so x = 9. 3(x − 2) = 15: distribute to get 3x − 6 = 15, add 6 to get 3x = 21, so x = 7.",
+      "commonTrap": "When a constant is subtracted on one side, students subtract it from the other side too instead of adding it. That error produces 2 and 3 here. Check each answer by substituting it back into its equation.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-ALG-110",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-MS",
+      "tags": [
+        "ALG-EXP"
+      ],
+      "stem": "Which two expressions are equivalent to 6x − 4(x − 3)? Select two answers.",
+      "choices": [
+        {
+          "id": "MATH-ALG-110-a",
+          "label": "A",
+          "text": "2x − 12",
+          "isCorrect": false,
+          "explanation": "This comes from multiplying −4 by −3 and getting −12. A negative times a negative is positive, so the term is +12."
+        },
+        {
+          "id": "MATH-ALG-110-b",
+          "label": "B",
+          "text": "2(x + 6)",
+          "isCorrect": true,
+          "explanation": "Correct. 6x − 4x + 12 = 2x + 12, and 2(x + 6) = 2x + 12."
+        },
+        {
+          "id": "MATH-ALG-110-c",
+          "label": "C",
+          "text": "2x − 3",
+          "isCorrect": false,
+          "explanation": "This comes from multiplying only the x by −4: 6x − 4x − 3 = 2x − 3. The −4 must also multiply the −3, which gives +12."
+        },
+        {
+          "id": "MATH-ALG-110-d",
+          "label": "D",
+          "text": "4(x + 3) − 2x",
+          "isCorrect": true,
+          "explanation": "Correct. 4x + 12 − 2x = 2x + 12."
+        },
+        {
+          "id": "MATH-ALG-110-e",
+          "label": "E",
+          "text": "10x + 12",
+          "isCorrect": false,
+          "explanation": "This comes from treating −4 times x as +4x. The x-term is 6x − 4x = 2x."
+        }
+      ],
+      "solutionExplanation": "Distribute the −4: −4(x − 3) = −4x + 12. Then 6x − 4x + 12 = 2x + 12. Choice B, 2(x + 6), equals 2x + 12. Choice D, 4(x + 3) − 2x, equals 4x + 12 − 2x = 2x + 12. The other expressions simplify to 2x − 12, 2x − 3, and 10x + 12.",
+      "commonTrap": "Students distribute the −4 but miss that −4 × −3 = +12, which leads to 2x − 12. The sign of each product must be checked separately.",
+      "ms": {
+        "selectCount": 2
+      },
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-ALG-111",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-WP",
+      "tags": [
+        "ALG-LIN",
+        "APP-FIN"
+      ],
+      "stem": "A kayak rental costs a $45 fee plus $30 for each hour. Kayaks are rented by the whole hour only. Lena can spend at most $200. What is the greatest number of hours she can rent a kayak?",
+      "choices": [
+        {
+          "id": "MATH-ALG-111-a",
+          "label": "A",
+          "text": "5",
+          "isCorrect": true,
+          "explanation": "Correct. 45 + 30h ≤ 200 gives h ≤ 155/30, which is about 5.2, so the greatest whole number of hours is 5."
+        },
+        {
+          "id": "MATH-ALG-111-b",
+          "label": "B",
+          "text": "6",
+          "isCorrect": false,
+          "explanation": "This comes from ignoring the $45 fee: 200 ÷ 30 is about 6.7, which rounds down to 6. Six hours would cost $45 + $180 = $225."
+        },
+        {
+          "id": "MATH-ALG-111-c",
+          "label": "C",
+          "text": "7",
+          "isCorrect": false,
+          "explanation": "This comes from ignoring the $45 fee and rounding 200 ÷ 30 up to 7."
+        },
+        {
+          "id": "MATH-ALG-111-d",
+          "label": "D",
+          "text": "8",
+          "isCorrect": false,
+          "explanation": "This comes from adding the fee to $200 instead of subtracting it: 245 ÷ 30 is about 8.2, which rounds down to 8."
+        }
+      ],
+      "solutionExplanation": "Let h be the number of hours. The cost must be at most $200: 45 + 30h ≤ 200. Subtract 45: 30h ≤ 155. Divide by 30: h ≤ 5 1/6. Since only whole hours are allowed, the greatest value is 5. Check: 5 hours cost $45 + $150 = $195, and 6 hours cost $225, which is too much.",
+      "commonTrap": "Students divide $200 by $30 without first taking out the $45 fee and choose 6. The fee is paid once, so subtract it before dividing.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-ALG-112",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "ALG-SYS"
+      ],
+      "stem": "If 3x + 2y = 19 and x + 2y = 9, what is the value of x + y?",
+      "choices": [
+        {
+          "id": "MATH-ALG-112-a",
+          "label": "A",
+          "text": "2",
+          "isCorrect": false,
+          "explanation": "This is the value of y alone. The question asks for x + y."
+        },
+        {
+          "id": "MATH-ALG-112-b",
+          "label": "B",
+          "text": "5",
+          "isCorrect": false,
+          "explanation": "This is the value of x alone. The question asks for x + y."
+        },
+        {
+          "id": "MATH-ALG-112-c",
+          "label": "C",
+          "text": "7",
+          "isCorrect": true,
+          "explanation": "Correct. Adding the equations gives 4x + 4y = 28, so x + y = 7. (x = 5 and y = 2.)"
+        },
+        {
+          "id": "MATH-ALG-112-d",
+          "label": "D",
+          "text": "28",
+          "isCorrect": false,
+          "explanation": "This comes from adding the equations to get 4x + 4y = 28 and stopping before dividing by 4."
+        }
+      ],
+      "solutionExplanation": "Add the two equations: (3x + 2y) + (x + 2y) = 19 + 9, so 4x + 4y = 28. Divide both sides by 4: x + y = 7. Another way: subtracting the second equation from the first gives 2x = 10, so x = 5, and then 5 + 2y = 9 gives y = 2. Either way, x + y = 7.",
+      "commonTrap": "Students add the equations, see 4x + 4y = 28, and choose 28. The sum 4x + 4y is 4 times x + y, so divide by 4.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-101",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "APP-PCT"
+      ],
+      "stem": "A jacket regularly costs $80. It is on sale for 25% off the regular price. What is the sale price of the jacket?",
+      "choices": [
+        {
+          "id": "MATH-APP-101-a",
+          "label": "A",
+          "text": "$20.00",
+          "isCorrect": false,
+          "explanation": "This is the amount of the discount, 25% of $80. The question asks for the sale price."
+        },
+        {
+          "id": "MATH-APP-101-b",
+          "label": "B",
+          "text": "$55.00",
+          "isCorrect": false,
+          "explanation": "This comes from subtracting $25 instead of 25% of $80."
+        },
+        {
+          "id": "MATH-APP-101-c",
+          "label": "C",
+          "text": "$60.00",
+          "isCorrect": true,
+          "explanation": "Correct. 25% of $80 is $20, and $80 − $20 = $60."
+        },
+        {
+          "id": "MATH-APP-101-d",
+          "label": "D",
+          "text": "$100.00",
+          "isCorrect": false,
+          "explanation": "This comes from adding the 25% to the regular price instead of subtracting it."
+        }
+      ],
+      "solutionExplanation": "The discount is 25% of $80, which is 0.25 × 80 = $20. The sale price is $80 − $20 = $60. Another way: the sale price is 75% of the regular price, and 0.75 × 80 = $60.",
+      "commonTrap": "Students find the discount, $20, and stop. The discount is the amount saved, not the price paid.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-102",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-WP",
+      "tags": [
+        "APP-PCT"
+      ],
+      "stem": "A store raised the price of a $50 video game by 20%. Later, the store put the game on sale for 25% off the new price. What was the sale price of the game?",
+      "choices": [
+        {
+          "id": "MATH-APP-102-a",
+          "label": "A",
+          "text": "$15.00",
+          "isCorrect": false,
+          "explanation": "This is the amount of the discount, 25% of $60. The question asks for the sale price."
+        },
+        {
+          "id": "MATH-APP-102-b",
+          "label": "B",
+          "text": "$35.00",
+          "isCorrect": false,
+          "explanation": "This comes from subtracting $25 from the new price of $60 instead of subtracting 25% of it."
+        },
+        {
+          "id": "MATH-APP-102-c",
+          "label": "C",
+          "text": "$45.00",
+          "isCorrect": true,
+          "explanation": "Correct. The new price is $50 × 1.20 = $60, and the sale price is $60 × 0.75 = $45."
+        },
+        {
+          "id": "MATH-APP-102-d",
+          "label": "D",
+          "text": "$47.50",
+          "isCorrect": false,
+          "explanation": "This comes from combining the percents first: 20% up and 25% down is a net 5% off, and 95% of $50 is $47.50. The 25% is taken from the new price, $60, not from $50."
+        }
+      ],
+      "solutionExplanation": "The price increase is 20% of $50, which is $10, so the new price is $60. The discount is 25% of $60, which is $15, so the sale price is $60 − $15 = $45.",
+      "commonTrap": "Students subtract the percents (25% − 20% = 5%) and take 5% off $50 to get $47.50. Each percent applies to a different starting price, so they cannot be combined that way.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-103",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "INDY-EE",
+      "tags": [
+        "APP-PCT"
+      ],
+      "stem": "The bill for a family's dinner is $36.00. They leave a 15% tip based on the bill. What is the total amount they pay, including the tip?",
+      "ee": {
+        "instruction": "Enter the total in dollars.",
+        "acceptableAnswers": [
+          "41.40",
+          "41.4"
+        ],
+        "inputPrefix": "$"
+      },
+      "commonWrongAnswers": [
+        {
+          "answer": "5.40",
+          "explanation": "This is the tip alone, 15% of $36.00. The question asks for the total, so add the tip to the bill."
+        },
+        {
+          "answer": "51.00",
+          "explanation": "This comes from adding $15 instead of 15% of $36.00."
+        }
+      ],
+      "solutionExplanation": "The tip is 15% of $36.00, which is 0.15 × 36 = $5.40. (10% is $3.60 and 5% is $1.80, and $3.60 + $1.80 = $5.40.) The total is $36.00 + $5.40 = $41.40.",
+      "commonTrap": "Students find the tip, $5.40, and enter it as the answer. The question asks for the total paid.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-104",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-MS",
+      "tags": [
+        "APP-PCT"
+      ],
+      "stem": "A store reduces the price of a $250 bicycle by 20%. Then 8% sales tax is added to the reduced price. Which two expressions give the total cost, in dollars? Select two answers.",
+      "choices": [
+        {
+          "id": "MATH-APP-104-a",
+          "label": "A",
+          "text": "250(0.8)(1.08)",
+          "isCorrect": true,
+          "explanation": "Correct. Multiplying by 0.8 keeps 80% of the price after the discount, and multiplying by 1.08 adds 8% tax. The value is $216."
+        },
+        {
+          "id": "MATH-APP-104-b",
+          "label": "B",
+          "text": "250(0.88)",
+          "isCorrect": false,
+          "explanation": "This comes from subtracting the percents, 20% − 8% = 12%, and taking 12% off. The tax is figured on the reduced price, so the percents cannot be combined this way. The value is $220."
+        },
+        {
+          "id": "MATH-APP-104-c",
+          "label": "C",
+          "text": "250(0.2)(1.08)",
+          "isCorrect": false,
+          "explanation": "This comes from multiplying by the discount rate, 0.2, instead of the part that remains, 0.8. The value is $54, which is the discount plus tax on it."
+        },
+        {
+          "id": "MATH-APP-104-d",
+          "label": "D",
+          "text": "0.864(250)",
+          "isCorrect": true,
+          "explanation": "Correct. 0.8 × 1.08 = 0.864, so this is the same as 250(0.8)(1.08). The value is $216."
+        },
+        {
+          "id": "MATH-APP-104-e",
+          "label": "E",
+          "text": "1.08(250) − 20",
+          "isCorrect": false,
+          "explanation": "This comes from subtracting $20 instead of 20% of the price. The value is $250."
+        }
+      ],
+      "solutionExplanation": "The reduced price is 80% of $250: 250(0.8) = $200. The tax adds 8% of the reduced price, so the total is 200(1.08) = $216. This is 250(0.8)(1.08). Since 0.8 × 1.08 = 0.864, the expression 0.864(250) is also equal to $216.",
+      "commonTrap": "Students combine the discount and the tax into one 12% decrease and choose 250(0.88). The 8% is taken of the reduced price, not of $250.",
+      "ms": {
+        "selectCount": 2
+      },
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-105",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "APP-RTD"
+      ],
+      "stem": "A cyclist rides at a constant speed of 12 miles per hour. How many minutes does it take the cyclist to ride 3 miles?",
+      "choices": [
+        {
+          "id": "MATH-APP-105-a",
+          "label": "A",
+          "text": "0.25",
+          "isCorrect": false,
+          "explanation": "This is the time in hours, 3 ÷ 12. The question asks for minutes, and 0.25 hour is 15 minutes."
+        },
+        {
+          "id": "MATH-APP-105-b",
+          "label": "B",
+          "text": "4",
+          "isCorrect": false,
+          "explanation": "This comes from dividing the speed by the distance, 12 ÷ 3. Time is distance divided by speed."
+        },
+        {
+          "id": "MATH-APP-105-c",
+          "label": "C",
+          "text": "15",
+          "isCorrect": true,
+          "explanation": "Correct. 3 ÷ 12 = 1/4 hour, and 1/4 of 60 minutes is 15 minutes."
+        },
+        {
+          "id": "MATH-APP-105-d",
+          "label": "D",
+          "text": "36",
+          "isCorrect": false,
+          "explanation": "This comes from multiplying the speed by the distance, 12 × 3."
+        }
+      ],
+      "solutionExplanation": "Time equals distance divided by speed: 3 ÷ 12 = 1/4 hour. One hour is 60 minutes, so 1/4 hour is 60 ÷ 4 = 15 minutes. Another way: at 12 miles per hour, the cyclist rides 1 mile every 5 minutes, so 3 miles take 15 minutes.",
+      "commonTrap": "Students compute 3 ÷ 12 = 0.25 and forget to convert hours to minutes.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-106",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-WP",
+      "tags": [
+        "APP-RTD"
+      ],
+      "stem": "Pipe A can fill a tank in 12 hours. Pipe B can fill the same tank in 4 hours. If both pipes are used at the same time, how many hours will it take to fill the empty tank?",
+      "choices": [
+        {
+          "id": "MATH-APP-106-a",
+          "label": "A",
+          "text": "1/3",
+          "isCorrect": false,
+          "explanation": "This is the fraction of the tank the two pipes fill together in 1 hour. The time is the reciprocal, 3 hours."
+        },
+        {
+          "id": "MATH-APP-106-b",
+          "label": "B",
+          "text": "3",
+          "isCorrect": true,
+          "explanation": "Correct. Together the pipes fill 1/12 + 1/4 = 1/3 of the tank each hour, so the tank fills in 3 hours."
+        },
+        {
+          "id": "MATH-APP-106-c",
+          "label": "C",
+          "text": "8",
+          "isCorrect": false,
+          "explanation": "This comes from averaging the two times, (12 + 4) ÷ 2. Working together must be faster than either pipe alone."
+        },
+        {
+          "id": "MATH-APP-106-d",
+          "label": "D",
+          "text": "16",
+          "isCorrect": false,
+          "explanation": "This comes from adding the two times. Working together must take less time than the faster pipe alone."
+        }
+      ],
+      "solutionExplanation": "In 1 hour, Pipe A fills 1/12 of the tank and Pipe B fills 1/4 = 3/12 of the tank. Together they fill 1/12 + 3/12 = 4/12 = 1/3 of the tank each hour. At that rate, the full tank takes 3 hours.",
+      "commonTrap": "Students average the times and get 8 hours. Together the pipes must be faster than Pipe B alone, so the answer must be less than 4 hours.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-107",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "INDY-DND",
+      "tags": [
+        "APP-RTD"
+      ],
+      "stem": "Each situation describes travel at a constant speed. Drag the number that answers each question into its box.",
+      "dnd": {
+        "instruction": "Move the correct answer into each box. Not all answers will be used.",
+        "pool": [
+          {
+            "id": "p1",
+            "text": "1/3",
+            "explanation": "Wrong. This is 50 ÷ 150, the speed divided by the distance. Time is distance divided by speed: 150 ÷ 50 = 3."
+          },
+          {
+            "id": "p2",
+            "text": "3",
+            "explanation": "Correct for the first situation. Time = distance ÷ speed = 150 ÷ 50 = 3 hours."
+          },
+          {
+            "id": "p3",
+            "text": "16",
+            "explanation": "Wrong. This is 40 ÷ 2.5, the speed divided by the time. Distance is speed times time: 40 × 2.5 = 100."
+          },
+          {
+            "id": "p4",
+            "text": "60",
+            "explanation": "Correct for the third situation. Speed = distance ÷ time = 90 ÷ 1.5 = 60 miles per hour."
+          },
+          {
+            "id": "p5",
+            "text": "100",
+            "explanation": "Correct for the second situation. Distance = speed × time = 40 × 2.5 = 100 miles."
+          },
+          {
+            "id": "p6",
+            "text": "135",
+            "explanation": "Wrong. This is 90 × 1.5, the distance times the time. Speed is distance divided by time: 90 ÷ 1.5 = 60."
+          }
+        ],
+        "zones": [
+          {
+            "id": "z1",
+            "prompt": "How many hours does it take to drive 150 miles at 50 miles per hour?"
+          },
+          {
+            "id": "z2",
+            "prompt": "How many miles are traveled in 2.5 hours at 40 miles per hour?"
+          },
+          {
+            "id": "z3",
+            "prompt": "How many miles per hour are needed to travel 90 miles in 1.5 hours?"
+          }
+        ],
+        "correctMapping": {
+          "z1": "p2",
+          "z2": "p5",
+          "z3": "p4"
+        }
+      },
+      "solutionExplanation": "Use distance = speed × time. First situation: time = 150 ÷ 50 = 3 hours. Second situation: distance = 40 × 2.5 = 100 miles. Third situation: speed = 90 ÷ 1.5 = 60 miles per hour.",
+      "commonTrap": "Students multiply or divide the two given numbers without checking which operation the units call for. Miles ÷ miles per hour gives hours, and miles per hour × hours gives miles.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-108",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "APP-FIN"
+      ],
+      "stem": "Dev deposits $600 in a savings account that earns 4% simple interest per year. He makes no other deposits or withdrawals. How much interest will the account earn in 3 years?",
+      "choices": [
+        {
+          "id": "MATH-APP-108-a",
+          "label": "A",
+          "text": "$24",
+          "isCorrect": false,
+          "explanation": "This is the interest for 1 year, 4% of $600. The account earns this amount each year for 3 years."
+        },
+        {
+          "id": "MATH-APP-108-b",
+          "label": "B",
+          "text": "$72",
+          "isCorrect": true,
+          "explanation": "Correct. Interest = $600 × 0.04 × 3 = $72."
+        },
+        {
+          "id": "MATH-APP-108-c",
+          "label": "C",
+          "text": "$672",
+          "isCorrect": false,
+          "explanation": "This is the total in the account after 3 years, $600 + $72. The question asks only for the interest."
+        },
+        {
+          "id": "MATH-APP-108-d",
+          "label": "D",
+          "text": "$720",
+          "isCorrect": false,
+          "explanation": "This comes from writing 4% as 0.4 instead of 0.04: $600 × 0.4 × 3 = $720."
+        }
+      ],
+      "solutionExplanation": "Simple interest is principal × rate × time. The interest is $600 × 0.04 × 3. Each year the account earns 0.04 × 600 = $24, so in 3 years it earns 3 × $24 = $72.",
+      "commonTrap": "Students add the interest to the deposit and choose $672. The question asks for the interest earned, not the account balance.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-109",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-WP",
+      "tags": [
+        "APP-FIN"
+      ],
+      "stem": "Rosa earns $14 per hour for the first 40 hours she works in a week. For each hour over 40, she earns 1.5 times her regular hourly rate. Last week Rosa worked 46 hours. How much did she earn last week?",
+      "choices": [
+        {
+          "id": "MATH-APP-109-a",
+          "label": "A",
+          "text": "$644",
+          "isCorrect": false,
+          "explanation": "This comes from paying all 46 hours at the regular rate, 46 × $14. The 6 extra hours earn more."
+        },
+        {
+          "id": "MATH-APP-109-b",
+          "label": "B",
+          "text": "$653",
+          "isCorrect": false,
+          "explanation": "This comes from adding $1.50 to the hourly rate instead of multiplying by 1.5: 40 × $14 + 6 × $15.50 = $560 + $93."
+        },
+        {
+          "id": "MATH-APP-109-c",
+          "label": "C",
+          "text": "$686",
+          "isCorrect": true,
+          "explanation": "Correct. 40 × $14 = $560 and 6 × $21 = $126, so she earned $686."
+        },
+        {
+          "id": "MATH-APP-109-d",
+          "label": "D",
+          "text": "$966",
+          "isCorrect": false,
+          "explanation": "This comes from paying all 46 hours at the higher rate, 46 × $21. Only the hours over 40 earn the higher rate."
+        }
+      ],
+      "solutionExplanation": "Regular pay: 40 hours × $14 = $560. The higher rate is 1.5 × $14 = $21 per hour. Rosa worked 46 − 40 = 6 hours over 40, so she earned 6 × $21 = $126 for those hours. Total: $560 + $126 = $686.",
+      "commonTrap": "Students pay every hour at one rate, either $14 or $21. The first 40 hours and the extra 6 hours must be paid separately.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-110",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "INDY-DND",
+      "tags": [
+        "APP-FIN",
+        "ALG-LIN"
+      ],
+      "stem": "Drag the expression that represents each situation into its box. In each expression, h is a number of hours or weeks.",
+      "dnd": {
+        "instruction": "Move the correct answer into each box. Not all answers will be used.",
+        "pool": [
+          {
+            "id": "p1",
+            "text": "15h + 40",
+            "explanation": "Correct for Ana. She earns 15 dollars for each of h hours, which is 15h, plus a bonus of 40 added once."
+          },
+          {
+            "id": "p2",
+            "text": "40h + 15",
+            "explanation": "Wrong. This switches the hourly rate and the one-time amount in Ana's situation. The rate, 15, is multiplied by h."
+          },
+          {
+            "id": "p3",
+            "text": "40 − 15h",
+            "explanation": "Correct for Ben. He starts with 40 and spends 15 for each of h weeks, so 15h is subtracted from 40."
+          },
+          {
+            "id": "p4",
+            "text": "15h − 40",
+            "explanation": "Wrong. This reverses the subtraction in Ben's situation. Ben starts with 40, so the expression starts with 40."
+          },
+          {
+            "id": "p5",
+            "text": "40h − 15",
+            "explanation": "Correct for Cara. She earns 40 for each of h hours, which is 40h, and the fee of 15 is subtracted once."
+          },
+          {
+            "id": "p6",
+            "text": "55h",
+            "explanation": "Wrong. This combines 15h and 40 as if they were like terms. The bonus of 40 is added once, not every hour."
+          }
+        ],
+        "zones": [
+          {
+            "id": "z1",
+            "prompt": "Ana earns $15 per hour and also gets a one-time $40 bonus. Her total earnings, in dollars, for working h hours"
+          },
+          {
+            "id": "z2",
+            "prompt": "Ben has $40 and spends $15 each week. The amount he has left, in dollars, after h weeks"
+          },
+          {
+            "id": "z3",
+            "prompt": "Cara earns $40 per hour and pays a one-time $15 fee out of her earnings. Her total, in dollars, after working h hours and paying the fee"
+          }
+        ],
+        "correctMapping": {
+          "z1": "p1",
+          "z2": "p3",
+          "z3": "p5"
+        }
+      },
+      "solutionExplanation": "A rate that applies to each hour or week is multiplied by h. A one-time amount is added or subtracted once. Ana: 15 per hour plus a one-time 40, so 15h + 40. Ben: starts with 40 and loses 15 each week, so 40 − 15h. Cara: 40 per hour minus a one-time 15, so 40h − 15.",
+      "commonTrap": "Students attach h to the wrong number, which gives 40h + 15 for Ana. Ask which amount happens every hour or week. That number is the one multiplied by h.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-111",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "APP-PLG"
+      ],
+      "stem": "The formula d = 16t² gives the distance d, in feet, that an object falls in t seconds after it is dropped. How many feet does an object fall in 3 seconds?",
+      "choices": [
+        {
+          "id": "MATH-APP-111-a",
+          "label": "A",
+          "text": "48",
+          "isCorrect": false,
+          "explanation": "This comes from leaving off the exponent: 16 × 3 = 48. The time must be squared."
+        },
+        {
+          "id": "MATH-APP-111-b",
+          "label": "B",
+          "text": "96",
+          "isCorrect": false,
+          "explanation": "This comes from treating t² as 2t: 16 × 6 = 96. The expression t² means t × t."
+        },
+        {
+          "id": "MATH-APP-111-c",
+          "label": "C",
+          "text": "144",
+          "isCorrect": true,
+          "explanation": "Correct. d = 16(3²) = 16 × 9 = 144 feet."
+        },
+        {
+          "id": "MATH-APP-111-d",
+          "label": "D",
+          "text": "2,304",
+          "isCorrect": false,
+          "explanation": "This comes from multiplying 16 × 3 first and then squaring: 48² = 2,304. Only t is squared, so square 3 before multiplying by 16."
+        }
+      ],
+      "solutionExplanation": "Substitute t = 3 into the formula: d = 16(3)². Exponents come before multiplication, so 3² = 9 and d = 16 × 9 = 144 feet.",
+      "commonTrap": "Students multiply 16 × 3 and then square the result, which gives 2,304. The exponent applies only to t.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-112",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "APP-PLG",
+        "APP-FIN"
+      ],
+      "stem": "The formula A = P(1 + rt) gives the amount A in an account after t years, when P dollars are deposited at a simple interest rate r. Find A when P = 500, r = 0.05, and t = 4.",
+      "choices": [
+        {
+          "id": "MATH-APP-112-a",
+          "label": "A",
+          "text": "$100.00",
+          "isCorrect": false,
+          "explanation": "This is only the interest, Prt = 500 × 0.05 × 4. The formula also includes the $500 deposit."
+        },
+        {
+          "id": "MATH-APP-112-b",
+          "label": "B",
+          "text": "$500.20",
+          "isCorrect": false,
+          "explanation": "This comes from ignoring the parentheses: 500 × 1 + 0.05 × 4 = 500.20. The 500 multiplies the whole sum 1 + rt."
+        },
+        {
+          "id": "MATH-APP-112-c",
+          "label": "C",
+          "text": "$600.00",
+          "isCorrect": true,
+          "explanation": "Correct. 1 + (0.05)(4) = 1.2, and 500 × 1.2 = 600."
+        },
+        {
+          "id": "MATH-APP-112-d",
+          "label": "D",
+          "text": "$2,100.00",
+          "isCorrect": false,
+          "explanation": "This comes from adding 1 + 0.05 first and then multiplying by 4: 500 × 1.05 × 4 = 2,100. Inside the parentheses, multiply r × t before adding 1."
+        }
+      ],
+      "solutionExplanation": "Work inside the parentheses first. Multiply before adding: rt = 0.05 × 4 = 0.2, so 1 + rt = 1.2. Then A = 500 × 1.2 = 600. The amount in the account is $600.00.",
+      "commonTrap": "Students compute 1 + 0.05 before multiplying by 4, which leads to $2,100.00. Inside parentheses, the order of operations still applies: multiply rt first, then add 1.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-101",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-ANG"
+      ],
+      "stem": "Two angles are supplementary. The measure of one angle is 4 times the measure of the other angle. What is the measure of the larger angle?",
+      "choices": [
+        {
+          "id": "MATH-GEO-101-a",
+          "label": "A",
+          "text": "36°",
+          "isCorrect": false,
+          "explanation": "This is the measure of the smaller angle. The question asks for the larger angle."
+        },
+        {
+          "id": "MATH-GEO-101-b",
+          "label": "B",
+          "text": "45°",
+          "isCorrect": false,
+          "explanation": "This comes from dividing 180 by 4 instead of by 5. The two angles together make 5 equal parts."
+        },
+        {
+          "id": "MATH-GEO-101-c",
+          "label": "C",
+          "text": "72°",
+          "isCorrect": false,
+          "explanation": "This comes from using 90° as the sum, which is the rule for complementary angles: 5x = 90 gives x = 18, and 4 × 18 = 72."
+        },
+        {
+          "id": "MATH-GEO-101-d",
+          "label": "D",
+          "text": "144°",
+          "isCorrect": true,
+          "explanation": "Correct. x + 4x = 180 gives x = 36, so the larger angle is 4 × 36 = 144°."
+        }
+      ],
+      "solutionExplanation": "Supplementary angles add to 180°. Let the smaller angle be x. Then the larger angle is 4x, and x + 4x = 180. So 5x = 180 and x = 36. The larger angle is 4 × 36° = 144°. Check: 36° + 144° = 180°.",
+      "commonTrap": "Students mix up supplementary (sum 180°) and complementary (sum 90°) and choose 72°.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-102",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-EE",
+      "tags": [
+        "GEO-ANG",
+        "GEO-TRI"
+      ],
+      "stem": "In triangle PQR, side QR is extended past R to form an exterior angle at R. This exterior angle measures 130°. The measure of angle P is 20° greater than the measure of angle Q. What is the measure, in degrees, of angle P?",
+      "ee": {
+        "instruction": "Enter the measure in degrees, without the degree symbol.",
+        "acceptableAnswers": [
+          "75",
+          "75.0"
+        ]
+      },
+      "commonWrongAnswers": [
+        {
+          "answer": "55",
+          "explanation": "This is the measure of angle Q. The question asks for angle P, which is 20° more."
+        },
+        {
+          "answer": "35",
+          "explanation": "This comes from using 180° − 130° = 50° as the sum of angles P and Q. That 50° is the interior angle at R. The exterior angle, 130°, equals the sum of P and Q."
+        },
+        {
+          "answer": "65",
+          "explanation": "This comes from splitting 130° evenly between P and Q and ignoring that P is 20° greater than Q."
+        }
+      ],
+      "solutionExplanation": "An exterior angle of a triangle equals the sum of the two interior angles that are not next to it. So P + Q = 130. Since P = Q + 20, substitute: (Q + 20) + Q = 130, so 2Q = 110 and Q = 55. Then P = 55 + 20 = 75. Check: the interior angle at R is 180 − 130 = 50, and 75 + 55 + 50 = 180.",
+      "commonTrap": "Students use the interior angle at R (50°) as the sum of P and Q. The exterior angle (130°) is the sum of the two remote interior angles.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-103",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-TRI"
+      ],
+      "stem": "A 13-foot ladder leans against a vertical wall. The bottom of the ladder is on level ground, 5 feet from the base of the wall. How many feet up the wall does the top of the ladder reach?",
+      "choices": [
+        {
+          "id": "MATH-GEO-103-a",
+          "label": "A",
+          "text": "8",
+          "isCorrect": false,
+          "explanation": "This comes from subtracting the lengths, 13 − 5. The Pythagorean theorem uses the squares of the lengths."
+        },
+        {
+          "id": "MATH-GEO-103-b",
+          "label": "B",
+          "text": "12",
+          "isCorrect": true,
+          "explanation": "Correct. 5² + h² = 13², so h² = 169 − 25 = 144 and h = 12."
+        },
+        {
+          "id": "MATH-GEO-103-c",
+          "label": "C",
+          "text": "√194",
+          "isCorrect": false,
+          "explanation": "This comes from adding the squares, 25 + 169, as if the ladder were a leg. The ladder is the hypotenuse, so subtract: 169 − 25."
+        },
+        {
+          "id": "MATH-GEO-103-d",
+          "label": "D",
+          "text": "144",
+          "isCorrect": false,
+          "explanation": "This is h², not h. The last step is to take the square root: √144 = 12."
+        }
+      ],
+      "solutionExplanation": "The wall, the ground, and the ladder form a right triangle. The ladder, 13 feet, is the hypotenuse, and the 5-foot distance along the ground is one leg. Let h be the height up the wall. By the Pythagorean theorem, 5² + h² = 13², so 25 + h² = 169, h² = 144, and h = 12 feet.",
+      "commonTrap": "Students add the squares of the two given lengths without noticing that the ladder is the hypotenuse, which gives √194.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-104",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-TRI",
+        "GEO-ARV"
+      ],
+      "stem": "An isosceles triangle has two sides of length 10 centimeters and a third side, the base, of length 16 centimeters. What is the area of the triangle, in square centimeters?",
+      "choices": [
+        {
+          "id": "MATH-GEO-104-a",
+          "label": "A",
+          "text": "48",
+          "isCorrect": true,
+          "explanation": "Correct. The height to the base is 6 cm, so the area is (1/2)(16)(6) = 48 square centimeters."
+        },
+        {
+          "id": "MATH-GEO-104-b",
+          "label": "B",
+          "text": "80",
+          "isCorrect": false,
+          "explanation": "This comes from using a 10 cm side as the height: (1/2)(16)(10). The sides of length 10 are slanted, so they are not the height."
+        },
+        {
+          "id": "MATH-GEO-104-c",
+          "label": "C",
+          "text": "96",
+          "isCorrect": false,
+          "explanation": "This comes from finding the height correctly but forgetting the 1/2: 16 × 6 = 96."
+        },
+        {
+          "id": "MATH-GEO-104-d",
+          "label": "D",
+          "text": "160",
+          "isCorrect": false,
+          "explanation": "This comes from multiplying the base by a 10 cm side and forgetting the 1/2."
+        }
+      ],
+      "solutionExplanation": "The height drawn to the base of an isosceles triangle splits the base in half, making two right triangles with hypotenuse 10 and one leg 16 ÷ 2 = 8. The height h satisfies 8² + h² = 10², so h² = 100 − 64 = 36 and h = 6. The area is (1/2)(16)(6) = 48 square centimeters.",
+      "commonTrap": "Students use the slanted side, 10, as the height. The height must be perpendicular to the base, so it has to be found with the Pythagorean theorem.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-105",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-QUAD",
+        "GEO-ARV"
+      ],
+      "stem": "A rectangle has a perimeter of 36 centimeters and a length of 10 centimeters. What is the area of the rectangle, in square centimeters?",
+      "choices": [
+        {
+          "id": "MATH-GEO-105-a",
+          "label": "A",
+          "text": "80",
+          "isCorrect": true,
+          "explanation": "Correct. The width is (36 − 2 × 10) ÷ 2 = 8, so the area is 10 × 8 = 80."
+        },
+        {
+          "id": "MATH-GEO-105-b",
+          "label": "B",
+          "text": "81",
+          "isCorrect": false,
+          "explanation": "This comes from treating the rectangle as a square with side 36 ÷ 4 = 9. The length is given as 10, so the shape is not a square."
+        },
+        {
+          "id": "MATH-GEO-105-c",
+          "label": "C",
+          "text": "130",
+          "isCorrect": false,
+          "explanation": "This comes from subtracting only one length: (36 − 10) ÷ 2 = 13 for the width. A rectangle has two lengths."
+        },
+        {
+          "id": "MATH-GEO-105-d",
+          "label": "D",
+          "text": "260",
+          "isCorrect": false,
+          "explanation": "This comes from using 36 − 10 = 26 as the width. The perimeter includes two lengths and two widths."
+        }
+      ],
+      "solutionExplanation": "The perimeter is 2 × length + 2 × width. So 2(10) + 2w = 36, which gives 2w = 16 and w = 8. The area is length × width = 10 × 8 = 80 square centimeters.",
+      "commonTrap": "Students subtract only one length from the perimeter, which gives a width of 13 and an area of 130.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-106",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-QUAD",
+        "GEO-ANG"
+      ],
+      "stem": "In parallelogram ABCD, angle A measures (3x + 10)° and angle B measures (5x − 6)°. What is the measure of angle C?",
+      "choices": [
+        {
+          "id": "MATH-GEO-106-a",
+          "label": "A",
+          "text": "22°",
+          "isCorrect": false,
+          "explanation": "This is the value of x, not the measure of an angle."
+        },
+        {
+          "id": "MATH-GEO-106-b",
+          "label": "B",
+          "text": "34°",
+          "isCorrect": false,
+          "explanation": "This comes from setting angle A equal to angle B: 3x + 10 = 5x − 6 gives x = 8. Angles A and B are consecutive, so they are supplementary, not equal."
+        },
+        {
+          "id": "MATH-GEO-106-c",
+          "label": "C",
+          "text": "76°",
+          "isCorrect": true,
+          "explanation": "Correct. Angles A and B add to 180°, so x = 22 and angle A = 76°. Angle C is opposite angle A, so it also measures 76°."
+        },
+        {
+          "id": "MATH-GEO-106-d",
+          "label": "D",
+          "text": "104°",
+          "isCorrect": false,
+          "explanation": "This is the measure of angle B. Angle C is opposite angle A, so it equals angle A, not angle B."
+        }
+      ],
+      "solutionExplanation": "In parallelogram ABCD, angles A and B are consecutive angles, so they are supplementary: (3x + 10) + (5x − 6) = 180. Then 8x + 4 = 180, so 8x = 176 and x = 22. Angle A = 3(22) + 10 = 76°. Opposite angles of a parallelogram are equal, and angle C is opposite angle A, so angle C = 76°.",
+      "commonTrap": "Students set consecutive angles equal and get 34°. In a parallelogram, opposite angles are equal and consecutive angles add to 180°.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-107",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-CRC"
+      ],
+      "stem": "A circle has an area of 49π square inches. What is the circumference of the circle, in inches?",
+      "choices": [
+        {
+          "id": "MATH-GEO-107-a",
+          "label": "A",
+          "text": "7π",
+          "isCorrect": false,
+          "explanation": "This comes from using πr instead of 2πr for the circumference."
+        },
+        {
+          "id": "MATH-GEO-107-b",
+          "label": "B",
+          "text": "14π",
+          "isCorrect": true,
+          "explanation": "Correct. πr² = 49π gives r = 7, and the circumference is 2π(7) = 14π."
+        },
+        {
+          "id": "MATH-GEO-107-c",
+          "label": "C",
+          "text": "28π",
+          "isCorrect": false,
+          "explanation": "This comes from using the diameter, 14, as the radius: 2π(14) = 28π."
+        },
+        {
+          "id": "MATH-GEO-107-d",
+          "label": "D",
+          "text": "98π",
+          "isCorrect": false,
+          "explanation": "This comes from using 2πr² instead of 2πr: 2π(7²) = 98π."
+        }
+      ],
+      "solutionExplanation": "The area of a circle is πr². Since πr² = 49π, r² = 49 and r = 7 inches. The circumference is 2πr = 2π(7) = 14π inches.",
+      "commonTrap": "Students mix the area and circumference formulas, for example by computing 2πr² = 98π. Find r from the area first, then use C = 2πr.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-108",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-CRC",
+        "GEO-TRI"
+      ],
+      "stem": "A square has sides of length 10 centimeters. All four vertices of the square lie on a circle. What is the area of the circle, in square centimeters?",
+      "choices": [
+        {
+          "id": "MATH-GEO-108-a",
+          "label": "A",
+          "text": "25π",
+          "isCorrect": false,
+          "explanation": "This comes from using half the side length, 5, as the radius. That is the circle that fits inside the square, not the one through its vertices."
+        },
+        {
+          "id": "MATH-GEO-108-b",
+          "label": "B",
+          "text": "50π",
+          "isCorrect": true,
+          "explanation": "Correct. The diagonal of the square, 10√2, is a diameter of the circle, so r = 5√2 and the area is π(5√2)² = 50π."
+        },
+        {
+          "id": "MATH-GEO-108-c",
+          "label": "C",
+          "text": "100π",
+          "isCorrect": false,
+          "explanation": "This comes from using the side length, 10, as the radius."
+        },
+        {
+          "id": "MATH-GEO-108-d",
+          "label": "D",
+          "text": "200π",
+          "isCorrect": false,
+          "explanation": "This comes from using the diagonal, 10√2, as the radius instead of the diameter: π(10√2)² = 200π."
+        }
+      ],
+      "solutionExplanation": "A diagonal of the square connects two opposite vertices and passes through the center of the circle, so it is a diameter. By the Pythagorean theorem, the diagonal is √(10² + 10²) = √200 = 10√2. The radius is half of that, 5√2. The area is πr² = π(5√2)² = π(25 × 2) = 50π square centimeters.",
+      "commonTrap": "Students picture the circle inside the square and use a radius of 5, which gives 25π. A circle through the vertices is larger, and its diameter is the square's diagonal.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-109",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-EE",
+      "tags": [
+        "GEO-ARV",
+        "GEO-COO"
+      ],
+      "stem": "A trapezoid has vertices at (0, 0), (10, 0), (7, 4), and (2, 4). What is the area of the trapezoid, in square units?",
+      "ee": {
+        "instruction": "Enter your answer as a number.",
+        "acceptableAnswers": [
+          "30",
+          "30.0"
+        ]
+      },
+      "commonWrongAnswers": [
+        {
+          "answer": "60",
+          "explanation": "This comes from finding (10 + 5) × 4 and forgetting to multiply by 1/2."
+        },
+        {
+          "answer": "40",
+          "explanation": "This comes from multiplying the longer base by the height, 10 × 4, as if the shape were a rectangle."
+        },
+        {
+          "answer": "20",
+          "explanation": "This comes from multiplying the shorter base by the height, 5 × 4. That leaves out the two triangles on the ends."
+        }
+      ],
+      "solutionExplanation": "The bottom base runs from (0, 0) to (10, 0), so its length is 10. The top base runs from (2, 4) to (7, 4), so its length is 7 − 2 = 5. The bases are horizontal, so the height is the vertical distance between them, 4. Area = (1/2)(10 + 5)(4) = (1/2)(60) = 30 square units.",
+      "commonTrap": "Students forget the 1/2 in the trapezoid formula and enter 60. The area must be between the two rectangles 5 × 4 = 20 and 10 × 4 = 40.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-110",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-COO"
+      ],
+      "stem": "What is the slope of the line that passes through the points (−2, 5) and (4, −7)?",
+      "choices": [
+        {
+          "id": "MATH-GEO-110-a",
+          "label": "A",
+          "text": "−6",
+          "isCorrect": false,
+          "explanation": "This comes from adding the x-coordinates instead of subtracting: −12 ÷ (−2 + 4) = −12 ÷ 2 = −6."
+        },
+        {
+          "id": "MATH-GEO-110-b",
+          "label": "B",
+          "text": "−2",
+          "isCorrect": true,
+          "explanation": "Correct. The slope is (−7 − 5) ÷ (4 − (−2)) = −12 ÷ 6 = −2."
+        },
+        {
+          "id": "MATH-GEO-110-c",
+          "label": "C",
+          "text": "−1/2",
+          "isCorrect": false,
+          "explanation": "This comes from dividing the change in x by the change in y: 6 ÷ (−12). Slope is the change in y divided by the change in x."
+        },
+        {
+          "id": "MATH-GEO-110-d",
+          "label": "D",
+          "text": "2",
+          "isCorrect": false,
+          "explanation": "This comes from subtracting the y-coordinates in one order and the x-coordinates in the other: (−7 − 5) ÷ (−2 − 4) = −12 ÷ (−6) = 2."
+        }
+      ],
+      "solutionExplanation": "Slope is the change in y divided by the change in x. From (−2, 5) to (4, −7), the change in y is −7 − 5 = −12 and the change in x is 4 − (−2) = 6. The slope is −12 ÷ 6 = −2.",
+      "commonTrap": "Students subtract the coordinates in different orders, which flips the sign and gives 2. Start from the same point for both the y-change and the x-change.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-111",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-MS",
+      "tags": [
+        "GEO-COO",
+        "GEO-TRI"
+      ],
+      "stem": "Which two points are exactly 5 units from the point (1, 2)? Select two answers.",
+      "choices": [
+        {
+          "id": "MATH-GEO-111-a",
+          "label": "A",
+          "text": "(4, 6)",
+          "isCorrect": true,
+          "explanation": "Correct. The changes are 3 and 4, and √(3² + 4²) = √25 = 5."
+        },
+        {
+          "id": "MATH-GEO-111-b",
+          "label": "B",
+          "text": "(3, 5)",
+          "isCorrect": false,
+          "explanation": "This comes from adding the horizontal and vertical changes, 2 + 3 = 5. The distance is √(2² + 3²) = √13."
+        },
+        {
+          "id": "MATH-GEO-111-c",
+          "label": "C",
+          "text": "(6, 7)",
+          "isCorrect": false,
+          "explanation": "This comes from moving 5 units both right and up. The distance is √(5² + 5²) = √50, which is more than 5."
+        },
+        {
+          "id": "MATH-GEO-111-d",
+          "label": "D",
+          "text": "(−2, −2)",
+          "isCorrect": true,
+          "explanation": "Correct. The changes are −3 and −4, and √((−3)² + (−4)²) = √25 = 5."
+        },
+        {
+          "id": "MATH-GEO-111-e",
+          "label": "E",
+          "text": "(5, 1)",
+          "isCorrect": false,
+          "explanation": "This comes from adding the horizontal and vertical changes, 4 + 1 = 5. The distance is √(4² + 1²) = √17."
+        }
+      ],
+      "solutionExplanation": "Use the distance formula, which is the Pythagorean theorem on the coordinate plane. For (4, 6): the changes are 3 and 4, and √(9 + 16) = 5. For (−2, −2): the changes are −3 and −4, and √(9 + 16) = 5. The other points are √13, √50, and √17 units away.",
+      "commonTrap": "Students add the horizontal and vertical distances instead of using the Pythagorean theorem, so (3, 5) and (5, 1) look correct. Moving diagonally covers less distance than moving across and then up.",
+      "ms": {
+        "selectCount": 2
+      },
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-112",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-DND",
+      "tags": [
+        "GEO-3D"
+      ],
+      "stem": "Drag the correct number into the box for each question.",
+      "dnd": {
+        "instruction": "Move the correct answer into each box. Not all answers will be used.",
+        "pool": [
+          {
+            "id": "p1",
+            "text": "5",
+            "explanation": "Correct for the rectangular prism. Volume = base area × height, so 60 = 12 × height and the height is 5 inches."
+          },
+          {
+            "id": "p2",
+            "text": "9",
+            "explanation": "Wrong. This is the area of one face of the cube with volume 27 (3 × 3). A cube has 6 faces, so the surface area is 6 × 9 = 54."
+          },
+          {
+            "id": "p3",
+            "text": "16",
+            "explanation": "Wrong. This is the area of one face of the cube with surface area 96 (96 ÷ 6). The edge is √16 = 4, so the volume is 4³ = 64."
+          },
+          {
+            "id": "p4",
+            "text": "18",
+            "explanation": "Wrong. This comes from multiplying the edge of the cube with volume 27 by 6 (6 × 3). Each face has area 3², so the surface area is 6 × 9 = 54."
+          },
+          {
+            "id": "p5",
+            "text": "48",
+            "explanation": "Wrong. This comes from subtracting the base area from the volume (60 − 12). The height is the volume divided by the base area."
+          },
+          {
+            "id": "p6",
+            "text": "54",
+            "explanation": "Correct for the cube with volume 27. The edge is 3 inches, each face is 9 square inches, and 6 × 9 = 54."
+          },
+          {
+            "id": "p7",
+            "text": "64",
+            "explanation": "Correct for the cube with surface area 96. Each face is 96 ÷ 6 = 16 square inches, so the edge is 4 inches and the volume is 4³ = 64."
+          }
+        ],
+        "zones": [
+          {
+            "id": "z1",
+            "prompt": "A cube has a surface area of 96 square inches. What is its volume, in cubic inches?"
+          },
+          {
+            "id": "z2",
+            "prompt": "A cube has a volume of 27 cubic inches. What is its surface area, in square inches?"
+          },
+          {
+            "id": "z3",
+            "prompt": "A rectangular prism has a volume of 60 cubic inches. Its base is a rectangle 3 inches by 4 inches. What is its height, in inches?"
+          }
+        ],
+        "correctMapping": {
+          "z1": "p7",
+          "z2": "p6",
+          "z3": "p1"
+        }
+      },
+      "solutionExplanation": "Cube with surface area 96: a cube has 6 equal square faces, so each face has area 96 ÷ 6 = 16. The edge is 4 inches, and the volume is 4 × 4 × 4 = 64 cubic inches. Cube with volume 27: the edge is 3 inches because 3 × 3 × 3 = 27. Each face has area 9, so the surface area is 6 × 9 = 54 square inches. Prism: the base area is 3 × 4 = 12 square inches, and volume = base area × height, so the height is 60 ÷ 12 = 5 inches.",
+      "commonTrap": "Students stop partway through a cube problem, for example at the area of one face (16 or 9). Finding the edge length first connects surface area and volume.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    }
+  ]
+}

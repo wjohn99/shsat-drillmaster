@@ -1,0 +1,1955 @@
+{
+  "batch": "2026-10-11-math-num-dat",
+  "description": "36 new original SHSAT Math items in number sense (integers, fractions, exponents, ratios, factors) and data (statistics, probability, tables and bar graphs). Written by Claude with Jed Levine to the content/AUTHORING.md standard: every distractor traces to a named student error, and every key and distractor path was recomputed by script. Mix: 22 MC4, 6 INDY-CGT, 5 INDY-EE, 3 INDY-MS; 18 Module 1 and 18 Module 2. All items are Provisional until a second team member reviews them.",
+  "reviewStatusValues": {
+    "provisional": "Revised and approved by Jed with Claude. OK to publish in the app with a Provisional badge.",
+    "final": "Also reviewed by a second team member. Badge removed."
+  },
+  "questions": [
+    {
+      "id": "MATH-NUM-101",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "NUM-INT"
+      ],
+      "stem": "What is the value of 18 − 3 × (4 − 6)²?",
+      "choices": [
+        {
+          "id": "MATH-NUM-101-a",
+          "label": "A",
+          "text": "−18",
+          "isCorrect": false,
+          "explanation": "This comes from multiplying before squaring: (3 × (−2))² = 36, and 18 − 36 = −18. The exponent applies only to (4 − 6), so it must be evaluated before multiplying by 3."
+        },
+        {
+          "id": "MATH-NUM-101-b",
+          "label": "B",
+          "text": "6",
+          "isCorrect": true,
+          "explanation": "Correct. (4 − 6)² = (−2)² = 4, then 3 × 4 = 12, and 18 − 12 = 6."
+        },
+        {
+          "id": "MATH-NUM-101-c",
+          "label": "C",
+          "text": "30",
+          "isCorrect": false,
+          "explanation": "This comes from treating (−2)² as −4. Then 18 − 3 × (−4) = 18 + 12 = 30. A negative number squared is positive: (−2)(−2) = 4."
+        },
+        {
+          "id": "MATH-NUM-101-d",
+          "label": "D",
+          "text": "60",
+          "isCorrect": false,
+          "explanation": "This comes from working left to right: 18 − 3 = 15, then 15 × 4 = 60. Multiplication must be done before subtraction."
+        }
+      ],
+      "solutionExplanation": "Work inside the parentheses first: 4 − 6 = −2. Next, evaluate the exponent: (−2)² = 4. Then multiply: 3 × 4 = 12. Finally, subtract: 18 − 12 = 6.",
+      "commonTrap": "Students who work from left to right compute 18 − 3 = 15 first and then multiply by 4 to get 60. Multiplication comes before subtraction, so 3 × 4 must be found before subtracting from 18.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-NUM-102",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "NUM-INT"
+      ],
+      "stem": "What is the value of |3 − 9| − |−4| × 2?",
+      "choices": [
+        {
+          "id": "MATH-NUM-102-a",
+          "label": "A",
+          "text": "−14",
+          "isCorrect": false,
+          "explanation": "This comes from leaving |3 − 9| as −6 instead of 6. Then −6 − 8 = −14. Absolute value is a distance, so it is never negative."
+        },
+        {
+          "id": "MATH-NUM-102-b",
+          "label": "B",
+          "text": "−2",
+          "isCorrect": true,
+          "explanation": "Correct. |3 − 9| = 6 and |−4| = 4. Then 6 − 4 × 2 = 6 − 8 = −2."
+        },
+        {
+          "id": "MATH-NUM-102-c",
+          "label": "C",
+          "text": "4",
+          "isCorrect": false,
+          "explanation": "This comes from subtracting before multiplying: (6 − 4) × 2 = 4. Multiplication comes before subtraction."
+        },
+        {
+          "id": "MATH-NUM-102-d",
+          "label": "D",
+          "text": "14",
+          "isCorrect": false,
+          "explanation": "This comes from treating |−4| as −4. Then 6 − (−4)(2) = 6 + 8 = 14. The absolute value of −4 is 4."
+        }
+      ],
+      "solutionExplanation": "Evaluate each absolute value first. |3 − 9| = |−6| = 6, and |−4| = 4. Then multiply before subtracting: 4 × 2 = 8. Finally, 6 − 8 = −2.",
+      "commonTrap": "Students often find the absolute values correctly and then subtract before multiplying: (6 − 4) × 2 = 4. The multiplication 4 × 2 must be done first.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-NUM-103",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "NUM-INT",
+        "NUM-FR"
+      ],
+      "stem": "On a number line, point P is at −8 and point Q is at 12. Point R is on the segment from P to Q, and the distance from P to R is ¾ of the distance from P to Q. What number is at point R?",
+      "choices": [
+        {
+          "id": "MATH-NUM-103-a",
+          "label": "A",
+          "text": "−3",
+          "isCorrect": false,
+          "explanation": "This measures ¾ of the way from Q instead of from P: 12 − 15 = −3. The stem measures the distance from P."
+        },
+        {
+          "id": "MATH-NUM-103-b",
+          "label": "B",
+          "text": "7",
+          "isCorrect": true,
+          "explanation": "Correct. PQ = 12 − (−8) = 20, and ¾ × 20 = 15. Then −8 + 15 = 7."
+        },
+        {
+          "id": "MATH-NUM-103-c",
+          "label": "C",
+          "text": "9",
+          "isCorrect": false,
+          "explanation": "This is ¾ of 12, the coordinate of Q. It measures from 0 instead of from P, and it ignores that P is at −8."
+        },
+        {
+          "id": "MATH-NUM-103-d",
+          "label": "D",
+          "text": "15",
+          "isCorrect": false,
+          "explanation": "This is the distance from P to R, not the location of R. Add it to P's coordinate: −8 + 15 = 7."
+        }
+      ],
+      "solutionExplanation": "The distance from P to Q is 12 − (−8) = 20. The distance from P to R is ¾ × 20 = 15. Point R is 15 units to the right of P, so R is at −8 + 15 = 7.",
+      "commonTrap": "Students find ¾ of the distance, 15, and choose it as the location of R. The distance must be added to P's position, −8, because R is measured from P, not from 0.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-NUM-104",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-EE",
+      "tags": [
+        "NUM-INT"
+      ],
+      "stem": "The integers x and y satisfy −5 ≤ x ≤ 3 and −2 ≤ y ≤ 4. What is the least possible value of xy?",
+      "ee": {
+        "instruction": "Enter your answer as a number. Use the − key for a negative number.",
+        "acceptableAnswers": [
+          "-20",
+          "−20",
+          "-20.0"
+        ]
+      },
+      "commonWrongAnswers": [
+        {
+          "answer": "10",
+          "explanation": "This multiplies the two least values, (−5)(−2) = 10. The product of two negatives is positive, so this is not a small product."
+        },
+        {
+          "answer": "−6",
+          "explanation": "This checks only a positive x with a negative y: 3 × (−2) = −6. Pairing x = −5 with y = 4 gives the smaller product, −20."
+        },
+        {
+          "answer": "12",
+          "explanation": "This multiplies the two greatest values, 3 × 4 = 12, which gives the greatest positive product, not the least value."
+        }
+      ],
+      "solutionExplanation": "For xy to be as small as possible, it must be negative, so x and y must have opposite signs. There are two cases. A negative x times a positive y: the least product uses x = −5 and y = 4, giving −20. A positive x times a negative y: the least product uses x = 3 and y = −2, giving −6. Since −20 < −6, the least possible value of xy is −20.",
+      "commonTrap": "Students multiply the two least values, (−5)(−2) = 10, assuming the smallest inputs give the smallest product. Two negatives make a positive, so the least product comes from pairing the most negative x with the greatest positive y.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-NUM-105",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "NUM-FR"
+      ],
+      "stem": "What is the value of 2/3 + 1/4 ÷ 1/2?",
+      "choices": [
+        {
+          "id": "MATH-NUM-105-a",
+          "label": "A",
+          "text": "19/24",
+          "isCorrect": false,
+          "explanation": "This multiplies instead of dividing: 1/4 × 1/2 = 1/8, and 2/3 + 1/8 = 19/24. Dividing by 1/2 means multiplying by 2."
+        },
+        {
+          "id": "MATH-NUM-105-b",
+          "label": "B",
+          "text": "7/6",
+          "isCorrect": true,
+          "explanation": "Correct. 1/4 ÷ 1/2 = 1/2, and 2/3 + 1/2 = 7/6."
+        },
+        {
+          "id": "MATH-NUM-105-c",
+          "label": "C",
+          "text": "11/6",
+          "isCorrect": false,
+          "explanation": "This adds first: 2/3 + 1/4 = 11/12, then 11/12 ÷ 1/2 = 11/6. Division comes before addition."
+        },
+        {
+          "id": "MATH-NUM-105-d",
+          "label": "D",
+          "text": "8/3",
+          "isCorrect": false,
+          "explanation": "This flips the wrong fraction: 4 × 1/2 = 2 instead of 1/4 × 2. Then 2/3 + 2 = 8/3. Only the divisor, 1/2, is replaced by its reciprocal."
+        }
+      ],
+      "solutionExplanation": "Division comes before addition. To divide by 1/2, multiply by its reciprocal: 1/4 ÷ 1/2 = 1/4 × 2 = 1/2. Then add, using a common denominator of 6: 2/3 + 1/2 = 4/6 + 3/6 = 7/6.",
+      "commonTrap": "Students add 2/3 + 1/4 first because it comes first, then divide by 1/2 and get 11/6. Division must be done before addition.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-NUM-106",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "NUM-FR"
+      ],
+      "stem": "A 250-milliliter water sample is 0.4% salt. How many milliliters of salt are in the sample?",
+      "choices": [
+        {
+          "id": "MATH-NUM-106-a",
+          "label": "A",
+          "text": "0.1",
+          "isCorrect": false,
+          "explanation": "This moves the decimal point four places, writing 0.4% as 0.0004. Then 0.0004 × 250 = 0.1. Dividing by 100 moves it only two places."
+        },
+        {
+          "id": "MATH-NUM-106-b",
+          "label": "B",
+          "text": "1",
+          "isCorrect": true,
+          "explanation": "Correct. 0.4% = 0.004, and 0.004 × 250 = 1."
+        },
+        {
+          "id": "MATH-NUM-106-c",
+          "label": "C",
+          "text": "10",
+          "isCorrect": false,
+          "explanation": "This writes 0.4% as 0.04, which is 4%. Then 0.04 × 250 = 10."
+        },
+        {
+          "id": "MATH-NUM-106-d",
+          "label": "D",
+          "text": "100",
+          "isCorrect": false,
+          "explanation": "This ignores the percent sign and uses 0.4. Then 0.4 × 250 = 100, which is 40% of the sample."
+        }
+      ],
+      "solutionExplanation": "To change a percent to a decimal, divide by 100: 0.4% = 0.4 ÷ 100 = 0.004. Then 0.004 × 250 = 1 milliliter.",
+      "commonTrap": "Students treat 0.4% as 0.4 and multiply to get 100. The percent sign means \"out of 100,\" so 0.4% must be divided by 100 first.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-NUM-107",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "NUM-FR"
+      ],
+      "stem": "Jamal spent 1/3 of his money on a book. Then he spent 1/4 of the money he had left on lunch. After lunch, he had $30.00. How much money did Jamal have at the start?",
+      "choices": [
+        {
+          "id": "MATH-NUM-107-a",
+          "label": "A",
+          "text": "$40.00",
+          "isCorrect": false,
+          "explanation": "This is the money Jamal had after buying the book. Since $30.00 is 3/4 of it, it is $40.00, but the book cost must still be undone."
+        },
+        {
+          "id": "MATH-NUM-107-b",
+          "label": "B",
+          "text": "$42.00",
+          "isCorrect": false,
+          "explanation": "This adds the fractions incorrectly, 1/3 + 1/4 = 2/7, leaving 5/7. Then $30.00 ÷ 5/7 = $42.00. Fractions need a common denominator before adding."
+        },
+        {
+          "id": "MATH-NUM-107-c",
+          "label": "C",
+          "text": "$60.00",
+          "isCorrect": true,
+          "explanation": "Correct. He kept 3/4 of 2/3, which is 1/2 of his money, so he started with 2 × $30.00 = $60.00."
+        },
+        {
+          "id": "MATH-NUM-107-d",
+          "label": "D",
+          "text": "$72.00",
+          "isCorrect": false,
+          "explanation": "This takes 1/4 of the starting money instead of 1/4 of what was left: 1 − 1/3 − 1/4 = 5/12, and $30.00 ÷ 5/12 = $72.00."
+        }
+      ],
+      "solutionExplanation": "After the book, Jamal had 1 − 1/3 = 2/3 of his money. Lunch cost 1/4 of that amount, so he kept 3/4 of it: 3/4 × 2/3 = 1/2 of his starting money. Since 1/2 of his money is $30.00, he started with $60.00. Check: the book cost $20.00, leaving $40.00; lunch cost $10.00, leaving $30.00.",
+      "commonTrap": "Students treat the 1/4 as a fraction of the starting money and subtract 1/3 + 1/4 = 7/12 from the whole, leaving 5/12. That leads to $72.00. The lunch is 1/4 of the money left after the book, not 1/4 of the original amount.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-NUM-108",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "INDY-MS",
+      "tags": [
+        "NUM-FR"
+      ],
+      "stem": "Which two of the following are equal to 3/8? Select two answers.",
+      "choices": [
+        {
+          "id": "MATH-NUM-108-a",
+          "label": "A",
+          "text": "3.75%",
+          "isCorrect": false,
+          "explanation": "This multiplies 0.375 by 10 instead of 100 when changing to a percent. 3.75% = 0.0375."
+        },
+        {
+          "id": "MATH-NUM-108-b",
+          "label": "B",
+          "text": "0.375",
+          "isCorrect": true,
+          "explanation": "Correct. 3 ÷ 8 = 0.375."
+        },
+        {
+          "id": "MATH-NUM-108-c",
+          "label": "C",
+          "text": "37.5%",
+          "isCorrect": true,
+          "explanation": "Correct. 0.375 × 100 = 37.5%."
+        },
+        {
+          "id": "MATH-NUM-108-d",
+          "label": "D",
+          "text": "0.38",
+          "isCorrect": false,
+          "explanation": "This writes the numerator and denominator next to each other after a decimal point. 3/8 means 3 ÷ 8, which is 0.375, not 0.38."
+        },
+        {
+          "id": "MATH-NUM-108-e",
+          "label": "E",
+          "text": "2⅔",
+          "isCorrect": false,
+          "explanation": "This divides 8 by 3 instead of 3 by 8. The numerator is divided by the denominator."
+        }
+      ],
+      "ms": {
+        "selectCount": 2,
+        "instruction": "Select two answers."
+      },
+      "solutionExplanation": "Divide 3 by 8: 3 ÷ 8 = 0.375. To write a decimal as a percent, multiply by 100: 0.375 × 100 = 37.5%. So 0.375 and 37.5% are both equal to 3/8.",
+      "commonTrap": "Students write the digits of the fraction side by side and get 0.38. A fraction bar means division, so 3/8 = 3 ÷ 8 = 0.375.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-NUM-109",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "NUM-EXP",
+        "NUM-INT"
+      ],
+      "stem": "What is the value of (−3)² − 3²?",
+      "choices": [
+        {
+          "id": "MATH-NUM-109-a",
+          "label": "A",
+          "text": "−18",
+          "isCorrect": false,
+          "explanation": "This treats (−3)² as −9. The product (−3)(−3) is positive 9, so the expression is 9 − 9."
+        },
+        {
+          "id": "MATH-NUM-109-b",
+          "label": "B",
+          "text": "−12",
+          "isCorrect": false,
+          "explanation": "This multiplies each base by 2 instead of squaring it: (−6) − 6 = −12. An exponent of 2 means multiply the base by itself."
+        },
+        {
+          "id": "MATH-NUM-109-c",
+          "label": "C",
+          "text": "0",
+          "isCorrect": true,
+          "explanation": "Correct. (−3)² = 9 and 3² = 9, so 9 − 9 = 0."
+        },
+        {
+          "id": "MATH-NUM-109-d",
+          "label": "D",
+          "text": "36",
+          "isCorrect": false,
+          "explanation": "This subtracts the bases first and then squares: (−3 − 3)² = (−6)² = 36. Each term must be squared before subtracting."
+        }
+      ],
+      "solutionExplanation": "(−3)² means (−3)(−3) = 9. 3² means (3)(3) = 9. So (−3)² − 3² = 9 − 9 = 0.",
+      "commonTrap": "Students think any expression with −3 in it must be negative and write (−3)² = −9, which gives −9 − 9 = −18. A negative number times a negative number is positive.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-NUM-110",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "NUM-EXP"
+      ],
+      "stem": "What is the product of 4 × 10⁵ and 6 × 10³, written in scientific notation?",
+      "choices": [
+        {
+          "id": "MATH-NUM-110-a",
+          "label": "A",
+          "text": "2.4 × 10⁸",
+          "isCorrect": false,
+          "explanation": "This rewrites 24 as 2.4 but keeps the exponent 8. Since 24 × 10⁸ = 2.4 × 10 × 10⁸, the exponent must increase to 9."
+        },
+        {
+          "id": "MATH-NUM-110-b",
+          "label": "B",
+          "text": "1 × 10⁹",
+          "isCorrect": false,
+          "explanation": "This adds the first factors instead of multiplying them: 4 + 6 = 10, and 10 × 10⁸ = 1 × 10⁹."
+        },
+        {
+          "id": "MATH-NUM-110-c",
+          "label": "C",
+          "text": "2.4 × 10⁹",
+          "isCorrect": true,
+          "explanation": "Correct. 4 × 6 = 24 and 10⁵ × 10³ = 10⁸, so the product is 24 × 10⁸ = 2.4 × 10⁹."
+        },
+        {
+          "id": "MATH-NUM-110-d",
+          "label": "D",
+          "text": "2.4 × 10¹⁶",
+          "isCorrect": false,
+          "explanation": "This multiplies the exponents instead of adding them: 10⁵ × 10³ becomes 10¹⁵, so 24 × 10¹⁵ = 2.4 × 10¹⁶."
+        }
+      ],
+      "solutionExplanation": "Multiply the numbers in front and add the exponents: (4 × 6) × 10⁵⁺³ = 24 × 10⁸. In scientific notation, the first factor must be at least 1 and less than 10. 24 = 2.4 × 10¹, so 24 × 10⁸ = 2.4 × 10⁹.",
+      "commonTrap": "Students get 24 × 10⁸ and move the decimal point in 24 without changing the exponent, giving 2.4 × 10⁸. Making the first factor 10 times smaller requires making the power of 10 ten times larger.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-NUM-111",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "NUM-EXP"
+      ],
+      "stem": "If √(x + 9) = 5, what is the value of √(4x)?",
+      "choices": [
+        {
+          "id": "MATH-NUM-111-a",
+          "label": "A",
+          "text": "4",
+          "isCorrect": false,
+          "explanation": "This splits the root as √x + √9 = 5, so √x = 2 and x = 4. Then √(4 × 4) = 4. A square root cannot be split over addition."
+        },
+        {
+          "id": "MATH-NUM-111-b",
+          "label": "B",
+          "text": "8",
+          "isCorrect": true,
+          "explanation": "Correct. x + 9 = 25, so x = 16. Then √(4 × 16) = √64 = 8."
+        },
+        {
+          "id": "MATH-NUM-111-c",
+          "label": "C",
+          "text": "16",
+          "isCorrect": false,
+          "explanation": "This is the value of x. It also comes from 4√x = 4 × 4, which applies the root to x but not to the 4. The question asks for √(4x)."
+        },
+        {
+          "id": "MATH-NUM-111-d",
+          "label": "D",
+          "text": "64",
+          "isCorrect": false,
+          "explanation": "This is the value of 4x. The square root of 64 still has to be taken."
+        }
+      ],
+      "solutionExplanation": "Square both sides of √(x + 9) = 5 to get x + 9 = 25, so x = 16. Then 4x = 64, and √64 = 8.",
+      "commonTrap": "Students split the square root over the sum and write √x + 3 = 5. That gives √x = 2 and x = 4, so √(4x) = √16 = 4. The square root of a sum is not the sum of the square roots: √(16 + 9) = 5, but √16 + √9 = 7.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-NUM-112",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-EE",
+      "tags": [
+        "NUM-EXP"
+      ],
+      "stem": "If 2ⁿ = 8 × 4³, what is the value of n?",
+      "ee": {
+        "instruction": "Enter your answer as a number.",
+        "acceptableAnswers": [
+          "9",
+          "9.0"
+        ]
+      },
+      "commonWrongAnswers": [
+        {
+          "answer": "6",
+          "explanation": "This adds the exponents 3 + 3 without changing 4³ to a power of 2. Exponents can be added only when the bases are the same."
+        },
+        {
+          "answer": "15",
+          "explanation": "This multiplies 8 × 4 first and then cubes: 32³ = (2⁵)³ = 2¹⁵. The exponent 3 applies only to the 4."
+        },
+        {
+          "answer": "18",
+          "explanation": "This multiplies the exponents of 2³ and 2⁶ instead of adding them. When multiplying powers with the same base, add the exponents."
+        }
+      ],
+      "solutionExplanation": "Write each factor as a power of 2. 8 = 2³, and 4 = 2², so 4³ = (2²)³ = 2⁶. Then 8 × 4³ = 2³ × 2⁶ = 2⁹. So n = 9. Check: 8 × 64 = 512 = 2⁹.",
+      "commonTrap": "Students treat 4³ as if it were 2³ and add exponents to get 2⁶, so n = 6. The base 4 is 2², so 4³ is (2²)³ = 2⁶, not 2³.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-NUM-113",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "NUM-RAT"
+      ],
+      "stem": "In a robotics club, the ratio of boys to girls is 3 : 5. After 6 more boys join the club and no one leaves, the number of boys is equal to the number of girls. How many students were in the club before the new boys joined?",
+      "choices": [
+        {
+          "id": "MATH-NUM-113-a",
+          "label": "A",
+          "text": "15",
+          "isCorrect": false,
+          "explanation": "This is the number of girls, not the total number of students before the boys joined."
+        },
+        {
+          "id": "MATH-NUM-113-b",
+          "label": "B",
+          "text": "24",
+          "isCorrect": true,
+          "explanation": "Correct. 3k + 6 = 5k gives k = 3, so there were 9 boys and 15 girls, or 24 students."
+        },
+        {
+          "id": "MATH-NUM-113-c",
+          "label": "C",
+          "text": "30",
+          "isCorrect": false,
+          "explanation": "This is the number of students after the 6 boys joined: 15 + 15. The question asks about the club before they joined."
+        },
+        {
+          "id": "MATH-NUM-113-d",
+          "label": "D",
+          "text": "48",
+          "isCorrect": false,
+          "explanation": "This treats the 6 new boys as one part, so k = 6 and the total is 8 × 6. The 6 boys fill the 2-part gap between 3 parts and 5 parts."
+        }
+      ],
+      "solutionExplanation": "Let the club have 3k boys and 5k girls. After 6 boys join, 3k + 6 = 5k, so 2k = 6 and k = 3. The club had 3(3) = 9 boys and 5(3) = 15 girls, for a total of 24 students. Check: 9 + 6 = 15 boys, which equals 15 girls.",
+      "commonTrap": "Students treat the 6 new boys as one part of the ratio, so k = 6 and the total is 8 × 6 = 48. The 6 boys make up the difference between 5 parts and 3 parts, which is 2 parts.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-NUM-114",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "NUM-RAT"
+      ],
+      "stem": "A printer prints 45 pages in 3 minutes. At this rate, how many pages will it print in 20 minutes?",
+      "choices": [
+        {
+          "id": "MATH-NUM-114-a",
+          "label": "A",
+          "text": "15",
+          "isCorrect": false,
+          "explanation": "This is the unit rate, 15 pages per minute. It must be multiplied by 20 minutes."
+        },
+        {
+          "id": "MATH-NUM-114-b",
+          "label": "B",
+          "text": "62",
+          "isCorrect": false,
+          "explanation": "This adds the same amount to both quantities: 3 + 17 = 20 minutes, so 45 + 17 = 62 pages. A proportion multiplies both quantities by the same number."
+        },
+        {
+          "id": "MATH-NUM-114-c",
+          "label": "C",
+          "text": "300",
+          "isCorrect": true,
+          "explanation": "Correct. 45 ÷ 3 = 15 pages per minute, and 15 × 20 = 300 pages."
+        },
+        {
+          "id": "MATH-NUM-114-d",
+          "label": "D",
+          "text": "900",
+          "isCorrect": false,
+          "explanation": "This multiplies 45 by 20 without dividing by 3, as if the printer printed 45 pages every minute."
+        }
+      ],
+      "solutionExplanation": "Find the unit rate: 45 ÷ 3 = 15 pages per minute. In 20 minutes, the printer prints 15 × 20 = 300 pages.",
+      "commonTrap": "Students see that 20 minutes is 17 more than 3 minutes and add 17 pages to 45, getting 62. Rates scale by multiplying, not by adding the same amount to both quantities.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-NUM-115",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "NUM-RAT"
+      ],
+      "stem": "In a garden, the ratio of roses to tulips is 2 : 3. The ratio of tulips to daisies is 4 : 5. What is the ratio of roses to daisies?",
+      "choices": [
+        {
+          "id": "MATH-NUM-115-a",
+          "label": "A",
+          "text": "2 : 5",
+          "isCorrect": false,
+          "explanation": "This uses the first number of one ratio and the last number of the other without making the tulip parts match."
+        },
+        {
+          "id": "MATH-NUM-115-b",
+          "label": "B",
+          "text": "8 : 15",
+          "isCorrect": true,
+          "explanation": "Correct. Scaling to 8 : 12 and 12 : 15 makes the tulips match, so roses to daisies is 8 : 15."
+        },
+        {
+          "id": "MATH-NUM-115-c",
+          "label": "C",
+          "text": "5 : 6",
+          "isCorrect": false,
+          "explanation": "This cross-multiplies the two ratios as if they formed a proportion: 2 × 5 = 10 and 3 × 4 = 12, giving 10 : 12 = 5 : 6. Cross-multiplying tests whether two ratios are equal; it does not combine them."
+        },
+        {
+          "id": "MATH-NUM-115-d",
+          "label": "D",
+          "text": "15 : 8",
+          "isCorrect": false,
+          "explanation": "This finds the correct numbers but writes them in reverse order. The question asks for roses to daisies, so the number of roses comes first."
+        }
+      ],
+      "solutionExplanation": "The tulips appear in both ratios, so make the number of tulips the same in each. The least common multiple of 3 and 4 is 12. Multiply the first ratio by 4: roses to tulips is 8 : 12. Multiply the second ratio by 3: tulips to daisies is 12 : 15. So roses to tulips to daisies is 8 : 12 : 15, and roses to daisies is 8 : 15.",
+      "commonTrap": "Students take the 2 from the first ratio and the 5 from the second ratio and write 2 : 5. The two ratios use different-sized parts for tulips (3 parts in one, 4 parts in the other), so they must be scaled to match before they can be combined.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-NUM-116",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "NUM-FAC"
+      ],
+      "stem": "A Route A bus leaves the station every 12 minutes. A Route B bus leaves the station every 18 minutes. Both buses leave the station at 8:00 a.m. What is the next time that both buses will leave the station at the same time?",
+      "choices": [
+        {
+          "id": "MATH-NUM-116-a",
+          "label": "A",
+          "text": "8:06 a.m.",
+          "isCorrect": false,
+          "explanation": "This uses 6 minutes, the greatest common factor of 12 and 18. The buses leave together after a common multiple, not a common factor."
+        },
+        {
+          "id": "MATH-NUM-116-b",
+          "label": "B",
+          "text": "8:30 a.m.",
+          "isCorrect": false,
+          "explanation": "This adds the two intervals: 12 + 18 = 30 minutes. Neither bus leaves at 8:30 a.m., since 30 is not a multiple of 12 or of 18."
+        },
+        {
+          "id": "MATH-NUM-116-c",
+          "label": "C",
+          "text": "8:36 a.m.",
+          "isCorrect": true,
+          "explanation": "Correct. The least common multiple of 12 and 18 is 36 minutes, and 36 minutes after 8:00 a.m. is 8:36 a.m."
+        },
+        {
+          "id": "MATH-NUM-116-d",
+          "label": "D",
+          "text": "11:36 a.m.",
+          "isCorrect": false,
+          "explanation": "This uses 12 × 18 = 216 minutes, or 3 hours 36 minutes. 216 is a common multiple, but not the least common multiple."
+        }
+      ],
+      "solutionExplanation": "The buses leave together after a number of minutes that is a multiple of both 12 and 18. The least common multiple of 12 and 18 is 36: the multiples of 18 are 18, 36, ..., and 36 is the first one that 12 divides. So both buses leave together again 36 minutes after 8:00 a.m., at 8:36 a.m.",
+      "commonTrap": "Students multiply 12 × 18 = 216 minutes to find a common multiple. 216 is a common multiple, but not the least one, so it skips earlier times when both buses leave together.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-NUM-117",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-MS",
+      "tags": [
+        "NUM-FAC"
+      ],
+      "stem": "A positive integer n is divisible by both 6 and 15. Which two statements must be true? Select two answers.",
+      "choices": [
+        {
+          "id": "MATH-NUM-117-a",
+          "label": "A",
+          "text": "n is divisible by 9.",
+          "isCorrect": false,
+          "explanation": "This counts the factor of 3 twice, once from 6 and once from 15. Only one 3 is needed. n = 30 is divisible by both 6 and 15 but not by 9."
+        },
+        {
+          "id": "MATH-NUM-117-b",
+          "label": "B",
+          "text": "n is divisible by 10.",
+          "isCorrect": true,
+          "explanation": "Correct. n must be a multiple of 30, and every multiple of 30 is a multiple of 10."
+        },
+        {
+          "id": "MATH-NUM-117-c",
+          "label": "C",
+          "text": "n is divisible by 30.",
+          "isCorrect": true,
+          "explanation": "Correct. 30 is the least common multiple of 6 and 15, so n must be a multiple of 30."
+        },
+        {
+          "id": "MATH-NUM-117-d",
+          "label": "D",
+          "text": "n is divisible by 45.",
+          "isCorrect": false,
+          "explanation": "This multiplies 15 by the 3 from 6 instead of the 2 from 6. 15 already contains a 3; the missing factor is 2. n = 30 is not divisible by 45."
+        },
+        {
+          "id": "MATH-NUM-117-e",
+          "label": "E",
+          "text": "n is divisible by 90.",
+          "isCorrect": false,
+          "explanation": "This uses 6 × 15 = 90 as if it were the least common multiple. n = 30 is divisible by both 6 and 15 but not by 90."
+        }
+      ],
+      "ms": {
+        "selectCount": 2,
+        "instruction": "Select two answers."
+      },
+      "solutionExplanation": "Write each number as a product of primes: 6 = 2 × 3 and 15 = 3 × 5. A number divisible by both must contain the factors 2, 3, and 5, so it is divisible by the least common multiple, 2 × 3 × 5 = 30. Every multiple of 30 is also divisible by 10, since 30 = 3 × 10. The smallest possible value, n = 30, shows that n does not have to be divisible by 9, 45, or 90.",
+      "commonTrap": "Students multiply 6 × 15 = 90 and assume n must be a multiple of 90. Since 6 and 15 share a factor of 3, the least common multiple is only 30. The number 30 is divisible by both 6 and 15 but not by 90.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-NUM-118",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-EE",
+      "tags": [
+        "NUM-FAC"
+      ],
+      "stem": "The students in a club can be split evenly into groups of 4, into groups of 6, or into groups of 9, with no students left over. The club has more than 40 students and fewer than 100 students. How many students are in the club?",
+      "ee": {
+        "instruction": "Enter your answer as a number.",
+        "acceptableAnswers": [
+          "72",
+          "72.0"
+        ]
+      },
+      "commonWrongAnswers": [
+        {
+          "answer": "36",
+          "explanation": "This is the least common multiple of 4, 6, and 9, but it does not meet the condition that the club has more than 40 students."
+        },
+        {
+          "answer": "54",
+          "explanation": "This is a multiple of 6 and 9 (their least common multiple is 18) but ignores the groups of 4. 54 ÷ 4 = 13.5, so 54 students cannot be split into groups of 4."
+        },
+        {
+          "answer": "48",
+          "explanation": "This is a multiple of 4 and 6 (their least common multiple is 12) but ignores the groups of 9. 48 ÷ 9 is not a whole number."
+        }
+      ],
+      "solutionExplanation": "The number of students is a common multiple of 4, 6, and 9. Using prime factors, 4 = 2², 6 = 2 × 3, and 9 = 3², so the least common multiple is 2² × 3² = 36. The common multiples are 36, 72, 108, and so on. The only one greater than 40 and less than 100 is 72.",
+      "commonTrap": "Students find the least common multiple, 36, and stop. The club has more than 40 students, so the answer is the next common multiple, 72.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-101",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "DAT-STA"
+      ],
+      "stem": "Priya's mean score on 4 tests is 85. What score does she need on her fifth test to raise her mean score to 87?",
+      "choices": [
+        {
+          "id": "MATH-DAT-101-a",
+          "label": "A",
+          "text": "87",
+          "isCorrect": false,
+          "explanation": "This assumes she needs to score the target mean. Her first 4 tests average 2 points below 87, so a score of 87 would leave the mean below 87."
+        },
+        {
+          "id": "MATH-DAT-101-b",
+          "label": "B",
+          "text": "89",
+          "isCorrect": false,
+          "explanation": "This adds the 2-point increase only once: 87 + 2. The fifth test must make up 2 points for each of the 4 earlier tests."
+        },
+        {
+          "id": "MATH-DAT-101-c",
+          "label": "C",
+          "text": "95",
+          "isCorrect": true,
+          "explanation": "Correct. 5 × 87 − 4 × 85 = 435 − 340 = 95."
+        },
+        {
+          "id": "MATH-DAT-101-d",
+          "label": "D",
+          "text": "97",
+          "isCorrect": false,
+          "explanation": "This adds 2 points for all 5 tests: 87 + 5 × 2 = 97. Only the 4 earlier tests are 2 points below the new mean."
+        }
+      ],
+      "solutionExplanation": "Her 4 scores add to 4 × 85 = 340. For a mean of 87 on 5 tests, the scores must add to 5 × 87 = 435. Her fifth score must be 435 − 340 = 95.",
+      "commonTrap": "Students think scoring the new mean, 87, on the fifth test will make the mean 87. Each of the first 4 tests is 2 points below 87, so the fifth score must make up 4 × 2 = 8 points: 87 + 8 = 95.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-102",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "DAT-STA"
+      ],
+      "stem": "Six students reported the number of books they read last month.\n\n13, 7, 10, 4, 17, 9\n\nWhat is the median number of books?",
+      "choices": [
+        {
+          "id": "MATH-DAT-102-a",
+          "label": "A",
+          "text": "7",
+          "isCorrect": false,
+          "explanation": "This uses the two middle numbers of the unordered list, 10 and 4: (10 + 4) ÷ 2 = 7. The data must be put in order first."
+        },
+        {
+          "id": "MATH-DAT-102-b",
+          "label": "B",
+          "text": "9",
+          "isCorrect": false,
+          "explanation": "This puts the data in order but uses only one of the two middle values. With an even number of values, the median is the mean of the two middle values."
+        },
+        {
+          "id": "MATH-DAT-102-c",
+          "label": "C",
+          "text": "9.5",
+          "isCorrect": true,
+          "explanation": "Correct. In order, the data are 4, 7, 9, 10, 13, 17, and (9 + 10) ÷ 2 = 9.5."
+        },
+        {
+          "id": "MATH-DAT-102-d",
+          "label": "D",
+          "text": "10",
+          "isCorrect": false,
+          "explanation": "This is the mean, 60 ÷ 6 = 10, not the median. It is also the 4th value, chosen alone instead of averaged with the 3rd."
+        }
+      ],
+      "solutionExplanation": "First put the numbers in order: 4, 7, 9, 10, 13, 17. With 6 values, the median is the mean of the two middle values, the 3rd and 4th: (9 + 10) ÷ 2 = 9.5 books.",
+      "commonTrap": "Students take the middle of the list as it is written, without putting it in order first. The two middle numbers as listed are 10 and 4, which gives 7.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-103",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-MS",
+      "tags": [
+        "DAT-STA"
+      ],
+      "stem": "A soccer team scored these numbers of goals in 7 games.\n\n3, 5, 5, 8, 10, 12, 20\n\nThe coach finds that the 20 was recorded incorrectly. The correct value is 6. When 20 is replaced with 6, which two statements are true? Select two answers.",
+      "choices": [
+        {
+          "id": "MATH-DAT-103-a",
+          "label": "A",
+          "text": "The mean decreases by 2.",
+          "isCorrect": true,
+          "explanation": "Correct. The sum decreases by 20 − 6 = 14, and 14 ÷ 7 = 2. The mean goes from 9 to 7."
+        },
+        {
+          "id": "MATH-DAT-103-b",
+          "label": "B",
+          "text": "The mean decreases by 14.",
+          "isCorrect": false,
+          "explanation": "14 is the decrease in the sum of the data. The mean decreases by 14 ÷ 7 = 2."
+        },
+        {
+          "id": "MATH-DAT-103-c",
+          "label": "C",
+          "text": "The median stays the same.",
+          "isCorrect": false,
+          "explanation": "This assumes changing the greatest value leaves the middle alone. The new value, 6, is less than 8, so in the new order the 4th value is 6."
+        },
+        {
+          "id": "MATH-DAT-103-d",
+          "label": "D",
+          "text": "The range decreases by 8.",
+          "isCorrect": true,
+          "explanation": "Correct. The range goes from 20 − 3 = 17 to 12 − 3 = 9, a decrease of 8."
+        },
+        {
+          "id": "MATH-DAT-103-e",
+          "label": "E",
+          "text": "The range decreases by 14.",
+          "isCorrect": false,
+          "explanation": "This subtracts the two replaced values, 20 − 6 = 14. After the change, the greatest value is 12, not 6, so the new range is 12 − 3 = 9."
+        }
+      ],
+      "ms": {
+        "selectCount": 2,
+        "instruction": "Select two answers."
+      },
+      "solutionExplanation": "Original data: the sum is 63, so the mean is 63 ÷ 7 = 9. The median is the 4th value, 8. The range is 20 − 3 = 17.\n\nNew data in order: 3, 5, 5, 6, 8, 10, 12. The sum is 63 − 20 + 6 = 49, so the mean is 49 ÷ 7 = 7, a decrease of 2. The median is the 4th value, 6, so the median changes. The range is 12 − 3 = 9, a decrease of 17 − 9 = 8.",
+      "commonTrap": "Students assume that changing the greatest value cannot change the median. Here the new value, 6, is less than the old median, 8, so it moves into the lower half of the data and the middle value shifts from 8 to 6.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-104",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-EE",
+      "tags": [
+        "DAT-STA"
+      ],
+      "stem": "The mean of five numbers is 12. Two of the numbers are removed, and the mean of the remaining three numbers is 10. What is the mean of the two numbers that were removed?",
+      "ee": {
+        "instruction": "Enter your answer as a number.",
+        "acceptableAnswers": [
+          "15",
+          "15.0"
+        ]
+      },
+      "commonWrongAnswers": [
+        {
+          "answer": "30",
+          "explanation": "This is the sum of the two removed numbers. Their mean is 30 ÷ 2 = 15."
+        },
+        {
+          "answer": "11",
+          "explanation": "This averages the two means, (12 + 10) ÷ 2 = 11. Means of groups cannot be combined or separated without using sums."
+        },
+        {
+          "answer": "2",
+          "explanation": "This is the difference between the two means, 12 − 10. It is not the mean of the removed numbers."
+        }
+      ],
+      "solutionExplanation": "The five numbers add to 5 × 12 = 60. The remaining three add to 3 × 10 = 30. So the two removed numbers add to 60 − 30 = 30, and their mean is 30 ÷ 2 = 15.",
+      "commonTrap": "Students find the sum of the removed numbers, 30, and enter it as the answer. The question asks for the mean of the two numbers, so divide by 2.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-105",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "DAT-STA",
+        "NUM-INT"
+      ],
+      "stem": "The low temperatures, in degrees Fahrenheit, in a town for five days were −4, 7, −9, 3, and 5. What is the range of the low temperatures, in degrees?",
+      "choices": [
+        {
+          "id": "MATH-DAT-105-a",
+          "label": "A",
+          "text": "6",
+          "isCorrect": false,
+          "explanation": "This ignores the negative signs and finds 9 − 3 = 6. Negative numbers are less than positive numbers, so −9 is the least value and 7 is the greatest."
+        },
+        {
+          "id": "MATH-DAT-105-b",
+          "label": "B",
+          "text": "9",
+          "isCorrect": false,
+          "explanation": "This subtracts the first value listed from the last value listed: 5 − (−4) = 9. The range uses the greatest and least values, not the first and last."
+        },
+        {
+          "id": "MATH-DAT-105-c",
+          "label": "C",
+          "text": "11",
+          "isCorrect": false,
+          "explanation": "This uses −4 as the least value: 7 − (−4) = 11. Since −9 < −4, the least value is −9."
+        },
+        {
+          "id": "MATH-DAT-105-d",
+          "label": "D",
+          "text": "16",
+          "isCorrect": true,
+          "explanation": "Correct. 7 − (−9) = 16 degrees."
+        }
+      ],
+      "solutionExplanation": "The range is the greatest value minus the least value. The greatest temperature is 7. The least temperature is −9, since −9 is farther below 0 than −4. The range is 7 − (−9) = 7 + 9 = 16 degrees.",
+      "commonTrap": "Students think −4 is less than −9 because 4 is less than 9, so they compute 7 − (−4) = 11. On a number line, −9 is to the left of −4, so −9 is the least value.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-106",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "DAT-STA"
+      ],
+      "stem": "The mean test score of 12 students is 80. Then 18 more students take the same test, and the mean score of all 30 students is 86. What is the mean score of the 18 students who took the test later?",
+      "choices": [
+        {
+          "id": "MATH-DAT-106-a",
+          "label": "A",
+          "text": "54",
+          "isCorrect": false,
+          "explanation": "This finds the correct total for the later students, 1,620, but divides by all 30 students instead of the 18 students in the group."
+        },
+        {
+          "id": "MATH-DAT-106-b",
+          "label": "B",
+          "text": "90",
+          "isCorrect": true,
+          "explanation": "Correct. 30 × 86 − 12 × 80 = 1,620, and 1,620 ÷ 18 = 90."
+        },
+        {
+          "id": "MATH-DAT-106-c",
+          "label": "C",
+          "text": "92",
+          "isCorrect": false,
+          "explanation": "This assumes the overall mean is halfway between the group means: 86 − 80 = 6, and 86 + 6 = 92. The groups have different sizes, so the means cannot be weighted equally."
+        },
+        {
+          "id": "MATH-DAT-106-d",
+          "label": "D",
+          "text": "95",
+          "isCorrect": false,
+          "explanation": "This balances the groups in the wrong direction. The 12 students are 6 below 86, for a total of 72 points, which is spread over 18 students: 72 ÷ 18 = 4 above 86. Computing 6 × 18 ÷ 12 = 9 reverses the group sizes."
+        }
+      ],
+      "solutionExplanation": "All 30 scores add to 30 × 86 = 2,580. The first 12 scores add to 12 × 80 = 960. So the 18 later scores add to 2,580 − 960 = 1,620, and their mean is 1,620 ÷ 18 = 90.",
+      "commonTrap": "Students assume 86 is halfway between the two group means, so the second mean must be 86 + 6 = 92. That is only true when the groups are the same size. The larger group pulls the overall mean toward its own mean.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-107",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "DAT-PROB"
+      ],
+      "stem": "A bag contains 5 red marbles, 3 blue marbles, and 4 green marbles. One marble is chosen at random. What is the probability that the marble is not blue?",
+      "choices": [
+        {
+          "id": "MATH-DAT-107-a",
+          "label": "A",
+          "text": "1/4",
+          "isCorrect": false,
+          "explanation": "This is the probability that the marble is blue, 3/12. The question asks for not blue."
+        },
+        {
+          "id": "MATH-DAT-107-b",
+          "label": "B",
+          "text": "1/3",
+          "isCorrect": false,
+          "explanation": "This compares 3 blue marbles with 9 other marbles. A probability divides by the total number of marbles, 12."
+        },
+        {
+          "id": "MATH-DAT-107-c",
+          "label": "C",
+          "text": "2/3",
+          "isCorrect": false,
+          "explanation": "This treats the 3 colors as equally likely: 2 of the 3 colors are not blue. The colors have different numbers of marbles."
+        },
+        {
+          "id": "MATH-DAT-107-d",
+          "label": "D",
+          "text": "3/4",
+          "isCorrect": true,
+          "explanation": "Correct. 9 of the 12 marbles are not blue, and 9/12 = 3/4."
+        }
+      ],
+      "solutionExplanation": "There are 5 + 3 + 4 = 12 marbles. The marbles that are not blue are the 5 red and 4 green marbles, so 9 marbles are not blue. The probability is 9/12 = 3/4.",
+      "commonTrap": "Students compare the blue marbles with the other marbles, 3 to 9, and write 3/9 = 1/3. A probability compares the favorable outcomes with all outcomes, not with the other outcomes.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-108",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "DAT-PROB"
+      ],
+      "stem": "A locker code is made of one letter, A, B, or C, followed by two digits from 0 through 9. The digits may repeat. How many different locker codes are possible?",
+      "choices": [
+        {
+          "id": "MATH-DAT-108-a",
+          "label": "A",
+          "text": "23",
+          "isCorrect": false,
+          "explanation": "This adds the choices: 3 + 10 + 10 = 23. Choices made together are multiplied."
+        },
+        {
+          "id": "MATH-DAT-108-b",
+          "label": "B",
+          "text": "30",
+          "isCorrect": false,
+          "explanation": "This counts only one digit: 3 × 10 = 30. The code has two digits."
+        },
+        {
+          "id": "MATH-DAT-108-c",
+          "label": "C",
+          "text": "270",
+          "isCorrect": false,
+          "explanation": "This does not let the digits repeat: 3 × 10 × 9 = 270. The stem says digits may repeat."
+        },
+        {
+          "id": "MATH-DAT-108-d",
+          "label": "D",
+          "text": "300",
+          "isCorrect": true,
+          "explanation": "Correct. 3 × 10 × 10 = 300."
+        }
+      ],
+      "solutionExplanation": "There are 3 choices for the letter, 10 choices for the first digit, and 10 choices for the second digit, since digits may repeat. By the counting principle, there are 3 × 10 × 10 = 300 codes.",
+      "commonTrap": "Students who do not read that digits may repeat use 9 choices for the second digit and get 270. The stem says the digits may repeat, so both digits have 10 choices.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-109",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "DAT-PROB"
+      ],
+      "stem": "Two fair number cubes, each with faces numbered 1 through 6, are rolled. What is the probability that the sum of the two numbers rolled is 8?",
+      "choices": [
+        {
+          "id": "MATH-DAT-109-a",
+          "label": "A",
+          "text": "1/12",
+          "isCorrect": false,
+          "explanation": "This counts 2 + 6, 3 + 5, and 4 + 4 once each: 3/36. Pairs of different numbers can happen in two orders."
+        },
+        {
+          "id": "MATH-DAT-109-b",
+          "label": "B",
+          "text": "1/11",
+          "isCorrect": false,
+          "explanation": "This treats the 11 possible sums, 2 through 12, as equally likely. A sum of 8 can happen in more ways than a sum of 2."
+        },
+        {
+          "id": "MATH-DAT-109-c",
+          "label": "C",
+          "text": "5/36",
+          "isCorrect": true,
+          "explanation": "Correct. Five of the 36 outcomes have a sum of 8."
+        },
+        {
+          "id": "MATH-DAT-109-d",
+          "label": "D",
+          "text": "1/6",
+          "isCorrect": false,
+          "explanation": "This doubles every pair, including 4 + 4: 3 × 2 = 6, and 6/36 = 1/6. Rolling 4 and 4 can happen in only one way."
+        }
+      ],
+      "solutionExplanation": "There are 6 × 6 = 36 equally likely outcomes. List the ordered pairs with a sum of 8: (2, 6), (3, 5), (4, 4), (5, 3), and (6, 2). That is 5 outcomes, so the probability is 5/36.",
+      "commonTrap": "Students list the pairs as 2 + 6, 3 + 5, and 4 + 4 and get 3/36 = 1/12. With two cubes, rolling 2 then 6 is a different outcome from rolling 6 then 2, so each pair of different numbers counts twice.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-110",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "DAT-PROB"
+      ],
+      "stem": "A jar holds 4 chocolate cookies and 6 vanilla cookies. Leah takes 2 cookies at random, one at a time, without putting the first one back. What is the probability that she takes one cookie of each flavor?",
+      "choices": [
+        {
+          "id": "MATH-DAT-110-a",
+          "label": "A",
+          "text": "6/25",
+          "isCorrect": false,
+          "explanation": "This uses only one order and acts as if the first cookie were put back: 4/10 × 6/10 = 24/100 = 6/25."
+        },
+        {
+          "id": "MATH-DAT-110-b",
+          "label": "B",
+          "text": "4/15",
+          "isCorrect": false,
+          "explanation": "This counts only chocolate then vanilla: 4/10 × 6/9 = 4/15. Vanilla then chocolate also gives one of each flavor."
+        },
+        {
+          "id": "MATH-DAT-110-c",
+          "label": "C",
+          "text": "12/25",
+          "isCorrect": false,
+          "explanation": "This counts both orders but acts as if the first cookie were put back: 2 × 4/10 × 6/10 = 12/25. After one cookie is taken, only 9 remain."
+        },
+        {
+          "id": "MATH-DAT-110-d",
+          "label": "D",
+          "text": "8/15",
+          "isCorrect": true,
+          "explanation": "Correct. 4/10 × 6/9 + 6/10 × 4/9 = 48/90 = 8/15."
+        }
+      ],
+      "solutionExplanation": "There are two ways to get one of each flavor. Chocolate then vanilla: 4/10 × 6/9 = 24/90. Vanilla then chocolate: 6/10 × 4/9 = 24/90. Add the two cases: 24/90 + 24/90 = 48/90 = 8/15.",
+      "commonTrap": "Students find the probability of chocolate then vanilla, 24/90 = 4/15, and stop. The cookies can also come in the other order, vanilla then chocolate, so both cases must be added.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-111",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-EE",
+      "tags": [
+        "DAT-PROB",
+        "NUM-FR"
+      ],
+      "stem": "A jar contains only red, blue, and green marbles. When one marble is chosen at random, the probability that it is red is 1/4, and the probability that it is blue is 2/5. There are 14 green marbles in the jar. How many marbles are in the jar?",
+      "ee": {
+        "instruction": "Enter your answer as a number.",
+        "acceptableAnswers": [
+          "40",
+          "40.0"
+        ]
+      },
+      "commonWrongAnswers": [
+        {
+          "answer": "21",
+          "explanation": "This adds the fractions as 1/4 + 2/5 = 3/9 = 1/3, so green is 2/3 and 14 ÷ 2/3 = 21. With a common denominator, 1/4 + 2/5 = 13/20."
+        },
+        {
+          "answer": "26",
+          "explanation": "This is the number of red and blue marbles together, 10 + 16. The question asks for all the marbles, including the 14 green ones."
+        }
+      ],
+      "solutionExplanation": "The probabilities of all three colors add to 1. The probability of red or blue is 1/4 + 2/5 = 5/20 + 8/20 = 13/20, so the probability of green is 1 − 13/20 = 7/20. Then 7/20 of the marbles are green, so 7/20 of the total is 14. The total is 14 ÷ 7/20 = 14 × 20/7 = 40 marbles. Check: 10 red, 16 blue, and 14 green make 40.",
+      "commonTrap": "Students add 1/4 + 2/5 by adding the numerators and the denominators to get 3/9 = 1/3. That makes the green probability 2/3 and the total 21. Fractions need a common denominator before they are added.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-112",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "DAT-PROB"
+      ],
+      "stem": "A spinner has 8 equal sections numbered 1 through 8. What is the probability that the spinner lands on a number that is even or a multiple of 3?",
+      "choices": [
+        {
+          "id": "MATH-DAT-112-a",
+          "label": "A",
+          "text": "1/8",
+          "isCorrect": false,
+          "explanation": "This counts only the numbers that are even and a multiple of 3, which is just 6. \"Or\" includes numbers in either group."
+        },
+        {
+          "id": "MATH-DAT-112-b",
+          "label": "B",
+          "text": "1/2",
+          "isCorrect": false,
+          "explanation": "This counts only the even numbers, 4/8, and leaves out 3, which is a multiple of 3 but not even."
+        },
+        {
+          "id": "MATH-DAT-112-c",
+          "label": "C",
+          "text": "5/8",
+          "isCorrect": true,
+          "explanation": "Correct. The numbers 2, 3, 4, 6, and 8 make 5 of the 8 sections."
+        },
+        {
+          "id": "MATH-DAT-112-d",
+          "label": "D",
+          "text": "3/4",
+          "isCorrect": false,
+          "explanation": "This adds 4 even numbers and 2 multiples of 3 to get 6/8. The number 6 is counted twice."
+        }
+      ],
+      "solutionExplanation": "The even numbers are 2, 4, 6, and 8. The multiples of 3 are 3 and 6. The number 6 is in both lists, so count it only once. The numbers that are even or a multiple of 3 are 2, 3, 4, 6, and 8. That is 5 of the 8 sections, so the probability is 5/8.",
+      "commonTrap": "Students add 4 even numbers and 2 multiples of 3 to get 6/8 = 3/4. The number 6 is in both groups and gets counted twice.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-113",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "INDY-CGT",
+      "tags": [
+        "DAT-GR",
+        "APP-PCT"
+      ],
+      "stem": "The table shows the number of bicycles a shop sold each month.\n\nWhat was the percent increase in the number of bicycles sold from March to April?",
+      "choices": [
+        {
+          "id": "MATH-DAT-113-a",
+          "label": "A",
+          "text": "21%",
+          "isCorrect": false,
+          "explanation": "This is the increase in bicycles, 21, written as a percent. It must be divided by the original amount, 35."
+        },
+        {
+          "id": "MATH-DAT-113-b",
+          "label": "B",
+          "text": "37.5%",
+          "isCorrect": false,
+          "explanation": "This divides the increase by April's sales: 21 ÷ 56 = 37.5%. Percent increase divides by the original amount, March's sales."
+        },
+        {
+          "id": "MATH-DAT-113-c",
+          "label": "C",
+          "text": "60%",
+          "isCorrect": true,
+          "explanation": "Correct. The increase is 21, and 21 ÷ 35 = 60%."
+        },
+        {
+          "id": "MATH-DAT-113-d",
+          "label": "D",
+          "text": "160%",
+          "isCorrect": false,
+          "explanation": "This is April's sales as a percent of March's sales, 56 ÷ 35 = 160%. The increase is 160% − 100% = 60%."
+        }
+      ],
+      "cgt": {
+        "visual": {
+          "type": "table",
+          "caption": "Bicycles Sold",
+          "headers": [
+            "Month",
+            "Number of Bicycles"
+          ],
+          "rows": [
+            [
+              "January",
+              "40"
+            ],
+            [
+              "February",
+              "50"
+            ],
+            [
+              "March",
+              "35"
+            ],
+            [
+              "April",
+              "56"
+            ]
+          ]
+        }
+      },
+      "solutionExplanation": "In March the shop sold 35 bicycles, and in April it sold 56. The increase is 56 − 35 = 21 bicycles. Percent increase compares the increase with the original amount: 21 ÷ 35 = 3/5 = 60%.",
+      "commonTrap": "Students divide the increase by the new amount, 21 ÷ 56 = 37.5%. Percent change is always found by dividing by the original amount, which here is March.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-114",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "INDY-CGT",
+      "tags": [
+        "DAT-GR",
+        "NUM-FR"
+      ],
+      "stem": "The bar graph shows the favorite sports of 40 students.\n\nWhat fraction of the students chose basketball or baseball?",
+      "choices": [
+        {
+          "id": "MATH-DAT-114-a",
+          "label": "A",
+          "text": "3/10",
+          "isCorrect": false,
+          "explanation": "This counts only basketball, 12/40 = 3/10. The question asks for basketball or baseball."
+        },
+        {
+          "id": "MATH-DAT-114-b",
+          "label": "B",
+          "text": "9/20",
+          "isCorrect": true,
+          "explanation": "Correct. 12 + 6 = 18 students, and 18/40 = 9/20."
+        },
+        {
+          "id": "MATH-DAT-114-c",
+          "label": "C",
+          "text": "1/2",
+          "isCorrect": false,
+          "explanation": "This counts sports instead of students: 2 of the 4 sports. Each sport was chosen by a different number of students."
+        },
+        {
+          "id": "MATH-DAT-114-d",
+          "label": "D",
+          "text": "9/11",
+          "isCorrect": false,
+          "explanation": "This compares the 18 students with the 22 students who chose soccer or tennis. The fraction must compare 18 with all 40 students."
+        }
+      ],
+      "cgt": {
+        "visual": {
+          "type": "barChart",
+          "title": "Favorite Sports of 40 Students",
+          "categories": [
+            "Soccer",
+            "Basketball",
+            "Baseball",
+            "Tennis"
+          ],
+          "values": [
+            18,
+            12,
+            6,
+            4
+          ],
+          "valueSuffix": " students"
+        }
+      },
+      "solutionExplanation": "From the graph, 12 students chose basketball and 6 chose baseball, so 12 + 6 = 18 students chose one of the two. There are 40 students in all. The fraction is 18/40 = 9/20.",
+      "commonTrap": "Students divide by the students who did not choose basketball or baseball, 18 + 4 = 22, and get 18/22 = 9/11. A fraction of the students compares the part with all 40 students.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-115",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-CGT",
+      "tags": [
+        "DAT-GR",
+        "DAT-STA"
+      ],
+      "stem": "The table shows the number of books each of 20 students read over the summer.\n\nWhat is the median number of books read?",
+      "ee": {
+        "instruction": "Enter your answer as a number.",
+        "acceptableAnswers": [
+          "2",
+          "2.0"
+        ]
+      },
+      "commonWrongAnswers": [
+        {
+          "answer": "2.5",
+          "explanation": "This is the middle of the values 0 through 5 in the first column. It ignores how many students read each number of books."
+        },
+        {
+          "answer": "1",
+          "explanation": "This is the mode, the number of books read by the most students (7). The median is the middle value of all 20."
+        },
+        {
+          "answer": "3",
+          "explanation": "This is the median of the frequencies in the second column, 1, 2, 3, 3, 4, 7. The frequencies count students, not books."
+        }
+      ],
+      "cgt": {
+        "visual": {
+          "type": "table",
+          "caption": "Books Read Over the Summer",
+          "headers": [
+            "Number of Books",
+            "Number of Students"
+          ],
+          "rows": [
+            [
+              "0",
+              "2"
+            ],
+            [
+              "1",
+              "7"
+            ],
+            [
+              "2",
+              "3"
+            ],
+            [
+              "3",
+              "4"
+            ],
+            [
+              "4",
+              "3"
+            ],
+            [
+              "5",
+              "1"
+            ]
+          ]
+        }
+      },
+      "solutionExplanation": "There are 20 values, so the median is the mean of the 10th and 11th values in order. Count up the table: 2 students read 0 books (values 1 and 2), 7 read 1 book (values 3 through 9), and 3 read 2 books (values 10 through 12). So the 10th and 11th values are both 2, and the median is (2 + 2) ÷ 2 = 2 books.",
+      "commonTrap": "Students find the middle of the Number of Books column. The column lists 0 through 5, and its middle is 2.5. The median must be found from all 20 students' values, using the frequencies.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-116",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-CGT",
+      "tags": [
+        "DAT-GR",
+        "DAT-STA"
+      ],
+      "stem": "The bar graph shows the number of smoothies a café sold each weekday last week. The café was also open on Saturday. The mean number of smoothies sold per day for all six days was 33. How many smoothies did the café sell on Saturday?",
+      "choices": [
+        {
+          "id": "MATH-DAT-116-a",
+          "label": "A",
+          "text": "33",
+          "isCorrect": false,
+          "explanation": "This assumes Saturday's sales equal the six-day mean. The weekdays average only 30, so Saturday must be above 33."
+        },
+        {
+          "id": "MATH-DAT-116-b",
+          "label": "B",
+          "text": "36",
+          "isCorrect": false,
+          "explanation": "This adds the 3-smoothie increase once to the new mean: 33 + 3. Saturday must make up 3 smoothies for each of the 5 weekdays."
+        },
+        {
+          "id": "MATH-DAT-116-c",
+          "label": "C",
+          "text": "48",
+          "isCorrect": true,
+          "explanation": "Correct. 6 × 33 − 150 = 198 − 150 = 48."
+        },
+        {
+          "id": "MATH-DAT-116-d",
+          "label": "D",
+          "text": "51",
+          "isCorrect": false,
+          "explanation": "This adds 3 for all six days: 33 + 6 × 3 = 51. Only the 5 weekdays are below the new mean."
+        }
+      ],
+      "cgt": {
+        "visual": {
+          "type": "barChart",
+          "title": "Smoothies Sold",
+          "categories": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday"
+          ],
+          "values": [
+            24,
+            30,
+            18,
+            36,
+            42
+          ]
+        }
+      },
+      "solutionExplanation": "From the graph, the weekday sales add to 24 + 30 + 18 + 36 + 42 = 150. For a mean of 33 over 6 days, the total must be 6 × 33 = 198. Saturday's sales were 198 − 150 = 48 smoothies.",
+      "commonTrap": "Students see that the weekday mean is 150 ÷ 5 = 30 and add the 3-smoothie increase once, getting 36. To raise the mean of all six days by 3, Saturday must also make up 3 smoothies for each of the 5 weekdays: 33 + 5 × 3 = 48.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-117",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "INDY-CGT",
+      "tags": [
+        "DAT-GR",
+        "NUM-RAT"
+      ],
+      "stem": "The table shows the size and price of a bag of rice at four stores.\n\nWhich store has the lowest price per pound?",
+      "choices": [
+        {
+          "id": "MATH-DAT-117-a",
+          "label": "A",
+          "text": "Store A",
+          "isCorrect": false,
+          "explanation": "This assumes the largest bag is the best deal. Store A charges $1.50 per pound, which is more than Store B."
+        },
+        {
+          "id": "MATH-DAT-117-b",
+          "label": "B",
+          "text": "Store B",
+          "isCorrect": true,
+          "explanation": "Correct. $5.60 ÷ 4 = $1.40 per pound, the lowest unit price."
+        },
+        {
+          "id": "MATH-DAT-117-c",
+          "label": "C",
+          "text": "Store C",
+          "isCorrect": false,
+          "explanation": "This chooses the lowest total price. Store C charges $1.45 per pound, which is more than Store B's $1.40."
+        },
+        {
+          "id": "MATH-DAT-117-d",
+          "label": "D",
+          "text": "Store D",
+          "isCorrect": false,
+          "explanation": "This divides pounds by price (5 ÷ 7.75 ≈ 0.65 pound per dollar) and chooses the smallest result. That is the fewest pounds per dollar, which makes Store D the most expensive per pound."
+        }
+      ],
+      "cgt": {
+        "visual": {
+          "type": "table",
+          "caption": "Rice Prices",
+          "headers": [
+            "Store",
+            "Bag Size (pounds)",
+            "Price"
+          ],
+          "rows": [
+            [
+              "A",
+              "6",
+              "$9.00"
+            ],
+            [
+              "B",
+              "4",
+              "$5.60"
+            ],
+            [
+              "C",
+              "2",
+              "$2.90"
+            ],
+            [
+              "D",
+              "5",
+              "$7.75"
+            ]
+          ]
+        }
+      },
+      "solutionExplanation": "Divide each price by the number of pounds. Store A: $9.00 ÷ 6 = $1.50. Store B: $5.60 ÷ 4 = $1.40. Store C: $2.90 ÷ 2 = $1.45. Store D: $7.75 ÷ 5 = $1.55. The lowest price per pound is $1.40, at Store B.",
+      "commonTrap": "Students choose Store C because it has the lowest total price. A cheaper bag can still cost more per pound if it holds less rice. Compare unit prices, not total prices.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "MATH-DAT-118",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-CGT",
+      "tags": [
+        "DAT-GR",
+        "DAT-PROB"
+      ],
+      "stem": "The table shows the number of seventh and eighth graders in the chess club and the art club at a school. No student is in both clubs.\n\nOne member of the chess club is chosen at random. What is the probability that the student is in eighth grade?",
+      "choices": [
+        {
+          "id": "MATH-DAT-118-a",
+          "label": "A",
+          "text": "1/3",
+          "isCorrect": false,
+          "explanation": "This divides by all 60 students in both clubs: 20/60. The student is chosen only from the chess club."
+        },
+        {
+          "id": "MATH-DAT-118-b",
+          "label": "B",
+          "text": "8/15",
+          "isCorrect": false,
+          "explanation": "This is the probability that a student from either club is in the chess club: 32/60. It does not use grade at all."
+        },
+        {
+          "id": "MATH-DAT-118-c",
+          "label": "C",
+          "text": "5/8",
+          "isCorrect": true,
+          "explanation": "Correct. 20 of the 32 chess club members are eighth graders, and 20/32 = 5/8."
+        },
+        {
+          "id": "MATH-DAT-118-d",
+          "label": "D",
+          "text": "2/3",
+          "isCorrect": false,
+          "explanation": "This divides by the 30 eighth graders: 20/30. That is the probability that an eighth grader is in the chess club, not the other way around."
+        }
+      ],
+      "cgt": {
+        "visual": {
+          "type": "table",
+          "caption": "Club Membership",
+          "headers": [
+            "Grade",
+            "Chess Club",
+            "Art Club"
+          ],
+          "rows": [
+            [
+              "Seventh grade",
+              "12",
+              "18"
+            ],
+            [
+              "Eighth grade",
+              "20",
+              "10"
+            ]
+          ]
+        }
+      },
+      "solutionExplanation": "The student is chosen from the chess club only, so the total is the Chess Club column: 12 + 20 = 32 students. Of these, 20 are in eighth grade. The probability is 20/32 = 5/8.",
+      "commonTrap": "Students use the wrong whole. Dividing 20 by the 30 eighth graders gives 2/3, which is the probability that an eighth grader is in the chess club. The stem says the student is chosen from the chess club, so divide by the 32 chess club members.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "New item.",
+      "createdAt": "2026-10-11T12:00:00Z"
+    }
+  ]
+}

@@ -1,0 +1,729 @@
+{
+  "batch": "2026-10-12-published-unapproved",
+  "description": "The 14 math items (geometry, applications, number) that went live in trackerQuestions.ts from the tracker's 'Jed Approved batch 2' import without Jed's final sign-off. 13 of them are also served by the diagnostic. Teammate reviewer notes were already applied in the live versions. Revised by Jed Levine with Claude: distractors that no realistic student error produces were rebuilt, every key and distractor path was recomputed in code, dollar signs were removed from non-money choices, units were added, per-choice explanations and Common Traps were written, and tags and modules were checked. Original IDs kept. All items are Provisional until a second team member reviews them and marks them Final.",
+  "sourceTracker": "src/data/trackerQuestions.ts (live) and src/data/diagnosticQuestions.ts, cross-checked against SHSAT Question Bank Tracker.xlsx for author, reviewer, and reviewer notes, read 2026-10-12",
+  "reviewStatusValues": {
+    "provisional": "Revised and approved by Jed with Claude. OK to publish in the app with a Provisional badge.",
+    "final": "Also reviewed by a second team member. Badge removed."
+  },
+  "questions": [
+    {
+      "id": "MATH-GEO-001",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-TRI",
+        "GEO-ARV"
+      ],
+      "stem": "In triangle ABC, angle C is a right angle. Point D lies on side AB so that segment CD is perpendicular to AB. The length of AC is 6 centimeters, and the length of BC is 8 centimeters. What is the length of CD, in centimeters?",
+      "choices": [
+        {
+          "id": "MATH-GEO-001-a",
+          "label": "A",
+          "text": "2.4",
+          "isCorrect": false,
+          "explanation": "This comes from finding the area, ½ × 6 × 8 = 24, and then setting 24 equal to 10 × CD. The ½ was dropped on the hypotenuse side of the equation."
+        },
+        {
+          "id": "MATH-GEO-001-b",
+          "label": "B",
+          "text": "4.8",
+          "isCorrect": true,
+          "explanation": "Correct. AB = √(6² + 8²) = 10. The area is ½ × 6 × 8 = 24, so ½ × 10 × CD = 24 and CD = 4.8."
+        },
+        {
+          "id": "MATH-GEO-001-c",
+          "label": "C",
+          "text": "5",
+          "isCorrect": false,
+          "explanation": "This is half of AB. It comes from assuming that CD cuts the hypotenuse into two equal parts. An altitude to the hypotenuse does not bisect it unless the legs are equal."
+        },
+        {
+          "id": "MATH-GEO-001-d",
+          "label": "D",
+          "text": "9.6",
+          "isCorrect": false,
+          "explanation": "This comes from using 6 × 8 = 48 as the area, forgetting the ½, and then solving ½ × 10 × CD = 48."
+        }
+      ],
+      "solutionExplanation": "Since angle C is a right angle, AC and BC are the legs and AB is the hypotenuse. By the Pythagorean theorem, AB = √(6² + 8²) = √100 = 10 centimeters. Using the legs as base and height, the area of the triangle is ½ × 6 × 8 = 24 square centimeters. CD is the height to side AB, so the area is also ½ × 10 × CD. Then ½ × 10 × CD = 24, so 5 × CD = 24 and CD = 4.8 centimeters.",
+      "commonTrap": "Students see that AB = 10 and assume D is the midpoint of AB, so they choose 5. The altitude from the right angle does not split the hypotenuse in half. Find the area two ways and set the expressions equal.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "trackerReviewer": "AC",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Replaced 4.6 and 5.4 (no real error produces either; the old explanations described 'adjusting through arithmetic error') with 2.4 and 9.6, which come from dropping the ½ on one side of the area equation. Stem now says 'side AB' and 'segment CD' and gives units. Added GEO-ARV tag (area-two-ways method). Format: tracker Format column says Multiple Choice Question but trackerQuestions.ts had INDY-WP; set to MC4_A-D to match the tracker and the diagnostic. Also used in the diagnostic.",
+      "createdAt": "2026-10-12T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-002",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-ARV",
+        "GEO-QUAD"
+      ],
+      "stem": "A rectangular swimming pool is 20 feet long and 10 feet wide. A walkway that is 2 feet wide surrounds the pool on all four sides. What is the area of the walkway, in square feet?",
+      "choices": [
+        {
+          "id": "MATH-GEO-002-a",
+          "label": "A",
+          "text": "64",
+          "isCorrect": false,
+          "explanation": "This comes from adding the 2-foot width to each dimension only once: 22 × 12 = 264, and 264 − 200 = 64. The walkway is on both ends of each side, so each dimension grows by 4 feet."
+        },
+        {
+          "id": "MATH-GEO-002-b",
+          "label": "B",
+          "text": "120",
+          "isCorrect": false,
+          "explanation": "This comes from multiplying the pool's perimeter by the walkway width: 2(20 + 10) × 2 = 120. This leaves out the four 2-foot-by-2-foot corner squares."
+        },
+        {
+          "id": "MATH-GEO-002-c",
+          "label": "C",
+          "text": "136",
+          "isCorrect": true,
+          "explanation": "Correct. The outer rectangle is 24 feet by 14 feet, so its area is 336 square feet. Subtract the pool's 200 square feet: 336 − 200 = 136."
+        },
+        {
+          "id": "MATH-GEO-002-d",
+          "label": "D",
+          "text": "336",
+          "isCorrect": false,
+          "explanation": "This is the area of the pool and walkway together. The area of the pool, 200 square feet, still has to be subtracted."
+        }
+      ],
+      "solutionExplanation": "The walkway adds 2 feet on each end of the length and 2 feet on each end of the width. The outer rectangle is 20 + 2 + 2 = 24 feet long and 10 + 2 + 2 = 14 feet wide, so its area is 24 × 14 = 336 square feet. The pool's area is 20 × 10 = 200 square feet. The area of the walkway is 336 − 200 = 136 square feet.",
+      "commonTrap": "Students add 2 feet to each dimension instead of 4, which gives an outer rectangle of 22 feet by 12 feet and an answer of 64. A walkway on all four sides adds its width to both ends of each dimension.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "trackerReviewer": "AC",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Reviewer fix (D = 64, the add-2-once error) kept. Replaced 112 (its explanation named no specific error) with 336, the outer area before subtracting the pool. Choices put in numeric order and 'sq ft' moved into the stem as 'in square feet'. 'Uniform walkway' and 'walkway alone' reworded. Added GEO-QUAD tag. Format INDY-WP → MC4_A-D to match the tracker and the diagnostic. Also used in the diagnostic.",
+      "createdAt": "2026-10-12T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-003",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-COO"
+      ],
+      "stem": "In the coordinate plane, point P is located at (1, 3) and point Q is located at (7, 11). Point R is the midpoint of segment PQ. What are the coordinates of point R?",
+      "choices": [
+        {
+          "id": "MATH-GEO-003-a",
+          "label": "A",
+          "text": "(3, 4)",
+          "isCorrect": false,
+          "explanation": "This is half the change from P to Q: (7 − 1) ÷ 2 = 3 and (11 − 3) ÷ 2 = 4. These amounts have to be added to the coordinates of P to reach the midpoint."
+        },
+        {
+          "id": "MATH-GEO-003-b",
+          "label": "B",
+          "text": "(4, 7)",
+          "isCorrect": true,
+          "explanation": "Correct. Average the coordinates: (1 + 7) ÷ 2 = 4 and (3 + 11) ÷ 2 = 7."
+        },
+        {
+          "id": "MATH-GEO-003-c",
+          "label": "C",
+          "text": "(6, 8)",
+          "isCorrect": false,
+          "explanation": "This is the change from P to Q, 7 − 1 = 6 and 11 − 3 = 8. It tells how far apart the points are, not where the midpoint is."
+        },
+        {
+          "id": "MATH-GEO-003-d",
+          "label": "D",
+          "text": "(8, 14)",
+          "isCorrect": false,
+          "explanation": "This comes from adding the coordinates, 1 + 7 = 8 and 3 + 11 = 14, without dividing by 2."
+        }
+      ],
+      "solutionExplanation": "The midpoint of a segment has coordinates equal to the averages of the endpoints' coordinates. The x-coordinate of R is (1 + 7) ÷ 2 = 4, and the y-coordinate of R is (3 + 11) ÷ 2 = 7. Point R is at (4, 7).",
+      "commonTrap": "Students find the horizontal and vertical change from P to Q, (6, 8), or half of it, (3, 4), and report that as the location. The midpoint is found by averaging the coordinates, or by adding half the change to the starting point.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "trackerReviewer": "AC",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Replaced (4, 8) (explained as misreading 11 as 13, which is not a math error) with (8, 14), adding the coordinates without dividing by 2. Reviewer's praise of Choice A kept. 'Lies exactly halfway between' → 'is the midpoint of segment PQ'. Format INDY-WP → MC4_A-D to match the tracker and the diagnostic. Also used in the diagnostic.",
+      "createdAt": "2026-10-12T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-004",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-QUAD",
+        "GEO-ARV"
+      ],
+      "stem": "The length of a rectangular yard is 3 times its width. The yard is enclosed by 72 feet of fencing. What is the area of the yard, in square feet?",
+      "choices": [
+        {
+          "id": "MATH-GEO-004-a",
+          "label": "A",
+          "text": "81",
+          "isCorrect": false,
+          "explanation": "This comes from finding the width correctly, 9 feet, and then squaring it. The yard is a rectangle, so the area is width times length, 9 × 27."
+        },
+        {
+          "id": "MATH-GEO-004-b",
+          "label": "B",
+          "text": "243",
+          "isCorrect": true,
+          "explanation": "Correct. The perimeter gives 2(w + 3w) = 72, so w = 9. The length is 27, and 9 × 27 = 243."
+        },
+        {
+          "id": "MATH-GEO-004-c",
+          "label": "C",
+          "text": "324",
+          "isCorrect": false,
+          "explanation": "This comes from treating the yard as a square: 72 ÷ 4 = 18 and 18 × 18 = 324. The length is 3 times the width, so the sides are not equal."
+        },
+        {
+          "id": "MATH-GEO-004-d",
+          "label": "D",
+          "text": "972",
+          "isCorrect": false,
+          "explanation": "This comes from writing w + 3w = 72, which counts only one width and one length. Then w = 18, the length is 54, and 18 × 54 = 972."
+        }
+      ],
+      "solutionExplanation": "Let w be the width in feet. Then the length is 3w. The fencing goes around the whole yard, so the perimeter is 2(w + 3w) = 8w. Since 8w = 72, w = 9 feet, and the length is 3 × 9 = 27 feet. The area is 9 × 27 = 243 square feet.",
+      "commonTrap": "Students write w + 3w = 72 and forget that a rectangle has two widths and two lengths. This makes each side twice as long as it should be and leads to 972.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "trackerReviewer": "AC",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Reviewer fixes applied in the live version (A = 81, C = 972) kept. Choice D, 324, re-explained: the old explanation paired the correct width with a wrong length, which no student does; 324 is what you get by treating the yard as a square. Choices put in numeric order, 'sq ft' moved into the stem. Common Trap rewritten: the old one described 5w = 72, which matches no choice. Added GEO-ARV tag. Format INDY-WP → MC4_A-D to match the tracker and the diagnostic. Also used in the diagnostic.",
+      "createdAt": "2026-10-12T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-006",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-ANG",
+        "GEO-TRI"
+      ],
+      "stem": "In a triangle, the measure of one angle is 90°, the measure of a second angle is 2x°, and the measure of the third angle is x°. What is the value of x?",
+      "choices": [
+        {
+          "id": "MATH-GEO-006-a",
+          "label": "A",
+          "text": "30",
+          "isCorrect": true,
+          "explanation": "Correct. 90 + 2x + x = 180, so 3x = 90 and x = 30."
+        },
+        {
+          "id": "MATH-GEO-006-b",
+          "label": "B",
+          "text": "45",
+          "isCorrect": false,
+          "explanation": "This comes from splitting the remaining 90° into two equal angles. The second angle is twice the third, so they are not equal."
+        },
+        {
+          "id": "MATH-GEO-006-c",
+          "label": "C",
+          "text": "60",
+          "isCorrect": false,
+          "explanation": "This is the value of 2x, the measure of the second angle. It also comes from leaving out the 90° angle and solving 3x = 180."
+        },
+        {
+          "id": "MATH-GEO-006-d",
+          "label": "D",
+          "text": "90",
+          "isCorrect": false,
+          "explanation": "This comes from using 360° as the sum of the angles of a triangle: 90 + 3x = 360, so 3x = 270 and x = 90."
+        }
+      ],
+      "solutionExplanation": "The measures of the angles of a triangle add up to 180°. So 90 + 2x + x = 180. Combining like terms gives 90 + 3x = 180, so 3x = 90 and x = 30. Check: the angles are 90°, 60°, and 30°, and 90 + 60 + 30 = 180.",
+      "commonTrap": "Students solve correctly but then report 60, the measure of the angle labeled 2x. The question asks for x, the measure of the smallest angle.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "trackerReviewer": "AC",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Reviewer note applied: dollar signs removed from the choices. Replaced 15 (dividing by 6 has no source) with 90 (using 360° as the angle sum). Choice 45 re-explained as splitting 90° equally; 60 now explained as the value of 2x. Common Trap rewritten to match a listed choice. Degree signs added to the stem. Added GEO-TRI tag. Format INDY-WP → MC4_A-D to match the tracker and the diagnostic. Also used in the diagnostic.",
+      "createdAt": "2026-10-12T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-007",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-TRI"
+      ],
+      "stem": "A right triangle has legs that are 9 inches long and 12 inches long. What is the length of the hypotenuse, in inches?",
+      "choices": [
+        {
+          "id": "MATH-GEO-007-a",
+          "label": "A",
+          "text": "3√7",
+          "isCorrect": false,
+          "explanation": "This comes from subtracting the squares instead of adding them: √(12² − 9²) = √63 = 3√7. That method finds a missing leg when 12 is the hypotenuse, but here 9 and 12 are both legs."
+        },
+        {
+          "id": "MATH-GEO-007-b",
+          "label": "B",
+          "text": "15",
+          "isCorrect": true,
+          "explanation": "Correct. √(9² + 12²) = √(81 + 144) = √225 = 15."
+        },
+        {
+          "id": "MATH-GEO-007-c",
+          "label": "C",
+          "text": "21",
+          "isCorrect": false,
+          "explanation": "This comes from adding the two legs, 9 + 12 = 21. The hypotenuse of a right triangle is always shorter than the sum of the legs."
+        },
+        {
+          "id": "MATH-GEO-007-d",
+          "label": "D",
+          "text": "225",
+          "isCorrect": false,
+          "explanation": "This is 9² + 12² = 225. The square root still has to be taken to find the length of the hypotenuse."
+        }
+      ],
+      "solutionExplanation": "By the Pythagorean theorem, the square of the hypotenuse equals the sum of the squares of the legs. So c² = 9² + 12² = 81 + 144 = 225, and c = √225 = 15 inches.",
+      "commonTrap": "Students who remember a² + b² = c² often stop at 225 and forget that this is c², not c. Take the square root to get the length.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "trackerReviewer": "AC",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Reviewer note applied: dollar signs removed from the choices. Replaced 13 and 14 (explained only as 'arithmetic error' and 'rounding incorrectly') with 3√7 (subtracting the squares) and 225 (forgetting the square root). Units added. Common Trap now targets the most frequent error. Format INDY-WP → MC4_A-D to match the tracker. Not used in the diagnostic.",
+      "createdAt": "2026-10-12T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-008",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-QUAD",
+        "ALG-LIN"
+      ],
+      "stem": "The length of a rectangle is (2x + 3) centimeters, and the width of the rectangle is x centimeters. The perimeter of the rectangle is 36 centimeters. What is the area of the rectangle, in square centimeters?",
+      "choices": [
+        {
+          "id": "MATH-GEO-008-a",
+          "label": "A",
+          "text": "65",
+          "isCorrect": true,
+          "explanation": "Correct. 2(2x + 3) + 2x = 36 gives x = 5. The rectangle is 13 centimeters by 5 centimeters, and 13 × 5 = 65."
+        },
+        {
+          "id": "MATH-GEO-008-b",
+          "label": "B",
+          "text": "77",
+          "isCorrect": false,
+          "explanation": "This comes from multiplying only the 2x by 2 and not the 3: 4x + 3 + 2x = 36, so x = 5.5. Then the length is 14 and the area is 14 × 5.5 = 77."
+        },
+        {
+          "id": "MATH-GEO-008-c",
+          "label": "C",
+          "text": "90",
+          "isCorrect": false,
+          "explanation": "This comes from counting the width only once: 2(2x + 3) + x = 36, so x = 6. Then the length is 15 and the area is 15 × 6 = 90."
+        },
+        {
+          "id": "MATH-GEO-008-d",
+          "label": "D",
+          "text": "275",
+          "isCorrect": false,
+          "explanation": "This comes from adding one length and one width instead of all four sides: (2x + 3) + x = 36, so x = 11. Then the length is 25 and the area is 25 × 11 = 275."
+        }
+      ],
+      "solutionExplanation": "The perimeter is 2(length) + 2(width) = 2(2x + 3) + 2x = 4x + 6 + 2x = 6x + 6. Since 6x + 6 = 36, 6x = 30 and x = 5. The width is 5 centimeters and the length is 2(5) + 3 = 13 centimeters. The area is 13 × 5 = 65 square centimeters.",
+      "commonTrap": "Students set one length plus one width equal to 36 and get x = 11, which leads to 275. The perimeter includes two lengths and two widths, so the sum of one length and one width is 18, not 36.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "trackerReviewer": "AC",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "All three distractors replaced. 36, 50, and 78 were explained only as 'confusing perimeter with area', 'arithmetic error', and 'multiplication error'. New distractors 77, 90, and 275 come from errors in writing the perimeter equation (not distributing the 2 to the 3, one width, one length and one width). Units added. Common Trap rewritten to match a listed choice. Added ALG-LIN tag. Format INDY-WP → MC4_A-D to match the tracker and the diagnostic. Also used in the diagnostic.",
+      "createdAt": "2026-10-12T12:00:00Z"
+    },
+    {
+      "id": "MATH-GEO-009",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-CRC"
+      ],
+      "stem": "A circle has a radius of 6 inches. What is the area of one quarter of the circle, in square inches?",
+      "choices": [
+        {
+          "id": "MATH-GEO-009-a",
+          "label": "A",
+          "text": "3π",
+          "isCorrect": false,
+          "explanation": "This is one quarter of the circumference: 2π(6) ÷ 4 = 3π. The circumference measures the distance around the circle, not the area."
+        },
+        {
+          "id": "MATH-GEO-009-b",
+          "label": "B",
+          "text": "9π",
+          "isCorrect": true,
+          "explanation": "Correct. The area of the whole circle is π(6²) = 36π, and 36π ÷ 4 = 9π."
+        },
+        {
+          "id": "MATH-GEO-009-c",
+          "label": "C",
+          "text": "12π",
+          "isCorrect": false,
+          "explanation": "This is the circumference of the whole circle, 2π(6). It uses the wrong formula and does not divide by 4."
+        },
+        {
+          "id": "MATH-GEO-009-d",
+          "label": "D",
+          "text": "36π",
+          "isCorrect": false,
+          "explanation": "This is the area of the whole circle. It still has to be divided by 4 to find the area of one quarter."
+        }
+      ],
+      "solutionExplanation": "The area of a circle is πr². With a radius of 6 inches, the area of the whole circle is π(6²) = 36π square inches. One quarter of the circle has one quarter of the area: 36π ÷ 4 = 9π square inches.",
+      "commonTrap": "Students find the area of the whole circle, 36π, and stop. The question asks for one quarter of the circle, so divide by 4.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "trackerReviewer": "AC",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Reviewer fix (D = 36π) kept. Replaced 6π ('confusing the radius with part of the final answer' is not a real error) with 12π, the circumference. Choice A now explained as a quarter of the circumference (the diagnostic already had this explanation; the tracker still said 'dividing the radius by 4', which gives 9π/4, not 3π). Units added. Format INDY-WP → MC4_A-D to match the tracker and the diagnostic. Also used in the diagnostic.",
+      "createdAt": "2026-10-12T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-006",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "ALG-LIN"
+      ],
+      "stem": "Three friends split a restaurant bill. Amara pays twice as much as Ben. Carlos pays $6.00 more than Ben. Together, they pay $54.00. How much does Amara pay?",
+      "choices": [
+        {
+          "id": "MATH-APP-006-a",
+          "label": "A",
+          "text": "$12.00",
+          "isCorrect": false,
+          "explanation": "This is Ben's share. Solving b + 2b + (b + 6) = 54 gives b = 12, but the question asks for Amara's share."
+        },
+        {
+          "id": "MATH-APP-006-b",
+          "label": "B",
+          "text": "$18.00",
+          "isCorrect": false,
+          "explanation": "This is Carlos's share, $12.00 + $6.00. It is also what each friend would pay if the bill were split equally, $54.00 ÷ 3."
+        },
+        {
+          "id": "MATH-APP-006-c",
+          "label": "C",
+          "text": "$24.00",
+          "isCorrect": true,
+          "explanation": "Correct. Ben pays $12.00, so Amara pays 2 × $12.00 = $24.00. Check: $12.00 + $24.00 + $18.00 = $54.00."
+        },
+        {
+          "id": "MATH-APP-006-d",
+          "label": "D",
+          "text": "$30.00",
+          "isCorrect": false,
+          "explanation": "This comes from adding the $6.00 to $54.00 instead of subtracting it: 4b = 60, so b = 15 and Amara pays 2 × $15.00 = $30.00."
+        }
+      ],
+      "solutionExplanation": "Let b be the amount Ben pays, in dollars. Amara pays 2b, and Carlos pays b + 6. The total is b + 2b + (b + 6) = 54, so 4b + 6 = 54. Subtract 6 from both sides: 4b = 48, so b = 12. Amara pays 2 × $12.00 = $24.00. Check: $12.00 + $24.00 + $18.00 = $54.00.",
+      "commonTrap": "Students solve for b and choose $12.00 without going back to the question. The variable stands for Ben's share, and the question asks for Amara's.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Distractors kept. Choice D re-explained: the tracker's path (4b = 54, then rounding $27 up to $30) is not a real error; $30.00 comes from 4b = 54 + 6. Choice B explanation now names both paths to $18 (Carlos's share and an equal split). This matches the diagnostic's explanations, which were already updated. Tag NUM-RAT → ALG-LIN (no ratio; the skill is writing and solving a linear equation), matching the diagnostic. Money shown with cents. Note: the tracker row was still 'In Review' with no reviewer when it went live. Format INDY-WP → MC4_A-D to match the tracker and the diagnostic. Also used in the diagnostic.",
+      "createdAt": "2026-10-12T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-008",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "APP-PCT"
+      ],
+      "stem": "A sporting goods store buys a baseball glove from a supplier for $75.00. The store marks up the price by 40% to set the retail price. During a clearance sale, the store discounts the retail price by 20%. What is the sale price of the glove?",
+      "choices": [
+        {
+          "id": "MATH-APP-008-a",
+          "label": "A",
+          "text": "$60.00",
+          "isCorrect": false,
+          "explanation": "This applies the 20% discount to the supplier's price and skips the markup: $75.00 × 0.80 = $60.00."
+        },
+        {
+          "id": "MATH-APP-008-b",
+          "label": "B",
+          "text": "$84.00",
+          "isCorrect": true,
+          "explanation": "Correct. $75.00 × 1.40 = $105.00, and $105.00 × 0.80 = $84.00."
+        },
+        {
+          "id": "MATH-APP-008-c",
+          "label": "C",
+          "text": "$90.00",
+          "isCorrect": false,
+          "explanation": "This comes from combining the percents first, 40% − 20% = 20%, and applying a 20% increase once: $75.00 × 1.20 = $90.00. The 20% discount is taken from the higher retail price."
+        },
+        {
+          "id": "MATH-APP-008-d",
+          "label": "D",
+          "text": "$105.00",
+          "isCorrect": false,
+          "explanation": "This is the retail price after the markup. The 20% discount still has to be applied."
+        }
+      ],
+      "solutionExplanation": "A 40% markup means the retail price is 140% of the supplier's price: $75.00 × 1.40 = $105.00. A 20% discount means the customer pays 80% of the retail price: $105.00 × 0.80 = $84.00.",
+      "commonTrap": "Students subtract the percents, 40% − 20% = 20%, and apply a single 20% increase to get $90.00. Each percent applies to a different amount, so apply them one at a time.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "trackerReviewer": "BA",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Live version ($75.00, 40% markup, 20% discount) kept; it already answers the reviewer's note that the old key ($95.20) was guessable as the only non-round choice. Replaced $80 (no error produces it; the net-20% error gives $90) with $60.00, the discount applied without the markup. $90 now explained as combining the percents. Added per-choice explanations and a Common Trap (the tracker version had neither; the diagnostic's trap was kept in spirit). Money shown with cents throughout. Format INDY-WP → MC4_A-D to match the tracker and the diagnostic. Also used in the diagnostic.",
+      "createdAt": "2026-10-12T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-012",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "APP-FIN"
+      ],
+      "stem": "Maria deposits $300.00 in an account that earns 4% simple interest per year. She makes no other deposits or withdrawals. What is the total amount in the account at the end of 5 years?",
+      "choices": [
+        {
+          "id": "MATH-APP-012-a",
+          "label": "A",
+          "text": "$60.00",
+          "isCorrect": false,
+          "explanation": "This is the interest earned in 5 years. It still has to be added to the $300.00 Maria deposited."
+        },
+        {
+          "id": "MATH-APP-012-b",
+          "label": "B",
+          "text": "$312.00",
+          "isCorrect": false,
+          "explanation": "This adds only one year of interest, $12.00, to the deposit. The account earns $12.00 each year for 5 years."
+        },
+        {
+          "id": "MATH-APP-012-c",
+          "label": "C",
+          "text": "$360.00",
+          "isCorrect": true,
+          "explanation": "Correct. The interest is $300.00 × 0.04 × 5 = $60.00, and $300.00 + $60.00 = $360.00."
+        },
+        {
+          "id": "MATH-APP-012-d",
+          "label": "D",
+          "text": "$900.00",
+          "isCorrect": false,
+          "explanation": "This comes from writing 4% as 0.4 instead of 0.04: $300.00 × 0.4 × 5 = $600.00, and $300.00 + $600.00 = $900.00."
+        }
+      ],
+      "solutionExplanation": "Simple interest is earned only on the original deposit. Each year, Maria earns $300.00 × 0.04 = $12.00. In 5 years, she earns 5 × $12.00 = $60.00 in interest. The total in the account is $300.00 + $60.00 = $360.00.",
+      "commonTrap": "Students find the interest, $60.00, and choose it without adding it to the deposit. The question asks for the total amount in the account.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "trackerReviewer": "BA",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Replaced $324 and $336 (explained only as 'arithmetic error' and 'partial calculation error') with $60.00 (interest only, the error the old Common Trap described but no choice offered) and $900.00 (4% written as 0.4). 'Invests' → 'deposits'; added 'no other deposits or withdrawals'. Money shown with cents. Format INDY-WP → MC4_A-D to match the tracker and the diagnostic. Also used in the diagnostic.",
+      "createdAt": "2026-10-12T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-013",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "APP-PCT"
+      ],
+      "stem": "The price of a jacket is increased by 20%. Then the new price is decreased by 20%. What is the overall percent change from the original price to the final price?",
+      "choices": [
+        {
+          "id": "MATH-APP-013-a",
+          "label": "A",
+          "text": "20% decrease",
+          "isCorrect": false,
+          "explanation": "This compares the final price to the increased price instead of the original. If the original price is $100, the final price of $96 is 20% less than $120, but only 4% less than $100."
+        },
+        {
+          "id": "MATH-APP-013-b",
+          "label": "B",
+          "text": "4% decrease",
+          "isCorrect": true,
+          "explanation": "Correct. If the original price is $100, it rises to $120 and then falls to $96. That is a $4 drop from $100, a 4% decrease."
+        },
+        {
+          "id": "MATH-APP-013-c",
+          "label": "C",
+          "text": "No change",
+          "isCorrect": false,
+          "explanation": "This assumes that a 20% increase and a 20% decrease cancel. The decrease is taken from the larger, increased price, so it removes more than the increase added."
+        },
+        {
+          "id": "MATH-APP-013-d",
+          "label": "D",
+          "text": "4% increase",
+          "isCorrect": false,
+          "explanation": "This finds the correct size of the change but the wrong direction. The final price, $96, is less than the original price, $100."
+        }
+      ],
+      "solutionExplanation": "Choose an original price of $100. A 20% increase makes the price $100 × 1.20 = $120. A 20% decrease of the new price makes it $120 × 0.80 = $96. The final price is $4 less than the original price, and $4 ÷ $100 = 4%, so the overall change is a 4% decrease. In general, 1.20 × 0.80 = 0.96, so the final price is always 96% of the original.",
+      "commonTrap": "Students expect a 20% increase and a 20% decrease to cancel and choose no change. The 20% decrease is 20% of a larger amount, so it is a larger dollar change than the increase.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "trackerReviewer": "BA",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Replaced 40% decrease (no real error produces it) with 20% decrease, which comes from measuring the change from the increased price. Choices put in order from largest decrease to increase. Reviewer note (make clear the decrease applies to the new price) was already applied in the live stem; stem now names an item and says 'from the original price to the final price'. Added a general check (1.20 × 0.80 = 0.96). Also used in the diagnostic.",
+      "createdAt": "2026-10-12T12:00:00Z"
+    },
+    {
+      "id": "MATH-APP-014",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "APP-RTD"
+      ],
+      "stem": "A pump fills a pool with water at a constant rate of 60 gallons every 15 minutes. At this rate, how many minutes will it take the pump to fill an empty 480-gallon pool?",
+      "choices": [
+        {
+          "id": "MATH-APP-014-a",
+          "label": "A",
+          "text": "8",
+          "isCorrect": false,
+          "explanation": "This is 480 ÷ 60, the number of 15-minute periods the pump needs. Each period is 15 minutes, so the time is 8 × 15 minutes."
+        },
+        {
+          "id": "MATH-APP-014-b",
+          "label": "B",
+          "text": "32",
+          "isCorrect": false,
+          "explanation": "This comes from dividing the gallons by the minutes, 480 ÷ 15 = 32. The rate is 60 gallons every 15 minutes, not 1 gallon every minute."
+        },
+        {
+          "id": "MATH-APP-014-c",
+          "label": "C",
+          "text": "120",
+          "isCorrect": true,
+          "explanation": "Correct. The pump fills 60 ÷ 15 = 4 gallons per minute, and 480 ÷ 4 = 120 minutes."
+        },
+        {
+          "id": "MATH-APP-014-d",
+          "label": "D",
+          "text": "1,920",
+          "isCorrect": false,
+          "explanation": "This comes from multiplying the pool's volume by the rate, 480 × 4 = 1,920, instead of dividing by it."
+        }
+      ],
+      "solutionExplanation": "The pump's rate is 60 gallons ÷ 15 minutes = 4 gallons per minute. To fill 480 gallons, it takes 480 ÷ 4 = 120 minutes. Another way: 480 ÷ 60 = 8, so the pool holds 8 groups of 60 gallons, and each group takes 15 minutes. 8 × 15 = 120 minutes.",
+      "commonTrap": "Students compute 480 ÷ 60 = 8 and stop. The 8 counts 15-minute periods, not minutes, so it must be multiplied by 15.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "trackerReviewer": "BA",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "All three distractors replaced. 90, 100, and 110 were explained only as 'arithmetic error', 'rounding error', and 'similar setup error', and an evenly spaced set ending at the key was easy to guess. New distractors: 8 (number of 15-minute periods), 32 (gallons ÷ minutes), and 1,920 (multiplying by the rate). Choices now give numbers only, since the stem asks for minutes. Added 'constant' and 'empty'. Common Trap rewritten to match a listed choice. Format INDY-WP → MC4_A-D to match the tracker and the diagnostic. Also used in the diagnostic.",
+      "createdAt": "2026-10-12T12:00:00Z"
+    },
+    {
+      "id": "MATH-NUM-009",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "NUM-RAT"
+      ],
+      "stem": "A jar contains only red marbles and blue marbles. The ratio of red marbles to blue marbles is 4 to 7. There are 66 marbles in the jar. How many blue marbles are in the jar?",
+      "choices": [
+        {
+          "id": "MATH-NUM-009-a",
+          "label": "A",
+          "text": "6",
+          "isCorrect": false,
+          "explanation": "This is the number of marbles in one part of the ratio, 66 ÷ 11 = 6. Blue marbles make up 7 parts, so multiply by 7."
+        },
+        {
+          "id": "MATH-NUM-009-b",
+          "label": "B",
+          "text": "24",
+          "isCorrect": false,
+          "explanation": "This is the number of red marbles, 4 × 6 = 24. The question asks for the blue marbles."
+        },
+        {
+          "id": "MATH-NUM-009-c",
+          "label": "C",
+          "text": "33",
+          "isCorrect": false,
+          "explanation": "This comes from splitting the marbles evenly, 66 ÷ 2 = 33. The ratio 4 to 7 means there are more blue marbles than red marbles."
+        },
+        {
+          "id": "MATH-NUM-009-d",
+          "label": "D",
+          "text": "42",
+          "isCorrect": true,
+          "explanation": "Correct. The ratio has 4 + 7 = 11 parts. Each part is 66 ÷ 11 = 6 marbles, so there are 7 × 6 = 42 blue marbles."
+        }
+      ],
+      "solutionExplanation": "The ratio 4 to 7 means that for every 4 red marbles there are 7 blue marbles, so the marbles are divided into 4 + 7 = 11 equal parts. Each part is 66 ÷ 11 = 6 marbles. Blue marbles make up 7 of the parts, so there are 7 × 6 = 42 blue marbles. Check: 24 red + 42 blue = 66.",
+      "commonTrap": "Students find the value of one part and then multiply by the wrong number, choosing 24, the number of red marbles. Check which part of the ratio the question asks about.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "trackerReviewer": "MA",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Reviewer note applied: dollar signs removed from the choices. Replaced 30 and 36 (explained as 'incorrect number of parts' and 'rounding or arithmetic error') with 6 (stopping at the value of one part) and 33 (the even split the old Common Trap described but no choice offered). Stem states that the jar holds only red and blue marbles. Format INDY-WP → MC4_A-D to match the tracker and the diagnostic. Also used in the diagnostic.",
+      "createdAt": "2026-10-12T12:00:00Z"
+    }
+  ]
+}

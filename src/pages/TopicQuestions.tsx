@@ -23,6 +23,7 @@ import { parseIcSelectionsForQuestion, serializeIcSelections } from "@/lib/indyI
 import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
 import { HighlightableText } from "@/components/exam/HighlightableText";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
+import { ProvisionalBadge } from "@/components/question/ProvisionalBadge";
 import { useState } from "react";
 
 export default function TopicQuestions() {
@@ -131,6 +132,7 @@ export default function TopicQuestions() {
                       {question.subject}
                     </Badge>
                     <ModuleBadge module={question.module} />
+                    <ProvisionalBadge question={question} />
                   </div>
                   <div className="text-sm text-muted-foreground">
                     Question #{index + 1}

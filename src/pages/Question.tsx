@@ -24,6 +24,7 @@ import {
 import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
 import { useQuestions } from "@/contexts/QuestionsContext";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
+import { ProvisionalBadge } from "@/components/question/ProvisionalBadge";
 import { QuestionSolutionPanel } from "@/components/question/QuestionSolutionPanel";
 import { getSelectedChoiceIds } from "@/lib/questionExplanation";
 import { useQuestionBookmarks } from "@/contexts/QuestionBookmarksContext";
@@ -336,6 +337,7 @@ export default function Question() {
                       {question.subject}
                     </Badge>
                     <ModuleBadge module={question.module} />
+                    <ProvisionalBadge question={question} />
                     <Badge variant="outline">{question.subtype}</Badge>
                   </div>
                   

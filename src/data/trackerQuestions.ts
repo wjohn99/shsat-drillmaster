@@ -1,6 +1,7 @@
 /**
  * Jed Approved rows imported from the SHSAT Question Bank Tracker spreadsheet.
  * Update via import scripts, not loaded at runtime from mockData or converted_questions.json.
+ * Content batches replace a row when they reuse the same id (see content/batches/).
  */
 import { Question } from '@/types';
 import { tag } from '@/data/taggingScheme';

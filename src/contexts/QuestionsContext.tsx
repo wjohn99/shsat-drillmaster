@@ -9,11 +9,13 @@ import {
 } from "react";
 
 import {
-  loadQuestionCatalog,
+  filterCatalogForViewer,
+  loadFullPracticeCatalog,
   type QuestionCatalog,
 } from "@/data/questionCatalog";
 import { getQuestionsForTopic } from "@/data/navigationData";
 import { filterQuestions, type QuestionFilterInput } from "@/lib/questionFilters";
+import { useAuth } from "@/contexts/AuthContext";
 import type { Form, Passage, Question } from "@/types";
 import type { SubjectNavigation } from "@/types/navigation";
 
@@ -35,17 +37,19 @@ type QuestionsContextValue = {
 const QuestionsContext = createContext<QuestionsContextValue | null>(null);
 
 export function QuestionsProvider({ children }: { children: ReactNode }) {
-  const [catalog, setCatalog] = useState<QuestionCatalog | null>(null);
+  const { profile, loading: authLoading } = useAuth();
+  const [fullCatalog, setFullCatalog] = useState<QuestionCatalog | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
 
-    loadQuestionCatalog()
+    Promise.resolve()
+      .then(() => loadFullPracticeCatalog())
       .then((next) => {
         if (!cancelled) {
-          setCatalog(next);
+          setFullCatalog(next);
           setError(null);
         }
       })
@@ -64,6 +68,12 @@ export function QuestionsProvider({ children }: { children: ReactNode }) {
       cancelled = true;
     };
   }, []);
+
+  const catalog = useMemo(() => {
+    if (!fullCatalog) return null;
+    const role = authLoading ? undefined : profile?.role;
+    return filterCatalogForViewer(fullCatalog, role);
+  }, [fullCatalog, authLoading, profile?.role]);
 
   const getFilteredQuestions = useCallback(
     (filters: QuestionFilterInput, source?: Question[]) => {
