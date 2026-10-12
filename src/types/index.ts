@@ -211,12 +211,20 @@ export interface Choice {
   explanation?: string;
 }
 
+/** Second-review gate. Missing status is treated as final (legacy Jed Approved items). */
+export type ReviewStatus = "provisional" | "final";
+
 export interface Question {
   id: string;
   subject: Subject;
   /** Adaptive SHSAT module (tracker column E). */
   module: QuestionModule;
   subtype: QuestionSubtype;
+  /**
+   * `provisional` is tutor-only until a second reviewer marks it `final`.
+   * Legacy tracker items omit this and stay student-visible.
+   */
+  reviewStatus?: ReviewStatus;
   stem: string;
   /** Tutor-facing note on the wrong-answer lure (tracker column P). */
   commonTrap?: string;

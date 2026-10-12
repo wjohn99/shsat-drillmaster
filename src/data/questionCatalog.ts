@@ -3,19 +3,23 @@
  *
  * Source hierarchy:
  * 1. **Tracker spreadsheet** — Jed Approved bank items in `trackerQuestions.ts`.
- * 2. **Diagnostic holdback** — items/passages from Diagnostic_100_for_John.xlsx are
- *    reserved for `/practice/diagnostic` and are never merged into this catalog,
- *    including tracker rows that reuse a diagnostic form ID.
- * 3. **Legacy (not loaded):** `mockData.ts`, `converted_questions.json`.
+ * 2. **Content batches** — JSON files under content/batches. Same ID replaces the tracker row.
+ * 3. **Diagnostic holdback** — items/passages from Diagnostic_100_for_John.xlsx stay
+ *    reserved for `/practice/diagnostic`, except tutors can review batch revisions.
+ * 4. **Legacy (not loaded):** `mockData.ts`, `converted_questions.json`.
+ *
+ * Provisional batch items are tutor-only. Students only see final / untagged tracker items.
  */
 import type { Form, Passage, Question } from "@/types";
+import type { UserRole } from "@/types/auth";
 import type { SubjectNavigation } from "@/types/navigation";
+import { loadContentBatches } from "@/data/contentBatches";
 import { normalizeQuestionTags } from "@/data/taggingScheme";
 import { buildNavigationData } from "@/data/navigationData";
 import { diagnosticPassages } from "@/data/diagnosticPassages";
 import { diagnosticQuestions } from "@/data/diagnosticQuestions";
-import { DIAGNOSTIC_RESERVED_QUESTION_IDS } from "@/data/shsatDiagnosticForm";
 import { trackerQuestions } from "@/data/trackerQuestions";
+import { isQuestionVisibleToViewer } from "@/lib/questionVisibility";
 import { filterQuestions, type QuestionFilterInput } from "@/lib/questionFilters";
 
 export type QuestionCatalog = {
@@ -44,27 +48,20 @@ function buildForms(questions: Question[]): Form[] {
   ];
 }
 
-function diagnosticHoldbackQuestionIds(): Set<string> {
-  const ids = new Set<string>(DIAGNOSTIC_RESERVED_QUESTION_IDS);
-  for (const question of diagnosticQuestions) {
-    ids.add(question.id);
+/** Tracker first, then batches (batch wins on ID). Passages come from batches. */
+function mergedPracticeBank(): { questions: Question[]; passages: Passage[] } {
+  const batches = loadContentBatches();
+  const questionsById = new Map<string, Question>();
+  for (const question of trackerQuestions) {
+    questionsById.set(question.id, question);
   }
-  return ids;
-}
-
-function diagnosticHoldbackPassageIds(): Set<string> {
-  return new Set(diagnosticPassages.map((passage) => passage.id));
-}
-
-/** Tracker items students may practice — diagnostic form IDs and passages excluded. */
-function publicPracticeQuestions(): Question[] {
-  const reservedQuestions = diagnosticHoldbackQuestionIds();
-  const reservedPassages = diagnosticHoldbackPassageIds();
-  return trackerQuestions.filter((question) => {
-    if (reservedQuestions.has(question.id)) return false;
-    if (question.passageId && reservedPassages.has(question.passageId)) return false;
-    return true;
-  });
+  for (const question of batches.questions) {
+    questionsById.set(question.id, question);
+  }
+  return {
+    questions: [...questionsById.values()],
+    passages: batches.passages,
+  };
 }
 
 export function buildQuestionCatalog(
@@ -89,13 +86,35 @@ export function buildQuestionCatalog(
   };
 }
 
-/** Practice catalog only — diagnostic form items are omitted. */
-export async function loadQuestionCatalog(): Promise<QuestionCatalog> {
-  return buildQuestionCatalog(publicPracticeQuestions(), []);
+/** Full practice bank, including provisional tutor-review items. */
+export function loadFullPracticeCatalog(): QuestionCatalog {
+  const bank = mergedPracticeBank();
+  return buildQuestionCatalog(bank.questions, bank.passages);
 }
 
-export function loadQuestionCatalogSync(): QuestionCatalog {
-  return buildQuestionCatalog(publicPracticeQuestions(), []);
+export function filterCatalogForViewer(
+  catalog: QuestionCatalog,
+  role?: UserRole | null,
+): QuestionCatalog {
+  const questions = catalog.questions.filter((question) =>
+    isQuestionVisibleToViewer(question, role),
+  );
+  const passageIds = new Set(
+    questions.map((question) => question.passageId).filter((id): id is string => Boolean(id)),
+  );
+  const passages = catalog.passages.filter((passage) => passageIds.has(passage.id));
+  return buildQuestionCatalog(questions, passages);
+}
+
+/** Practice catalog for a viewer. Omit role to get the student-safe bank. */
+export async function loadQuestionCatalog(
+  role?: UserRole | null,
+): Promise<QuestionCatalog> {
+  return filterCatalogForViewer(loadFullPracticeCatalog(), role);
+}
+
+export function loadQuestionCatalogSync(role?: UserRole | null): QuestionCatalog {
+  return filterCatalogForViewer(loadFullPracticeCatalog(), role);
 }
 
 /** Diagnostic exam only. Do not pass this catalog into Practice, Worksheets, Bank, or Blitz. */

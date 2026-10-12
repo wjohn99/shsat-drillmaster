@@ -57,6 +57,7 @@ import { TutorWorksheetsHome } from "@/components/worksheets/TutorWorksheetsHome
 import { StudentWorksheetsHome } from "@/components/worksheets/StudentWorksheetsHome";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
+import { isProvisionalQuestion } from "@/lib/reviewStatus";
 import type { StudentOption } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type {
@@ -320,7 +321,9 @@ const Worksheets = () => {
     workspaceTarget?: WorksheetsWorkspaceCompletionTarget,
   ) => {
     workspaceCompletionTargetRef.current = workspaceTarget ?? null;
-    const picked = resolveQuestionsByIds(questions, assignment.questionIds);
+    const picked = resolveQuestionsByIds(questions, assignment.questionIds).filter(
+      (question) => role === "tutor" || !isProvisionalQuestion(question),
+    );
     if (picked.length === 0) {
       toast({
         title: "Worksheet unavailable",
@@ -396,8 +399,23 @@ const Worksheets = () => {
       return;
     }
 
-    const picked = pickCurrentQuestions();
-    if (picked.length === 0) return;
+    const pickedAll = pickCurrentQuestions();
+    const picked = pickedAll.filter((question) => !isProvisionalQuestion(question));
+    if (picked.length === 0) {
+      toast({
+        title: "Nothing to assign",
+        description:
+          "Provisional questions stay in tutor review until they are marked final. Assign approved questions only.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (picked.length < pickedAll.length) {
+      toast({
+        title: "Skipped provisional questions",
+        description: "Students only receive questions that are marked final.",
+      });
+    }
 
     if (!assignmentDueDate) {
       toast({

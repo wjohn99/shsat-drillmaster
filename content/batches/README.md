@@ -17,10 +17,10 @@ Every question has a `reviewStatus`:
 
 | Value | Meaning | In the app |
 |---|---|---|
-| `provisional` | Revised and approved by Jed with Claude | Publish it, with a "Provisional" badge |
-| `final` | Also reviewed by a second team member | Publish it with no badge |
+| `provisional` | Written or revised, waiting on a second reviewer | Tutors only, with a Provisional badge. Hidden from students. |
+| `final` | Also reviewed by a second team member | Live for students and tutors, no badge |
 
-Provisional questions are meant to go live. The badge just shows that the team hasn't finished reviewing them yet, so it shouldn't keep a question out of the app.
+Provisional questions stay out of the student bank, practice, blitz, and assigned worksheets until they are marked `final`.
 
 ## Fields beyond `Question`
 

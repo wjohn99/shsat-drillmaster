@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight, BookOpen, Flag } from "lucide-react";
 import { useQuestions } from "@/contexts/QuestionsContext";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
+import { ProvisionalBadge } from "@/components/question/ProvisionalBadge";
 import { QuestionResponseFields } from "@/components/question/QuestionResponseFields";
 import { QuestionSolutionPanel } from "@/components/question/QuestionSolutionPanel";
 import { getSelectedChoiceIds } from "@/lib/questionExplanation";
@@ -220,6 +221,7 @@ export function SessionQuestionRunner({
                       {currentQuestion.subject}
                     </Badge>
                     <ModuleBadge module={currentQuestion.module} />
+                    <ProvisionalBadge question={currentQuestion} />
                   </div>
                   <div className="text-sm text-muted-foreground">Question #{currentQuestionIndex + 1}</div>
                 </div>

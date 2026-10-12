@@ -11,6 +11,7 @@ import {
   isFormatTagCode,
 } from "@/data/taggingScheme";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
+import { ProvisionalBadge } from "@/components/question/ProvisionalBadge";
 
 interface QuestionCardProps {
   question: Question;
@@ -57,6 +58,7 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
               {question.subject}
             </Chip>
             <ModuleBadge module={question.module} className="h-5 px-2 text-[10px]" />
+            <ProvisionalBadge question={question} />
           </div>
         </div>
 

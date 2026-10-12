@@ -23,7 +23,7 @@ These are the rules for every item in `content/batches/`. `scripts/export-questi
 | `stem` | The question |
 | `solutionExplanation` | A step-by-step solution in the voice of the Pearson explanation booklets |
 | `commonTrap` | The single most tempting wrong path, and why students take it |
-| `reviewStatus` | `"provisional"` for anything Jed and Claude have revised. `"final"` only after a second team member reviews it. |
+| `reviewStatus` | `"provisional"` until a second team member reviews it (tutor-only in the app). `"final"` after that second review. |
 | `revisedBy`, `revisionNotes` | Who worked on the item and what changed (for new items: `"New item."`) |
 | `createdAt` | ISO timestamp |
 
