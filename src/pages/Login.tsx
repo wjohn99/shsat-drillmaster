@@ -1,22 +1,60 @@
 import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { useAuth } from "@/contexts/AuthContext";
+import { normalizeEmail } from "@/lib/authService";
+import { cn } from "@/lib/utils";
+
+type SignInAudience = "student" | "parent" | "tutor";
+
+const SIGN_IN_OPTIONS = [
+  { id: "student", label: "Student" },
+  { id: "parent", label: "Parent" },
+  { id: "tutor", label: "Tutor" },
+] as const;
+
+function isEmail(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+}
 
 export default function Login() {
   const { profile, error, isConfigured, signInWithGoogle } = useAuth();
   const [signingIn, setSigningIn] = useState(false);
+  const [audience, setAudience] = useState<SignInAudience>("student");
+  const [studentEmail, setStudentEmail] = useState("");
+  const [formError, setFormError] = useState<string | null>(null);
 
   if (profile) {
     return <Navigate to="/dashboard" replace />;
   }
 
+  const studentEmailBlank = studentEmail.trim().length === 0;
+  const studentEmailReady = isEmail(studentEmail);
+
   const handleSignIn = () => {
     void (async () => {
+      setFormError(null);
+      if (audience === "parent" && !studentEmailBlank && !studentEmailReady) {
+        setFormError("Enter the student's email.");
+        return;
+      }
+
       setSigningIn(true);
       try {
-        await signInWithGoogle();
+        if (audience === "tutor") {
+          await signInWithGoogle({ tutor: true });
+        } else if (audience === "parent" && studentEmailReady) {
+          await signInWithGoogle({
+            studentEmail: normalizeEmail(studentEmail),
+          });
+        } else if (audience === "parent") {
+          await signInWithGoogle({ returning: true });
+        } else {
+          await signInWithGoogle();
+        }
       } catch {
         // Error surfaced via context
       } finally {
@@ -49,10 +87,48 @@ export default function Login() {
           </p>
           <h2 className="mt-3 font-serif text-2xl font-semibold tracking-tight">Sign in</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Use Google to open your dashboard. No password.
+            Choose Student, Parent, or Tutor, then continue with Google.
           </p>
 
-          <div className="mt-8 space-y-4">
+          <div
+            role="radiogroup"
+            aria-label="Sign in as"
+            className="relative mt-6 grid grid-cols-3 rounded-full bg-foreground/[0.06] p-1 shadow-[inset_0_1px_2px_hsl(220_40%_16%/0.08)]"
+          >
+            <span
+              aria-hidden
+              className={cn(
+                "pointer-events-none absolute bottom-1 left-1 top-1 w-[calc((100%-8px)/3)] rounded-full",
+                "border border-white/80 bg-white/80 shadow-[0_6px_16px_-8px_hsl(220_40%_16%/0.45),inset_0_1px_0_hsl(0_0%_100%/0.95)]",
+                "backdrop-blur-xl transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none",
+                audience === "parent" && "translate-x-full",
+                audience === "tutor" && "translate-x-[200%]",
+              )}
+            />
+            {SIGN_IN_OPTIONS.map((option) => {
+              const selected = audience === option.id;
+              return (
+                <button
+                  key={option.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={selected}
+                  className={cn(
+                    "relative z-10 h-9 rounded-full text-sm font-medium transition-colors duration-300",
+                    selected ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+                  )}
+                  onClick={() => {
+                    setAudience(option.id);
+                    setFormError(null);
+                  }}
+                >
+                  {option.label}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="mt-6 space-y-4">
             {!isConfigured && (
               <Alert variant="destructive">
                 <AlertTitle>Firebase not configured</AlertTitle>
@@ -63,17 +139,44 @@ export default function Login() {
               </Alert>
             )}
 
-            {error && (
+            {(formError || error) && (
               <Alert variant="destructive">
                 <AlertTitle>Sign-in error</AlertTitle>
-                <AlertDescription>{error}</AlertDescription>
+                <AlertDescription>{formError || error}</AlertDescription>
               </Alert>
+            )}
+
+            {audience === "student" ? (
+              <p className="text-sm text-muted-foreground">
+                Use Google to open your dashboard. No password.
+              </p>
+            ) : audience === "tutor" ? (
+              <p className="text-sm text-muted-foreground">
+                Sign in with your Google account. This opens only when that email is on the tutor list.
+              </p>
+            ) : (
+              <div className="space-y-3">
+                <div className="space-y-2">
+                  <Label htmlFor="student-email">Student email, first time only</Label>
+                  <Input
+                    id="student-email"
+                    type="email"
+                    autoComplete="off"
+                    value={studentEmail}
+                    onChange={(event) => setStudentEmail(event.target.value)}
+                    placeholder="student@email.com"
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  First time, enter your student's account email and sign in with your Google account. Returning parents leave this blank and sign in with your Google account.
+                </p>
+              </div>
             )}
 
             <GoogleSignInButton
               onClick={handleSignIn}
               loading={signingIn}
-              disabled={!isConfigured || signingIn}
+              disabled={!isConfigured || signingIn || (audience === "parent" && !studentEmailBlank && !studentEmailReady)}
             />
 
             <p className="pt-2 text-sm text-muted-foreground">

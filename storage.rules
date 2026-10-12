@@ -11,6 +11,15 @@ service firebase.storage {
         && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'tutor';
     }
 
+    function isApprovedParentOf(boardId) {
+      let linkPath = /databases/(default)/documents/parent_links/$(request.auth.uid);
+      return isSignedIn()
+        && firestore.exists(linkPath)
+        && firestore.get(linkPath).data.parentUid == request.auth.uid
+        && firestore.get(linkPath).data.status == 'approved'
+        && firestore.get(linkPath).data.studentUid == boardId;
+    }
+
     function canAccessWorkspaceBoard(boardId) {
       let board = firestore.get(/databases/(default)/documents/workspace_boards/$(boardId));
       return isSignedIn()
@@ -18,9 +27,13 @@ service firebase.storage {
         && (board.data.studentUid == request.auth.uid || isTutor());
     }
 
+    function canReadWorkspaceFile(boardId) {
+      return canAccessWorkspaceBoard(boardId) || isApprovedParentOf(boardId);
+    }
+
     // Workspace homework files: PDF, JPEG, and PNG. No uploads anywhere else in the bucket.
     match /workspace/{boardId}/cards/{cardId}/{fileName} {
-      allow read: if canAccessWorkspaceBoard(boardId);
+      allow read: if canReadWorkspaceFile(boardId);
 
       allow write: if canAccessWorkspaceBoard(boardId)
         && request.resource.size > 0

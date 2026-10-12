@@ -30,8 +30,14 @@ import { TutorRoute } from "@/components/auth/TutorRoute";
 
 const queryClient = new QueryClient();
 
-function RequireAuth({ children }: { children: React.ReactNode }) {
-  return <ProtectedRoute>{children}</ProtectedRoute>;
+function RequireAuth({
+  children,
+  allowParent = false,
+}: {
+  children: React.ReactNode;
+  allowParent?: boolean;
+}) {
+  return <ProtectedRoute allowParent={allowParent}>{children}</ProtectedRoute>;
 }
 
 const App = () => (
@@ -50,7 +56,7 @@ const App = () => (
             <Route
               path="/dashboard"
               element={
-                <RequireAuth>
+                <RequireAuth allowParent>
                   <Dashboard />
                 </RequireAuth>
               }
@@ -66,7 +72,7 @@ const App = () => (
             <Route
               path="/worksheets"
               element={
-                <RequireAuth>
+                <RequireAuth allowParent>
                   <Worksheets />
                 </RequireAuth>
               }
@@ -82,7 +88,7 @@ const App = () => (
             <Route
               path="/practice/diagnostic"
               element={
-                <RequireAuth>
+                <RequireAuth allowParent>
                   <DiagnosticExam />
                 </RequireAuth>
               }
@@ -154,7 +160,7 @@ const App = () => (
             <Route
               path="/workspace"
               element={
-                <RequireAuth>
+                <RequireAuth allowParent>
                   <Workspace />
                 </RequireAuth>
               }
@@ -162,7 +168,7 @@ const App = () => (
             <Route
               path="/workspace/:boardId"
               element={
-                <RequireAuth>
+                <RequireAuth allowParent>
                   <Workspace />
                 </RequireAuth>
               }

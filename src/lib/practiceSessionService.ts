@@ -9,6 +9,7 @@ import {
   type QueryDocumentSnapshot,
 } from "firebase/firestore";
 import { fetchAssignmentsForStudent } from "@/lib/assignmentService";
+import { parentReaderUidsForStudent } from "@/lib/parentLinkService";
 import { computeSessionAnalytics } from "@/lib/sessionAnalytics";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase";
 import { fetchWorkspaceBoard } from "@/lib/workspaceService";
@@ -74,8 +75,10 @@ export async function savePracticeSession(
   const totalTimeSeconds = input.events.reduce((s, e) => s + e.elapsedSeconds, 0);
 
   const db = getFirebaseDb();
+  const readerUids = await parentReaderUidsForStudent(userId);
   const docRef = await addDoc(collection(db, PRACTICE_SESSIONS_COLLECTION), {
     userId,
+    ...(readerUids.length > 0 ? { readerUids } : {}),
     sessionType: input.sessionType,
     assignmentId: input.assignmentId ?? null,
     tutorUid: input.tutorUid ?? null,
@@ -104,6 +107,36 @@ export async function fetchPracticeSessionsForStudent(
   if (!userId) {
     throw new Error("You must be signed in to view practice history.");
   }
+  return fetchPracticeSessionsForUser(userId, sessionTypes);
+}
+
+export async function fetchPracticeSessionsForParent(
+  parentUid: string,
+  studentUid: string,
+  sessionTypes?: PracticeSessionType[],
+): Promise<PracticeSessionRecord[]> {
+  const snapshot = await getDocs(
+    query(
+      collection(getFirebaseDb(), PRACTICE_SESSIONS_COLLECTION),
+      where("readerUids", "array-contains", parentUid),
+    ),
+  );
+  let rows = snapshot.docs
+    .map(parsePracticeSession)
+    .filter((session) => session.userId === studentUid);
+  if (sessionTypes && sessionTypes.length > 0) {
+    const allowed = new Set(sessionTypes);
+    rows = rows.filter((session) => allowed.has(session.sessionType));
+  }
+  return rows.sort(
+    (a, b) => (b.completedAt?.toMillis?.() ?? 0) - (a.completedAt?.toMillis?.() ?? 0),
+  );
+}
+
+export async function fetchPracticeSessionsForUser(
+  userId: string,
+  sessionTypes?: PracticeSessionType[],
+): Promise<PracticeSessionRecord[]> {
 
   const db = getFirebaseDb();
   const sessionsQuery = query(

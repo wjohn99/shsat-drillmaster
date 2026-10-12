@@ -20,6 +20,7 @@ import type {
   WorksheetAssignment,
 } from "@/types/assignment";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase";
+import { parentReaderUidsForStudent } from "@/lib/parentLinkService";
 import { logWorksheetCompletedOnCard } from "@/lib/workspaceCardContentService";
 
 const ASSIGNMENTS_COLLECTION = "assignments";
@@ -187,6 +188,28 @@ export async function fetchAssignmentsForStudent(): Promise<WorksheetAssignment[
   if (!studentUid) {
     throw new Error("You must be signed in to view assignments.");
   }
+  return fetchAssignmentsForStudentUid(studentUid);
+}
+
+export async function fetchAssignmentsForParent(
+  parentUid: string,
+  studentUid: string,
+): Promise<WorksheetAssignment[]> {
+  const snapshot = await getDocs(
+    query(
+      collection(getFirebaseDb(), ASSIGNMENTS_COLLECTION),
+      where("readerUids", "array-contains", parentUid),
+    ),
+  );
+  return snapshot.docs
+    .map(parseAssignment)
+    .filter((assignment) => assignment.assignedToStudentUid === studentUid)
+    .sort((a, b) => (b.createdAt?.toMillis?.() ?? 0) - (a.createdAt?.toMillis?.() ?? 0));
+}
+
+export async function fetchAssignmentsForStudentUid(
+  studentUid: string,
+): Promise<WorksheetAssignment[]> {
 
   const db = getFirebaseDb();
   const assignmentsQuery = query(
@@ -252,6 +275,7 @@ export async function createAssignment(
   input: CreateAssignmentInput,
 ): Promise<string> {
   const db = getFirebaseDb();
+  const readerUids = await parentReaderUidsForStudent(input.assignedToStudentUid);
   const docRef = await addDoc(collection(db, ASSIGNMENTS_COLLECTION), {
     questionIds: input.questionIds,
     tutorUid: input.tutorUid,
@@ -265,6 +289,7 @@ export async function createAssignment(
     workspaceBoardId: input.workspace?.boardId ?? null,
     workspaceListId: input.workspace?.listId ?? null,
     workspaceCardId: null,
+    ...(readerUids.length > 0 ? { readerUids } : {}),
   });
   return docRef.id;
 }

@@ -1,4 +1,10 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -117,6 +123,8 @@ export interface SessionResultsDashboardProps {
   footnote?: ReactNode;
   extraSections?: ReactNode;
   tagTableTitle?: string;
+  /** Keep summary metrics visible and tuck charts, tables, and extra sections behind a closed toggle. */
+  collapseDetails?: boolean;
 }
 
 type TagSortKey = keyof Pick<SessionTagTableRow, "tag" | "n" | "accuracy" | "avgTime">;
@@ -133,6 +141,7 @@ export function SessionResultsDashboard({
   footnote,
   extraSections,
   tagTableTitle = "Tags & skills",
+  collapseDetails = false,
 }: SessionResultsDashboardProps) {
   const results = useMemo(() => computeSessionAnalytics(events), [events]);
   const narrowSkillChart = useNarrowSkillChart();
@@ -194,29 +203,8 @@ export function SessionResultsDashboard({
     );
   };
 
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div
-          className={`grid gap-3 ${
-            summaryMetrics.length >= 5
-              ? "md:grid-cols-5"
-              : summaryMetrics.length === 4
-                ? "md:grid-cols-4"
-                : "md:grid-cols-3"
-          }`}
-        >
-          {summaryMetrics.map((m) => (
-            <div key={m.label} className="rounded-lg border p-3">
-              <div className="text-xs text-muted-foreground">{m.label}</div>
-              <div className="text-2xl font-bold">{m.value}</div>
-            </div>
-          ))}
-        </div>
-
+  const detailSections = (
+    <>
         {footnote ? <div className="text-sm text-muted-foreground">{footnote}</div> : null}
 
         {extraSections}
@@ -343,7 +331,49 @@ export function SessionResultsDashboard({
             </CardContent>
           </Card>
         ) : null}
+    </>
+  );
 
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div
+          className={`grid gap-3 ${
+            summaryMetrics.length >= 5
+              ? "md:grid-cols-5"
+              : summaryMetrics.length === 4
+                ? "md:grid-cols-4"
+                : "md:grid-cols-3"
+          }`}
+        >
+          {summaryMetrics.map((m) => (
+            <div key={m.label} className="rounded-lg border p-3">
+              <div className="text-xs text-muted-foreground">{m.label}</div>
+              <div className="text-2xl font-bold">{m.value}</div>
+            </div>
+          ))}
+        </div>
+
+        {collapseDetails ? (
+          <Accordion type="single" collapsible>
+            <AccordionItem value="details" className="border-none">
+              <AccordionTrigger className="group h-auto min-h-11 rounded-xl border bg-background px-4 py-2.5 text-sm font-medium shadow-sm hover:bg-accent hover:no-underline">
+                <span className="group-data-[state=open]:hidden">
+                  Click to view the full results
+                </span>
+                <span className="hidden group-data-[state=open]:inline">Hide the full results</span>
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="space-y-4 text-base">{detailSections}</div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        ) : (
+          detailSections
+        )}
 
         {footerActions ? <div className="flex flex-wrap gap-2">{footerActions}</div> : null}
       </CardContent>

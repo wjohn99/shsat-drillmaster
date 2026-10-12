@@ -13,8 +13,9 @@
  */
 
 const { initializeApp } = require("firebase-admin/app");
-const { getFirestore } = require("firebase-admin/firestore");
+const { getFirestore, FieldValue } = require("firebase-admin/firestore");
 const { onDocumentCreated } = require("firebase-functions/v2/firestore");
+const { onCall, HttpsError } = require("firebase-functions/v2/https");
 const { defineSecret } = require("firebase-functions/params");
 const { logger } = require("firebase-functions");
 
@@ -172,6 +173,137 @@ exports.onStudentCardAttachment = onDocumentCreated(
     });
   },
 );
+
+function normalizeEmail(email) {
+  return String(email || "").trim().toLowerCase();
+}
+
+async function grantParentReadAccess(parentUid, studentUid) {
+  const [assignmentSnap, sessionSnap] = await Promise.all([
+    db.collection("assignments").where("assignedToStudentUid", "==", studentUid).get(),
+    db.collection("practice_sessions").where("userId", "==", studentUid).get(),
+  ]);
+  const refs = [
+    ...assignmentSnap.docs,
+    ...sessionSnap.docs.filter((row) => {
+      const sessionType = row.data().sessionType;
+      return sessionType === "assignment" || sessionType === "diagnostic";
+    }),
+  ].map((row) => row.ref);
+
+  for (let index = 0; index < refs.length; index += 400) {
+    const batch = db.batch();
+    for (const ref of refs.slice(index, index + 400)) {
+      batch.update(ref, { readerUids: FieldValue.arrayUnion(parentUid) });
+    }
+    await batch.commit();
+  }
+}
+
+exports.linkParentAccount = onCall({ region: "us-central1" }, async (request) => {
+  if (!request.auth) {
+    throw new HttpsError("unauthenticated", "Sign in with Google first.");
+  }
+
+  const studentEmail = normalizeEmail(request.data?.studentEmail);
+  const parentEmail = normalizeEmail(request.auth.token.email);
+  const parentUid = request.auth.uid;
+  if (!parentEmail) {
+    throw new HttpsError("failed-precondition", "Your Google account must have an email address.");
+  }
+  if (!studentEmail || !studentEmail.includes("@")) {
+    throw new HttpsError("invalid-argument", "Enter the student's email.");
+  }
+  if (studentEmail === parentEmail) {
+    throw new HttpsError(
+      "failed-precondition",
+      "This Google account matches the student email. Use the parent's own Google account.",
+    );
+  }
+
+  const [whitelistSnap, parentSnap, linkSnap, studentsSnap] = await Promise.all([
+    db.doc(`tutor_whitelist/${parentEmail}`).get(),
+    db.doc(`users/${parentUid}`).get(),
+    db.doc(`parent_links/${parentUid}`).get(),
+    db.collection("users").where("role", "==", "student").get(),
+  ]);
+
+  if (whitelistSnap.exists) {
+    throw new HttpsError("failed-precondition", "This Google account is a tutor.");
+  }
+
+  const existingRole = parentSnap.exists ? parentSnap.data().role : null;
+  if (existingRole === "student") {
+    throw new HttpsError(
+      "failed-precondition",
+      "This Google account is a student. Sign in as a student, or use the parent's own Google account.",
+    );
+  }
+  if (existingRole === "tutor") {
+    throw new HttpsError("failed-precondition", "This Google account is a tutor.");
+  }
+
+  const studentDoc = studentsSnap.docs.find(
+    (row) => normalizeEmail(row.data().email) === studentEmail,
+  );
+  if (!studentDoc) {
+    throw new HttpsError(
+      "failed-precondition",
+      "The email you entered is not a valid student account. No parent account was created.",
+    );
+  }
+
+  const existingLink = linkSnap.exists ? linkSnap.data() : null;
+  if (
+    existingLink
+    && existingLink.status === "approved"
+    && existingLink.studentUid
+    && existingLink.studentUid !== studentDoc.id
+  ) {
+    throw new HttpsError("failed-precondition", "This parent account is already linked to another student.");
+  }
+
+  const student = studentDoc.data();
+  const studentName = student.displayName || student.email || "Student";
+  const now = FieldValue.serverTimestamp();
+
+  await db.doc(`users/${parentUid}`).set(
+    {
+      uid: parentUid,
+      email: request.auth.token.email,
+      displayName: request.auth.token.name || parentSnap.data()?.displayName || "",
+      photoURL: request.auth.token.picture || parentSnap.data()?.photoURL || null,
+      role: "parent",
+      lastActiveAt: now,
+      ...(parentSnap.exists ? {} : { createdAt: now }),
+    },
+    { merge: true },
+  );
+  await db.doc(`parent_links/${parentUid}`).set(
+    {
+      parentUid,
+      parentEmail,
+      studentEmail,
+      studentUid: studentDoc.id,
+      studentName,
+      status: "approved",
+      updatedAt: now,
+      ...(linkSnap.exists ? {} : { createdAt: now }),
+    },
+    { merge: true },
+  );
+  await db.doc(`student_parent_readers/${studentDoc.id}`).set(
+    {
+      studentUid: studentDoc.id,
+      parentUids: FieldValue.arrayUnion(parentUid),
+      updatedAt: now,
+    },
+    { merge: true },
+  );
+  await grantParentReadAccess(parentUid, studentDoc.id);
+
+  return { studentUid: studentDoc.id, studentName };
+});
 
 exports.onStudentAttachmentSubmission = onDocumentCreated(
   {

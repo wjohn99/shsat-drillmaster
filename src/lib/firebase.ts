@@ -46,6 +46,15 @@ if (isFirebaseConfigured) {
   storage = getStorage(app);
 }
 
+export function getFirebaseApp(): FirebaseApp {
+  if (!app) {
+    throw new Error(
+      "Firebase is not configured. Add VITE_FIREBASE_* variables to your .env file.",
+    );
+  }
+  return app;
+}
+
 export function getFirebaseAuth(): Auth {
   if (!auth) {
     throw new Error(

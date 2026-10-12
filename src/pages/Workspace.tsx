@@ -5,19 +5,24 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { TutorWorkspaceHome } from "@/components/workspace/TutorWorkspaceHome";
 import { WorkspaceBoard } from "@/components/workspace/WorkspaceBoard";
+import { fetchParentLink } from "@/lib/parentLinkService";
 import { fetchWorkspaceBoard } from "@/lib/workspaceService";
 import { Loader2 } from "lucide-react";
 
 type StudentBoardStatus = "idle" | "loading" | "ready" | "missing";
+type ParentBoardStatus = "idle" | "loading" | "ready" | "missing" | "unlinked";
 
 export default function Workspace() {
   const { boardId } = useParams<{ boardId?: string }>();
   const navigate = useNavigate();
   const { profile, loading: authLoading } = useAuth();
   const isTutor = profile?.role === "tutor";
+  const isParent = profile?.role === "parent";
   const isStudent = profile?.role === "student";
 
   const [studentBoardStatus, setStudentBoardStatus] = useState<StudentBoardStatus>("idle");
+  const [parentStudentUid, setParentStudentUid] = useState<string | null>(null);
+  const [parentBoardStatus, setParentBoardStatus] = useState<ParentBoardStatus>("idle");
 
   useEffect(() => {
     if (authLoading || !profile || !isStudent) {
@@ -50,9 +55,55 @@ export default function Workspace() {
     };
   }, [authLoading, profile, isStudent, boardId, navigate]);
 
+  useEffect(() => {
+    if (authLoading || !profile || !isParent) {
+      setParentStudentUid(null);
+      setParentBoardStatus("idle");
+      return;
+    }
+
+    let cancelled = false;
+    setParentBoardStatus("loading");
+
+    void (async () => {
+      try {
+        const link = await fetchParentLink(profile.uid);
+        if (cancelled) return;
+        const studentUid = link?.status === "approved" ? link.studentUid : null;
+        if (!studentUid) {
+          setParentStudentUid(null);
+          setParentBoardStatus("unlinked");
+          return;
+        }
+        setParentStudentUid(studentUid);
+        if (boardId && boardId !== studentUid) {
+          navigate(`/workspace/${studentUid}`, { replace: true });
+          return;
+        }
+        if (boardId === studentUid) {
+          setParentBoardStatus("ready");
+          return;
+        }
+        const board = await fetchWorkspaceBoard(studentUid);
+        if (cancelled) return;
+        setParentBoardStatus(board ? "ready" : "missing");
+      } catch {
+        if (!cancelled) {
+          setParentStudentUid(null);
+          setParentBoardStatus("unlinked");
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [authLoading, profile, isParent, boardId, navigate]);
+
   const showLoading =
     authLoading ||
-    (isStudent && !boardId && (studentBoardStatus === "idle" || studentBoardStatus === "loading"));
+    (isStudent && !boardId && (studentBoardStatus === "idle" || studentBoardStatus === "loading")) ||
+    (isParent && (parentBoardStatus === "idle" || parentBoardStatus === "loading"));
 
   const boardContent = (() => {
     if (showLoading) {
@@ -73,13 +124,34 @@ export default function Workspace() {
       return null;
     }
 
+    if (isParent && !boardId) {
+      if (parentBoardStatus === "ready" && parentStudentUid) {
+        return <Navigate to={`/workspace/${parentStudentUid}`} replace />;
+      }
+      if (parentBoardStatus === "missing") {
+        return <ParentWorkspacePlaceholder linked />;
+      }
+      if (parentBoardStatus === "unlinked") {
+        return <ParentWorkspacePlaceholder linked={false} />;
+      }
+      return null;
+    }
+
+    if (boardId && isParent && parentStudentUid && boardId !== parentStudentUid) {
+      return (
+        <div className="flex justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      );
+    }
+
     if (boardId) {
       return (
         <BoardCrashGuard>
           <WorkspaceBoard
             boardId={boardId}
-            readOnly={isStudent}
-            canCreateListsAndCards
+            readOnly={isStudent || isParent}
+            canCreateListsAndCards={!isParent}
             showBackLink={isTutor}
           />
         </BoardCrashGuard>
@@ -87,9 +159,7 @@ export default function Workspace() {
     }
 
     if (isTutor) {
-      return (
-        <TutorWorkspaceHome />
-      );
+      return <TutorWorkspaceHome />;
     }
 
     return <StudentWorkspacePlaceholder />;
@@ -132,6 +202,19 @@ class BoardCrashGuard extends Component<{ children: ReactNode }, { message: stri
     }
     return this.props.children;
   }
+}
+
+function ParentWorkspacePlaceholder({ linked }: { linked: boolean }) {
+  return (
+    <div className="max-w-lg mx-auto text-center space-y-4 py-16">
+      <h1 className="text-2xl font-bold">Workspace</h1>
+      <p className="text-muted-foreground">
+        {linked
+          ? "Your student's tutor has not set up a workspace yet."
+          : "This parent account is not linked to a student. Sign in again as a parent with the student's email."}
+      </p>
+    </div>
+  );
 }
 
 function StudentWorkspacePlaceholder() {

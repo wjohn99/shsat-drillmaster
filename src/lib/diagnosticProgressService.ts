@@ -58,6 +58,12 @@ export async function fetchDiagnosticProgress(
   if (auth.currentUser?.uid !== userId) {
     throw new Error("You must be signed in to load diagnostic progress.");
   }
+  return fetchDiagnosticProgressDocument(userId);
+}
+
+export async function fetchDiagnosticProgressDocument(
+  userId: string,
+): Promise<DiagnosticExamSave | null> {
   const snapshot = await getDoc(progressDoc(userId));
   if (!snapshot.exists()) return null;
   return normalizeDiagnosticExamSave(snapshot.data());

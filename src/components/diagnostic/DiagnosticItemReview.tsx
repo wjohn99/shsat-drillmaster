@@ -334,7 +334,7 @@ export function DiagnosticItemReview({ exam, events }: DiagnosticItemReviewProps
                     question={selected}
                     isCorrect={selectedEvent?.correct}
                     selectedChoiceIds={getSelectedChoiceIds(selected, raw)}
-                    showSkillToImprove={profile?.role === "tutor"}
+                    showSkillToImprove={profile?.role === "tutor" || profile?.role === "parent"}
                   />
                 </div>
               </div>

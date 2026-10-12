@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import type { ParentSignInIntent } from "@/lib/authService";
 import type { AppUserProfile } from "@/types/auth";
 import { isFirebaseConfigured } from "@/lib/firebase";
 import {
@@ -23,7 +24,7 @@ interface AuthContextValue {
   loading: boolean;
   error: string | null;
   isConfigured: boolean;
-  signInWithGoogle: () => Promise<void>;
+  signInWithGoogle: (intent?: ParentSignInIntent) => Promise<void>;
   signOut: () => Promise<void>;
   clearError: () => void;
 }
@@ -93,10 +94,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const signInWithGoogle = useCallback(async () => {
+  const signInWithGoogle = useCallback(async (intent?: ParentSignInIntent) => {
     setError(null);
     try {
-      const userProfile = await authSignInWithGoogle();
+      const userProfile = await authSignInWithGoogle(intent);
       setProfile(userProfile);
     } catch (err) {
       setError(authErrorMessage(err));

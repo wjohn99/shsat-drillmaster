@@ -21,9 +21,11 @@ import { StudentQuickActions } from "./StudentQuickActions";
 
 interface TutorWorkspaceHomeProps {
   onBoardCreated?: (boardId: string) => void;
+  /** Parents can open every board, without tutor actions. */
+  readOnly?: boolean;
 }
 
-export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) {
+export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWorkspaceHomeProps) {
   const [boards, setBoards] = useState<WorkspaceBoard[]>([]);
   const [sessions, setSessions] = useState<PracticeSessionRecord[]>([]);
   const [assignments, setAssignments] = useState<WorksheetAssignment[]>([]);
@@ -39,8 +41,12 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
     try {
       const [boardRows, sessionRows, assignmentRows, tutorRows] = await Promise.all([
         fetchAllWorkspaceBoards(),
-        fetchPracticeSessionsForTutor().catch(() => [] as PracticeSessionRecord[]),
-        fetchAssignmentsForTutor().catch(() => [] as WorksheetAssignment[]),
+        readOnly
+          ? Promise.resolve([] as PracticeSessionRecord[])
+          : fetchPracticeSessionsForTutor().catch(() => [] as PracticeSessionRecord[]),
+        readOnly
+          ? Promise.resolve([] as WorksheetAssignment[])
+          : fetchAssignmentsForTutor().catch(() => [] as WorksheetAssignment[]),
         fetchTutors().catch(() => [] as TutorOption[]),
       ]);
       setBoards(boardRows);
@@ -110,6 +116,7 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
       <PageHeader
         title="Workspace"
         actions={
+          readOnly ? undefined : (
           <>
             <Button variant="outline" asChild>
               <Link
@@ -124,6 +131,7 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
               Add student
             </Button>
           </>
+          )
         }
       />
 
@@ -140,12 +148,16 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
           <CardContent className="space-y-3 py-10 text-center">
             <p className="font-medium">No workspaces yet</p>
             <p className="text-sm text-muted-foreground max-w-md mx-auto">
-              Add a student who has signed in to create their workspace.
+              {readOnly
+                ? "No student workspaces yet."
+                : "Add a student who has signed in to create their workspace."}
             </p>
+            {readOnly ? null : (
             <Button onClick={() => setAddOpen(true)}>
               <UserPlus className="h-4 w-4 mr-2" />
               Add student
             </Button>
+            )}
           </CardContent>
         </Card>
       ) : (
@@ -196,6 +208,7 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
                             <div className="min-w-0 space-y-1">
                               <div className="flex items-center gap-1 min-w-0">
                                 <CardTitle className="truncate text-xl">{board.studentName}</CardTitle>
+                                {readOnly ? null : (
                                 <Button
                                   type="button"
                                   variant="ghost"
@@ -207,6 +220,7 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
                                   <Pencil className="h-3.5 w-3.5" />
                                   <span className="sr-only">Edit name and color</span>
                                 </Button>
+                                )}
                               </div>
                               {board.studentEmail ? (
                                 <p className="truncate text-sm text-muted-foreground">
@@ -217,6 +231,7 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
                             <AttentionStatusLabel status={board.roadmap.status} />
                           </div>
                         </div>
+                        {readOnly ? null : (
                         <div className="relative z-10 mt-auto border-t border-border/70 bg-background/50 px-5 py-3 transition-colors duration-300 group-hover:bg-background/75">
                           <StudentQuickActions
                             studentUid={board.studentUid}
@@ -229,6 +244,7 @@ export function TutorWorkspaceHome({ onBoardCreated }: TutorWorkspaceHomeProps) 
                             returnTo={WORKSPACE_HOME_PATH}
                           />
                         </div>
+                        )}
                       </div>
                     </Card>
                   );

@@ -14,6 +14,7 @@ import {
   signOut as firebaseSignOut,
   type User,
 } from "firebase/auth";
+import { linkParentAccount } from "@/lib/parentLinkService";
 import type { AppUserProfile, UserRole } from "@/types/auth";
 import {
   getFirebaseAuth,
@@ -61,6 +62,43 @@ export function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
 
+const PARENT_SIGN_IN_KEY = "drillmaster.parentSignIn";
+
+export interface ParentSignInIntent {
+  studentEmail?: string;
+  returning?: boolean;
+  tutor?: boolean;
+}
+
+export function stageParentSignIn(intent: ParentSignInIntent): void {
+  const stored = intent.tutor
+    ? { tutor: true }
+    : intent.studentEmail
+      ? { studentEmail: normalizeEmail(intent.studentEmail) }
+      : { returning: true };
+  sessionStorage.setItem(PARENT_SIGN_IN_KEY, JSON.stringify(stored));
+}
+
+export function clearStagedParentSignIn(): void {
+  sessionStorage.removeItem(PARENT_SIGN_IN_KEY);
+}
+
+function readParentIntent(): ParentSignInIntent | null {
+  try {
+    const raw = sessionStorage.getItem(PARENT_SIGN_IN_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<ParentSignInIntent>;
+    if (parsed.tutor) return { tutor: true };
+    if (parsed.returning && !parsed.studentEmail) return { returning: true };
+    if (!parsed.studentEmail) return null;
+    return {
+      studentEmail: normalizeEmail(parsed.studentEmail),
+    };
+  } catch {
+    return null;
+  }
+}
+
 export async function isEmailWhitelisted(email: string): Promise<boolean> {
   const db = getFirebaseDb();
   const whitelistRef = doc(db, "tutor_whitelist", normalizeEmail(email));
@@ -105,8 +143,71 @@ async function writeUserProfile(firebaseUser: User): Promise<AppUserProfile> {
 
   const db = getFirebaseDb();
   const userRef = doc(db, "users", firebaseUser.uid);
+  const intent = readParentIntent();
   const existing = await getDoc(userRef);
-  const role = await resolveUserRole(email);
+  const existingRole = existing.exists() ? (existing.data().role as UserRole) : null;
+  const emailNorm = normalizeEmail(email);
+  const whitelisted = await isEmailWhitelisted(emailNorm);
+
+  let role: UserRole;
+  if (intent?.tutor) {
+    clearStagedParentSignIn();
+    if (!whitelisted) {
+      await discardParentSignIn(firebaseUser, existing.exists());
+      throw new Error("This Google account is not on the tutor list. No account was created.");
+    }
+    role = "tutor";
+  } else if (whitelisted) {
+    clearStagedParentSignIn();
+    role = "tutor";
+  } else if (intent?.returning && !intent.studentEmail) {
+    clearStagedParentSignIn();
+    if (existingRole === "student") {
+      await firebaseSignOut(getFirebaseAuth());
+      throw new Error(
+        "This Google account is a student. Sign in as a student, or use the parent's own Google account.",
+      );
+    }
+    if (existingRole !== "parent") {
+      await discardParentSignIn(firebaseUser, existing.exists());
+      throw new Error(
+        "This Google account is not a parent account yet. Enter the student's email, then click Sign in with Google. No account was created.",
+      );
+    }
+    role = "parent";
+  } else if (intent?.studentEmail) {
+    if (intent.studentEmail === emailNorm) {
+      clearStagedParentSignIn();
+      await discardParentSignIn(firebaseUser, existing.exists());
+      throw new Error(
+        "This Google account matches the student email. Use the parent's own Google account.",
+      );
+    }
+    if (existingRole === "student") {
+      clearStagedParentSignIn();
+      await firebaseSignOut(getFirebaseAuth());
+      throw new Error(
+        "This Google account is a student. Sign in as a student, or use the parent's own Google account.",
+      );
+    }
+    try {
+      await linkParentAccount(intent.studentEmail);
+    } catch (err) {
+      clearStagedParentSignIn();
+      await discardParentSignIn(firebaseUser, existing.exists());
+      throw err;
+    }
+    clearStagedParentSignIn();
+    const linked = await getDoc(userRef);
+    if (!linked.exists()) {
+      throw new Error("Parent account was not created.");
+    }
+    return parseUserProfile(linked);
+  } else if (existingRole === "parent") {
+    role = "parent";
+  } else {
+    role = "student";
+  }
 
   const profileData = {
     uid: firebaseUser.uid,
@@ -122,6 +223,18 @@ async function writeUserProfile(firebaseUser: User): Promise<AppUserProfile> {
 
   const updated = await getDoc(userRef);
   return parseUserProfile(updated);
+}
+
+async function discardParentSignIn(firebaseUser: User, hadProfile: boolean): Promise<void> {
+  if (!hadProfile) {
+    try {
+      await firebaseUser.delete();
+      return;
+    } catch {
+      // Fall through to sign-out when the new login cannot be removed.
+    }
+  }
+  await firebaseSignOut(getFirebaseAuth());
 }
 
 export async function fetchUserProfile(uid: string): Promise<AppUserProfile | null> {
@@ -164,7 +277,12 @@ export async function completeGoogleRedirect(): Promise<AppUserProfile | null> {
   }
 }
 
-export async function signInWithGoogle(): Promise<AppUserProfile> {
+export async function signInWithGoogle(intent?: ParentSignInIntent): Promise<AppUserProfile> {
+  if (intent) {
+    stageParentSignIn(intent);
+  } else {
+    clearStagedParentSignIn();
+  }
   const auth = getFirebaseAuth();
   const result = await signInWithPopup(
     auth,

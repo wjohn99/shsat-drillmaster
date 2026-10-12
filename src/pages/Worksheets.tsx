@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
@@ -375,7 +375,10 @@ const Worksheets = () => {
         navState.workspaceCompletionTarget,
       );
     } else if (navState.reviewSession) {
-      openReviewSession(navState.reviewSession);
+      openReviewSession(
+        navState.reviewSession,
+        role === "parent" ? "Saved student attempt" : undefined,
+      );
     } else if (navState.reviewAssignment) {
       void handleReviewAssignment(navState.reviewAssignment);
     } else {
@@ -539,6 +542,27 @@ const Worksheets = () => {
     }
   };
 
+  const parentCanReview =
+    role === "parent" &&
+    Boolean(
+      (location.state as WorksheetsLocationState | null)?.reviewSession ||
+        (location.state as WorksheetsLocationState | null)?.reviewAssignment,
+    );
+
+  if (role === "parent" && !(mode === "review" && reviewSession)) {
+    if (!parentCanReview && !authLoading) {
+      return <Navigate to="/dashboard" replace />;
+    }
+    return (
+      <div className="min-h-screen">
+        <Header />
+        <div className="flex justify-center py-16">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </div>
+    );
+  }
+
   if (questionsLoading && mode !== "review") {
     return (
       <div className="min-h-screen">
@@ -556,7 +580,7 @@ const Worksheets = () => {
           <WorksheetSessionReview
             session={reviewSession}
             subtitle={reviewSubtitle}
-            viewerRole={role === "tutor" ? "tutor" : "student"}
+            viewerRole={role === "tutor" || role === "parent" ? "tutor" : "student"}
             onBack={() => {
               setReviewSession(null);
               setReviewSubtitle(undefined);

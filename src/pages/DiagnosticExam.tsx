@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, CheckCircle2, Clock, Loader2, TimerOff } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Badge } from "@/components/ui/badge";
@@ -557,6 +557,10 @@ export default function DiagnosticExam() {
     await persistAndUploadResults(completedEvents, reason);
   };
 
+  if (profile?.role === "parent" && !reviewFromNav) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   if (phase === "exam" && profile) {
     return (
       <DiagnosticExamRunner
@@ -742,9 +746,11 @@ export default function DiagnosticExam() {
                     All sittings
                   </Button>
                 ) : null}
-                <Button variant="outline" asChild>
-                  <Link to="/practice">Back to Practice</Link>
-                </Button>
+                {profile?.role === "parent" ? null : (
+                  <Button variant="outline" asChild>
+                    <Link to="/practice">Back to Practice</Link>
+                  </Button>
+                )}
                 <Button variant="outline" asChild>
                   <Link to="/dashboard">Dashboard</Link>
                 </Button>

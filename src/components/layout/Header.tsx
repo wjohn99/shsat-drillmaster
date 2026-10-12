@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 const roleLabels: Record<UserRole, string> = {
   tutor: "Tutor",
   student: "Student",
+  parent: "Parent",
 };
 
 type NavItem = {
@@ -48,7 +49,22 @@ export const Header = () => {
   const workspacePath =
     profile?.role === "student" && profile.uid ? `/workspace/${profile.uid}` : "/workspace";
 
-  const navItems: NavItem[] = [
+  const navItems: NavItem[] = profile?.role === "parent"
+    ? [
+        {
+          to: "/dashboard",
+          label: "Dashboard",
+          shortLabel: "Dashboard",
+          active: location.pathname === "/dashboard" || location.pathname.startsWith("/dashboard/"),
+        },
+        {
+          to: "/workspace",
+          label: "Workspace",
+          shortLabel: "Workspace",
+          active: location.pathname.startsWith("/workspace"),
+        },
+      ]
+    : [
     {
       to: "/question-bank",
       label: "Question Bank",

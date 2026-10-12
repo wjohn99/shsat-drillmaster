@@ -4,9 +4,11 @@ import { useAuth } from "@/contexts/AuthContext";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
+  /** Dashboard is the only signed-in page a parent can open. */
+  allowParent?: boolean;
 }
 
-export function ProtectedRoute({ children }: ProtectedRouteProps) {
+export function ProtectedRoute({ children, allowParent = false }: ProtectedRouteProps) {
   const { profile, loading, isConfigured } = useAuth();
   const location = useLocation();
 
@@ -27,6 +29,10 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   if (!profile) {
     return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+
+  if (!allowParent && profile.role === "parent") {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <>{children}</>;
