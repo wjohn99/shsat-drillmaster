@@ -8,7 +8,11 @@ import { ArrowLeft, Eye, Loader2 } from "lucide-react";
 import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
 import { useQuestions } from "@/contexts/QuestionsContext";
 import { allTags } from "@/data/taggingScheme";
-import type { Question } from "@/types";
+import type { Passage, Question } from "@/types";
+import {
+  buildWorksheetPresets,
+  type WorksheetPreset,
+} from "@/data/worksheetPresets";
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
 import type { WorksheetAssignment } from "@/types/assignment";
 import {
@@ -24,7 +28,6 @@ import {
   defaultAssignmentDueDateInput,
   fetchStudents,
   markAssignmentCompleted,
-  resolveQuestionsByIds,
   setAssignmentWorkspaceCard,
   toAssignmentDueDateInputValue,
 } from "@/lib/assignmentService";
@@ -57,7 +60,6 @@ import { TutorWorksheetsHome } from "@/components/worksheets/TutorWorksheetsHome
 import { StudentWorksheetsHome } from "@/components/worksheets/StudentWorksheetsHome";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
-import { isProvisionalQuestion } from "@/lib/reviewStatus";
 import type { StudentOption } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type {
@@ -69,7 +71,13 @@ type Mode = "home" | "build" | "runner" | "results" | "review";
 type RunSource = "assignment" | "self" | "tutor-preview";
 
 const Worksheets = () => {
-  const { questions, passages, loading: questionsLoading } = useQuestions();
+  const {
+    questions,
+    passages,
+    loading: questionsLoading,
+    getQuestionsByIds,
+    getPassagesForQuestions,
+  } = useQuestions();
   const location = useLocation();
   const navigate = useNavigate();
   const { profile, loading: authLoading } = useAuth();
@@ -82,6 +90,8 @@ const Worksheets = () => {
   const [selectedCodes, setSelectedCodes] = useState<string[]>([]);
   const [questionLimit, setQuestionLimit] = useState(10);
   const [worksheetQuestions, setWorksheetQuestions] = useState<Question[]>([]);
+  const [runnerPassages, setRunnerPassages] = useState<Passage[] | undefined>();
+  const [presetTitle, setPresetTitle] = useState<string | null>(null);
   const [sessionEvents, setSessionEvents] = useState<SessionAnalyticsEvent[]>([]);
   const [activeAssignment, setActiveAssignment] = useState<WorksheetAssignment | null>(null);
   const workspaceCompletionTargetRef = useRef<WorksheetsWorkspaceCompletionTarget | null>(
@@ -124,6 +134,7 @@ const Worksheets = () => {
   };
 
   const tagCatalog = useMemo(() => buildWorksheetTagCatalog(allTags, questions), [questions]);
+  const worksheetPresets = useMemo(() => buildWorksheetPresets(questions), [questions]);
 
   const toggleTag = (code: string) => {
     setSelectedCodes((prev) =>
@@ -247,7 +258,21 @@ const Worksheets = () => {
   const openTutorBuild = () => {
     setBuildVariant("tutor");
     setActiveAssignment(null);
+    setPresetTitle(null);
     setMode("build");
+  };
+
+  const openTutorBuildFromPreset = (preset: WorksheetPreset) => {
+    setBuildVariant("tutor");
+    setActiveAssignment(null);
+    setSelectedCodes(preset.tagCodes);
+    setQuestionLimit(preset.questionLimit);
+    setPresetTitle(preset.title);
+    setMode("build");
+    toast({
+      title: `${preset.title} pre-set loaded`,
+      description: "Pick a student and due date, then assign.",
+    });
   };
 
   const openStudentBuild = () => {
@@ -259,12 +284,33 @@ const Worksheets = () => {
   const pickCurrentQuestions = () =>
     pickWorksheetQuestions(questions, selectedSet, questionLimit);
 
-  const startWorksheetRun = (picked?: Question[]) => {
+  const startWorksheetRun = (picked?: Question[], extraPassages?: Passage[]) => {
     const next = picked ?? pickCurrentQuestions();
     setWorksheetQuestions(next);
+    setRunnerPassages(extraPassages);
     setRunKey((k) => k + 1);
     setSessionEvents([]);
     setMode("runner");
+  };
+
+  const previewPreset = (preset: WorksheetPreset) => {
+    const picked = pickWorksheetQuestions(
+      questions,
+      new Set(preset.tagCodes),
+      preset.questionLimit,
+    );
+    if (picked.length === 0) {
+      toast({
+        title: "No questions in this pre-set",
+        description: "Try another set, or build a custom worksheet.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setPresetTitle(preset.title);
+    setActiveAssignment(null);
+    setRunSource("tutor-preview");
+    startWorksheetRun(picked);
   };
 
   const startTutorOrSelfPreview = () => {
@@ -321,9 +367,7 @@ const Worksheets = () => {
     workspaceTarget?: WorksheetsWorkspaceCompletionTarget,
   ) => {
     workspaceCompletionTargetRef.current = workspaceTarget ?? null;
-    const picked = resolveQuestionsByIds(questions, assignment.questionIds).filter(
-      (question) => role === "tutor" || !isProvisionalQuestion(question),
-    );
+    const picked = getQuestionsByIds(assignment.questionIds);
     if (picked.length === 0) {
       toast({
         title: "Worksheet unavailable",
@@ -334,7 +378,7 @@ const Worksheets = () => {
     }
     setActiveAssignment(assignment);
     setRunSource("assignment");
-    startWorksheetRun(picked);
+    startWorksheetRun(picked, getPassagesForQuestions(picked));
   };
 
   useEffect(() => {
@@ -402,22 +446,14 @@ const Worksheets = () => {
       return;
     }
 
-    const pickedAll = pickCurrentQuestions();
-    const picked = pickedAll.filter((question) => !isProvisionalQuestion(question));
+    const picked = pickCurrentQuestions();
     if (picked.length === 0) {
       toast({
         title: "Nothing to assign",
-        description:
-          "Provisional questions stay in tutor review until they are marked final. Assign approved questions only.",
+        description: "Select skill tags that match questions in the bank.",
         variant: "destructive",
       });
       return;
-    }
-    if (picked.length < pickedAll.length) {
-      toast({
-        title: "Skipped provisional questions",
-        description: "Students only receive questions that are marked final.",
-      });
     }
 
     if (!assignmentDueDate) {
@@ -440,9 +476,10 @@ const Worksheets = () => {
     setAssigning(true);
     try {
       const title =
-        selectedTagLabels.length > 0
+        presetTitle ??
+        (selectedTagLabels.length > 0
           ? `Worksheet: ${selectedTagLabels.slice(0, 2).join(", ")}${selectedTagLabels.length > 2 ? "…" : ""}`
-          : "Custom worksheet";
+          : "Custom worksheet");
 
       const dueAt = assignmentDueDateInputToTimestamp(assignmentDueDate);
       const placeOnWorkspace =
@@ -543,7 +580,7 @@ const Worksheets = () => {
       ? activeAssignment?.title ?? "Assigned worksheet"
       : runSource === "self"
         ? "Your practice worksheet"
-        : "Custom worksheet";
+        : presetTitle ?? "Custom worksheet";
 
   const storageKeyPrefix =
     runSource === "assignment" && activeAssignment
@@ -616,6 +653,7 @@ const Worksheets = () => {
         key={runKey}
         questions={worksheetQuestions}
         sessionTitle={sessionTitle}
+        passageCatalog={runnerPassages}
         storageKeyPrefix={storageKeyPrefix}
         onExit={exitRunner}
         revealAnswers={
@@ -831,11 +869,6 @@ const Worksheets = () => {
             <PageHeader
               title="Worksheets"
               description="Focused SHSAT practice sets, complete them here, or build your own."
-              actions={
-                role === "tutor" ? (
-                  <Button onClick={openTutorBuild}>Assign to student</Button>
-                ) : null
-              }
             />
 
             {authLoading ? (
@@ -856,7 +889,10 @@ const Worksheets = () => {
             ) : role === "tutor" ? (
               <TutorWorksheetsHome
                 assignmentsRefreshKey={assignmentsRefreshKey}
+                presets={worksheetPresets}
                 onCreateCustom={openTutorBuild}
+                onAssignPreset={openTutorBuildFromPreset}
+                onPreviewPreset={previewPreset}
                 onReviewAssignment={handleReviewAssignment}
                 onReviewSession={(session) =>
                   openReviewSession(session, "Student assignment attempt")

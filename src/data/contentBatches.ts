@@ -40,6 +40,9 @@ type RawBatch = {
   passages?: RawPassage[];
 };
 
+/** Same suggested time as Jed Approved tracker items (shown as 2:00 in the bank). */
+const DEFAULT_TIME_TO_SOLVE_SECONDS = 120;
+
 const batchModules = import.meta.glob("../../content/batches/*/questions.json", {
   eager: true,
 }) as Record<string, RawBatch | { default: RawBatch }>;
@@ -75,7 +78,7 @@ function hydrateQuestion(raw: RawQuestion): Question {
     gif: raw.gif,
     tags: hydrateTags(raw.tags),
     passageId: raw.passageId,
-    timeToSolve: raw.timeToSolve,
+    timeToSolve: raw.timeToSolve && raw.timeToSolve > 0 ? raw.timeToSolve : DEFAULT_TIME_TO_SOLVE_SECONDS,
     createdAt: raw.createdAt ?? new Date().toISOString(),
     reviewStatus: raw.reviewStatus === "final" ? "final" : "provisional",
   };

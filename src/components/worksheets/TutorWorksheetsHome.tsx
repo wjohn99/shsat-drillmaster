@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Plus, ArrowRight, Clock, BookOpen } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,55 +9,28 @@ import { fetchPracticeSessionsForTutor } from "@/lib/practiceSessionService";
 import { fetchStudents } from "@/lib/assignmentService";
 import type { TutorAssignmentRow } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
+import type { WorksheetPreset } from "@/data/worksheetPresets";
 
 interface TutorWorksheetsHomeProps {
   assignmentsRefreshKey: number;
+  presets: WorksheetPreset[];
   onCreateCustom: () => void;
+  onAssignPreset: (preset: WorksheetPreset) => void;
+  onPreviewPreset: (preset: WorksheetPreset) => void;
   onReviewAssignment: (assignment: TutorAssignmentRow) => void;
   onReviewSession: (session: PracticeSessionRecord) => void;
 }
 
-const presetWorksheets = [
-  {
-    id: "algebra-basics",
-    title: "Algebra Basics",
-    description: "Linear equations and expressions fundamentals",
-    questionCount: 20,
-    estimatedTime: "30 min",
-    subject: "MATH",
-  },
-  {
-    id: "reading-comp-1",
-    title: "Reading Comprehension Set 1",
-    description: "Science and technology passages",
-    questionCount: 15,
-    estimatedTime: "25 min",
-    subject: "ELA",
-  },
-  {
-    id: "grammar-essentials",
-    title: "Grammar Essentials",
-    description: "Comma usage and sentence structure",
-    questionCount: 25,
-    estimatedTime: "20 min",
-    subject: "ELA",
-  },
-  {
-    id: "geometry-shapes",
-    title: "Geometry & Shapes",
-    description: "Area, volume, and coordinate geometry",
-    questionCount: 18,
-    estimatedTime: "35 min",
-    subject: "MATH",
-  },
-];
-
 export function TutorWorksheetsHome({
   assignmentsRefreshKey,
+  presets,
   onCreateCustom,
+  onAssignPreset,
+  onPreviewPreset,
   onReviewAssignment,
   onReviewSession,
 }: TutorWorksheetsHomeProps) {
+  const presetsRef = useRef<HTMLElement>(null);
   const [historySessions, setHistorySessions] = useState<PracticeSessionRecord[]>([]);
   const [historyLoading, setHistoryLoading] = useState(true);
   const [studentNameByUid, setStudentNameByUid] = useState<Map<string, string>>(new Map());
@@ -96,14 +69,18 @@ export function TutorWorksheetsHome({
     [studentNameByUid],
   );
 
+  const scrollToPresets = () => {
+    presetsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <div className="mx-auto max-w-6xl space-y-12">
       <div className="flex flex-col gap-3 border-b border-border pb-6 sm:flex-row sm:items-center sm:justify-between">
         <p className="max-w-xl text-sm text-muted-foreground">
-          Assign a custom worksheet, or browse pre-sets when they are available.
+          Assign a custom worksheet, or send a pre-set built from the question bank.
         </p>
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline">
+          <Button variant="outline" onClick={scrollToPresets}>
             Browse pre-sets
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
@@ -144,47 +121,70 @@ export function TutorWorksheetsHome({
         />
       </section>
 
-      <section>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-serif text-xl font-semibold">Featured pre-sets</h2>
-          <Button variant="outline" size="sm">
-            View all
-          </Button>
+      <section id="worksheet-presets" ref={presetsRef} className="scroll-mt-24">
+        <div className="mb-4">
+          <h2 className="font-serif text-xl font-semibold">Pre-set worksheets</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Ready-made sets from the current question bank. Assign one to a student, or
+            preview it first.
+          </p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {presetWorksheets.map((worksheet) => (
-            <Card key={worksheet.id}>
-              <CardHeader>
-                <div className="flex items-center justify-between mb-2">
-                  <Badge
-                    variant={worksheet.subject === "MATH" ? "default" : "secondary"}
-                    className="text-xs"
-                  >
-                    {worksheet.subject}
-                  </Badge>
-                </div>
-                <CardTitle className="text-lg leading-tight">{worksheet.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">{worksheet.description}</p>
-                <div className="flex items-center justify-between text-xs text-muted-foreground mb-4">
-                  <div className="flex items-center">
-                    <BookOpen className="h-3 w-3 mr-1" />
-                    {worksheet.questionCount} questions
+        {presets.length === 0 ? (
+          <Card>
+            <CardContent className="py-10 text-center text-sm text-muted-foreground">
+              No pre-sets yet. Add tagged questions to the bank and they will show up here.
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {presets.map((worksheet) => (
+              <Card key={worksheet.id}>
+                <CardHeader>
+                  <div className="mb-2 flex items-center justify-between">
+                    <Badge
+                      variant={worksheet.subject === "MATH" ? "default" : "secondary"}
+                      className="text-xs"
+                    >
+                      {worksheet.subject}
+                    </Badge>
                   </div>
-                  <div className="flex items-center">
-                    <Clock className="h-3 w-3 mr-1" />
-                    {worksheet.estimatedTime}
+                  <CardTitle className="text-lg leading-tight">{worksheet.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="mb-4 text-sm text-muted-foreground">{worksheet.description}</p>
+                  <div className="mb-4 flex items-center justify-between text-xs text-muted-foreground">
+                    <div className="flex items-center">
+                      <BookOpen className="mr-1 h-3 w-3" />
+                      {worksheet.questionCount} questions
+                    </div>
+                    <div className="flex items-center">
+                      <Clock className="mr-1 h-3 w-3" />
+                      {worksheet.estimatedMinutes} min
+                    </div>
                   </div>
-                </div>
-                <Button className="w-full" size="sm">
-                  Start Worksheet
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      className="flex-1"
+                      size="sm"
+                      onClick={() => onPreviewPreset(worksheet)}
+                    >
+                      Preview
+                    </Button>
+                    <Button
+                      className="flex-1"
+                      size="sm"
+                      onClick={() => onAssignPreset(worksheet)}
+                    >
+                      Assign
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

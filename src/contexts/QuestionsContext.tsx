@@ -32,6 +32,9 @@ type QuestionsContextValue = {
   ) => Question[];
   getQuestionById: (id: string) => Question | undefined;
   getQuestionsForTopic: (topicId: string) => Question[];
+  /** Resolve assigned worksheet IDs from the full bank, including provisional items. */
+  getQuestionsByIds: (ids: string[]) => Question[];
+  getPassagesForQuestions: (items: Question[]) => Passage[];
 };
 
 const QuestionsContext = createContext<QuestionsContextValue | null>(null);
@@ -96,6 +99,28 @@ export function QuestionsProvider({ children }: { children: ReactNode }) {
     [catalog],
   );
 
+  const getQuestionsByIds = useCallback(
+    (ids: string[]) => {
+      if (!fullCatalog) return [];
+      const byId = new Map(fullCatalog.questions.map((question) => [question.id, question]));
+      return ids
+        .map((id) => byId.get(id))
+        .filter((question): question is Question => question !== undefined);
+    },
+    [fullCatalog],
+  );
+
+  const getPassagesForQuestions = useCallback(
+    (items: Question[]) => {
+      if (!fullCatalog) return [];
+      const passageIds = new Set(
+        items.map((question) => question.passageId).filter((id): id is string => Boolean(id)),
+      );
+      return fullCatalog.passages.filter((passage) => passageIds.has(passage.id));
+    },
+    [fullCatalog],
+  );
+
   const value = useMemo<QuestionsContextValue>(
     () => ({
       questions: catalog?.questions ?? [],
@@ -107,8 +132,19 @@ export function QuestionsProvider({ children }: { children: ReactNode }) {
       getFilteredQuestions,
       getQuestionById,
       getQuestionsForTopic: getQuestionsForTopicId,
+      getQuestionsByIds,
+      getPassagesForQuestions,
     }),
-    [catalog, loading, error, getFilteredQuestions, getQuestionById, getQuestionsForTopicId],
+    [
+      catalog,
+      loading,
+      error,
+      getFilteredQuestions,
+      getQuestionById,
+      getQuestionsForTopicId,
+      getQuestionsByIds,
+      getPassagesForQuestions,
+    ],
   );
 
   return <QuestionsContext.Provider value={value}>{children}</QuestionsContext.Provider>;

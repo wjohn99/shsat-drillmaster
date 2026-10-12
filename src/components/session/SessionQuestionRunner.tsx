@@ -12,7 +12,7 @@ import { ProvisionalBadge } from "@/components/question/ProvisionalBadge";
 import { QuestionResponseFields } from "@/components/question/QuestionResponseFields";
 import { QuestionSolutionPanel } from "@/components/question/QuestionSolutionPanel";
 import { getSelectedChoiceIds } from "@/lib/questionExplanation";
-import type { Question } from "@/types";
+import type { Passage, Question } from "@/types";
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
 import { parseAtaAnswer, serializeAtaAnswer } from "@/lib/indyAta";
 import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
@@ -31,6 +31,8 @@ export interface SessionQuestionRunnerProps {
    * or explanation. Used for a cold diagnostic assignment.
    */
   revealAnswers?: boolean;
+  /** Optional passage list for assigned items that are not in the viewer catalog. */
+  passageCatalog?: Passage[];
 }
 
 export function SessionQuestionRunner({
@@ -40,8 +42,10 @@ export function SessionQuestionRunner({
   onComplete,
   storageKeyPrefix,
   revealAnswers = true,
+  passageCatalog,
 }: SessionQuestionRunnerProps) {
-  const { passages } = useQuestions();
+  const { passages: catalogPassages } = useQuestions();
+  const passages = passageCatalog ?? catalogPassages;
   const { profile } = useAuth();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
