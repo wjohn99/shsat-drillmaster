@@ -45,6 +45,7 @@ import {
 } from "@/lib/dashboardStats";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
+import { LinkifiedText } from "@/components/workspace/LinkifiedText";
 
 function formatCardSessionDate(value?: string): string {
   if (!value) return "";
@@ -505,11 +506,21 @@ export function BoardListColumn({
                         <GripVertical className="h-4 w-4" />
                       </div>
                     ) : null}
-                    <button
-                      type="button"
-                      onClick={() => onCardClick(card)}
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      onClick={(event) => {
+                        if ((event.target as HTMLElement).closest("a")) return;
+                        onCardClick(card);
+                      }}
+                      onKeyDown={(event) => {
+                        if (event.key !== "Enter" && event.key !== " ") return;
+                        if ((event.target as HTMLElement).closest("a, [role='button']")) return;
+                        event.preventDefault();
+                        onCardClick(card);
+                      }}
                       className={cn(
-                        "relative min-w-0 flex-1 rounded-xl border border-border bg-card px-3.5 py-3 text-left text-sm transition-colors",
+                        "relative min-w-0 flex-1 cursor-pointer rounded-xl border border-border bg-card px-3.5 py-3 text-left text-sm transition-colors",
                         "hover:border-foreground/20",
                         card.completed && "opacity-80",
                       )}
@@ -572,7 +583,7 @@ export function BoardListColumn({
                       ) : null}
                       {card.description ? (
                         <p className="text-xs text-muted-foreground mt-1 line-clamp-2 pl-6">
-                          {card.description}
+                          <LinkifiedText text={card.description} stopClickPropagation />
                         </p>
                       ) : null}
                       {((card.commentCount ?? 0) > 0 || (card.attachmentCount ?? 0) > 0) ? (
@@ -623,7 +634,7 @@ export function BoardListColumn({
                           <Trash2 className="h-3.5 w-3.5" />
                         </span>
                       ) : null}
-                    </button>
+                    </div>
                   </div>
                 </div>
               </div>

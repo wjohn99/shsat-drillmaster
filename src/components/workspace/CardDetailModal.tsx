@@ -88,6 +88,7 @@ import type {
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { WORKSPACE_HOME_PATH } from "@/types/worksheetsNavigation";
+import { LinkifiedText, NoteLinkList } from "@/components/workspace/LinkifiedText";
 
 interface CardDetailModalProps {
   boardId: string;
@@ -695,9 +696,15 @@ export function CardDetailModal({
 
                 {readOnly ? (
                   <div className="text-sm space-y-3">
-                    {whenLine ? <p className="text-muted-foreground">{whenLine}</p> : null}
+                    {whenLine ? (
+                      <p className="text-muted-foreground">
+                        <LinkifiedText text={whenLine} />
+                      </p>
+                    ) : null}
                     {summaryShown ? (
-                      <p className="whitespace-pre-wrap text-foreground/90 leading-relaxed">{summaryShown}</p>
+                      <p className="text-foreground/90 leading-relaxed">
+                        <LinkifiedText text={summaryShown} />
+                      </p>
                     ) : (
                       <p className="text-muted-foreground">No session notes yet.</p>
                     )}
@@ -789,6 +796,7 @@ export function CardDetailModal({
                       aria-label="Session notes"
                       className={sessionFieldClass}
                     />
+                    <NoteLinkList text={[concepts, location].filter(Boolean).join("\n")} />
                     <div className="flex justify-end">
                       <Button
                         type="button"
@@ -1266,6 +1274,7 @@ function AttachmentRow({
   const canRemove = isTutorView || isOwnAttachment;
   const canRename = isTutorView || isOwnAttachment;
   const canPreviewFile = (isPdf || isImage) && Boolean(downloadUrl);
+  const linkHref = isLink ? downloadUrl || attachment.externalUrl || null : null;
   const showHomeworkSubmit = isStudentView && !isOwnAttachment;
 
   const openHref = (url: string) => {
@@ -1436,6 +1445,16 @@ function AttachmentRow({
               <Eye className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden />
               <span className="sr-only">Preview {attachment.fileName}</span>
             </button>
+          ) : linkHref ? (
+            <a
+              href={linkHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={linkHref}
+              className="block truncate text-sm font-medium text-primary underline underline-offset-2 hover:text-primary/80"
+            >
+              {attachment.fileName}
+            </a>
           ) : (
             <p className="text-sm font-medium truncate">{attachment.fileName}</p>
           )}
@@ -1470,16 +1489,29 @@ function AttachmentRow({
               <Pencil className="h-4 w-4" />
             </Button>
           ) : null}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-            disabled={urlLoading || (!downloadUrl && attachment.kind === "file")}
-            onClick={openAttachment}
-            title={isLink ? "Open link" : "Open PDF"}
-          >
-            <ExternalLink className="h-4 w-4" />
-          </Button>
+          {linkHref ? (
+            <a
+              href={linkHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Open link"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground"
+            >
+              <ExternalLink className="h-4 w-4" />
+              <span className="sr-only">Open link</span>
+            </a>
+          ) : (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              disabled={urlLoading || (!downloadUrl && attachment.kind === "file")}
+              onClick={openAttachment}
+              title="Open PDF"
+            >
+              <ExternalLink className="h-4 w-4" />
+            </Button>
+          )}
           {canRemove ? (
             <Button
               variant="ghost"
@@ -1532,7 +1564,9 @@ function AttachmentRow({
             Submitted {formatTimestamp(submission.submittedAt)}
           </p>
           {submission.notes ? (
-            <p className="text-muted-foreground whitespace-pre-wrap">{submission.notes}</p>
+            <p className="text-muted-foreground">
+              <LinkifiedText text={submission.notes} />
+            </p>
           ) : null}
           <Button
             variant="link"
@@ -1699,7 +1733,9 @@ function CommentBubble({
             {" · "}
             {formatTimestamp(comment.createdAt)}
           </p>
-          <p className="text-sm whitespace-pre-wrap">{comment.body}</p>
+          <p className="text-sm">
+            <LinkifiedText text={comment.body} />
+          </p>
         </div>
         {canDelete ? (
           <Button
@@ -1742,7 +1778,7 @@ function ActivityLine({ activity }: { activity: WorkspaceCardActivity }) {
         <Upload className="h-3.5 w-3.5 inline-block mr-1.5 -mt-0.5 text-emerald-600" />
       ) : null}
       <span className="font-medium text-foreground/80">{activity.actorName}</span>{" "}
-      {activity.message}
+      <LinkifiedText text={activity.message} />
       {activity.createdAt ? (
         <span className="block mt-0.5 opacity-70">{formatTimestamp(activity.createdAt)}</span>
       ) : null}
