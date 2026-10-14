@@ -280,6 +280,19 @@ service cloud.firestore {
             && request.resource.data.diff(resource.data).affectedKeys()
               .hasOnly(['commentCount', 'attachmentCount', 'updatedAt'])
           );
+        // Students may rename cards on their own board.
+        allow update: if workspaceBoardIdMatchesStudent(boardId)
+          && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['title', 'updatedAt'])
+          && request.resource.data.title is string
+          && request.resource.data.title.size() > 0
+          && request.resource.data.title.size() <= 200;
+        // Students may hide cards on their own board. Notes and files stay saved.
+        allow update: if workspaceBoardIdMatchesStudent(boardId)
+          && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['deletedAt', 'updatedAt'])
+          && request.resource.data.deletedAt is timestamp
+          && (!('deletedAt' in resource.data) || resource.data.deletedAt == null);
         allow delete: if false;
 
         match /attachments/{attachmentId} {
@@ -370,8 +383,11 @@ service cloud.firestore {
 
         match /revisions/{revId} {
           allow read: if canReadWorkspaceBoard(boardId);
-          allow create: if isTutor()
-            && request.resource.data.savedByUid == request.auth.uid;
+          allow create: if request.resource.data.savedByUid == request.auth.uid
+            && (
+              isTutor()
+              || workspaceBoardIdMatchesStudent(boardId)
+            );
           allow update, delete: if false;
         }
       }

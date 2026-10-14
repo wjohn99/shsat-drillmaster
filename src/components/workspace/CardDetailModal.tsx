@@ -96,6 +96,8 @@ interface CardDetailModalProps {
   listTitle?: string;
   open: boolean;
   readOnly?: boolean;
+  /** Students can rename or hide a card without tutor notes editing. */
+  canRenameAndDeleteCards?: boolean;
   /** Place the cursor in the notes field when this card opens. */
   focusNotes?: boolean;
   onOpenChange: (open: boolean) => void;
@@ -204,6 +206,7 @@ export function CardDetailModal({
   listTitle,
   open,
   readOnly = false,
+  canRenameAndDeleteCards = !readOnly,
   focusNotes = false,
   onOpenChange,
   onUpdated,
@@ -450,9 +453,15 @@ export function CardDetailModal({
   };
 
   const handleSaveTitle = async () => {
-    if (!card || readOnly || title.trim() === card.title) return;
+    if (!card || !canRenameAndDeleteCards) return;
+    const next = title.trim();
+    if (!next) {
+      setTitle(card.title);
+      return;
+    }
+    if (next === card.title) return;
     try {
-      await updateWorkspaceCard(boardId, card.id, { title: title.trim() });
+      await updateWorkspaceCard(boardId, card.id, { title: next });
       onUpdated();
     } catch {
       toast({ title: "Could not update title", variant: "destructive" });
@@ -472,7 +481,7 @@ export function CardDetailModal({
   };
 
   const handleDeleteCard = async () => {
-    if (!card || readOnly) return;
+    if (!card || !canRenameAndDeleteCards) return;
     setDeletingCard(true);
     try {
       await deleteWorkspaceCard(boardId, card.id);
@@ -669,10 +678,17 @@ export function CardDetailModal({
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   onBlur={() => void handleSaveTitle()}
-                  readOnly={readOnly}
+                  onKeyDown={(e) => {
+                    if (e.key !== "Enter") return;
+                    e.preventDefault();
+                    (e.currentTarget as HTMLInputElement).blur();
+                  }}
+                  readOnly={!canRenameAndDeleteCards}
+                  maxLength={200}
+                  aria-label="Card name"
                   className="h-auto min-w-0 flex-1 rounded-none border-0 bg-transparent px-0 py-1 text-xl font-semibold leading-tight shadow-none hover:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 [background-color:transparent] hover:[background-color:transparent]"
                 />
-                {!readOnly ? (
+                {canRenameAndDeleteCards ? (
                   <Button
                     type="button"
                     variant="ghost"

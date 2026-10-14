@@ -42,7 +42,7 @@ import { StudentRoadmapPanel } from "./StudentRoadmapPanel";
 interface WorkspaceBoardProps {
   boardId: string;
   readOnly?: boolean;
-  /** Students can add lists and cards on their own board without full tutor edit access. */
+  /** Students can add lists and cards, and rename or delete cards, without full tutor edit access. */
   canCreateListsAndCards?: boolean;
   showBackLink?: boolean;
 }
@@ -474,6 +474,7 @@ export function WorkspaceBoard({
         listTitle={selectedListTitle}
         open={cardModalOpen}
         readOnly={readOnly}
+        canRenameAndDeleteCards={canCreateListsAndCards}
         focusNotes={focusCardNotes}
         onOpenChange={(next) => {
           setCardModalOpen(next);

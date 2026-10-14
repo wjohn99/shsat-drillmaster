@@ -608,7 +608,7 @@ export function BoardListColumn({
                           ) : null}
                         </div>
                       ) : null}
-                      {!readOnly ? (
+                      {canCreateListsAndCards ? (
                         <span
                           role="button"
                           tabIndex={0}
