@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CheckCircle2, Circle, Eye, Loader2, Play } from "lucide-react";
+import { CheckCircle2, Circle, Eye, Loader2, Play, Printer } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -18,12 +18,14 @@ import { WorksheetEmptyState } from "./WorksheetEmptyState";
 interface StudentAssignmentsGridProps {
   onStartAssignment: (assignment: WorksheetAssignment) => void;
   onReviewAssignment?: (assignment: WorksheetAssignment) => void;
+  onPrintAssignment?: (assignment: WorksheetAssignment) => void;
   refreshKey?: number;
 }
 
 export function StudentAssignmentsGrid({
   onStartAssignment,
   onReviewAssignment,
+  onPrintAssignment,
   refreshKey = 0,
 }: StudentAssignmentsGridProps) {
   const { profile } = useAuth();
@@ -157,6 +159,17 @@ export function StudentAssignmentsGrid({
                   <Play className="h-4 w-4 mr-2" />
                   {isCompleted ? "Practice again" : "Start practice"}
                 </Button>
+                {onPrintAssignment ? (
+                  <Button
+                    className="w-full"
+                    size="sm"
+                    variant="outline"
+                    onClick={() => onPrintAssignment(assignment)}
+                  >
+                    <Printer className="h-4 w-4 mr-2" />
+                    Print / Save PDF
+                  </Button>
+                ) : null}
               </div>
             </CardContent>
           </Card>

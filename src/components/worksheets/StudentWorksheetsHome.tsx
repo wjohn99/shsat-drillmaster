@@ -11,6 +11,7 @@ interface StudentWorksheetsHomeProps {
   assignmentsRefreshKey: number;
   onStartAssignment: (assignment: WorksheetAssignment) => void;
   onReviewAssignment: (assignment: WorksheetAssignment) => void;
+  onPrintAssignment: (assignment: WorksheetAssignment) => void;
   onReviewSession: (session: PracticeSessionRecord) => void;
   onCreateCustomPractice: () => void;
 }
@@ -19,6 +20,7 @@ export function StudentWorksheetsHome({
   assignmentsRefreshKey,
   onStartAssignment,
   onReviewAssignment,
+  onPrintAssignment,
   onReviewSession,
   onCreateCustomPractice,
 }: StudentWorksheetsHomeProps) {
@@ -56,6 +58,7 @@ export function StudentWorksheetsHome({
           refreshKey={assignmentsRefreshKey}
           onStartAssignment={onStartAssignment}
           onReviewAssignment={onReviewAssignment}
+          onPrintAssignment={onPrintAssignment}
         />
       </section>
 

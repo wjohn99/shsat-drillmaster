@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, ArrowRight, BookOpen, Flag } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Flag, Printer } from "lucide-react";
 import { useQuestions } from "@/contexts/QuestionsContext";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
 import { ProvisionalBadge } from "@/components/question/ProvisionalBadge";
@@ -18,6 +18,8 @@ import { parseAtaAnswer, serializeAtaAnswer } from "@/lib/indyAta";
 import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
 import { HighlightableText } from "@/components/exam/HighlightableText";
 import { canSubmitQuestionAnswer, isQuestionAnswerCorrect } from "@/lib/sessionGrading";
+import { openWorksheetPrintTab } from "@/lib/worksheetPrint";
+import { toast } from "@/hooks/use-toast";
 
 export interface SessionQuestionRunnerProps {
   questions: Question[];
@@ -182,7 +184,7 @@ export function SessionQuestionRunner({
       <Header />
 
       <div className="container py-6">
-        <div className="flex items-center justify-between mb-6">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-4">
             <Button variant="ghost" onClick={onExit}>
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -197,6 +199,28 @@ export function SessionQuestionRunner({
           </div>
 
           <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                try {
+                  openWorksheetPrintTab({
+                    title: sessionTitle,
+                    questions,
+                    passages,
+                  });
+                } catch (err) {
+                  toast({
+                    title: "Could not open print view",
+                    description: err instanceof Error ? err.message : "Please try again.",
+                    variant: "destructive",
+                  });
+                }
+              }}
+            >
+              <Printer className="mr-2 h-4 w-4" />
+              Print / Save PDF
+            </Button>
             <Button
               variant="outline"
               onClick={() => toggleFlag(currentQuestion.id)}

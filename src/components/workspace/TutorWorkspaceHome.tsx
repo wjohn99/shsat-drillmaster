@@ -183,14 +183,14 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
                       <Link
                         to={`/workspace/${board.studentUid}`}
                         aria-label={`Open ${board.studentName}`}
-                        className="absolute inset-0 z-0 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        className="absolute inset-0 z-[1] rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       />
                       <div
-                        className="w-1.5 shrink-0 transition-shadow duration-300 group-hover:shadow-[8px_0_20px_-8px_var(--board-accent)]"
+                        className="pointer-events-none w-1.5 shrink-0 transition-shadow duration-300 group-hover:shadow-[8px_0_20px_-8px_var(--board-accent)]"
                         style={{ backgroundColor: accent, ["--board-accent" as string]: accent }}
                         aria-hidden
                       />
-                      <div className="flex min-w-0 flex-1 flex-col">
+                      <div className="pointer-events-none flex min-w-0 flex-1 flex-col">
                         <div
                           className="relative px-5 pb-4 pt-4"
                           style={{
@@ -213,7 +213,7 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
                                   type="button"
                                   variant="ghost"
                                   size="icon"
-                                  className="relative z-10 h-7 w-7 shrink-0 text-muted-foreground"
+                                  className="relative z-10 h-7 w-7 shrink-0 pointer-events-auto text-muted-foreground"
                                   title="Edit name and color"
                                   onClick={() => setEditingBoard(board)}
                                 >
@@ -232,7 +232,7 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
                           </div>
                         </div>
                         {readOnly ? null : (
-                        <div className="relative z-10 mt-auto border-t border-border/70 bg-background/50 px-5 py-3 transition-colors duration-300 group-hover:bg-background/75">
+                        <div className="mt-auto border-t border-border/70 bg-background/50 px-5 py-3 transition-colors duration-300 group-hover:bg-background/75">
                           <StudentQuickActions
                             studentUid={board.studentUid}
                             lastSession={lastSession}
@@ -242,6 +242,7 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
                             showOpenBoard={false}
                             showFirstDiagnostic={false}
                             returnTo={WORKSPACE_HOME_PATH}
+                            className="relative z-10 pointer-events-auto"
                           />
                         </div>
                         )}

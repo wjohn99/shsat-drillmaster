@@ -20,7 +20,7 @@ import {
   buildWorksheetTagCatalog,
   pickWorksheetQuestions,
 } from "@/lib/worksheetTagCatalog";
-import { openWorksheetPdfInNewTab } from "@/lib/worksheetPdfExport";
+import { openWorksheetPrintTab } from "@/lib/worksheetPrint";
 import {
   assignmentDueDateInputToTimestamp,
   assignmentRevealsAnswers,
@@ -381,6 +381,31 @@ const Worksheets = () => {
     startWorksheetRun(picked, getPassagesForQuestions(picked));
   };
 
+  const printAssignedWorksheet = (assignment: { title: string; questionIds: string[] }) => {
+    const picked = getQuestionsByIds(assignment.questionIds);
+    if (picked.length === 0) {
+      toast({
+        title: "Worksheet unavailable",
+        description: "None of the assigned questions could be loaded.",
+        variant: "destructive",
+      });
+      return;
+    }
+    try {
+      openWorksheetPrintTab({
+        title: assignment.title || "SHSAT practice worksheet",
+        questions: picked,
+        passages: getPassagesForQuestions(picked),
+      });
+    } catch (err) {
+      toast({
+        title: "Could not open print view",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   useEffect(() => {
     if (authLoading || !profile) return;
 
@@ -563,11 +588,26 @@ const Worksheets = () => {
   const exportWorksheetPdf = () => {
     const picked = pickCurrentQuestions();
     if (picked.length === 0) return;
-    const tagPart =
-      selectedTagLabels.length > 0 ? selectedTagLabels.join("; ") : "No tags";
-    openWorksheetPdfInNewTab(picked, passages, {
-      tagSummaryLine: `${new Date().toLocaleString()}, Tags: ${tagPart}`,
-    });
+    const skillLine =
+      selectedTagLabels.length === 0
+        ? undefined
+        : selectedTagLabels.length <= 8
+          ? `Skills: ${selectedTagLabels.join(", ")}`
+          : `Skills: ${selectedTagLabels.slice(0, 8).join(", ")}, +${selectedTagLabels.length - 8} more`;
+    try {
+      openWorksheetPrintTab({
+        title: "SHSAT practice worksheet",
+        subtitle: skillLine,
+        questions: picked,
+        passages,
+      });
+    } catch (err) {
+      toast({
+        title: "Could not open print view",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const worksheetCorrect = sessionEvents.filter((e) => e.correct).length;
@@ -894,6 +934,7 @@ const Worksheets = () => {
                 onAssignPreset={openTutorBuildFromPreset}
                 onPreviewPreset={previewPreset}
                 onReviewAssignment={handleReviewAssignment}
+                onPrintAssignment={printAssignedWorksheet}
                 onReviewSession={(session) =>
                   openReviewSession(session, "Student assignment attempt")
                 }
@@ -903,6 +944,7 @@ const Worksheets = () => {
                 assignmentsRefreshKey={assignmentsRefreshKey}
                 onStartAssignment={startAssignedWorksheet}
                 onReviewAssignment={handleReviewAssignment}
+                onPrintAssignment={printAssignedWorksheet}
                 onReviewSession={(session) => openReviewSession(session)}
                 onCreateCustomPractice={openStudentBuild}
               />

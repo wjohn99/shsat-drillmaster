@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, Check, FileDown, Loader2, Search, Send } from "lucide-react";
+import { ArrowRight, Check, Loader2, Printer, Search, Send } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -540,8 +540,8 @@ export function CustomWorksheetBuilder({
           <ArrowRight className="h-4 w-4 ml-2" />
         </Button>
         <Button type="button" variant="outline" onClick={onExportPdf} disabled={!canStart}>
-          <FileDown className="h-4 w-4 mr-2" />
-          Export PDF
+          <Printer className="h-4 w-4 mr-2" />
+          Print / Save PDF
         </Button>
         {selectedCodes.length > 0 && (
           <Button variant="outline" onClick={onClearTags}>

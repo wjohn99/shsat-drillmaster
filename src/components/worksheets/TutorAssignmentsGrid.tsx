@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { CheckCircle2, Circle, Eye, Loader2 } from "lucide-react";
+import { CheckCircle2, Circle, Eye, Loader2, Printer } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,12 +16,14 @@ import { WorksheetEmptyState } from "./WorksheetEmptyState";
 interface TutorAssignmentsGridProps {
   refreshKey?: number;
   onReviewAssignment: (assignment: TutorAssignmentRow) => void;
+  onPrintAssignment?: (assignment: TutorAssignmentRow) => void;
   onCreate?: () => void;
 }
 
 export function TutorAssignmentsGrid({
   refreshKey = 0,
   onReviewAssignment,
+  onPrintAssignment,
   onCreate,
 }: TutorAssignmentsGridProps) {
   const [assignments, setAssignments] = useState<TutorAssignmentRow[]>([]);
@@ -135,16 +137,29 @@ export function TutorAssignmentsGrid({
             {assignment.tagCodes.length > 0 &&
               ` · ${assignment.tagCodes.length} skill tag${assignment.tagCodes.length === 1 ? "" : "s"}`}
           </p>
-          {isCompleted ? (
-            <Button className="w-full" size="sm" onClick={() => onReviewAssignment(assignment)}>
-              <Eye className="h-4 w-4 mr-2" />
-              View last results
-            </Button>
-          ) : (
-            <p className="text-sm text-muted-foreground text-center py-1">
-              Waiting for the student to complete this worksheet.
-            </p>
-          )}
+          <div className="flex flex-col gap-2">
+            {isCompleted ? (
+              <Button className="w-full" size="sm" onClick={() => onReviewAssignment(assignment)}>
+                <Eye className="h-4 w-4 mr-2" />
+                View last results
+              </Button>
+            ) : (
+              <p className="text-sm text-muted-foreground text-center py-1">
+                Waiting for the student to complete this worksheet.
+              </p>
+            )}
+            {onPrintAssignment ? (
+              <Button
+                className="w-full"
+                size="sm"
+                variant="outline"
+                onClick={() => onPrintAssignment(assignment)}
+              >
+                <Printer className="h-4 w-4 mr-2" />
+                Print / Save PDF
+              </Button>
+            ) : null}
+          </div>
         </CardContent>
       </Card>
     );

@@ -18,6 +18,7 @@ interface TutorWorksheetsHomeProps {
   onAssignPreset: (preset: WorksheetPreset) => void;
   onPreviewPreset: (preset: WorksheetPreset) => void;
   onReviewAssignment: (assignment: TutorAssignmentRow) => void;
+  onPrintAssignment: (assignment: TutorAssignmentRow) => void;
   onReviewSession: (session: PracticeSessionRecord) => void;
 }
 
@@ -28,6 +29,7 @@ export function TutorWorksheetsHome({
   onAssignPreset,
   onPreviewPreset,
   onReviewAssignment,
+  onPrintAssignment,
   onReviewSession,
 }: TutorWorksheetsHomeProps) {
   const presetsRef = useRef<HTMLElement>(null);
@@ -101,6 +103,7 @@ export function TutorWorksheetsHome({
         <TutorAssignmentsGrid
           refreshKey={assignmentsRefreshKey}
           onReviewAssignment={onReviewAssignment}
+          onPrintAssignment={onPrintAssignment}
           onCreate={onCreateCustom}
         />
       </section>

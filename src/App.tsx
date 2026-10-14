@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import QuestionBank from "./pages/QuestionBank";
 import Worksheets from "./pages/Worksheets";
+import WorksheetPrint from "./pages/WorksheetPrint";
 import Practice from "./pages/Practice";
 import Question from "./pages/Question";
 import QuestionSet from "./pages/QuestionSet";
@@ -74,6 +75,14 @@ const App = () => (
               element={
                 <RequireAuth allowParent>
                   <Worksheets />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/worksheets/print"
+              element={
+                <RequireAuth>
+                  <WorksheetPrint />
                 </RequireAuth>
               }
             />

@@ -99,5 +99,29 @@ export function pickWorksheetQuestions(
   for (const q of matched) {
     if (!byId.has(q.id)) byId.set(q.id, q);
   }
-  return shuffleArray([...byId.values()]).slice(0, limit);
+  return clusterQuestionsByPassage(shuffleArray([...byId.values()]).slice(0, limit));
+}
+
+/** Keep every question that shares a passage together, in first-seen order. */
+export function clusterQuestionsByPassage(questions: Question[]): Question[] {
+  const byPassage = new Map<string, Question[]>();
+  for (const question of questions) {
+    if (!question.passageId) continue;
+    const group = byPassage.get(question.passageId) ?? [];
+    group.push(question);
+    byPassage.set(question.passageId, group);
+  }
+
+  const seenPassages = new Set<string>();
+  const clustered: Question[] = [];
+  for (const question of questions) {
+    if (!question.passageId) {
+      clustered.push(question);
+      continue;
+    }
+    if (seenPassages.has(question.passageId)) continue;
+    seenPassages.add(question.passageId);
+    clustered.push(...(byPassage.get(question.passageId) ?? [question]));
+  }
+  return clustered;
 }
