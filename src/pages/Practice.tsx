@@ -19,11 +19,12 @@ import type { PracticeSessionRecord } from "@/types/practiceSession";
 const Practice = () => {
   const { profile } = useAuth();
   const isTutor = profile?.role === "tutor";
+  const isDemo = profile?.role === "demo";
   const diagnostic = useMemo(() => assembleDiagnosticExam(), []);
   const [diagnosticSessions, setDiagnosticSessions] = useState<PracticeSessionRecord[]>([]);
-  const [diagnosticAssigned, setDiagnosticAssigned] = useState(isTutor);
+  const [diagnosticAssigned, setDiagnosticAssigned] = useState(isTutor || isDemo);
   const [diagnosticInProgress, setDiagnosticInProgress] = useState(false);
-  const [diagnosticAccessLoaded, setDiagnosticAccessLoaded] = useState(isTutor);
+  const [diagnosticAccessLoaded, setDiagnosticAccessLoaded] = useState(isTutor || isDemo);
 
   useEffect(() => {
     if (!profile) return;
@@ -42,7 +43,7 @@ const Practice = () => {
 
   useEffect(() => {
     if (!profile) return;
-    if (profile.role === "tutor") {
+    if (profile.role === "tutor" || profile.role === "demo") {
       setDiagnosticAssigned(true);
       setDiagnosticAccessLoaded(true);
       return;
@@ -63,7 +64,7 @@ const Practice = () => {
     };
   }, [profile]);
 
-  const canStartDiagnostic = isTutor || diagnosticAssigned;
+  const canStartDiagnostic = isTutor || isDemo || diagnosticAssigned;
 
   const practiceTypes = [
     {
@@ -110,7 +111,9 @@ const Practice = () => {
           description={
             isTutor
               ? "Start with a full SHSAT diagnostic, then drill weaker skills in shorter sessions."
-              : "The SHSAT diagnostic stays listed here. Your tutor assigns it before you can start. Skill practice below is open anytime."
+              : isDemo
+                ? "Open a skill set below, or build your own."
+                : "The SHSAT diagnostic stays listed here. Your tutor assigns it before you can start. Skill practice below is open anytime."
           }
           actions={
             isTutor ? (
@@ -123,6 +126,7 @@ const Practice = () => {
           }
         />
 
+        {isDemo ? null : (
         <Card className="mb-10">
           <CardHeader className="gap-6 md:flex-row md:items-start md:justify-between">
             <div className="max-w-2xl">
@@ -207,8 +211,16 @@ const Practice = () => {
             </div>
           </CardHeader>
         </Card>
+        )}
 
-        <h2 className="mb-4 font-serif text-xl font-semibold">Skill practice</h2>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <h2 className="font-serif text-xl font-semibold">Skill practice</h2>
+          {isDemo ? (
+            <Button asChild>
+              <Link to="/practice/custom">Build your own set</Link>
+            </Button>
+          ) : null}
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           {practiceTypes.map((type) => (
             <Card key={type.id} className="flex h-full flex-col">

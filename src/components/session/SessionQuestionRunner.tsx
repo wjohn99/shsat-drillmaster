@@ -35,6 +35,7 @@ export interface SessionQuestionRunnerProps {
   revealAnswers?: boolean;
   /** Optional passage list for assigned items that are not in the viewer catalog. */
   passageCatalog?: Passage[];
+  finishLabel?: string;
 }
 
 export function SessionQuestionRunner({
@@ -45,6 +46,7 @@ export function SessionQuestionRunner({
   storageKeyPrefix,
   revealAnswers = true,
   passageCatalog,
+  finishLabel = "Finish worksheet",
 }: SessionQuestionRunnerProps) {
   const { passages: catalogPassages } = useQuestions();
   const passages = passageCatalog ?? catalogPassages;
@@ -353,12 +355,12 @@ export function SessionQuestionRunner({
               >
                 {reviewingAnswer || answerLocked
                   ? currentQuestionIndex === questions.length - 1
-                    ? "Finish worksheet"
+                    ? finishLabel
                     : "Continue"
                   : revealAnswers
                     ? "Check answer"
                     : currentQuestionIndex === questions.length - 1
-                      ? "Finish worksheet"
+                      ? finishLabel
                       : "Next"}
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Button>

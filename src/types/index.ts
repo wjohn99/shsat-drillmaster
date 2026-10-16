@@ -221,8 +221,8 @@ export interface Question {
   module: QuestionModule;
   subtype: QuestionSubtype;
   /**
-   * `provisional` is tutor-only until a second reviewer marks it `final`.
-   * Legacy tracker items omit this and stay student-visible.
+   * `provisional` questions stay visible to students and demo accounts.
+   * Only tutors see the Provisional label. Legacy tracker items omit this.
    */
   reviewStatus?: ReviewStatus;
   stem: string;

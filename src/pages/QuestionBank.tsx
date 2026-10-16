@@ -108,14 +108,6 @@ const QuestionBank = () => {
                 </CardContent>
               </Card>
             )}
-
-            {filteredQuestions.length > 0 && filteredQuestions.length < questions.length && (
-              <div className="text-center mt-8">
-                <Button variant="outline">
-                  Load More Questions
-                </Button>
-              </div>
-            )}
           </div>
         </div>
       </div>

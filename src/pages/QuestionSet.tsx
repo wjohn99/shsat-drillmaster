@@ -1,63 +1,31 @@
-import { useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { 
-  ArrowLeft, 
-  ArrowRight, 
-  Clock, 
-  Flag, 
-  CheckCircle, 
-  XCircle,
-  RotateCcw,
-  BookOpen
-} from "lucide-react";
 import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
+import { SessionQuestionRunner } from "@/components/session/SessionQuestionRunner";
 import { useQuestions } from "@/contexts/QuestionsContext";
-import { Question, QuestionModule } from "@/types";
-import { ModuleBadge } from "@/components/question/ModuleBadge";
 import { isQuestionModule } from "@/lib/questionModule";
-import { isIndyCheckboxMultiSubtype, parseAtaAnswer, serializeAtaAnswer } from "@/lib/indyAta";
-import { parseDndPlacementsForQuestion, serializeDndPlacements } from "@/lib/indyDnd";
-import { DndBlock } from "@/components/question/DndBlock";
-import { EquationEditorBlock } from "@/components/question/EquationEditorBlock";
-import { CgtBlock } from "@/components/question/CgtBlock";
-import { WpBlock } from "@/components/question/WpBlock";
-import { InlineChoiceBlock } from "@/components/question/InlineChoiceBlock";
-import { HotSpotBlock } from "@/components/question/HotSpotBlock";
-import { GraphFigureBlock } from "@/components/question/GraphFigureBlock";
-import { parseIcSelectionsForQuestion, serializeIcSelections } from "@/lib/indyIc";
-import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
-import { HighlightableText } from "@/components/exam/HighlightableText";
+import type { QuestionModule } from "@/types";
 
 export default function QuestionSet() {
-  const { getFilteredQuestions, passages, loading } = useQuestions();
+  const { getFilteredQuestions, loading } = useQuestions();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  
-  // Get questions based on URL parameters
-  const filters = {
-    subjects: searchParams.get('subjects')?.split(',') || [],
-    modules: (searchParams.get('modules')?.split(',') || searchParams.get('difficulties')?.split(',') || [])
-      .map((value) => (value === 'hard' ? '2' : value === 'easy' || value === 'medium' ? '1' : value))
-      .filter((d): d is QuestionModule => isQuestionModule(d)),
-    tagCodes: searchParams.get('tagCodes')?.split(',') || []
-  };
-  
-  const questionSet = getFilteredQuestions(filters).slice(0, 20); // Limit to 20 questions per set
-  
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [flaggedQuestions, setFlaggedQuestions] = useState<Set<string>>(new Set());
-  const [timeElapsed, setTimeElapsed] = useState(0);
-  const [showResults, setShowResults] = useState(false);
+  const [done, setDone] = useState(false);
+
+  const questionSet = useMemo(() => {
+    const modules = (searchParams.get("modules")?.split(",") || searchParams.get("difficulties")?.split(",") || [])
+      .map((value) => (value === "hard" ? "2" : value === "easy" || value === "medium" ? "1" : value))
+      .filter((value): value is QuestionModule => isQuestionModule(value));
+    const countRaw = Number(searchParams.get("count") || "20");
+    const count = Number.isFinite(countRaw) && countRaw > 0 ? Math.floor(countRaw) : 20;
+    return getFilteredQuestions({
+      subjects: searchParams.get("subjects")?.split(",").filter(Boolean) || [],
+      modules,
+      tagCodes: searchParams.get("tagCodes")?.split(",").filter(Boolean) || [],
+    }).slice(0, count);
+  }, [getFilteredQuestions, searchParams]);
 
   if (loading) {
     return (
@@ -73,392 +41,42 @@ export default function QuestionSet() {
       <div className="min-h-screen">
         <Header />
         <div className="container py-8 text-center">
-          <h1 className="text-2xl font-bold mb-4">No Questions Found</h1>
+          <h1 className="text-2xl font-bold mb-4">No questions found</h1>
           <p className="text-muted-foreground mb-6">
-            Try adjusting your filters to find questions.
+            Try a different module or skill.
           </p>
-          <Button onClick={() => navigate('/question-bank')}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Question Bank
+          <Button onClick={() => navigate("/practice")}>Back to practice</Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (done) {
+    return (
+      <div className="min-h-screen">
+        <Header />
+        <div className="container max-w-lg py-16 text-center">
+          <h1 className="font-serif text-2xl font-semibold">Practice set complete</h1>
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+            Each question showed the answer, explanation, and common trap after you checked it.
+          </p>
+          <Button className="mt-6" asChild>
+            <Link to="/practice">Back to practice</Link>
           </Button>
         </div>
       </div>
     );
   }
 
-  const currentQuestion = questionSet[currentQuestionIndex];
-  const passage = currentQuestion.passageId
-    ? passages.find((p) => p.id === currentQuestion.passageId)
-    : null;
-  const showElaHighlighter = shouldShowElaHighlighter(currentQuestion);
-  const progress = ((currentQuestionIndex + 1) / questionSet.length) * 100;
-
-  const handleAnswerChange = (questionId: string, answer: string) => {
-    setAnswers(prev => ({ ...prev, [questionId]: answer }));
-  };
-
-  const toggleAtaAnswer = (questionId: string, choiceId: string) => {
-    const prev = parseAtaAnswer(answers[questionId]);
-    const next = prev.includes(choiceId)
-      ? prev.filter((id) => id !== choiceId)
-      : [...prev, choiceId];
-    handleAnswerChange(questionId, serializeAtaAnswer(next));
-  };
-
-  const toggleFlag = (questionId: string) => {
-    setFlaggedQuestions(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(questionId)) {
-        newSet.delete(questionId);
-      } else {
-        newSet.add(questionId);
-      }
-      return newSet;
-    });
-  };
-
-  const goToQuestion = (index: number) => {
-    setCurrentQuestionIndex(index);
-  };
-
-  const nextQuestion = () => {
-    if (currentQuestionIndex < questionSet.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    }
-  };
-
-  const prevQuestion = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-    }
-  };
-
-  const getQuestionStatus = (question: Question) => {
-    const isAnswered = answers[question.id];
-    const isFlagged = flaggedQuestions.has(question.id);
-    
-    if (isFlagged) return 'flagged';
-    if (isAnswered) return 'answered';
-    return 'unanswered';
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'answered': return 'bg-success text-white';
-      case 'flagged': return 'bg-warning text-white';
-      case 'current': return 'bg-primary text-white';
-      default: return 'bg-background border border-border text-foreground hover:bg-accent';
-    }
-  };
-
   return (
-    <div className="min-h-screen">
-      <Header />
-      
-      <div className="container py-6">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" onClick={() => navigate('/question-bank')}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Exit Practice
-            </Button>
-            <div>
-              <h1 className="text-2xl font-bold">Practice Set</h1>
-              <p className="text-muted-foreground">
-                Question {currentQuestionIndex + 1} of {questionSet.length}
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4" />
-              <span className="font-mono">15:32</span>
-            </div>
-            <Button
-              variant="outline"
-              onClick={() => toggleFlag(currentQuestion.id)}
-              className={flaggedQuestions.has(currentQuestion.id) ? 'bg-warning text-white' : ''}
-            >
-              <Flag className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-
-        {/* Progress */}
-        <div className="mb-6">
-          <div className="flex justify-between text-sm text-muted-foreground mb-2">
-            <span>Progress</span>
-            <span>{Math.round(progress)}% Complete</span>
-          </div>
-          <Progress value={progress} className="h-2" />
-        </div>
-
-        <div className="grid lg:grid-cols-4 gap-6">
-          {/* Question Content */}
-          <div className="lg:col-span-3">
-            <Card>
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <Badge variant={currentQuestion.subject === 'MATH' ? 'default' : 'secondary'}>
-                      {currentQuestion.subject}
-                    </Badge>
-                    <ModuleBadge module={currentQuestion.module} />
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    Question #{currentQuestionIndex + 1}
-                  </div>
-                </div>
-              </CardHeader>
-              
-              <CardContent className="space-y-6">
-                {passage && showElaHighlighter && (
-                  <Card className="border-dashed bg-muted/20">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="flex items-center gap-2 text-base">
-                        <BookOpen className="h-4 w-4" />
-                        {passage.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                      <HighlightableText
-                        text={passage.body}
-                        storageKey={`passage-${passage.id}`}
-                        variant="passage"
-                      />
-                    </CardContent>
-                  </Card>
-                )}
-                {passage && !showElaHighlighter && (
-                  <Card className="border-dashed bg-muted/20">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="flex items-center gap-2 text-base">
-                        <BookOpen className="h-4 w-4" />
-                        {passage.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0 prose prose-sm max-w-none">
-                      {passage.body.split("\n\n").map((para, i) => (
-                        <p key={i} className="mb-4 last:mb-0 leading-relaxed whitespace-pre-wrap">
-                          {para}
-                        </p>
-                      ))}
-                    </CardContent>
-                  </Card>
-                )}
-                {/* Question stem */}
-                {showElaHighlighter && currentQuestion.subtype !== "INDY-IC" ? (
-                  <div className="prose prose-sm max-w-none">
-                    <HighlightableText
-                      text={currentQuestion.stem}
-                      storageKey={`stem-${currentQuestion.id}`}
-                      variant="stem"
-                    />
-                  </div>
-                ) : (
-                  <div className="prose prose-sm max-w-none">
-                    <p className="text-base leading-relaxed whitespace-pre-wrap">{currentQuestion.stem}</p>
-                  </div>
-                )}
-
-                {currentQuestion.cgt && (
-                  <CgtBlock spec={currentQuestion.cgt} />
-                )}
-
-                {currentQuestion.subtype === 'INDY-WP' && (
-                  <WpBlock spec={currentQuestion.wp ?? {}} />
-                )}
-
-                {currentQuestion.subtype === 'INDY-HS' && currentQuestion.hs && (
-                  <HotSpotBlock
-                    spec={currentQuestion.hs}
-                    selectedId={answers[currentQuestion.id] || null}
-                    onSelect={(id) => handleAnswerChange(currentQuestion.id, id)}
-                  />
-                )}
-
-                {currentQuestion.subtype === 'INDY-GIF' &&
-                  currentQuestion.gif?.mode === "plotPoint" && (
-                    <GraphFigureBlock
-                      spec={currentQuestion.gif}
-                      value={answers[currentQuestion.id] || null}
-                      onChange={(s) => handleAnswerChange(currentQuestion.id, s)}
-                    />
-                  )}
-
-                {/* INDY-ATA / INDY-MS */}
-                {isIndyCheckboxMultiSubtype(currentQuestion.subtype) && currentQuestion.choices && (
-                  <div className="space-y-3">
-                    <p className="text-sm text-muted-foreground">
-                      {currentQuestion.subtype === "INDY-MS"
-                        ? "Select all answers that apply."
-                        : "Select all that apply."}
-                    </p>
-                    {currentQuestion.choices.map((choice) => {
-                      const selected = parseAtaAnswer(answers[currentQuestion.id]);
-                      return (
-                        <div key={choice.id} className="flex items-start space-x-3">
-                          <Checkbox
-                            id={`${currentQuestion.id}-${choice.id}`}
-                            checked={selected.includes(choice.id)}
-                            onCheckedChange={() => toggleAtaAnswer(currentQuestion.id, choice.id)}
-                            className="mt-1"
-                          />
-                          <Label
-                            htmlFor={`${currentQuestion.id}-${choice.id}`}
-                            className="flex-1 cursor-pointer text-sm leading-relaxed"
-                          >
-                            <span className="font-medium mr-2">{choice.label}.</span>
-                            {choice.text}
-                          </Label>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-
-                {/* INDY-DND */}
-                {currentQuestion.subtype === 'INDY-DND' && currentQuestion.dnd && (
-                  <DndBlock
-                    spec={currentQuestion.dnd}
-                    placements={parseDndPlacementsForQuestion(
-                      currentQuestion.dnd,
-                      answers[currentQuestion.id]
-                    )}
-                    onChange={(next) =>
-                      handleAnswerChange(currentQuestion.id, serializeDndPlacements(next))
-                    }
-                  />
-                )}
-
-                {/* Single-select MCQ */}
-                {currentQuestion.choices && !isIndyCheckboxMultiSubtype(currentQuestion.subtype) && currentQuestion.subtype !== 'INDY-DND' && currentQuestion.subtype !== 'INDY-EE' && currentQuestion.subtype !== 'INDY-IC' && currentQuestion.subtype !== 'INDY-HS' && currentQuestion.subtype !== 'INDY-GIF' && (
-                  <div className="space-y-3">
-                    <RadioGroup 
-                      value={answers[currentQuestion.id] || ""} 
-                      onValueChange={(value) => handleAnswerChange(currentQuestion.id, value)}
-                    >
-                      {currentQuestion.choices.map((choice) => (
-                        <div key={choice.id} className="flex items-start space-x-3">
-                          <RadioGroupItem value={choice.id} id={choice.id} className="mt-1" />
-                          <Label 
-                            htmlFor={choice.id} 
-                            className="flex-1 cursor-pointer text-sm leading-relaxed"
-                          >
-                            <span className="font-medium mr-2">{choice.label}.</span>
-                            {choice.text}
-                          </Label>
-                        </div>
-                      ))}
-                    </RadioGroup>
-                  </div>
-                )}
-
-                {/* Grid-in answer */}
-                {currentQuestion.subtype === 'GRID_IN' && (
-                  <div className="space-y-3">
-                    <Label htmlFor="grid-answer">Enter your answer:</Label>
-                    <Input
-                      id="grid-answer"
-                      value={answers[currentQuestion.id] || ""}
-                      onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
-                      placeholder="Enter fraction or decimal"
-                      className="max-w-md"
-                    />
-                  </div>
-                )}
-
-                {currentQuestion.subtype === 'INDY-EE' && currentQuestion.ee && (
-                  <EquationEditorBlock
-                    key={currentQuestion.id}
-                    spec={currentQuestion.ee}
-                    value={answers[currentQuestion.id] || ""}
-                    onChange={(v) => handleAnswerChange(currentQuestion.id, v)}
-                  />
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Navigation */}
-            <div className="flex justify-between mt-6">
-              <Button 
-                variant="outline" 
-                onClick={prevQuestion}
-                disabled={currentQuestionIndex === 0}
-              >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Previous
-              </Button>
-              
-              <Button 
-                onClick={nextQuestion}
-                disabled={currentQuestionIndex === questionSet.length - 1}
-              >
-                Next
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
-            </div>
-          </div>
-
-          {/* Question Navigator */}
-          <div className="lg:col-span-1">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Question Navigator</CardTitle>
-                <div className="flex items-center gap-4 text-xs">
-                  <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded bg-success"></div>
-                    <span>Answered</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded bg-warning"></div>
-                    <span>Flagged</span>
-                  </div>
-                </div>
-              </CardHeader>
-              
-              <CardContent>
-                <div className="grid grid-cols-5 gap-2">
-                  {questionSet.map((question, index) => {
-                    const status = index === currentQuestionIndex ? 'current' : getQuestionStatus(question);
-                    return (
-                      <button
-                        key={question.id}
-                        onClick={() => goToQuestion(index)}
-                        className={`
-                          h-8 w-8 rounded text-xs font-medium transition-all
-                          ${getStatusColor(status)}
-                        `}
-                      >
-                        {index + 1}
-                      </button>
-                    );
-                  })}
-                </div>
-                
-                <div className="mt-6 space-y-3">
-                  <div className="text-sm">
-                    <div className="flex justify-between">
-                      <span>Answered:</span>
-                      <span>{Object.keys(answers).length}/{questionSet.length}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Flagged:</span>
-                      <span>{flaggedQuestions.size}</span>
-                    </div>
-                  </div>
-                  
-                  <Button className="w-full" size="sm">
-                    Submit Practice Set
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </div>
-    </div>
+    <SessionQuestionRunner
+      questions={questionSet}
+      sessionTitle="Practice set"
+      storageKeyPrefix="practice-set"
+      revealAnswers
+      finishLabel="Finish practice set"
+      onExit={() => navigate("/practice")}
+      onComplete={() => setDone(true)}
+    />
   );
 }

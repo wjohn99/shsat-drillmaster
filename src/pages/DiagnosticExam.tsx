@@ -93,8 +93,9 @@ export default function DiagnosticExam() {
     progress?.firstSection ?? "ELA",
   );
   const [assignedExtendedTime, setAssignedExtendedTime] = useState(false);
-  const [diagnosticAssigned, setDiagnosticAssigned] = useState(profile?.role === "tutor");
-  const [assignmentLoaded, setAssignmentLoaded] = useState(profile?.role === "tutor");
+  const diagnosticReady = profile?.role === "tutor" || profile?.role === "demo";
+  const [diagnosticAssigned, setDiagnosticAssigned] = useState(diagnosticReady);
+  const [assignmentLoaded, setAssignmentLoaded] = useState(diagnosticReady);
   const [deadlineAt, setDeadlineAt] = useState(
     resumeLiveExam && initialSave ? initialSave.deadlineAt : 0,
   );
@@ -183,7 +184,7 @@ export default function DiagnosticExam() {
   useEffect(() => {
     if (!profile) return;
     let cancelled = false;
-    if (profile.role === "tutor") {
+    if (profile.role === "tutor" || profile.role === "demo") {
       setDiagnosticAssigned(true);
       setAssignmentLoaded(true);
     } else {
@@ -193,17 +194,19 @@ export default function DiagnosticExam() {
       .then((board) => {
         if (cancelled) return;
         setAssignedExtendedTime(Boolean(board?.diagnosticExtendedTime));
-        if (profile.role !== "tutor") {
+        if (profile.role !== "tutor" && profile.role !== "demo") {
           setDiagnosticAssigned(Boolean(board?.diagnosticAssigned));
         }
       })
       .catch(() => {
         if (cancelled) return;
         setAssignedExtendedTime(false);
-        if (profile.role !== "tutor") setDiagnosticAssigned(false);
+        if (profile.role !== "tutor" && profile.role !== "demo") setDiagnosticAssigned(false);
       })
       .finally(() => {
-        if (!cancelled && profile.role !== "tutor") setAssignmentLoaded(true);
+        if (!cancelled && profile.role !== "tutor" && profile.role !== "demo") {
+          setAssignmentLoaded(true);
+        }
       });
     return () => {
       cancelled = true;

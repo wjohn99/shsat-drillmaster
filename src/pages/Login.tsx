@@ -8,12 +8,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { normalizeEmail } from "@/lib/authService";
 import { cn } from "@/lib/utils";
 
-type SignInAudience = "student" | "parent" | "tutor";
+type SignInAudience = "student" | "parent" | "tutor" | "demo";
 
 const SIGN_IN_OPTIONS = [
   { id: "student", label: "Student" },
   { id: "parent", label: "Parent" },
   { id: "tutor", label: "Tutor" },
+  { id: "demo", label: "Demo" },
 ] as const;
 
 function isEmail(value: string): boolean {
@@ -46,6 +47,8 @@ export default function Login() {
       try {
         if (audience === "tutor") {
           await signInWithGoogle({ tutor: true });
+        } else if (audience === "demo") {
+          await signInWithGoogle({ demo: true });
         } else if (audience === "parent" && studentEmailReady) {
           await signInWithGoogle({
             studentEmail: normalizeEmail(studentEmail),
@@ -87,22 +90,23 @@ export default function Login() {
           </p>
           <h2 className="mt-3 font-serif text-2xl font-semibold tracking-tight">Sign in</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Choose Student, Parent, or Tutor, then continue with Google.
+            Choose Student, Parent, Tutor, or Demo, then continue with Google.
           </p>
 
           <div
             role="radiogroup"
             aria-label="Sign in as"
-            className="relative mt-6 grid grid-cols-3 rounded-full bg-foreground/[0.06] p-1 shadow-[inset_0_1px_2px_hsl(220_40%_16%/0.08)]"
+            className="relative mt-6 grid grid-cols-4 rounded-full bg-foreground/[0.06] p-1 shadow-[inset_0_1px_2px_hsl(220_40%_16%/0.08)]"
           >
             <span
               aria-hidden
               className={cn(
-                "pointer-events-none absolute bottom-1 left-1 top-1 w-[calc((100%-8px)/3)] rounded-full",
+                "pointer-events-none absolute bottom-1 left-1 top-1 w-[calc((100%-8px)/4)] rounded-full",
                 "border border-white/80 bg-white/80 shadow-[0_6px_16px_-8px_hsl(220_40%_16%/0.45),inset_0_1px_0_hsl(0_0%_100%/0.95)]",
                 "backdrop-blur-xl transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none",
                 audience === "parent" && "translate-x-full",
                 audience === "tutor" && "translate-x-[200%]",
+                audience === "demo" && "translate-x-[300%]",
               )}
             />
             {SIGN_IN_OPTIONS.map((option) => {
@@ -114,7 +118,7 @@ export default function Login() {
                   role="radio"
                   aria-checked={selected}
                   className={cn(
-                    "relative z-10 h-9 rounded-full text-sm font-medium transition-colors duration-300",
+                    "relative z-10 h-9 rounded-full text-[13px] font-medium transition-colors duration-300",
                     selected ? "text-foreground" : "text-muted-foreground hover:text-foreground",
                   )}
                   onClick={() => {
@@ -153,6 +157,10 @@ export default function Login() {
             ) : audience === "tutor" ? (
               <p className="text-sm text-muted-foreground">
                 Sign in with your Google account. This opens only when that email is on the tutor list.
+              </p>
+            ) : audience === "demo" ? (
+              <p className="text-sm text-muted-foreground">
+                Sign in with Google to create a demo account.
               </p>
             ) : (
               <div className="space-y-3">

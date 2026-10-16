@@ -5,7 +5,7 @@ export function roleCanStartDiagnostic(
   role: string | undefined,
   diagnosticAssigned: boolean,
 ): boolean {
-  return role === "tutor" || diagnosticAssigned;
+  return role === "tutor" || role === "demo" || diagnosticAssigned;
 }
 
 export function isPermissionDenied(err: unknown): boolean {

@@ -13,6 +13,7 @@ import { isFirebaseConfigured } from "@/lib/firebase";
 import {
   authErrorMessage,
   completeGoogleRedirect,
+  markDemoWelcomePending,
   signInWithGoogle as authSignInWithGoogle,
   signOut as authSignOut,
   subscribeToAuthState,
@@ -98,6 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setError(null);
     try {
       const userProfile = await authSignInWithGoogle(intent);
+      if (userProfile.role === "demo") markDemoWelcomePending();
       setProfile(userProfile);
     } catch (err) {
       setError(authErrorMessage(err));

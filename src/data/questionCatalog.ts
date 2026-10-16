@@ -8,7 +8,7 @@
  *    reserved for `/practice/diagnostic`, except tutors can review batch revisions.
  * 4. **Legacy (not loaded):** `mockData.ts`, `converted_questions.json`.
  *
- * Provisional batch items are tutor-only. Students only see final / untagged tracker items.
+ * Provisional batch items stay in the student and demo banks. Only the Provisional label is tutor-only.
  */
 import type { Form, Passage, Question } from "@/types";
 import type { UserRole } from "@/types/auth";

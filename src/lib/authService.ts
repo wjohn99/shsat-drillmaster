@@ -68,14 +68,31 @@ export interface ParentSignInIntent {
   studentEmail?: string;
   returning?: boolean;
   tutor?: boolean;
+  demo?: boolean;
+}
+
+const DEMO_WELCOME_KEY = "drillmaster.demoWelcome";
+
+export function markDemoWelcomePending(): void {
+  sessionStorage.setItem(DEMO_WELCOME_KEY, "pending");
+}
+
+export function isDemoWelcomePending(): boolean {
+  return sessionStorage.getItem(DEMO_WELCOME_KEY) === "pending";
+}
+
+export function dismissDemoWelcome(): void {
+  sessionStorage.setItem(DEMO_WELCOME_KEY, "seen");
 }
 
 export function stageParentSignIn(intent: ParentSignInIntent): void {
   const stored = intent.tutor
     ? { tutor: true }
-    : intent.studentEmail
-      ? { studentEmail: normalizeEmail(intent.studentEmail) }
-      : { returning: true };
+    : intent.demo
+      ? { demo: true }
+      : intent.studentEmail
+        ? { studentEmail: normalizeEmail(intent.studentEmail) }
+        : { returning: true };
   sessionStorage.setItem(PARENT_SIGN_IN_KEY, JSON.stringify(stored));
 }
 
@@ -89,6 +106,7 @@ function readParentIntent(): ParentSignInIntent | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<ParentSignInIntent>;
     if (parsed.tutor) return { tutor: true };
+    if (parsed.demo) return { demo: true };
     if (parsed.returning && !parsed.studentEmail) return { returning: true };
     if (!parsed.studentEmail) return null;
     return {
@@ -157,6 +175,24 @@ async function writeUserProfile(firebaseUser: User): Promise<AppUserProfile> {
       throw new Error("This Google account is not on the tutor list. No account was created.");
     }
     role = "tutor";
+  } else if (intent?.demo) {
+    if (existingRole === "demo") {
+      role = "demo";
+    } else if (existingRole) {
+      clearStagedParentSignIn();
+      await discardParentSignIn(firebaseUser, true);
+      throw new Error(
+        "This Google account already has an account. Sign in as a student, parent, or tutor. No demo account was created.",
+      );
+    } else if (whitelisted) {
+      clearStagedParentSignIn();
+      await discardParentSignIn(firebaseUser, false);
+      throw new Error(
+        "This Google account is on the tutor list. Sign in as a tutor. No demo account was created.",
+      );
+    } else {
+      role = "demo";
+    }
   } else if (whitelisted) {
     clearStagedParentSignIn();
     role = "tutor";
@@ -205,6 +241,8 @@ async function writeUserProfile(firebaseUser: User): Promise<AppUserProfile> {
     return parseUserProfile(linked);
   } else if (existingRole === "parent") {
     role = "parent";
+  } else if (existingRole === "demo") {
+    role = "demo";
   } else {
     role = "student";
   }
@@ -219,6 +257,7 @@ async function writeUserProfile(firebaseUser: User): Promise<AppUserProfile> {
     ...(existing.exists() ? {} : { createdAt: serverTimestamp() }),
   };
 
+  clearStagedParentSignIn();
   await setDoc(userRef, profileData, { merge: true });
 
   const updated = await getDoc(userRef);

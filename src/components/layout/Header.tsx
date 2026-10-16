@@ -11,6 +11,7 @@ import {
 import { LogOut, User, Menu } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { AuthLink } from "@/components/auth/AuthLink";
+import { DemoWelcomeDialog } from "@/components/auth/DemoWelcomeDialog";
 import { useAuth } from "@/contexts/AuthContext";
 import { useExamLock } from "@/contexts/ExamLockContext";
 import type { UserRole } from "@/types/auth";
@@ -21,6 +22,7 @@ const roleLabels: Record<UserRole, string> = {
   tutor: "Tutor",
   student: "Student",
   parent: "Parent",
+  demo: "Demo",
 };
 
 type NavItem = {
@@ -49,7 +51,36 @@ export const Header = () => {
   const workspacePath =
     profile?.role === "student" && profile.uid ? `/workspace/${profile.uid}` : "/workspace";
 
-  const navItems: NavItem[] = profile?.role === "parent"
+  const practiceActive =
+    location.pathname === "/practice" ||
+    location.pathname.startsWith("/practice-set") ||
+    (location.pathname.startsWith("/practice/") &&
+      !location.pathname.startsWith("/practice/diagnostic"));
+
+  const navItems: NavItem[] = profile?.role === "demo"
+    ? [
+        {
+          to: "/question-bank",
+          label: "Question Bank",
+          shortLabel: "Bank",
+          active:
+            location.pathname.startsWith("/question-bank") ||
+            location.pathname.startsWith("/question/"),
+        },
+        {
+          to: "/practice",
+          label: "Practice",
+          shortLabel: "Practice",
+          active: practiceActive,
+        },
+        {
+          to: "/practice/diagnostic",
+          label: "Diagnostic",
+          shortLabel: "Diagnostic",
+          active: location.pathname.startsWith("/practice/diagnostic"),
+        },
+      ]
+    : profile?.role === "parent"
     ? [
         {
           to: "/dashboard",
@@ -119,6 +150,8 @@ export const Header = () => {
     );
 
   return (
+    <>
+    {profile?.role === "demo" ? <DemoWelcomeDialog /> : null}
     <header className={cn(locked ? "relative z-50 shrink-0" : "sticky top-0 z-50")}>
       <div className="container px-4 pt-3 pb-2">
         <div className="glass-chrome flex h-14 items-stretch justify-between rounded-[1.35rem] border border-foreground/20 bg-white/95 px-3 text-primary">
@@ -269,5 +302,6 @@ export const Header = () => {
         </div>
       </div>
     </header>
+    </>
   );
 };

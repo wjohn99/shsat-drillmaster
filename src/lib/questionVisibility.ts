@@ -20,15 +20,14 @@ export function isDiagnosticHoldbackQuestion(question: Question): boolean {
 
 /**
  * Practice, Bank, Worksheets, and Blitz visibility.
- * Provisional items are tutor-only. Diagnostic holdbacks stay out of student
- * practice; tutors can still open batch revisions of those IDs for review.
+ * Provisional items stay in the bank for every role. Diagnostic holdbacks stay
+ * out of student and demo practice; tutors can still open batch revisions of those IDs.
  */
 export function isQuestionVisibleToViewer(
   question: Question,
   role?: UserRole | null,
 ): boolean {
   const tutor = role === "tutor";
-  if (isProvisionalQuestion(question) && !tutor) return false;
   if (isDiagnosticHoldbackQuestion(question)) {
     return tutor && isProvisionalQuestion(question);
   }

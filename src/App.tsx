@@ -34,11 +34,17 @@ const queryClient = new QueryClient();
 function RequireAuth({
   children,
   allowParent = false,
+  blockDemo = false,
 }: {
   children: React.ReactNode;
   allowParent?: boolean;
+  blockDemo?: boolean;
 }) {
-  return <ProtectedRoute allowParent={allowParent}>{children}</ProtectedRoute>;
+  return (
+    <ProtectedRoute allowParent={allowParent} blockDemo={blockDemo}>
+      {children}
+    </ProtectedRoute>
+  );
 }
 
 const App = () => (
@@ -73,7 +79,7 @@ const App = () => (
             <Route
               path="/worksheets"
               element={
-                <RequireAuth allowParent>
+                <RequireAuth allowParent blockDemo>
                   <Worksheets />
                 </RequireAuth>
               }
@@ -81,7 +87,7 @@ const App = () => (
             <Route
               path="/worksheets/print"
               element={
-                <RequireAuth>
+                <RequireAuth blockDemo>
                   <WorksheetPrint />
                 </RequireAuth>
               }
@@ -169,7 +175,7 @@ const App = () => (
             <Route
               path="/workspace"
               element={
-                <RequireAuth allowParent>
+                <RequireAuth allowParent blockDemo>
                   <Workspace />
                 </RequireAuth>
               }
@@ -177,7 +183,7 @@ const App = () => (
             <Route
               path="/workspace/:boardId"
               element={
-                <RequireAuth allowParent>
+                <RequireAuth allowParent blockDemo>
                   <Workspace />
                 </RequireAuth>
               }

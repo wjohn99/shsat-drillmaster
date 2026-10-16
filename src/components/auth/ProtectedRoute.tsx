@@ -6,9 +6,15 @@ interface ProtectedRouteProps {
   children: React.ReactNode;
   /** Dashboard is the only signed-in page a parent can open. */
   allowParent?: boolean;
+  /** Workspace, worksheets, and similar tools stay off demo accounts. */
+  blockDemo?: boolean;
 }
 
-export function ProtectedRoute({ children, allowParent = false }: ProtectedRouteProps) {
+export function ProtectedRoute({
+  children,
+  allowParent = false,
+  blockDemo = false,
+}: ProtectedRouteProps) {
   const { profile, loading, isConfigured } = useAuth();
   const location = useLocation();
 
@@ -32,6 +38,10 @@ export function ProtectedRoute({ children, allowParent = false }: ProtectedRoute
   }
 
   if (!allowParent && profile.role === "parent") {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  if (blockDemo && profile.role === "demo") {
     return <Navigate to="/dashboard" replace />;
   }
 

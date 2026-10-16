@@ -1,6 +1,7 @@
 import { TutorDashboard } from "./TutorDashboard";
 import { StudentDashboard } from "./StudentDashboard";
 import { ParentDashboard } from "./ParentDashboard";
+import { DemoDashboard } from "./DemoDashboard";
 import { useAuth } from "@/contexts/AuthContext";
 
 export function DashboardRouter() {
@@ -16,6 +17,10 @@ export function DashboardRouter() {
 
   if (profile.role === "parent") {
     return <ParentDashboard />;
+  }
+
+  if (profile.role === "demo") {
+    return <DemoDashboard />;
   }
 
   return <StudentDashboard />;

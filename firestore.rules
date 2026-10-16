@@ -31,7 +31,7 @@ service cloud.firestore {
       let data = request.resource.data;
       return data.uid == userId
         && data.email == request.auth.token.email
-        && data.role in ['student', 'tutor', 'parent']
+        && data.role in ['student', 'tutor', 'parent', 'demo']
         && roleMatchesWhitelist(data.role, data.email);
     }
 
@@ -51,6 +51,12 @@ service cloud.firestore {
       return isSignedIn()
         && exists(/databases/$(database)/documents/users/$(request.auth.uid))
         && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'tutor';
+    }
+
+    function isDemo() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'demo';
     }
 
     function isStudentAccountForEmail(studentUid, studentEmail) {
@@ -73,7 +79,7 @@ service cloud.firestore {
     }
 
     function canStartDiagnostic() {
-      return isTutor() || diagnosticAssignedToSignedInUser();
+      return isTutor() || isDemo() || diagnosticAssignedToSignedInUser();
     }
 
     function sessionReaderUidsOk() {
@@ -116,7 +122,11 @@ service cloud.firestore {
       allow update: if isOwner(userId)
         && isValidUserWrite(userId)
         && request.resource.data.uid == resource.data.uid
-        && request.resource.data.createdAt == resource.data.createdAt;
+        && request.resource.data.createdAt == resource.data.createdAt
+        && (
+          request.resource.data.role == resource.data.role
+          || (resource.data.role != 'demo' && request.resource.data.role != 'demo')
+        );
 
       match /bookmarks/{questionId} {
         allow read, write: if isOwner(userId);
