@@ -1,0 +1,1010 @@
+{
+  "track": "bank",
+  "description": "Math practice-bank revisions from the 2026-10-17 content audit: feedback fixes, two Grade 8 scope rewrites (MATH-ALG-006, MATH-GEO-001), the GEO-108 area route, ALG-SYS retags and the DAT-003/DAT-107 near-duplicate variant. Bank track only; diagnostic copies are separate.",
+  "questions": [
+    {
+      "id": "MATH-ALG-002",
+      "subject": "MATH",
+      "subtype": "MC4_A-D",
+      "module": "1",
+      "stem": "Which of the following equations has the same solution as the equation 8x − 4 = 52?",
+      "choices": [
+        {
+          "id": "MATH-ALG-002-v2-a",
+          "label": "A",
+          "text": "8x + 4 = 56",
+          "isCorrect": false,
+          "explanation": "This comes from adding 4 to both sides but writing the left side as 8x + 4 instead of 8x. Its solution is 8x = 52, so x = 6.5, not 7."
+        },
+        {
+          "id": "MATH-ALG-002-v2-b",
+          "label": "B",
+          "text": "2x − 1 = 13",
+          "isCorrect": true,
+          "explanation": "Correct. Dividing every term of 8x − 4 = 52 by 4 gives 2x − 1 = 13. Its solution is 2x = 14, so x = 7, the same as the original equation."
+        },
+        {
+          "id": "MATH-ALG-002-v2-c",
+          "label": "C",
+          "text": "x/2 = 3",
+          "isCorrect": false,
+          "explanation": "This matches subtracting 4 from 52 instead of adding it: 8x = 48, so x = 6. The solution of x/2 = 3 is 6, not 7."
+        },
+        {
+          "id": "MATH-ALG-002-v2-d",
+          "label": "D",
+          "text": "2x − 4 = 13",
+          "isCorrect": false,
+          "explanation": "This divides 8x and 52 by 4 but leaves the −4 unchanged. Its solution is 2x = 17, so x = 8.5, not 7. Every term on both sides must be divided by 4."
+        }
+      ],
+      "tags": [
+        "ALG-EXP"
+      ],
+      "timeToSolve": 120,
+      "createdAt": "2026-06-26T12:06:00Z",
+      "solutionExplanation": "First solve the given equation. Add 4 to both sides: 8x = 56. Divide both sides by 8: x = 7. Then find the choice whose solution is also 7. Dividing every term of 8x − 4 = 52 by 4 gives 2x − 1 = 13, which is choice B. Check: 2 × 7 − 1 = 14 − 1 = 13.",
+      "commonTrap": "Students divide 8x and 52 by 4 but forget to divide the −4 as well, which gives 2x − 4 = 13 (choice D). Dividing an equation by a number means dividing every term on both sides.",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "MATH:bank:MATH-ALG-002:1",
+        "MATH:bank:MATH-ALG-002:2"
+      ],
+      "revisionNotes": "Added solutionExplanation, commonTrap and per-choice explanations (the tracker version had none). Stem gets a question mark and consistent math spacing with a true minus sign. Old choice D (2x-3=10) solved to 6.5, the same as choice A, so it duplicated an error; replaced with 2x − 4 = 13 (x = 8.5), the divide-only-some-terms error. All four choice texts changed (spacing and minus signs, plus the new D), so all four get -v2 IDs. Key stays B (x = 7). Choice solutions are now 6.5, 7, 6, 8.5, all distinct.",
+      "reviewStatus": "provisional"
+    },
+    {
+      "id": "MATH-ALG-004",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "ALG-LIN",
+        "APP-FIN"
+      ],
+      "stem": "A school store sells two types of notebooks: wide-ruled for $1.20 each and college-ruled for $1.80 each. On Tuesday, the store sold 40 notebooks for a total of $57.00. How many wide-ruled notebooks were sold?",
+      "choices": [
+        {
+          "id": "MATH-ALG-004-a",
+          "label": "A",
+          "text": "15",
+          "isCorrect": false,
+          "explanation": "This is the number of college-ruled notebooks. It answers for the wrong type."
+        },
+        {
+          "id": "MATH-ALG-004-b",
+          "label": "B",
+          "text": "19",
+          "isCorrect": false,
+          "explanation": "This comes from using one variable for both types: 1.20w + 1.80w = 57, so 3w = 57 and w = 19."
+        },
+        {
+          "id": "MATH-ALG-004-c",
+          "label": "C",
+          "text": "20",
+          "isCorrect": false,
+          "explanation": "This assumes the 40 notebooks were split evenly, without using the total cost."
+        },
+        {
+          "id": "MATH-ALG-004-d",
+          "label": "D",
+          "text": "25",
+          "isCorrect": true,
+          "explanation": "Correct. 1.20w + 1.80(40 − w) = 57 gives w = 25. Check: 25($1.20) + 15($1.80) = $30.00 + $27.00 = $57.00."
+        }
+      ],
+      "solutionExplanation": "Let w be the number of wide-ruled notebooks. Then 40 − w notebooks were college-ruled. The total cost gives 1.20w + 1.80(40 − w) = 57. Distributing: 1.20w + 72 − 1.80w = 57, so −0.60w = −15 and w = 25.",
+      "commonTrap": "Students who solve correctly but answer for the wrong variable choose 15, the number of college-ruled notebooks. Check which quantity the question asks for.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "trackerReviewer": "BA",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Tags only: ALG-SYS changed to ALG-LIN (primary) and APP-FIN. The required method is one variable (1.20w + 1.80(40 − w) = 57), which the existing solution already uses, or plain arithmetic; no systems prerequisite. Key D = 25 unchanged (the diagnostic copy keeps its own key, 20).",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "metadata",
+      "auditFindings": [
+        "PROMPT:retag-alg-sys"
+      ]
+    },
+    {
+      "id": "MATH-ALG-006",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "ALG-LIN",
+        "APP-FIN"
+      ],
+      "stem": "Lena and Omar worked a total of 15 hours last week. Lena worked 3 more hours than Omar. Omar earns $12 per hour. How much did Omar earn last week?",
+      "choices": [
+        {
+          "id": "MATH-ALG-006-v2-a",
+          "label": "A",
+          "text": "$72",
+          "isCorrect": true,
+          "explanation": "Correct. If Omar worked h hours, then h + (h + 3) = 15, so 2h = 12 and h = 6. Omar earned 6 × $12 = $72."
+        },
+        {
+          "id": "MATH-ALG-006-v2-b",
+          "label": "B",
+          "text": "$90",
+          "isCorrect": false,
+          "explanation": "This splits the 15 hours evenly, 7.5 hours each, and 7.5 × $12 = $90. Lena worked 3 more hours than Omar, so their hours are not equal."
+        },
+        {
+          "id": "MATH-ALG-006-v2-c",
+          "label": "C",
+          "text": "$108",
+          "isCorrect": false,
+          "explanation": "This is Lena's pay: she worked 6 + 3 = 9 hours, and 9 × $12 = $108. The question asks about Omar, who worked fewer hours."
+        },
+        {
+          "id": "MATH-ALG-006-v2-d",
+          "label": "D",
+          "text": "$144",
+          "isCorrect": false,
+          "explanation": "This uses 12 hours for Omar. After subtracting 3 from 15, 2h = 12, so 12 is twice Omar's hours. Dividing by 2 gives 6 hours, not 12, and 12 × $12 = $144 is too much."
+        }
+      ],
+      "solutionExplanation": "Let h be the number of hours Omar worked. Lena worked 3 more hours, so she worked h + 3 hours. Together they worked 15 hours: h + (h + 3) = 15. Combine like terms: 2h + 3 = 15. Subtract 3 from both sides: 2h = 12. Divide by 2: h = 6. Omar worked 6 hours and earned 6 × $12 = $72. Check: Lena worked 6 + 3 = 9 hours, and 6 + 9 = 15.",
+      "commonTrap": "Students reach 2h = 12 and use 12 as Omar's hours, getting $144. The 12 is the hours for two people with Lena's extra 3 hours removed, so divide by 2 to find Omar's 6 hours.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "trackerReviewer": "BA",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Grade 8 scope rewrite. Version 1 (If x + y = 15 and x − y = 3, what is xy?) is a formal pair of simultaneous equations and stays preserved in its source batch. Version 2 is a sum/difference story solved with one variable: h + (h + 3) = 15 gives h = 6, and Omar earns 6 × $12 = $72. Objective changes from solving a system to writing and solving a one-variable equation from a story, so tags change from ALG-SYS to ALG-LIN (primary) and APP-FIN. Distractors come from named errors: even split ($90), answering for Lena ($108), and stopping at 2h = 12 ($144). New stem, choices, key and solution; all choices have -v2 IDs. Module stays 1 (one equation, two steps, then one multiplication). Clears the bank hold at clearedByContentVersion 2.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "scope-rewrite",
+      "auditFindings": [
+        "MATH:bank:MATH-ALG-006:1",
+        "SCOPE:bank:MATH-ALG-006"
+      ]
+    },
+    {
+      "id": "MATH-ALG-106",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-WP",
+      "tags": [
+        "ALG-LIN",
+        "APP-FIN"
+      ],
+      "stem": "A museum sold 120 tickets on Saturday. Adult tickets cost $9 each and student tickets cost $5 each. The museum collected $760 from ticket sales. How many student tickets were sold?",
+      "choices": [
+        {
+          "id": "MATH-ALG-106-a",
+          "label": "A",
+          "text": "40",
+          "isCorrect": false,
+          "explanation": "This is the number of adult tickets. It answers for the wrong type of ticket."
+        },
+        {
+          "id": "MATH-ALG-106-b",
+          "label": "B",
+          "text": "60",
+          "isCorrect": false,
+          "explanation": "This assumes the tickets were split evenly. But 60($9) + 60($5) = $840, not $760."
+        },
+        {
+          "id": "MATH-ALG-106-c",
+          "label": "C",
+          "text": "80",
+          "isCorrect": true,
+          "explanation": "Correct. 9a + 5(120 − a) = 760 gives a = 40 adult tickets, so 120 − 40 = 80 student tickets."
+        },
+        {
+          "id": "MATH-ALG-106-d",
+          "label": "D",
+          "text": "100",
+          "isCorrect": false,
+          "explanation": "This comes from multiplying only the 120 by 5: 9a + 600 − a = 760, so a = 20 and 120 − 20 = 100. The 5 must also multiply the a."
+        }
+      ],
+      "solutionExplanation": "Let a be the number of adult tickets. Then 120 − a tickets were student tickets. The money collected gives 9a + 5(120 − a) = 760. Distribute: 9a + 600 − 5a = 760, so 4a = 160 and a = 40. The number of student tickets is 120 − 40 = 80. Check: 40($9) + 80($5) = $360 + $400 = $760.",
+      "commonTrap": "Students solve correctly for the adult tickets and choose 40. The question asks for student tickets, so subtract from 120.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Tags only: ALG-SYS changed to ALG-LIN (primary) and APP-FIN. The existing solution uses one variable, 9a + 5(120 − a) = 760; the arithmetic route (all at $5 is $600, the $160 extra ÷ $4 = 40 adult tickets) also works. Key C = 80 unchanged.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "metadata",
+      "auditFindings": [
+        "PROMPT:retag-alg-sys"
+      ]
+    },
+    {
+      "id": "MATH-ALG-115",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-EE",
+      "tags": [
+        "ALG-LIN"
+      ],
+      "stem": "The sum of two numbers is 50. Three times the smaller number is 10 more than the larger number. What is the larger number?",
+      "ee": {
+        "instruction": "Enter your answer as a number.",
+        "acceptableAnswers": [
+          "35",
+          "35.0"
+        ]
+      },
+      "commonWrongAnswers": [
+        {
+          "answer": "15",
+          "explanation": "This is the smaller number. The question asks for the larger number, 50 − 15 = 35."
+        },
+        {
+          "answer": "40",
+          "explanation": "This comes from writing 3s + 10 = 50 − s, which says the larger number is the one that is 10 more. Then 4s = 40 gives s = 10 and a larger number of 50 − 10 = 40. The stem says three times the smaller number is the one that is 10 more."
+        }
+      ],
+      "solutionExplanation": "Let s be the smaller number. The two numbers add to 50, so the larger number is 50 − s. Three times the smaller number is 10 more than the larger number: 3s = (50 − s) + 10. Simplify the right side: 3s = 60 − s. Add s to both sides: 4s = 60, so s = 15. The larger number is 50 − 15 = 35. Check: 3 × 15 = 45, which is 10 more than 35.",
+      "commonTrap": "\"Three times the smaller number is 10 more than the larger number\" means 3s = (50 − s) + 10. Students who write 3s + 10 = 50 − s reverse the relationship and get 40.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Tags: ALG-SYS removed; ALG-LIN is now the only tag. The solution, common trap and the explanation for wrong answer 40 used two variables and substitution (s + L = 50, 3s = L + 10), which taught a systems route. Rewritten in one variable: the larger number is 50 − s, so 3s = (50 − s) + 10, 4s = 60, s = 15, larger 35. The wrong answer 40 path is rechecked (3s + 10 = 50 − s gives s = 10, larger 40). acceptableAnswers 35 and 35.0 and the stem are unchanged.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "PROMPT:retag-alg-sys"
+      ]
+    },
+    {
+      "id": "MATH-APP-001",
+      "subject": "MATH",
+      "subtype": "INDY-WP",
+      "module": "1",
+      "stem": "For a presentation, Ben can create 4 slides in 5 minutes, working at a constant rate. Dylan can create 3 slides in 10 minutes, working at his own constant rate. What is the total number of slides the two of them can create in one hour?",
+      "wp": {
+        "solutionExplanation": "Ben makes 4 slides every 5 minutes. One hour has 60 ÷ 5 = 12 five-minute periods, so Ben makes 4 × 12 = 48 slides. Dylan makes 3 slides every 10 minutes. One hour has 60 ÷ 10 = 6 ten-minute periods, so Dylan makes 3 × 6 = 18 slides. Together they make 48 + 18 = 66 slides in one hour."
+      },
+      "choices": [
+        {
+          "id": "MATH-APP-001-a",
+          "label": "A",
+          "text": "66",
+          "isCorrect": true,
+          "explanation": "Correct. Ben makes 4 × 12 = 48 slides and Dylan makes 3 × 6 = 18 slides, and 48 + 18 = 66."
+        },
+        {
+          "id": "MATH-APP-001-b",
+          "label": "B",
+          "text": "48",
+          "isCorrect": false,
+          "explanation": "This is Ben's total alone, 4 × 12 = 48. The question asks for the number of slides both of them create, so Dylan's 18 slides must be added."
+        },
+        {
+          "id": "MATH-APP-001-c",
+          "label": "C",
+          "text": "84",
+          "isCorrect": false,
+          "explanation": "This comes from (4 + 3) × 12 = 84, which treats Dylan's 3 slides as if they also took 5 minutes. Dylan needs 10 minutes for 3 slides, so he has only 6 periods in an hour."
+        },
+        {
+          "id": "MATH-APP-001-d",
+          "label": "D",
+          "text": "42",
+          "isCorrect": false,
+          "explanation": "This comes from (4 + 3) × 6 = 42, which treats Ben's 4 slides as if they also took 10 minutes. Ben needs only 5 minutes for 4 slides, so he has 12 periods in an hour."
+        }
+      ],
+      "tags": [
+        "APP-RTD"
+      ],
+      "timeToSolve": 150,
+      "createdAt": "2026-06-26T12:07:00Z",
+      "solutionExplanation": "Ben makes 4 slides every 5 minutes. One hour has 60 ÷ 5 = 12 five-minute periods, so Ben makes 4 × 12 = 48 slides. Dylan makes 3 slides every 10 minutes. One hour has 60 ÷ 10 = 6 ten-minute periods, so Dylan makes 3 × 6 = 18 slides. Together they make 48 + 18 = 66 slides in one hour.",
+      "commonTrap": "Students add the slide counts first, 4 + 3 = 7, and then scale both by the same time period. Ben and Dylan work over different time periods (5 minutes and 10 minutes), so convert each rate to one hour separately before adding.",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:bank:MATH-APP-001:1"
+      ],
+      "revisionNotes": "The only solution lived in wp.solutionExplanation. getQuestionSolutionExplanation() does fall back to wp for INDY-WP, but the top-level solutionExplanation, commonTrap and every per-choice explanation were missing. Added a top-level solutionExplanation (kept identical in wp so neither route can drift), a commonTrap, and explanations for all four choices: 48 omits Dylan; 84 = (4 + 3) × 12 treats both as five-minute rates; 42 = (4 + 3) × 6 treats both as ten-minute rates. Stem, choices and key A = 66 unchanged.",
+      "reviewStatus": "provisional"
+    },
+    {
+      "id": "MATH-APP-007",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "APP-FIN",
+        "ALG-LIN"
+      ],
+      "stem": "Jaylen invests $500 in an account that earns 3% simple interest per year. Maya invests $400 in an account that earns 8% simple interest per year. After how many complete years will Maya's account balance first be greater than Jaylen's?",
+      "choices": [
+        {
+          "id": "MATH-APP-007-a",
+          "label": "A",
+          "text": "4 years",
+          "isCorrect": false,
+          "explanation": "This comes from dividing the $100 gap by Maya's $32 per year and rounding up, ignoring that Jaylen's account also grows."
+        },
+        {
+          "id": "MATH-APP-007-b",
+          "label": "B",
+          "text": "5 years",
+          "isCorrect": false,
+          "explanation": "This comes from rounding the threshold 100/17 ≈ 5.88 down to 5. After 5 years, Maya has $560 and Jaylen has $575, so Maya is still behind."
+        },
+        {
+          "id": "MATH-APP-007-c",
+          "label": "C",
+          "text": "6 years",
+          "isCorrect": true,
+          "explanation": "Correct. After 6 years, Maya has $592 and Jaylen has $590."
+        },
+        {
+          "id": "MATH-APP-007-d",
+          "label": "D",
+          "text": "7 years",
+          "isCorrect": false,
+          "explanation": "This comes from dividing the $100 gap by Jaylen's $15 per year and rounding up."
+        }
+      ],
+      "solutionExplanation": "Jaylen earns $500 × 0.03 = $15 per year, and Maya earns $400 × 0.08 = $32 per year. Maya gains $32 − $15 = $17 per year on Jaylen and must make up a $100 gap. Solve 400 + 32t > 500 + 15t: 17t > 100, so t > 100/17. Since 100/17 ≈ 5.88, the first complete year that works is 6. Check: after 5 years, Maya has 400 + 5 × 32 = $560 and Jaylen has 500 + 5 × 15 = $575; after 6 years, Maya has 400 + 6 × 32 = $592 and Jaylen has 500 + 6 × 15 = $590.",
+      "commonTrap": "Students who get t > 100/17, which is about 5.88, sometimes round down to 5. Maya's balance must be greater, so t must be more than 5.88; the next complete year is 6. Check by substituting.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "trackerReviewer": "BA",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Wrote the exact threshold t > 100/17 before its approximation 100/17 ≈ 5.88 in the solution, the common trap and choice B (which had printed t > 5.88 as if exact). Added the year-5 check ($560 < $575) beside the year-6 check ($592 > $590) and used explicit multiplication signs in the checks. Key C = 6 years unchanged.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:bank:MATH-APP-007:1"
+      ]
+    },
+    {
+      "id": "MATH-APP-009",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "APP-RTD"
+      ],
+      "stem": "Maya leaves her house and rides her bike toward the library at 12 miles per hour. Her brother Deon leaves the same house 15 minutes later and rides along the same route at 16 miles per hour. Both ride at constant speeds and keep riding until Deon catches up to Maya. How many miles from the house will Deon catch up to Maya?",
+      "choices": [
+        {
+          "id": "MATH-APP-009-a",
+          "label": "A",
+          "text": "3",
+          "isCorrect": false,
+          "explanation": "This is Maya's head start, how far she rides before Deon leaves. Both riders keep moving after that."
+        },
+        {
+          "id": "MATH-APP-009-b",
+          "label": "B",
+          "text": "4",
+          "isCorrect": false,
+          "explanation": "This is how far Deon would ride in 15 minutes, 16 × ¼. It uses the wrong rider's speed for the head start."
+        },
+        {
+          "id": "MATH-APP-009-c",
+          "label": "C",
+          "text": "9",
+          "isCorrect": false,
+          "explanation": "This is how far Maya rides during the ¾ hour Deon is chasing her, without her 3-mile head start."
+        },
+        {
+          "id": "MATH-APP-009-d",
+          "label": "D",
+          "text": "12",
+          "isCorrect": true,
+          "explanation": "Correct. Deon catches Maya after ¾ hour, and 16 × ¾ = 12 miles."
+        }
+      ],
+      "solutionExplanation": "In 15 minutes, which is ¼ hour, Maya rides 12 × ¼ = 3 miles. Deon rides 16 − 12 = 4 miles per hour faster, so he closes the 3-mile gap in 3 ÷ 4 = ¾ hour. In ¾ hour, Deon rides 16 × ¾ = 12 miles. Check: Maya has ridden for 1 hour in total, and 12 × 1 = 12 miles.",
+      "commonTrap": "Students choose 3, the head start, as if Deon catches Maya where she was when he left. Both riders keep moving, so the meeting point is farther down the road.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "trackerReviewer": "BA",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Optional editorial finding adopted: the stem now states that both riders keep constant speeds and keep riding until Deon catches up, so the library cannot be read as a stopping point before the 12-mile meeting point. Only the stem changed; choices, IDs, key D = 12 and all explanations are unchanged (3-mile head start, 16 − 12 = 4 mph gain, 3 ÷ 4 = ¾ hour, 16 × ¾ = 12).",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "MATH:bank:MATH-APP-009:1"
+      ]
+    },
+    {
+      "id": "MATH-APP-106",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-WP",
+      "tags": [
+        "APP-RTD"
+      ],
+      "stem": "Pipe A can fill a tank in 12 hours. Pipe B can fill the same tank in 4 hours. Each pipe fills at a constant rate, and those rates do not change when both pipes are used. If both pipes are used at the same time, how many hours will it take to fill the empty tank?",
+      "choices": [
+        {
+          "id": "MATH-APP-106-a",
+          "label": "A",
+          "text": "1/3",
+          "isCorrect": false,
+          "explanation": "This is the fraction of the tank the two pipes fill together in 1 hour. The time is the reciprocal, 3 hours."
+        },
+        {
+          "id": "MATH-APP-106-b",
+          "label": "B",
+          "text": "3",
+          "isCorrect": true,
+          "explanation": "Correct. Together the pipes fill 1/12 + 1/4 = 1/3 of the tank each hour, so the tank fills in 3 hours."
+        },
+        {
+          "id": "MATH-APP-106-c",
+          "label": "C",
+          "text": "8",
+          "isCorrect": false,
+          "explanation": "This comes from averaging the two times, (12 + 4) ÷ 2. Working together must be faster than either pipe alone."
+        },
+        {
+          "id": "MATH-APP-106-d",
+          "label": "D",
+          "text": "16",
+          "isCorrect": false,
+          "explanation": "This comes from adding the two times. Working together must take less time than the faster pipe alone."
+        }
+      ],
+      "solutionExplanation": "In 1 hour, Pipe A fills 1/12 of the tank and Pipe B fills 1/4 = 3/12 of the tank. Together they fill 1/12 + 3/12 = 4/12 = 1/3 of the tank each hour. At that rate, the full tank takes 3 hours.",
+      "commonTrap": "Students average the times and get 8 hours. Together the pipes must be faster than Pipe B alone, so the answer must be less than 4 hours.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Optional editorial finding adopted: added the sentence stating that each pipe fills at a constant rate that does not change when both are used, which is the assumption the combined-rate solution relies on. Only the stem changed; choices, IDs, key B = 3 and explanations are unchanged (1/12 + 1/4 = 1/3 tank per hour, so 3 hours).",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "MATH:bank:MATH-APP-106:1"
+      ]
+    },
+    {
+      "id": "MATH-DAT-002",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "INDY-EE",
+      "tags": [
+        "DAT-STA"
+      ],
+      "stem": "A student's average (arithmetic mean) score on 6 tests is 84. After the student takes a 7th test, the average score on all 7 tests is 85. What score did the student earn on the 7th test?",
+      "ee": {
+        "instruction": "Enter your answer as a number.",
+        "acceptableAnswers": [
+          "91",
+          "91.0"
+        ]
+      },
+      "commonWrongAnswers": [
+        {
+          "answer": "85",
+          "explanation": "This assumes the 7th score equals the new average. A score of 85 would pull the average up by less than 1 point."
+        },
+        {
+          "answer": "90",
+          "explanation": "This adds 1 point for each of the first 6 tests to the old average: 84 + 6 = 90. Start instead from a baseline seventh score of 85, the new average, and then add the 6-point total shortfall of the first 6 scores: 85 + 6 = 91."
+        },
+        {
+          "answer": "92",
+          "explanation": "This adds 1 point for each of all 7 tests to the new average: 85 + 7 = 92. Only the first 6 tests need to be raised from 84 to 85."
+        }
+      ],
+      "solutionExplanation": "The sum of the first 6 scores is 6 × 84 = 504. For the average of 7 tests to be 85, the sum of all 7 scores must be 7 × 85 = 595. The 7th score is 595 − 504 = 91.",
+      "commonTrap": "Students guess that the new score is close to the new average, such as 85 or 86. One score has to raise the average of all 7 tests by a full point, so it must be 6 points above the new average.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "trackerReviewer": "",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "The explanation for wrong answer 90 said the seventh score 'must also be at the new average', which describes the actual score as 85. Rewritten as a baseline of 85 plus the first six scores' 6-point total shortfall: 85 + 6 = 91. Verified 6 × 84 + 91 = 595 = 7 × 85. acceptableAnswers 91 and 91.0 unchanged.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:bank:MATH-DAT-002:1"
+      ]
+    },
+    {
+      "id": "MATH-DAT-101",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "DAT-STA"
+      ],
+      "stem": "Priya's mean score on 4 tests is 85. What score does she need on her fifth test to raise her mean score to 87?",
+      "choices": [
+        {
+          "id": "MATH-DAT-101-a",
+          "label": "A",
+          "text": "87",
+          "isCorrect": false,
+          "explanation": "This assumes she needs to score the target mean. Her first 4 tests average 2 points below 87, so a score of 87 would leave the mean below 87."
+        },
+        {
+          "id": "MATH-DAT-101-b",
+          "label": "B",
+          "text": "89",
+          "isCorrect": false,
+          "explanation": "This adds the 2-point increase only once: 87 + 2. The first 4 scores average 2 points below 87, so together they fall 4 × 2 = 8 points short, and the fifth test must make up all 8 points."
+        },
+        {
+          "id": "MATH-DAT-101-c",
+          "label": "C",
+          "text": "95",
+          "isCorrect": true,
+          "explanation": "Correct. 5 × 87 − 4 × 85 = 435 − 340 = 95."
+        },
+        {
+          "id": "MATH-DAT-101-d",
+          "label": "D",
+          "text": "97",
+          "isCorrect": false,
+          "explanation": "This adds 2 points for all 5 tests: 87 + 5 × 2 = 97. Only the first 4 tests have a shortfall. They average 2 points below 87, a combined shortfall of 4 × 2 = 8 points, so the fifth score is 87 + 8 = 95."
+        }
+      ],
+      "solutionExplanation": "Her 4 scores add to 4 × 85 = 340. For a mean of 87 on 5 tests, the scores must add to 5 × 87 = 435. Her fifth score must be 435 − 340 = 95.",
+      "commonTrap": "Students think scoring the new mean, 87, on the fifth test will make the mean 87. The first 4 scores average 2 points below 87, so their combined shortfall is 4 × 2 = 8 points, and the fifth score must make it up: 87 + 8 = 95.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "The common trap ('Each of the first 4 tests is 2 points below 87') and choice D ('the 4 earlier tests are 2 points below the new mean') treated a group mean as individual scores. Rewritten as the group's combined shortfall, 4 × 2 = 8 points; choice B's 'for each of the 4 earlier tests' phrasing aligned the same way. Explanations now hold for earlier scores such as 80, 84, 86, 90 (mean 85). Key C = 95 unchanged; (4 × 85 + 95) ÷ 5 = 87.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:bank:MATH-DAT-101:1"
+      ]
+    },
+    {
+      "id": "MATH-DAT-106",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "DAT-STA"
+      ],
+      "stem": "The mean test score of 12 students is 80. Then 18 more students take the same test, and the mean score of all 30 students is 86. What is the mean score of the 18 students who took the test later?",
+      "choices": [
+        {
+          "id": "MATH-DAT-106-a",
+          "label": "A",
+          "text": "54",
+          "isCorrect": false,
+          "explanation": "This finds the correct total for the later students, 1,620, but divides by all 30 students instead of the 18 students in the group."
+        },
+        {
+          "id": "MATH-DAT-106-b",
+          "label": "B",
+          "text": "90",
+          "isCorrect": true,
+          "explanation": "Correct. 30 × 86 − 12 × 80 = 1,620, and 1,620 ÷ 18 = 90."
+        },
+        {
+          "id": "MATH-DAT-106-c",
+          "label": "C",
+          "text": "92",
+          "isCorrect": false,
+          "explanation": "This assumes the overall mean is halfway between the group means: 86 − 80 = 6, and 86 + 6 = 92. The groups have different sizes, so the means cannot be weighted equally."
+        },
+        {
+          "id": "MATH-DAT-106-d",
+          "label": "D",
+          "text": "95",
+          "isCorrect": false,
+          "explanation": "This balances the groups in the wrong direction. The first group averages 6 points below 86, a combined shortfall of 12 × 6 = 72 points. The 18 later students must make up those 72 points, so they average 72 ÷ 18 = 4 points above 86. Computing 6 × 18 ÷ 12 = 9 and 86 + 9 = 95 reverses the group sizes."
+        }
+      ],
+      "solutionExplanation": "All 30 scores add to 30 × 86 = 2,580. The first 12 scores add to 12 × 80 = 960. So the 18 later scores add to 2,580 − 960 = 1,620, and their mean is 1,620 ÷ 18 = 90.",
+      "commonTrap": "Students assume 86 is halfway between the two group means, so the second mean must be 86 + 6 = 92. That is only true when the groups are the same size. The larger group pulls the overall mean toward its own mean.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Choice D said 'The 12 students are 6 below 86', which reads as every score being 80. Rewritten as a group mean with a combined 12 × 6 = 72-point shortfall, and the distractor's arithmetic is now shown in full (6 × 18 ÷ 12 = 9, 86 + 9 = 95). Key B = 90 unchanged; (12 × 80 + 18 × 90) ÷ 30 = 86.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:bank:MATH-DAT-106:1"
+      ]
+    },
+    {
+      "id": "MATH-DAT-107",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "DAT-PROB"
+      ],
+      "stem": "A box holds 7 yellow tiles, 5 purple tiles, and 8 orange tiles. Kai picks a tile without looking, writes down its color, and puts the tile back. He does this 60 times. Based on probability, how many times should Kai expect to pick an orange tile?",
+      "choices": [
+        {
+          "id": "MATH-DAT-107-v2-a",
+          "label": "A",
+          "text": "20",
+          "isCorrect": false,
+          "explanation": "This treats the 3 colors as equally likely and divides 60 by 3. The box has more orange tiles than yellow or purple, so orange is more likely than 1/3."
+        },
+        {
+          "id": "MATH-DAT-107-v2-b",
+          "label": "B",
+          "text": "24",
+          "isCorrect": true,
+          "explanation": "Correct. The probability of orange is 8/20 = 2/5, and 2/5 × 60 = 24."
+        },
+        {
+          "id": "MATH-DAT-107-v2-c",
+          "label": "C",
+          "text": "36",
+          "isCorrect": false,
+          "explanation": "This is the expected number of tiles that are not orange: 12/20 × 60 = 36. The question asks for orange."
+        },
+        {
+          "id": "MATH-DAT-107-v2-d",
+          "label": "D",
+          "text": "40",
+          "isCorrect": false,
+          "explanation": "This compares orange tiles with the other tiles, 8 to 12, and uses 8/12 = 2/3: 2/3 × 60 = 40. A probability compares orange with all 20 tiles."
+        }
+      ],
+      "solutionExplanation": "The box has 7 + 5 + 8 = 20 tiles, and 8 of them are orange. Because Kai puts each tile back, the probability of orange is the same on every pick: 8/20 = 2/5. In 60 picks, he should expect about 2/5 × 60 = 24 orange tiles.",
+      "commonTrap": "Students compare the 8 orange tiles with the 12 tiles that are not orange and use 8/12 = 2/3, which gives 40. A probability compares the favorable outcomes with all 20 tiles, not with the other outcomes.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Version 1 duplicated MATH-DAT-003 (counts {3, 4, 5}, complement of the three-marble color, the same four choices and the same key 3/4). Version 2 tests a different skill: predicting a frequency from a probability with replacement (8/20 × 60 = 24). New setting (tiles in a box) and counts (7, 5, 8), new stem, choices, key, solution and trap; every choice has a -v2 ID. Distractors: equally likely colors (60 ÷ 3 = 20), the not-orange count (12/20 × 60 = 36) and the part-to-part ratio (8/12 × 60 = 40). The key's position follows numeric order; it was not chosen to diversify letters. MATH-DAT-003 is unchanged. Also distinct from the reverse-count items DAT-111 and DAT-119.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "MATH:bank:MATH-DAT-107:1",
+        "PROMPT:near-duplicates"
+      ]
+    },
+    {
+      "id": "MATH-DAT-116",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "INDY-CGT",
+      "tags": [
+        "DAT-GR",
+        "DAT-STA"
+      ],
+      "stem": "The bar graph shows the number of smoothies a café sold each weekday last week. The café was also open on Saturday. The mean number of smoothies sold per day for all six days was 33. How many smoothies did the café sell on Saturday?",
+      "choices": [
+        {
+          "id": "MATH-DAT-116-a",
+          "label": "A",
+          "text": "33",
+          "isCorrect": false,
+          "explanation": "This assumes Saturday's sales equal the six-day mean. The five weekdays average only 30, so Saturday must be above 33 to bring the mean up."
+        },
+        {
+          "id": "MATH-DAT-116-b",
+          "label": "B",
+          "text": "36",
+          "isCorrect": false,
+          "explanation": "This adds the 3-smoothie difference only once: 33 + 3. The five weekdays average 3 below 33, a combined shortfall of 5 × 3 = 15 smoothies, and Saturday must make up all 15."
+        },
+        {
+          "id": "MATH-DAT-116-c",
+          "label": "C",
+          "text": "48",
+          "isCorrect": true,
+          "explanation": "Correct. 6 × 33 − 150 = 198 − 150 = 48."
+        },
+        {
+          "id": "MATH-DAT-116-d",
+          "label": "D",
+          "text": "51",
+          "isCorrect": false,
+          "explanation": "This adds 3 for all six days: 33 + 6 × 3 = 51. Saturday has no shortfall of its own. Only the five-day weekday total falls short: the weekdays average 30, a combined shortfall of 5 × 3 = 15, so Saturday sells 33 + 15 = 48."
+        }
+      ],
+      "cgt": {
+        "visual": {
+          "type": "barChart",
+          "title": "Smoothies Sold",
+          "categories": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday"
+          ],
+          "values": [
+            24,
+            30,
+            18,
+            36,
+            42
+          ]
+        }
+      },
+      "solutionExplanation": "From the graph, the weekday sales add to 24 + 30 + 18 + 36 + 42 = 150. For a mean of 33 over 6 days, the total must be 6 × 33 = 198. Saturday's sales were 198 − 150 = 48 smoothies.",
+      "commonTrap": "Students see that the weekday mean is 150 ÷ 5 = 30 and add the 3-smoothie difference once, getting 36. The weekdays average 3 below 33, so their combined shortfall is 5 × 3 = 15, and Saturday must make up all of it: 33 + 15 = 48.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Choice D said 'Only the 5 weekdays are below the new mean', but Thursday (36) and Friday (42) are above 33. Choice D, choice B, choice A and the common trap now use the five-day mean and its combined shortfall (5 × 3 = 15; 33 + 15 = 48) instead of claims about individual days. Graph values 24, 30, 18, 36, 42 and key C = 48 unchanged; 150 + 48 = 198 = 6 × 33.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:bank:MATH-DAT-116:1"
+      ]
+    },
+    {
+      "id": "MATH-GEO-001",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-TRI",
+        "GEO-ARV"
+      ],
+      "stem": "In triangle ABC, angle C is a right angle. The length of AC is 6 centimeters, the length of BC is 8 centimeters, and the length of AB is 10 centimeters. Point D lies on side AB so that segment CD is perpendicular to AB. What is the length of CD, in centimeters?",
+      "choices": [
+        {
+          "id": "MATH-GEO-001-a",
+          "label": "A",
+          "text": "2.4",
+          "isCorrect": false,
+          "explanation": "This comes from finding the area, ½ × 6 × 8 = 24, and then setting 24 equal to 10 × CD. The ½ was dropped on the AB side of the equation."
+        },
+        {
+          "id": "MATH-GEO-001-b",
+          "label": "B",
+          "text": "4.8",
+          "isCorrect": true,
+          "explanation": "Correct. Using the legs, the area is ½ × 6 × 8 = 24. Using AB as the base, the area is ½ × 10 × CD. So 5 × CD = 24 and CD = 4.8."
+        },
+        {
+          "id": "MATH-GEO-001-c",
+          "label": "C",
+          "text": "5",
+          "isCorrect": false,
+          "explanation": "This is half of AB. It comes from assuming that CD cuts AB into two equal parts. A segment from the right angle perpendicular to AB does not cut AB in half unless the legs are equal, and 6 and 8 are not."
+        },
+        {
+          "id": "MATH-GEO-001-d",
+          "label": "D",
+          "text": "9.6",
+          "isCorrect": false,
+          "explanation": "This comes from using 6 × 8 = 48 as the area, forgetting the ½, and then solving ½ × 10 × CD = 48."
+        }
+      ],
+      "solutionExplanation": "Find the area of triangle ABC in two ways. Since angle C is a right angle, AC and BC are perpendicular, so one can be the base and the other the height: area = ½ × 6 × 8 = 24 square centimeters. Since CD is perpendicular to AB, CD is the height when AB is the base: area = ½ × 10 × CD = 5 × CD. The two expressions describe the same area, so 5 × CD = 24 and CD = 24 ÷ 5 = 4.8 centimeters.",
+      "commonTrap": "Students assume D is the midpoint of AB and choose 5, half of 10. The perpendicular segment from the right angle does not split AB in half. Find the area two ways and set the expressions equal.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "trackerReviewer": "AC",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Grade 8 scope rewrite. Version 1 gave only the legs 6 and 8, so finding CD required the Pythagorean theorem (or a memorized 6-8-10 triple) for AB first; it stays preserved in its source batch. Version 2 states AB = 10 centimeters in the stem, so the task is only equating two triangle-area expressions: ½ × 6 × 8 = 24 = ½ × 10 × CD, so CD = 4.8. Solution, trap and every choice explanation rewritten with no Pythagorean or square-root step. Choice texts (2.4, 4.8, 5, 9.6) and correctness are unchanged, so choice IDs are kept per the README rule; key B = 4.8. Distractor paths rechecked: 24 ÷ 10 = 2.4 (½ dropped on the AB side), 10 ÷ 2 = 5 (midpoint assumption), 48 ÷ 5 = 9.6 (½ dropped on the legs side). Clears the bank hold at clearedByContentVersion 2.",
+      "createdAt": "2026-10-12T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "scope-rewrite",
+      "auditFindings": [
+        "MATH:bank:MATH-GEO-001:1",
+        "SCOPE:bank:MATH-GEO-001"
+      ]
+    },
+    {
+      "id": "MATH-GEO-012",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-ARV",
+        "APP-PCT"
+      ],
+      "stem": "A rectangle measures 8 meters by 6 meters. If the length and the width are each increased by 50%, what is the area of the new rectangle, in square meters?",
+      "choices": [
+        {
+          "id": "MATH-GEO-012-a",
+          "label": "A",
+          "text": "42",
+          "isCorrect": false,
+          "explanation": "This is the perimeter of the new rectangle, 2(12 + 9) = 42, not its area."
+        },
+        {
+          "id": "MATH-GEO-012-b",
+          "label": "B",
+          "text": "72",
+          "isCorrect": false,
+          "explanation": "This comes from increasing the original area, 48, by 50%. It is also what students get if they increase only one dimension (12 × 6 = 72)."
+        },
+        {
+          "id": "MATH-GEO-012-c",
+          "label": "C",
+          "text": "96",
+          "isCorrect": false,
+          "explanation": "This comes from adding the two 50% increases to get a 100% increase in area, so the student doubles 48. Multiply the two growth factors instead: 1.5 × 1.5 = 2.25, so the new area is 225% of the original, which is a 125% increase."
+        },
+        {
+          "id": "MATH-GEO-012-d",
+          "label": "D",
+          "text": "108",
+          "isCorrect": true,
+          "explanation": "Correct. The new length is 8 × 1.5 = 12 meters and the new width is 6 × 1.5 = 9 meters, so the new area is 12 × 9 = 108 square meters."
+        }
+      ],
+      "solutionExplanation": "Increase each dimension by 50% first. The new length is 8 + 0.5(8) = 12 meters, and the new width is 6 + 0.5(6) = 9 meters. The new area is 12 × 9 = 108 square meters. As a check, the area was multiplied by 1.5 × 1.5 = 2.25, and 48 × 2.25 = 108.",
+      "commonTrap": "Students apply the 50% increase to the area instead of to each side and get 72. Because both dimensions grow by a factor of 1.5, the area grows by a factor of 1.5 × 1.5 = 2.25.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Aris Costea",
+      "trackerReviewer": "",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Choice C said 'Percent increases on two dimensions multiply', but 50% × 50% = 25%, not the 125% area increase. Rewritten so the growth factors multiply (1.5 × 1.5 = 2.25), with 225% of the original distinguished from a 125% increase. Key D = 108 unchanged; (8 × 1.5) × (6 × 1.5) = 108 = 48 × 2.25.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:bank:MATH-GEO-012:1"
+      ]
+    },
+    {
+      "id": "MATH-GEO-108",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "GEO-CRC",
+        "GEO-TRI"
+      ],
+      "stem": "A square has sides of length 10 centimeters. All four vertices of the square lie on a circle. What is the area of the circle, in square centimeters?",
+      "choices": [
+        {
+          "id": "MATH-GEO-108-a",
+          "label": "A",
+          "text": "25π",
+          "isCorrect": false,
+          "explanation": "This comes from using half the side length, 5, as the radius. That is the circle that fits inside the square, not the one through its vertices. Writing each of the four triangles' areas as r × r instead of ½ × r × r gives 4 × r² = 100, r² = 25, and leads to the same wrong answer."
+        },
+        {
+          "id": "MATH-GEO-108-b",
+          "label": "B",
+          "text": "50π",
+          "isCorrect": true,
+          "explanation": "Correct. The diagonals split the square into four triangles, each with two perpendicular sides of length r. So 4 × (½ × r × r) = 100, which gives 2 × r² = 100 and r² = 50. The area is π × r² = 50π."
+        },
+        {
+          "id": "MATH-GEO-108-c",
+          "label": "C",
+          "text": "100π",
+          "isCorrect": false,
+          "explanation": "This comes from using the side length, 10, as the radius: π × 10² = 100π."
+        },
+        {
+          "id": "MATH-GEO-108-d",
+          "label": "D",
+          "text": "200π",
+          "isCorrect": false,
+          "explanation": "This uses the whole diagonal as the radius instead of half of it. The diagonal is 2r, so its square is 4 × r² = 4 × 50 = 200, and π × 200 = 200π."
+        }
+      ],
+      "solutionExplanation": "Draw both diagonals of the square. They meet at the center of the square, which is also the center of the circle, so the distance from the center to each vertex is the radius r. The diagonals of a square are perpendicular, so they split the square into four triangles, each with a right angle at the center and two sides of length r. Each triangle has area ½ × r × r. The four triangles make up the whole square, whose area is 10 × 10 = 100. So 4 × (½ × r × r) = 100, which means 2 × r² = 100 and r² = 50. The area of the circle is π × r² = 50π square centimeters. (There is no need to find r itself.)",
+      "commonTrap": "Students picture the circle inside the square and use a radius of 5, which gives 25π. A circle through the vertices is larger: its radius reaches from the center to a corner of the square.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Teaching route rewritten for the Grade 8 product. The old solution and choices B and D used the Pythagorean theorem and irrational radicals (10√2, 5√2). The new route splits the square into the four center-to-vertex right triangles with legs r and r: 4 × (r²/2) = 2r² = 100, so r² = 50 and the area is 50π, without ever finding r. Choice A now also names the forgot-the-½ path (4r² = 100 gives 25π); choice D now describes diagonal-as-radius as (2r)² = 4 × 50 = 200, with no radical. No field mentions the Pythagorean theorem, the distance formula or a square root. Stem, tags, all four answer values, choice IDs and key B = 50π unchanged. Needs the scope reviewer's sign-off on the area-decomposition demand.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:bank:MATH-GEO-108:1",
+        "PROMPT:geo-108-route"
+      ]
+    },
+    {
+      "id": "MATH-NUM-106",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "NUM-FR"
+      ],
+      "stem": "A 250-gram saltwater sample is 0.4% salt by mass. How many grams of salt are in the sample?",
+      "choices": [
+        {
+          "id": "MATH-NUM-106-a",
+          "label": "A",
+          "text": "0.1",
+          "isCorrect": false,
+          "explanation": "This moves the decimal point three places, writing 0.4% as 0.0004. Then 0.0004 × 250 = 0.1. Changing a percent to a decimal means dividing by 100, which moves the decimal point only two places, to 0.004."
+        },
+        {
+          "id": "MATH-NUM-106-b",
+          "label": "B",
+          "text": "1",
+          "isCorrect": true,
+          "explanation": "Correct. 0.4% = 0.004, and 0.004 × 250 = 1."
+        },
+        {
+          "id": "MATH-NUM-106-c",
+          "label": "C",
+          "text": "10",
+          "isCorrect": false,
+          "explanation": "This writes 0.4% as 0.04, which is 4%. Then 0.04 × 250 = 10."
+        },
+        {
+          "id": "MATH-NUM-106-d",
+          "label": "D",
+          "text": "100",
+          "isCorrect": false,
+          "explanation": "This ignores the percent sign and uses 0.4. Then 0.4 × 250 = 100, which is 40% of the sample."
+        }
+      ],
+      "solutionExplanation": "To change a percent to a decimal, divide by 100: 0.4% = 0.4 ÷ 100 = 0.004. The salt is 0.4% of the sample's mass, so the salt has a mass of 0.004 × 250 = 1 gram.",
+      "commonTrap": "Students treat 0.4% as 0.4 and multiply to get 100. The percent sign means \"out of 100,\" so 0.4% must be divided by 100 first.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Choice A said 0.4 to 0.0004 moves the decimal four places; it moves three (0.4 ÷ 1,000), and the explanation keeps the contrast that dividing by 100 moves it two places to 0.004. The stem did not say whether 0.4% was by mass or volume while asking for milliliters of salt; it now reads 'A 250-gram saltwater sample is 0.4% salt by mass. How many grams of salt...', and the solution's unit is grams. Choice texts (0.1, 1, 10, 100) carry no units and are unchanged, so IDs are kept; key B = 1 (gram). No volume language remains.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "MATH:bank:MATH-NUM-106:1",
+        "MATH:bank:MATH-NUM-106:2"
+      ]
+    }
+  ]
+}

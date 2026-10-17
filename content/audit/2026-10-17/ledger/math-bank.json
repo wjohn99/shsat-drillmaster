@@ -1,0 +1,230 @@
+[
+  {
+    "key": "MATH:bank:MATH-ALG-001:1",
+    "disposition": "held",
+    "revision": null,
+    "note": "feedback fix deferred until the scope hold is reviewed; item is not served"
+  },
+  {
+    "key": "MATH:bank:MATH-ALG-001:2",
+    "disposition": "held",
+    "revision": null,
+    "note": "Scope hold active in content/scope/grade8-holds.json (clearedByContentVersion null). The version 1 original is preserved unchanged and excluded from every current Grade 8 pool. No in-scope rewrite in this pass."
+  },
+  {
+    "key": "MATH:bank:MATH-ALG-002:1",
+    "disposition": "fixed",
+    "revision": "bank:MATH-ALG-002@2",
+    "note": "Added solutionExplanation, commonTrap and per-choice explanations (the tracker version had none). Stem gets a question mark and consistent math spacing with a true minus sign. Old choice D (2x-3=10) solved to 6.5, the same as choice A, so it duplicated an error; replaced with 2x − 4 = 13 (x = 8.5), the divide-only-some-terms error. All four choice texts changed (spacing and minus signs, plus the new D), so all four get -v2 IDs. Key stays B (x = 7). Choice solutions are now 6.5, 7, 6, 8.5, all distinct."
+  },
+  {
+    "key": "MATH:bank:MATH-ALG-002:2",
+    "disposition": "fixed",
+    "revision": "bank:MATH-ALG-002@2",
+    "note": "Added solutionExplanation, commonTrap and per-choice explanations (the tracker version had none). Stem gets a question mark and consistent math spacing with a true minus sign. Old choice D (2x-3=10) solved to 6.5, the same as choice A, so it duplicated an error; replaced with 2x − 4 = 13 (x = 8.5), the divide-only-some-terms error. All four choice texts changed (spacing and minus signs, plus the new D), so all four get -v2 IDs. Key stays B (x = 7). Choice solutions are now 6.5, 7, 6, 8.5, all distinct."
+  },
+  {
+    "key": "MATH:bank:MATH-ALG-006:1",
+    "disposition": "fixed",
+    "revision": "bank:MATH-ALG-006@2",
+    "note": "Grade 8 scope rewrite. Version 1 (If x + y = 15 and x − y = 3, what is xy?) is a formal pair of simultaneous equations and stays preserved in its source batch. Version 2 is a sum/difference story solved with one variable: h + (h + 3) = 15 gives h = 6, and Omar earns 6 × $12 = $72. Objective changes from solving a system to writing and solving a one-variable equation from a story, so tags change from ALG-SYS to ALG-LIN (primary) and APP-FIN. Distractors come from named errors: even split ($90), answering for Lena ($108), and stopping at 2h = 12 ($144). New stem, choices, key and solution; all choices have -v2 IDs. Module stays 1 (one equation, two steps, then one multiplication). Clears the bank hold at clearedByContentVersion 2."
+  },
+  {
+    "key": "MATH:bank:MATH-ALG-105:1",
+    "disposition": "held",
+    "revision": null,
+    "note": "Scope hold active in content/scope/grade8-holds.json (clearedByContentVersion null). The version 1 original is preserved unchanged and excluded from every current Grade 8 pool. No in-scope rewrite in this pass."
+  },
+  {
+    "key": "MATH:bank:MATH-ALG-112:1",
+    "disposition": "held",
+    "revision": null,
+    "note": "Scope hold active in content/scope/grade8-holds.json (clearedByContentVersion null). The version 1 original is preserved unchanged and excluded from every current Grade 8 pool. No in-scope rewrite in this pass."
+  },
+  {
+    "key": "MATH:bank:MATH-ALG-114:1",
+    "disposition": "held",
+    "revision": null,
+    "note": "Scope hold active in content/scope/grade8-holds.json (clearedByContentVersion null). The version 1 original is preserved unchanged and excluded from every current Grade 8 pool. No in-scope rewrite in this pass."
+  },
+  {
+    "key": "MATH:bank:MATH-APP-001:1",
+    "disposition": "fixed",
+    "revision": "bank:MATH-APP-001@2",
+    "note": "The only solution lived in wp.solutionExplanation. getQuestionSolutionExplanation() does fall back to wp for INDY-WP, but the top-level solutionExplanation, commonTrap and every per-choice explanation were missing. Added a top-level solutionExplanation (kept identical in wp so neither route can drift), a commonTrap, and explanations for all four choices: 48 omits Dylan; 84 = (4 + 3) × 12 treats both as five-minute rates; 42 = (4 + 3) × 6 treats both as ten-minute rates. Stem, choices and key A = 66 unchanged."
+  },
+  {
+    "key": "MATH:bank:MATH-APP-007:1",
+    "disposition": "fixed",
+    "revision": "bank:MATH-APP-007@2",
+    "note": "Wrote the exact threshold t > 100/17 before its approximation 100/17 ≈ 5.88 in the solution, the common trap and choice B (which had printed t > 5.88 as if exact). Added the year-5 check ($560 < $575) beside the year-6 check ($592 > $590) and used explicit multiplication signs in the checks. Key C = 6 years unchanged."
+  },
+  {
+    "key": "MATH:bank:MATH-APP-009:1",
+    "disposition": "fixed",
+    "revision": "bank:MATH-APP-009@2",
+    "note": "Optional editorial finding adopted: the stem now states that both riders keep constant speeds and keep riding until Deon catches up, so the library cannot be read as a stopping point before the 12-mile meeting point. Only the stem changed; choices, IDs, key D = 12 and all explanations are unchanged (3-mile head start, 16 − 12 = 4 mph gain, 3 ÷ 4 = ¾ hour, 16 × ¾ = 12)."
+  },
+  {
+    "key": "MATH:bank:MATH-APP-106:1",
+    "disposition": "fixed",
+    "revision": "bank:MATH-APP-106@2",
+    "note": "Optional editorial finding adopted: added the sentence stating that each pipe fills at a constant rate that does not change when both are used, which is the assumption the combined-rate solution relies on. Only the stem changed; choices, IDs, key B = 3 and explanations are unchanged (1/12 + 1/4 = 1/3 tank per hour, so 3 hours)."
+  },
+  {
+    "key": "MATH:bank:MATH-DAT-002:1",
+    "disposition": "fixed",
+    "revision": "bank:MATH-DAT-002@2",
+    "note": "The explanation for wrong answer 90 said the seventh score 'must also be at the new average', which describes the actual score as 85. Rewritten as a baseline of 85 plus the first six scores' 6-point total shortfall: 85 + 6 = 91. Verified 6 × 84 + 91 = 595 = 7 × 85. acceptableAnswers 91 and 91.0 unchanged."
+  },
+  {
+    "key": "MATH:bank:MATH-DAT-101:1",
+    "disposition": "fixed",
+    "revision": "bank:MATH-DAT-101@2",
+    "note": "The common trap ('Each of the first 4 tests is 2 points below 87') and choice D ('the 4 earlier tests are 2 points below the new mean') treated a group mean as individual scores. Rewritten as the group's combined shortfall, 4 × 2 = 8 points; choice B's 'for each of the 4 earlier tests' phrasing aligned the same way. Explanations now hold for earlier scores such as 80, 84, 86, 90 (mean 85). Key C = 95 unchanged; (4 × 85 + 95) ÷ 5 = 87."
+  },
+  {
+    "key": "MATH:bank:MATH-DAT-106:1",
+    "disposition": "fixed",
+    "revision": "bank:MATH-DAT-106@2",
+    "note": "Choice D said 'The 12 students are 6 below 86', which reads as every score being 80. Rewritten as a group mean with a combined 12 × 6 = 72-point shortfall, and the distractor's arithmetic is now shown in full (6 × 18 ÷ 12 = 9, 86 + 9 = 95). Key B = 90 unchanged; (12 × 80 + 18 × 90) ÷ 30 = 86."
+  },
+  {
+    "key": "MATH:bank:MATH-DAT-107:1",
+    "disposition": "fixed",
+    "revision": "bank:MATH-DAT-107@2",
+    "note": "Version 1 duplicated MATH-DAT-003 (counts {3, 4, 5}, complement of the three-marble color, the same four choices and the same key 3/4). Version 2 tests a different skill: predicting a frequency from a probability with replacement (8/20 × 60 = 24). New setting (tiles in a box) and counts (7, 5, 8), new stem, choices, key, solution and trap; every choice has a -v2 ID. Distractors: equally likely colors (60 ÷ 3 = 20), the not-orange count (12/20 × 60 = 36) and the part-to-part ratio (8/12 × 60 = 40). The key's position follows numeric order; it was not chosen to diversify letters. MATH-DAT-003 is unchanged. Also distinct from the reverse-count items DAT-111 and DAT-119."
+  },
+  {
+    "key": "MATH:bank:MATH-DAT-116:1",
+    "disposition": "fixed",
+    "revision": "bank:MATH-DAT-116@2",
+    "note": "Choice D said 'Only the 5 weekdays are below the new mean', but Thursday (36) and Friday (42) are above 33. Choice D, choice B, choice A and the common trap now use the five-day mean and its combined shortfall (5 × 3 = 15; 33 + 15 = 48) instead of claims about individual days. Graph values 24, 30, 18, 36, 42 and key C = 48 unchanged; 150 + 48 = 198 = 6 × 33."
+  },
+  {
+    "key": "MATH:bank:MATH-GEO-001:1",
+    "disposition": "fixed",
+    "revision": "bank:MATH-GEO-001@2",
+    "note": "Grade 8 scope rewrite. Version 1 gave only the legs 6 and 8, so finding CD required the Pythagorean theorem (or a memorized 6-8-10 triple) for AB first; it stays preserved in its source batch. Version 2 states AB = 10 centimeters in the stem, so the task is only equating two triangle-area expressions: ½ × 6 × 8 = 24 = ½ × 10 × CD, so CD = 4.8. Solution, trap and every choice explanation rewritten with no Pythagorean or square-root step. Choice texts (2.4, 4.8, 5, 9.6) and correctness are unchanged, so choice IDs are kept per the README rule; key B = 4.8. Distractor paths rechecked: 24 ÷ 10 = 2.4 (½ dropped on the AB side), 10 ÷ 2 = 5 (midpoint assumption), 48 ÷ 5 = 9.6 (½ dropped on the legs side). Clears the bank hold at clearedByContentVersion 2."
+  },
+  {
+    "key": "MATH:bank:MATH-GEO-007:1",
+    "disposition": "held",
+    "revision": null,
+    "note": "Scope hold active in content/scope/grade8-holds.json (clearedByContentVersion null). The version 1 original is preserved unchanged and excluded from every current Grade 8 pool. No in-scope rewrite in this pass."
+  },
+  {
+    "key": "MATH:bank:MATH-GEO-012:1",
+    "disposition": "fixed",
+    "revision": "bank:MATH-GEO-012@2",
+    "note": "Choice C said 'Percent increases on two dimensions multiply', but 50% × 50% = 25%, not the 125% area increase. Rewritten so the growth factors multiply (1.5 × 1.5 = 2.25), with 225% of the original distinguished from a 125% increase. Key D = 108 unchanged; (8 × 1.5) × (6 × 1.5) = 108 = 48 × 2.25."
+  },
+  {
+    "key": "MATH:bank:MATH-GEO-103:1",
+    "disposition": "held",
+    "revision": null,
+    "note": "Scope hold active in content/scope/grade8-holds.json (clearedByContentVersion null). The version 1 original is preserved unchanged and excluded from every current Grade 8 pool. No in-scope rewrite in this pass."
+  },
+  {
+    "key": "MATH:bank:MATH-GEO-104:1",
+    "disposition": "held",
+    "revision": null,
+    "note": "Scope hold active in content/scope/grade8-holds.json (clearedByContentVersion null). The version 1 original is preserved unchanged and excluded from every current Grade 8 pool. No in-scope rewrite in this pass."
+  },
+  {
+    "key": "MATH:bank:MATH-GEO-108:1",
+    "disposition": "fixed",
+    "revision": "bank:MATH-GEO-108@2",
+    "note": "Teaching route rewritten for the Grade 8 product. The old solution and choices B and D used the Pythagorean theorem and irrational radicals (10√2, 5√2). The new route splits the square into the four center-to-vertex right triangles with legs r and r: 4 × (r²/2) = 2r² = 100, so r² = 50 and the area is 50π, without ever finding r. Choice A now also names the forgot-the-½ path (4r² = 100 gives 25π); choice D now describes diagonal-as-radius as (2r)² = 4 × 50 = 200, with no radical. No field mentions the Pythagorean theorem, the distance formula or a square root. Stem, tags, all four answer values, choice IDs and key B = 50π unchanged. Needs the scope reviewer's sign-off on the area-decomposition demand."
+  },
+  {
+    "key": "MATH:bank:MATH-GEO-110:1",
+    "disposition": "held",
+    "revision": null,
+    "note": "Scope hold active in content/scope/grade8-holds.json (clearedByContentVersion null). The version 1 original is preserved unchanged and excluded from every current Grade 8 pool. No in-scope rewrite in this pass."
+  },
+  {
+    "key": "MATH:bank:MATH-GEO-111:1",
+    "disposition": "held",
+    "revision": null,
+    "note": "Scope hold active in content/scope/grade8-holds.json (clearedByContentVersion null). The version 1 original is preserved unchanged and excluded from every current Grade 8 pool. No in-scope rewrite in this pass."
+  },
+  {
+    "key": "MATH:bank:MATH-GEO-113:1",
+    "disposition": "held",
+    "revision": null,
+    "note": "Scope hold active in content/scope/grade8-holds.json (clearedByContentVersion null). The version 1 original is preserved unchanged and excluded from every current Grade 8 pool. No in-scope rewrite in this pass."
+  },
+  {
+    "key": "MATH:bank:MATH-GEO-115:1",
+    "disposition": "held",
+    "revision": null,
+    "note": "Scope hold active in content/scope/grade8-holds.json (clearedByContentVersion null). The version 1 original is preserved unchanged and excluded from every current Grade 8 pool. No in-scope rewrite in this pass."
+  },
+  {
+    "key": "MATH:bank:MATH-GEO-116:1",
+    "disposition": "held",
+    "revision": null,
+    "note": "Scope hold active in content/scope/grade8-holds.json (clearedByContentVersion null). The version 1 original is preserved unchanged and excluded from every current Grade 8 pool. No in-scope rewrite in this pass."
+  },
+  {
+    "key": "MATH:bank:MATH-NUM-006:1",
+    "disposition": "deferred",
+    "revision": null,
+    "note": "Optional editorial finding, deferred. Stating that each difference is 2 greater than the one before would hand students the rule the item exists to test (find the growing difference) and would make distractors B (repeat the difference 10) and C (repeat the difference 12) misreadings of the stem rather than pattern errors. The intended continuation 43, 57, 73 is the conventional 'if the pattern continues' reading. Leave to the editorial reviewer to decide between strict determinacy and the pattern-finding demand."
+  },
+  {
+    "key": "MATH:bank:MATH-NUM-106:1",
+    "disposition": "fixed",
+    "revision": "bank:MATH-NUM-106@2",
+    "note": "Choice A said 0.4 to 0.0004 moves the decimal four places; it moves three (0.4 ÷ 1,000), and the explanation keeps the contrast that dividing by 100 moves it two places to 0.004. The stem did not say whether 0.4% was by mass or volume while asking for milliliters of salt; it now reads 'A 250-gram saltwater sample is 0.4% salt by mass. How many grams of salt...', and the solution's unit is grams. Choice texts (0.1, 1, 10, 100) carry no units and are unchanged, so IDs are kept; key B = 1 (gram). No volume language remains."
+  },
+  {
+    "key": "MATH:bank:MATH-NUM-106:2",
+    "disposition": "fixed",
+    "revision": "bank:MATH-NUM-106@2",
+    "note": "Choice A said 0.4 to 0.0004 moves the decimal four places; it moves three (0.4 ÷ 1,000), and the explanation keeps the contrast that dividing by 100 moves it two places to 0.004. The stem did not say whether 0.4% was by mass or volume while asking for milliliters of salt; it now reads 'A 250-gram saltwater sample is 0.4% salt by mass. How many grams of salt...', and the solution's unit is grams. Choice texts (0.1, 1, 10, 100) carry no units and are unchanged, so IDs are kept; key B = 1 (gram). No volume language remains."
+  },
+  {
+    "key": "MATH:bank:MATH-NUM-110:1",
+    "disposition": "held",
+    "revision": null,
+    "note": "Scope hold active in content/scope/grade8-holds.json (clearedByContentVersion null). The version 1 original is preserved unchanged and excluded from every current Grade 8 pool. No in-scope rewrite in this pass."
+  },
+  {
+    "key": "MATH:bank:MATH-NUM-111:1",
+    "disposition": "held",
+    "revision": null,
+    "note": "Scope hold active in content/scope/grade8-holds.json (clearedByContentVersion null). The version 1 original is preserved unchanged and excluded from every current Grade 8 pool. No in-scope rewrite in this pass."
+  },
+  {
+    "key": "SCOPE:bank:MATH-ALG-006",
+    "disposition": "fixed",
+    "revision": "bank:MATH-ALG-006@2",
+    "note": "Grade 8 scope rewrite. Version 1 (If x + y = 15 and x − y = 3, what is xy?) is a formal pair of simultaneous equations and stays preserved in its source batch. Version 2 is a sum/difference story solved with one variable: h + (h + 3) = 15 gives h = 6, and Omar earns 6 × $12 = $72. Objective changes from solving a system to writing and solving a one-variable equation from a story, so tags change from ALG-SYS to ALG-LIN (primary) and APP-FIN. Distractors come from named errors: even split ($90), answering for Lena ($108), and stopping at 2h = 12 ($144). New stem, choices, key and solution; all choices have -v2 IDs. Module stays 1 (one equation, two steps, then one multiplication). Clears the bank hold at clearedByContentVersion 2."
+  },
+  {
+    "key": "SCOPE:bank:MATH-GEO-001",
+    "disposition": "fixed",
+    "revision": "bank:MATH-GEO-001@2",
+    "note": "Grade 8 scope rewrite. Version 1 gave only the legs 6 and 8, so finding CD required the Pythagorean theorem (or a memorized 6-8-10 triple) for AB first; it stays preserved in its source batch. Version 2 states AB = 10 centimeters in the stem, so the task is only equating two triangle-area expressions: ½ × 6 × 8 = 24 = ½ × 10 × CD, so CD = 4.8. Solution, trap and every choice explanation rewritten with no Pythagorean or square-root step. Choice texts (2.4, 4.8, 5, 9.6) and correctness are unchanged, so choice IDs are kept per the README rule; key B = 4.8. Distractor paths rechecked: 24 ÷ 10 = 2.4 (½ dropped on the AB side), 10 ÷ 2 = 5 (midpoint assumption), 48 ÷ 5 = 9.6 (½ dropped on the legs side). Clears the bank hold at clearedByContentVersion 2."
+  },
+  {
+    "key": "PROMPT:near-duplicates",
+    "disposition": "fixed",
+    "revision": "bank:MATH-DAT-107@2",
+    "note": "Version 1 duplicated MATH-DAT-003 (counts {3, 4, 5}, complement of the three-marble color, the same four choices and the same key 3/4). Version 2 tests a different skill: predicting a frequency from a probability with replacement (8/20 × 60 = 24). New setting (tiles in a box) and counts (7, 5, 8), new stem, choices, key, solution and trap; every choice has a -v2 ID. Distractors: equally likely colors (60 ÷ 3 = 20), the not-orange count (12/20 × 60 = 36) and the part-to-part ratio (8/12 × 60 = 40). The key's position follows numeric order; it was not chosen to diversify letters. MATH-DAT-003 is unchanged. Also distinct from the reverse-count items DAT-111 and DAT-119."
+  },
+  {
+    "key": "PROMPT:geo-108-route",
+    "disposition": "fixed",
+    "revision": "bank:MATH-GEO-108@2",
+    "note": "Teaching route rewritten for the Grade 8 product. The old solution and choices B and D used the Pythagorean theorem and irrational radicals (10√2, 5√2). The new route splits the square into the four center-to-vertex right triangles with legs r and r: 4 × (r²/2) = 2r² = 100, so r² = 50 and the area is 50π, without ever finding r. Choice A now also names the forgot-the-½ path (4r² = 100 gives 25π); choice D now describes diagonal-as-radius as (2r)² = 4 × 50 = 200, with no radical. No field mentions the Pythagorean theorem, the distance formula or a square root. Stem, tags, all four answer values, choice IDs and key B = 50π unchanged. Needs the scope reviewer's sign-off on the area-decomposition demand."
+  },
+  {
+    "key": "PROMPT:retag-alg-sys",
+    "disposition": "fixed",
+    "revision": "bank:MATH-ALG-004@2",
+    "note": "MATH-ALG-004@2 and MATH-ALG-106@2 (metadata: ALG-SYS to ALG-LIN + APP-FIN) and MATH-ALG-115@2 (feedback: ALG-SYS removed, solution rewritten in one variable). MATH-ALG-005 already carries ALG-LIN and needs no change. ALG-107/108 carry ALG-FUN, not ALG-SYS, and are outside this key."
+  }
+]
