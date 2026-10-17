@@ -1,0 +1,230 @@
+[
+ {
+  "key": "MATH:diagnostic:MATH-ALG-001:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-ALG-001@2",
+  "note": "Merged into the v2 scope rewrite, which replaces the slope task in this slot; v2 has a full worked solution (rate $20/week from two balances, start $300, three checks) and per-choice explanations for every choice. The held v1 original is preserved unchanged in source; its slope-rule worked solution should be added if it is ever reused for a future Grade 9 product."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-ALG-001:2",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-ALG-001@2",
+  "note": "Scope rewrite: v2 asks for the equation s = 300 + 20w from balances given in context (constant weekly deposit plus starting amount), with no slope formula or parallel-line knowledge. Tag ALG-FUN -> ALG-LIN. New choice IDs -v2-a..d."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-ALG-002:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-ALG-002@2",
+  "note": "D (2x-3=10, x = 6.5, same as A) replaced by 2x-4=13 (x = 8.5, dividing 8x and 52 by 4 but not -4); new ID MATH-ALG-002-v2-d. Solution sets now 6.5, 7, 6, 8.5; only B = 7."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-ALG-002:2",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-ALG-002@2",
+  "note": "Trap and A feedback now say A changes -4 to +4 (left side +8) while adding only 4 to the right, which reproduces 8x+4=56 exactly."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-ALG-005:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-ALG-005@2",
+  "note": "C explained as the $12 bill difference (charge for 40 extra texts), D as the $15 usage charge for 50 texts; A shown not to fit both bills. Removed 'subtract the two equations' wording."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-ALG-006:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-ALG-006@2",
+  "note": "In the v2 rewrite every distractor has a specific, reproduced error: $36 (Sam's pay, 6 x 6), $45 (even split, 7.5 x 6), $63 (half plus whole difference, 10.5 x 6)."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-ALG-006:2",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-ALG-006@2",
+  "note": "Scope rewrite: formal pair x + y = 15, x - y = 3 replaced by a strawberry-picking story solved in one variable, s + (s + 3) = 15, then 9 x $6 = $54. Tag ALG-SYS -> ALG-LIN; objective, stimulus, solution and tags changed together. New choice IDs -v2-a..d."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-ALG-014:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-ALG-014@2",
+  "note": "D (5 - m >= c, equivalent to C) replaced by c - m >= 5 as the audit suggested; new ID MATH-ALG-014-v2-d. Four distinct relationships; only m - c >= 5 matches."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-ALG-016:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-ALG-016@2",
+  "note": "Optional; adopted. Trap keeps the 588 multiply error and adds a misconception that maps to B (84 + 42 + 42 = 168, dividing by 2 for t = 4). C and D get check-based feedback."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-ALG-020:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-ALG-020@2",
+  "note": "Optional; adopted without changing choices. Trap now explains the (1/2)x - x = +(1/2)x slip that gives Choice C, (1/2)(x + 20), and notes the -4 sign slip gives an expression that is not offered."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-ALG-024:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-ALG-024@2",
+  "note": "Trap now says B triples only n and adds 8 afterward, giving 3n + 8, and contrasts it with 3(n + 8) = 3n + 24."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-ALG-032:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-ALG-032@2",
+  "note": "Optional; adopted. Trap rule restated within its operation scope: multiplying or dividing both sides by a negative reverses the sign; by a positive, or adding/subtracting, keeps it."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-APP-001:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-APP-001@2",
+  "note": "Trap rewritten with explicit signs: (3 + 4) x 12 = 84 and (3 + 4) x 6 = 42; duplicated 'add' removed. Diagnostic copy only; bank APP-001 (nested wp) not touched."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-APP-003:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-APP-003@2",
+  "note": "Choice D chain split: $120 x 0.75 = $90, then $90 - $5 = $85, still naming the skipped second markdown."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-APP-007:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-APP-007@2",
+  "note": "Solution and trap keep t > 100/17 (about 5.88); least whole number 6, verified by 575/560 and 590/592. D feedback corrected (7 years works but is not the first)."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-APP-009:1",
+  "disposition": "deferred",
+  "revision": null,
+  "note": "Deferred. The proposed clause ('both continue at these constant speeds until Deon catches Maya') changes the stem of a fixed form that students have already taken; the uniform-motion reading is the standard one and the 12-mile key is unaffected. Recommend adding the clause in the next diagnostic form edition."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-APP-010:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-APP-010@2",
+  "note": "Optional; adopted without changing choices. C ($58) feedback shows it would need a $68 retail price (70% markup), not 60%."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-APP-011:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-APP-011@2",
+  "note": "Chose the retag option: kept stem, choices, IDs and key 60 (bank answer 64 not imported) for comparability with stored scores; tags APP-RTD + NUM-RAT (basic rate check). Trap now says the speed-averaging shortcut only works because both legs are 60 mph. A/B/D get check-based feedback (385/406/434 miles vs 420). Decision recorded in revisionNotes. An unequal-speed version would need a new form."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-APP-012:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-APP-012@2",
+  "note": "Optional; adopted. B = $300 + 2 x $12 = $324 and C = $300 + 3 x $12 = $336 explained as two and three years of interest."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-APP-014:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-APP-014@2",
+  "note": "Trap now affirms both 60/15 = 480/x and 15/60 = x/480 (each gives 120) and warns against the mixed 60/15 = x/480 (gives 1,920, dimensionally inconsistent)."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-APP-014:2",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-APP-014@2",
+  "note": "'Rounding error' removed (no step rounds). A, B, C kept for comparability; each explanation shows the gallons that time actually fills at 4 gal/min (360, 400, 440 vs 480) rather than inventing an error path."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-DAT-003:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-DAT-003@2",
+  "note": "Optional; adopted. B = P(blue) = 4/12 = 1/3, C = P(not blue) = 8/12 = 2/3."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-DAT-DX06:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-DAT-DX06@2",
+  "note": "Optional; adopted. D explanation now says 'Because the two rolls are independent' before multiplying."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-DAT-DX10:1",
+  "disposition": "deferred",
+  "revision": null,
+  "note": "Deferred. The stem already says the X-mark counts are shown in the table, so stimulus and payload agree and the 18 observations / answer 5 are determinate. Testing line-plot reading needs a rendered line-plot visual with an accessible alternative (renderer work), and would change the stimulus of a taken fixed form."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-GEO-001:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-GEO-001@2",
+  "note": "Merged into the v2 scope rewrite: Choice C (5) feedback now says 5 is half of AB, that the perpendicular from C does not meet AB at its midpoint here, and checks the area (25 vs 24), with no reliance on an unstated median theorem. Held v1 original preserved unchanged."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-GEO-001:2",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-GEO-001@2",
+  "note": "Scope rewrite as proposed: stem gives AB = 10; CD = 4.8 from (1/2)(6)(8) = (1/2)(10)(CD), no Pythagorean step. Distractors 4.6/5.4 replaced by 2.4 and 9.6 (dropping 1/2 on one side), IDs -v2-a/-v2-d; 4.8 and 5 keep IDs. Tags GEO-TRI + GEO-ARV."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-GEO-002:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-GEO-002@2",
+  "note": "Choice A is now 108 sq ft (new ID MATH-GEO-002-v2-a) with the exact stated error, (20 + 2) x (10 + 4) - 200 = 108; 112 had no valid pathway. Distractor and feedback rebuilt together."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-GEO-002:2",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-GEO-002@2",
+  "note": "Choice D chain split: 22 x 12 = 264 sq ft, then 264 - 200 = 64 sq ft."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-GEO-003:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-GEO-003@2",
+  "note": "(6, 8) now called the horizontal and vertical changes from P to Q (not a distance, not a location, not the length of PQ); (3, 4) is half of those changes. Midpoint (4, 7) unchanged."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-GEO-004:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-GEO-004@2",
+  "note": "Removed the claim that a noninteger width signals an error; trap names the missing second length and verifies 2w + 2(3w) = 8w = 72."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-GEO-008:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-GEO-008@2",
+  "note": "Optional; adopted. B = 10 x 5 (dropping + 3 from the length); D gets a dimension check (13 by 5, perimeter 36, area 65). Trap now maps to B."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-GEO-009:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-GEO-009@2",
+  "note": "Optional; adopted. 6π explained as π x 6 without squaring, or half the circumference 12π; both lengths, not square units."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-GEO-010:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-GEO-010@2",
+  "note": "Optional; adopted. B (108) shown to need base 24, not 28. Diagnostic key 126 kept (bank 189 is different content)."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-NUM-004:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-NUM-004@2",
+  "note": "Trap and feedback now say one endpoint gives 3 (C) and both give 4 (D)."
+ },
+ {
+  "key": "MATH:diagnostic:MATH-NUM-009:1",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-NUM-009@2",
+  "note": "A now identified as exactly the red count (4 x 6 = 24); B and C get ratio checks (6:5, 5:6)."
+ },
+ {
+  "key": "SCOPE:diagnostic:MATH-ALG-001",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-ALG-001@2",
+  "note": "Cleared by the reviewed in-scope scope-rewrite at contentVersion 2 (grade8-holds.json clearedByContentVersion 2). v1 kept in source as the preserved advanced original."
+ },
+ {
+  "key": "SCOPE:diagnostic:MATH-ALG-006",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-ALG-006@2",
+  "note": "Cleared by the reviewed in-scope scope-rewrite at contentVersion 2 (grade8-holds.json clearedByContentVersion 2). v1 kept in source as the preserved advanced original."
+ },
+ {
+  "key": "SCOPE:diagnostic:MATH-GEO-001",
+  "disposition": "fixed",
+  "revision": "diagnostic:MATH-GEO-001@2",
+  "note": "Cleared by the reviewed in-scope scope-rewrite at contentVersion 2 (grade8-holds.json clearedByContentVersion 2). v1 kept in source as the preserved advanced original."
+ }
+]

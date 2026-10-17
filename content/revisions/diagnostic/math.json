@@ -1,0 +1,1394 @@
+{
+  "track": "diagnostic",
+  "description": "Revisions to the 50 diagnostic MATH items from the 2026-10-17 content audit. Same IDs in the same form slots; past scores are stored, not regraded. Includes three Grade 8 scope rewrites of held slots (MATH-ALG-001, MATH-ALG-006, MATH-GEO-001), distractor rebuilds, and feedback corrections with per-choice explanations. Built only from the diagnostic originals; no bank stem, key or explanation is used.",
+  "questions": [
+    {
+      "id": "MATH-APP-001",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "For a presentation, Ben can create 4 slides in 5 minutes, working at a constant rate. Dylan can create 3 slides in 10 minutes, working at his own constant rate. What is the total number of slides the two of them can create in one hour?",
+      "solutionExplanation": "One hour is 60 minutes. Ben makes 4 slides every 5 minutes, and 60 ÷ 5 = 12, so he makes 12 × 4 = 48 slides in an hour. Dylan makes 3 slides every 10 minutes, and 60 ÷ 10 = 6, so he makes 6 × 3 = 18 slides in an hour. Together they make 48 + 18 = 66 slides. The correct answer is A.",
+      "commonTrap": "A student may add the slide counts without matching the time intervals: 3 + 4 = 7, then multiply by 12 or by 6 depending on which time is used. That gives (3 + 4) × 12 = 84 or (3 + 4) × 6 = 42, which are Choices C and D.",
+      "choices": [
+        {
+          "id": "MATH-APP-001-a",
+          "label": "A",
+          "text": "66",
+          "isCorrect": true,
+          "explanation": "Correct. Ben makes 12 × 4 = 48 slides in 60 minutes, and Dylan makes 6 × 3 = 18 slides in 60 minutes. Together: 48 + 18 = 66."
+        },
+        {
+          "id": "MATH-APP-001-b",
+          "label": "B",
+          "text": "48",
+          "isCorrect": false,
+          "explanation": "48 is Ben's slides alone: 12 × 4 = 48. Dylan's 18 slides must be added."
+        },
+        {
+          "id": "MATH-APP-001-c",
+          "label": "C",
+          "text": "84",
+          "isCorrect": false,
+          "explanation": "84 adds the slide counts and multiplies by 12, as if both worked in 5-minute intervals: (3 + 4) × 12 = 84. Dylan's 3 slides take 10 minutes, so he completes only 6 groups in an hour."
+        },
+        {
+          "id": "MATH-APP-001-d",
+          "label": "D",
+          "text": "42",
+          "isCorrect": false,
+          "explanation": "42 adds the slide counts and multiplies by 6, as if both worked in 10-minute intervals: (3 + 4) × 6 = 42. Ben's 4 slides take only 5 minutes, so he completes 12 groups in an hour."
+        }
+      ],
+      "tags": [
+        "APP-RTD"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-06-26T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-APP-001:1"
+      ],
+      "revisionNotes": "Feedback only. The trap had a doubled 'add' and missing multiplication signs ('712 = 84', '76 = 42' were false as printed); it now reads (3 + 4) × 12 = 84 and (3 + 4) × 6 = 42 with explicit signs. The solution shows the 12 and 6 intervals. Per-choice explanations added (B is Ben alone). Stem, choices, IDs and key unchanged. This is the diagnostic copy; the bank APP-001 record and its nested wp explanation are separate content and were not touched."
+    },
+    {
+      "id": "MATH-APP-003",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "stem": "A jacket originally costs $120. It is marked down 25%, then the discounted price is marked down an additional 10%. A customer also has a coupon for $5 off the final price. What is the price the customer pays?",
+      "solutionExplanation": "Choice A is incorrect. This results from adding the two percentage discounts into a single 35% discount off the original price: $120 × 0.65 = $78, then $78 − $5 = $73. The second markdown applies to the already reduced price of $90, not to $120. Choice B is correct. First discount: $120 × 0.75 = $90. Second discount: $90 × 0.90 = $81. Coupon: $81 − $5 = $76. Choice C is incorrect. This results from correctly applying both percentage discounts to arrive at $81 but forgetting to subtract the $5 coupon. Choice D is incorrect. This results from applying only the first discount, $120 × 0.75 = $90, and then subtracting the coupon, $90 − $5 = $85. It skips the second markdown entirely.",
+      "commonTrap": "Choice C ($81) is the most tempting wrong answer. Students who correctly apply both percentage discounts but forget the coupon will stop there. Each discount must be applied one at a time to the running price; the two percentages cannot be combined into a single discount.",
+      "choices": [
+        {
+          "id": "MATH-APP-003-a",
+          "label": "A",
+          "text": "$73.00",
+          "isCorrect": false,
+          "explanation": "$73 comes from combining the discounts into one 35% discount: $120 × 0.65 = $78, then $78 − $5 = $73. The 10% markdown applies to the reduced price of $90, not to $120."
+        },
+        {
+          "id": "MATH-APP-003-b",
+          "label": "B",
+          "text": "$76.00",
+          "isCorrect": true,
+          "explanation": "Correct. $120 × 0.75 = $90. Then $90 × 0.90 = $81. Then $81 − $5 = $76."
+        },
+        {
+          "id": "MATH-APP-003-c",
+          "label": "C",
+          "text": "$81.00",
+          "isCorrect": false,
+          "explanation": "$81 is the price after both markdowns, $90 × 0.90 = $81, before the $5 coupon is subtracted."
+        },
+        {
+          "id": "MATH-APP-003-d",
+          "label": "D",
+          "text": "$85.00",
+          "isCorrect": false,
+          "explanation": "$85 applies only the first markdown, $120 × 0.75 = $90, and then the coupon, $90 − $5 = $85. It skips the additional 10% markdown."
+        }
+      ],
+      "tags": [
+        "APP-PCT"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-06-19T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-APP-003:1"
+      ],
+      "revisionNotes": "Feedback only. The Choice D explanation '$120 × 0.75 = $90 − $5 = $85' asserted 90 = 85; it is split into $120 × 0.75 = $90, then $90 − $5 = $85, and still names the skipped second markdown. The trap's comma splice is fixed. Per-choice explanations added; stem, choices, IDs and key unchanged."
+    },
+    {
+      "id": "MATH-APP-012",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "Maria invests $300 in an account that earns 4% simple interest per year. What is the total amount in her account after 5 years?",
+      "solutionExplanation": "Choice A is incorrect. It adds only one year of interest: $300 + $12 = $312. Choice B is incorrect. It adds only two years of interest: $300 + 2 × $12 = $324. Choice C is incorrect. It adds only three years of interest: $300 + 3 × $12 = $336. Choice D is correct. Interest per year = $300 × 0.04 = $12. Over 5 years: $12 × 5 = $60. Total = $300 + $60 = $360.",
+      "commonTrap": "Students who forget to add the interest back to the principal, reporting only the interest earned ($60), will not find their answer among the choices and may second-guess a correct setup.",
+      "choices": [
+        {
+          "id": "MATH-APP-012-a",
+          "label": "A",
+          "text": "$312",
+          "isCorrect": false,
+          "explanation": "$312 includes only one year of interest: $300 + $12 = $312. The money earns $12 each year for 5 years."
+        },
+        {
+          "id": "MATH-APP-012-b",
+          "label": "B",
+          "text": "$324",
+          "isCorrect": false,
+          "explanation": "$324 includes only two years of interest: $300 + 2 × $12 = $324."
+        },
+        {
+          "id": "MATH-APP-012-c",
+          "label": "C",
+          "text": "$336",
+          "isCorrect": false,
+          "explanation": "$336 includes only three years of interest: $300 + 3 × $12 = $336."
+        },
+        {
+          "id": "MATH-APP-012-d",
+          "label": "D",
+          "text": "$360",
+          "isCorrect": true,
+          "explanation": "Correct. Each year's interest is $300 × 0.04 = $12. Over 5 years that is $60, so the total is $300 + $60 = $360."
+        }
+      ],
+      "tags": [
+        "APP-FIN"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-07-12T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-APP-012:1"
+      ],
+      "revisionNotes": "Feedback only (optional finding adopted). B and C had generic error labels; they are now explained as counting only two years ($300 + 2 × $12 = $324) and three years ($300 + 3 × $12 = $336) of interest. Per-choice explanations added; stem, choices, IDs and key unchanged."
+    },
+    {
+      "id": "MATH-APP-014",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "A pump fills a pool at a rate of 60 gallons every 15 minutes. At this rate, how many minutes will it take to fill a 480-gallon pool?",
+      "solutionExplanation": "Choice D is correct. The rate is 60 gallons ÷ 15 minutes = 4 gallons per minute, so 480 gallons takes 480 ÷ 4 = 120 minutes. A proportion works too, as long as both ratios compare the same quantities in the same order: 60/15 = 480/x (gallons to minutes) or 15/60 = x/480 (minutes to gallons). Each gives x = 120. Choices A, B, and C are too short: at 4 gallons per minute, 90 minutes fills 360 gallons, 100 minutes fills 400 gallons, and 110 minutes fills 440 gallons, all less than 480 gallons.",
+      "commonTrap": "Mixing the order of the quantities in a proportion. Both 60/15 = 480/x and 15/60 = x/480 are correct, because each side of each proportion compares the same quantities in the same order. A mixed setup such as 60/15 = x/480 compares gallons to minutes on one side and minutes to gallons on the other; it gives x = 1,920 minutes, far too long.",
+      "choices": [
+        {
+          "id": "MATH-APP-014-a",
+          "label": "A",
+          "text": "90 minutes",
+          "isCorrect": false,
+          "explanation": "At 4 gallons per minute, 90 minutes fills 4 × 90 = 360 gallons, which is 120 gallons short of 480. The time needed is 480 ÷ 4 = 120 minutes."
+        },
+        {
+          "id": "MATH-APP-014-b",
+          "label": "B",
+          "text": "100 minutes",
+          "isCorrect": false,
+          "explanation": "At 4 gallons per minute, 100 minutes fills 4 × 100 = 400 gallons, which is 80 gallons short of 480. The time needed is 480 ÷ 4 = 120 minutes."
+        },
+        {
+          "id": "MATH-APP-014-c",
+          "label": "C",
+          "text": "110 minutes",
+          "isCorrect": false,
+          "explanation": "At 4 gallons per minute, 110 minutes fills 4 × 110 = 440 gallons, which is 40 gallons short of 480. The time needed is 480 ÷ 4 = 120 minutes."
+        },
+        {
+          "id": "MATH-APP-014-d",
+          "label": "D",
+          "text": "120 minutes",
+          "isCorrect": true,
+          "explanation": "Correct. The pump moves 60 ÷ 15 = 4 gallons per minute, so 480 gallons takes 480 ÷ 4 = 120 minutes. The proportion 15/60 = x/480 gives the same answer."
+        }
+      ],
+      "tags": [
+        "APP-RTD"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-07-12T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-APP-014:1",
+        "MATH:diagnostic:MATH-APP-014:2"
+      ],
+      "revisionNotes": "Feedback only. Finding 1: the trap now states that both 60/15 = 480/x and 15/60 = x/480 are valid (each solves to 120) and warns instead against a mixed proportion, 60/15 = x/480, which is dimensionally inconsistent and gives 1,920. Finding 2: no step in the solution involves rounding, so B (100) is no longer called a rounding error. A, B and C have no standard error path, so each explanation shows how many gallons that time would actually fill at 4 gallons per minute (360, 400, 440). The choices were kept to preserve comparability on the fixed form. Per-choice explanations added; stem, choices, IDs and key unchanged."
+    },
+    {
+      "id": "MATH-NUM-009",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "A jar contains red and blue marbles in a ratio of 4 to 7. If there are 66 marbles total, how many are blue?",
+      "solutionExplanation": "Choice A is incorrect. 24 is the number of red marbles, 4 × 6 = 24, not blue marbles. Choice B is incorrect. If 30 marbles were blue, 36 would be red, and 36 to 30 is 6 to 5, not 4 to 7. Choice C is incorrect. If 36 marbles were blue, 30 would be red, and 30 to 36 is 5 to 6, not 4 to 7. Choice D is correct. The ratio has 4 + 7 = 11 total parts. Each part = 66 ÷ 11 = 6. Blue marbles = 7 × 6 = 42. Check: red = 4 × 6 = 24, and 24 + 42 = 66.",
+      "commonTrap": "Students who divide 66 by 2 (assuming an even split) will get 33, which doesn't match any choice, prompting some to guess the closest option rather than recomputing with the correct ratio.",
+      "choices": [
+        {
+          "id": "MATH-NUM-009-a",
+          "label": "A",
+          "text": "24",
+          "isCorrect": false,
+          "explanation": "24 is the number of red marbles: 4 parts × 6 = 24. The question asks for the blue marbles, 7 parts × 6 = 42."
+        },
+        {
+          "id": "MATH-NUM-009-b",
+          "label": "B",
+          "text": "30",
+          "isCorrect": false,
+          "explanation": "If 30 marbles were blue, 66 − 30 = 36 would be red, and 36 to 30 simplifies to 6 to 5, not 4 to 7."
+        },
+        {
+          "id": "MATH-NUM-009-c",
+          "label": "C",
+          "text": "36",
+          "isCorrect": false,
+          "explanation": "If 36 marbles were blue, 66 − 36 = 30 would be red, and 30 to 36 simplifies to 5 to 6, not 4 to 7."
+        },
+        {
+          "id": "MATH-NUM-009-d",
+          "label": "D",
+          "text": "42",
+          "isCorrect": true,
+          "explanation": "Correct. There are 4 + 7 = 11 parts, and 66 ÷ 11 = 6 marbles per part. Blue is 7 × 6 = 42."
+        }
+      ],
+      "tags": [
+        "NUM-RAT"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-07-12T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-NUM-009:1"
+      ],
+      "revisionNotes": "Feedback only. Choice A (24) was described as 'close to the number of red marbles'; it is exactly the red count (4 × 6 = 24), and the feedback now says it answers for red instead of blue. B (30) and C (36) have no standard error path, so their feedback checks the ratio each would imply (6 to 5 and 5 to 6, not 4 to 7). Per-choice explanations added; stem, choices, IDs and key unchanged."
+    },
+    {
+      "id": "MATH-NUM-004",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "How many positive factors of 72 are greater than 12 and less than 36?",
+      "solutionExplanation": "Listing out the factors of 72 in increasing order, we have 1, 2, 3, 4, 6, 8, 9, 12, 18, 24, 36, 72. The only numbers that are greater than 12 and less than 36 are 18 and 24, so the answer is B: 2.",
+      "commonTrap": "A student may read \"greater than 12\" as including 12, or \"less than 36\" as including 36. Including one of those endpoints gives 3 factors (Choice C), and including both gives 4 factors (Choice D). Both endpoints are excluded.",
+      "choices": [
+        {
+          "id": "MATH-NUM-004-a",
+          "label": "A",
+          "text": "1",
+          "isCorrect": false,
+          "explanation": "1 means only one factor was found between 12 and 36. Both 18 (72 = 4 × 18) and 24 (72 = 3 × 24) are factors in that range."
+        },
+        {
+          "id": "MATH-NUM-004-b",
+          "label": "B",
+          "text": "2",
+          "isCorrect": true,
+          "explanation": "Correct. The factors of 72 are 1, 2, 3, 4, 6, 8, 9, 12, 18, 24, 36, and 72. Only 18 and 24 are greater than 12 and less than 36."
+        },
+        {
+          "id": "MATH-NUM-004-c",
+          "label": "C",
+          "text": "3",
+          "isCorrect": false,
+          "explanation": "3 includes one endpoint along with 18 and 24: either 12 or 36. \"Greater than 12\" and \"less than 36\" leave out both 12 and 36."
+        },
+        {
+          "id": "MATH-NUM-004-d",
+          "label": "D",
+          "text": "4",
+          "isCorrect": false,
+          "explanation": "4 includes both endpoints: 12, 18, 24, and 36. Neither 12 nor 36 is strictly between 12 and 36."
+        }
+      ],
+      "tags": [
+        "NUM-FAC"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-NUM-004:1"
+      ],
+      "revisionNotes": "Feedback only. The trap said including either endpoint alone gives 4; including one endpoint (12 or 36) gives 3 (Choice C) and including both gives 4 (Choice D). The trap and per-choice explanations now say so. Double space in the solution removed. Stem, choices, IDs and key unchanged."
+    },
+    {
+      "id": "MATH-APP-007",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "stem": "Jaylen invests $500 in an account that earns 3% simple interest per year. His friend Maya invests $400 in an account that earns 8% simple interest per year. After how many complete years will Maya's account balance first exceed Jaylen's?",
+      "solutionExplanation": "Choice A is incorrect. After 4 years: Jaylen = 500 + 4(15) = $560. Maya = 400 + 4(32) = $528. Maya has not yet exceeded Jaylen. Choice B is incorrect. After 5 years: Jaylen = 500 + 5(15) = $575. Maya = 400 + 5(32) = $560. Maya has still not exceeded Jaylen. Choice C is correct. Jaylen earns $500 × 0.03 = $15 per year. Maya earns $400 × 0.08 = $32 per year. Set up the inequality: 400 + 32t > 500 + 15t, so 17t > 100 and t > 100/17. Since 100/17 is about 5.88, the least whole number of years is t = 6. Verify: Jaylen = 500 + 6(15) = $590. Maya = 400 + 6(32) = $592. Maya exceeds Jaylen. Choice D is incorrect. After 7 years Maya has 400 + 7(32) = $624 and Jaylen has 500 + 7(15) = $605, so Maya is ahead, but she was already ahead after 6 years, so 7 is not the first year.",
+      "commonTrap": "Students who solve 17t > 100 get t > 100/17, which is about 5.88. They must round UP to the next whole year, not down. The question asks when Maya's balance FIRST EXCEEDS Jaylen's at a whole-year mark. Always verify by plugging the answer back in to confirm the inequality is satisfied.",
+      "choices": [
+        {
+          "id": "MATH-APP-007-a",
+          "label": "A",
+          "text": "4 years",
+          "isCorrect": false,
+          "explanation": "After 4 years, Jaylen has 500 + 4(15) = $560 and Maya has 400 + 4(32) = $528. Maya has not yet passed Jaylen."
+        },
+        {
+          "id": "MATH-APP-007-b",
+          "label": "B",
+          "text": "5 years",
+          "isCorrect": false,
+          "explanation": "After 5 years, Jaylen has $575 and Maya has $560. Maya is still behind. Rounding 100/17, about 5.88, down to 5 gives this answer; round up instead."
+        },
+        {
+          "id": "MATH-APP-007-c",
+          "label": "C",
+          "text": "6 years",
+          "isCorrect": true,
+          "explanation": "Correct. Maya gains $32 − $15 = $17 per year on a $100 gap, so she passes Jaylen when 17t > 100, or t > 100/17, about 5.88. The first whole year is 6: Maya $592, Jaylen $590."
+        },
+        {
+          "id": "MATH-APP-007-d",
+          "label": "D",
+          "text": "7 years",
+          "isCorrect": false,
+          "explanation": "After 7 years Maya ($624) is ahead of Jaylen ($605), but she was already ahead after 6 years ($592 to $590). The question asks for the first year."
+        }
+      ],
+      "tags": [
+        "APP-FIN"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-APP-007:1"
+      ],
+      "revisionNotes": "Feedback only. 't > 5.88' replaced the exact threshold with a rounded decimal; the solution and trap now keep t > 100/17 (about 5.88) and conclude the least whole number is 6, with the year 5 and year 6 checks (575 vs 560, 590 vs 592). Choice D's vague 'arithmetic error' feedback is replaced by the accurate reason: Maya does exceed Jaylen after 7 years (624 vs 605), but 6 is the first year. Per-choice explanations added; stem, choices, IDs and key unchanged."
+    },
+    {
+      "id": "MATH-APP-010",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "A store buys a jacket for $40 and marks it up by 60% to set the retail price. A customer has a $10 coupon. What is the final price the customer pays?",
+      "solutionExplanation": "Choice A is incorrect. This results from subtracting the $10 coupon twice: $64 − $10 − $10 = $44. Choice B is correct. Markup: $40 × 1.60 = $64.00. Coupon: $64.00 − $10 = $54.00. Choice C is incorrect. A final price of $58 would need a retail price of $68, which is a $28 markup, or 70% of $40, not 60%. Choice D is incorrect. This is the marked-up price before the coupon is applied; students who stop before subtracting the coupon will select it.",
+      "commonTrap": "Choice D ($64.00) is the most tempting wrong answer. Students who correctly compute the markup often forget to apply the coupon afterward.",
+      "choices": [
+        {
+          "id": "MATH-APP-010-a",
+          "label": "A",
+          "text": "$44.00",
+          "isCorrect": false,
+          "explanation": "$44 subtracts the $10 coupon twice: $64 − $10 − $10 = $44. The coupon is used once."
+        },
+        {
+          "id": "MATH-APP-010-b",
+          "label": "B",
+          "text": "$54.00",
+          "isCorrect": true,
+          "explanation": "Correct. The markup is 60% of $40, or $24, so the retail price is $40 × 1.60 = $64. After the coupon: $64 − $10 = $54."
+        },
+        {
+          "id": "MATH-APP-010-c",
+          "label": "C",
+          "text": "$58.00",
+          "isCorrect": false,
+          "explanation": "$58 would need a retail price of $58 + $10 = $68, a markup of $28. That is 70% of $40, not 60%. A 60% markup is $24, giving $64 and then $54."
+        },
+        {
+          "id": "MATH-APP-010-d",
+          "label": "D",
+          "text": "$64.00",
+          "isCorrect": false,
+          "explanation": "$64 is the retail price after the markup, before the $10 coupon is subtracted."
+        }
+      ],
+      "tags": [
+        "APP-PCT"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-APP-010:1"
+      ],
+      "revisionNotes": "Feedback only (optional finding adopted without changing choices). Choice C ($58) was attributed to an unspecified arithmetic error; no standard error gives $58, so its feedback now shows what $58 would require (a $68 retail price, a 70% markup) and contrasts it with the 60% markup. Per-choice explanations added; stem, choices, IDs and key unchanged."
+    },
+    {
+      "id": "MATH-APP-011",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "stem": "A car travels 240 miles in 4 hours, then travels an additional 180 miles in 3 hours. What is the car's average speed for the entire trip?",
+      "solutionExplanation": "Choice C is correct. Total distance = 240 + 180 = 420 miles. Total time = 4 + 3 = 7 hours. Average speed = 420 ÷ 7 = 60 mph. Each leg also has a speed of 60 mph (240 ÷ 4 = 60 and 180 ÷ 3 = 60), so the car went 60 mph for the whole trip. Choices A, B, and D do not fit the given distances and times: in 7 hours, a car averaging 55 mph would go 385 miles, one averaging 58 mph would go 406 miles, and one averaging 62 mph would go 434 miles, but this car went 420 miles.",
+      "commonTrap": "Averaging the two speeds instead of dividing total distance by total time. In this problem both legs have the same speed, so that shortcut happens to give 60 mph too, but it fails whenever the legs have different speeds and take different amounts of time. Use total distance ÷ total time.",
+      "choices": [
+        {
+          "id": "MATH-APP-011-a",
+          "label": "A",
+          "text": "55 mph",
+          "isCorrect": false,
+          "explanation": "At 55 mph for 7 hours, the car would travel 55 × 7 = 385 miles. It actually traveled 240 + 180 = 420 miles in 7 hours, so its average speed is 420 ÷ 7 = 60 mph."
+        },
+        {
+          "id": "MATH-APP-011-b",
+          "label": "B",
+          "text": "58 mph",
+          "isCorrect": false,
+          "explanation": "At 58 mph for 7 hours, the car would travel 58 × 7 = 406 miles, not 420. Average speed is total distance ÷ total time: 420 ÷ 7 = 60 mph."
+        },
+        {
+          "id": "MATH-APP-011-c",
+          "label": "C",
+          "text": "60 mph",
+          "isCorrect": true,
+          "explanation": "Correct. Total distance is 240 + 180 = 420 miles and total time is 4 + 3 = 7 hours, so the average speed is 420 ÷ 7 = 60 mph."
+        },
+        {
+          "id": "MATH-APP-011-d",
+          "label": "D",
+          "text": "62 mph",
+          "isCorrect": false,
+          "explanation": "At 62 mph for 7 hours, the car would travel 62 × 7 = 434 miles, not 420. Average speed is total distance ÷ total time: 420 ÷ 7 = 60 mph."
+        }
+      ],
+      "tags": [
+        "APP-RTD",
+        "NUM-RAT"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-APP-011:1"
+      ],
+      "revisionNotes": "Decision (finding 1, diagnostic validity): retag and relevel as a basic rate check rather than change the stimulus. Because both legs are 60 mph, the unweighted-average mistake also gives the key, so the item cannot diagnose that misconception. Changing a leg's rate would change the task and key on a fixed form students have already taken, breaking comparability with stored scores, so the stem, choices, IDs and key (60) are unchanged and the bank answer 64 is not imported. Tags: APP-RTD kept and NUM-RAT added to mark it as a unit-rate check. Feedback is now honest: the trap says the speed-averaging shortcut only works here because the speeds are equal, and A, B, D (which have no standard error path) are explained by the distance each speed would give in 7 hours (385, 406, 434 miles versus 420). Per-choice explanations added."
+    },
+    {
+      "id": "MATH-ALG-001",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "stem": "Jordan had some money in a savings account. Each week after that, he deposited the same amount into the account and made no withdrawals. After 2 weeks, the account had $340. After 5 weeks, it had $400. After 9 weeks, it had $480. Which equation gives s, the number of dollars in the account after w weeks?",
+      "solutionExplanation": "The deposits are the same each week, so the balance grows by the same amount each week. From week 2 to week 5 (3 weeks), the balance grew from $340 to $400, an increase of $60, so the weekly deposit is $60 ÷ 3 = $20. The same rate fits weeks 5 to 9: $480 − $400 = $80, and $80 ÷ 4 = $20. To find the starting amount, go back 2 weeks from week 2: $340 − 2 × $20 = $300. So s = 300 + 20w. Check: 300 + 20 × 2 = 340, 300 + 20 × 5 = 400, and 300 + 20 × 9 = 480. The correct answer is A.",
+      "commonTrap": "Using $340 as the starting amount. The first balance given is for week 2, not week 0, so the starting amount is found by removing two weekly deposits: 340 − 2 × 20 = 300. Another trap is using the $60 change between two listed balances as the weekly deposit without dividing by the 3 weeks between them.",
+      "choices": [
+        {
+          "id": "MATH-ALG-001-v2-a",
+          "label": "A",
+          "text": "s = 300 + 20w",
+          "isCorrect": true,
+          "explanation": "Correct. From week 2 to week 5, the balance grew by $400 − $340 = $60 in 3 weeks, so each deposit is $60 ÷ 3 = $20. Going back 2 weeks from week 2 gives the starting amount: $340 − 2 × $20 = $300. Check week 9: 300 + 20 × 9 = 480."
+        },
+        {
+          "id": "MATH-ALG-001-v2-b",
+          "label": "B",
+          "text": "s = 340 + 20w",
+          "isCorrect": false,
+          "explanation": "This uses the correct weekly deposit, $20, but treats $340 as the starting amount. $340 is the balance after 2 weeks, not at week 0. Check: when w = 2, this equation gives 340 + 40 = 380, not 340."
+        },
+        {
+          "id": "MATH-ALG-001-v2-c",
+          "label": "C",
+          "text": "s = 220 + 60w",
+          "isCorrect": false,
+          "explanation": "This uses the $60 increase from week 2 to week 5 as the weekly deposit without dividing by the 3 weeks between those balances. Working back from $340 at that rate gives 340 − 2 × 60 = 220. The equation matches week 2 but gives 220 + 60 × 5 = 520, not 400, at week 5."
+        },
+        {
+          "id": "MATH-ALG-001-v2-d",
+          "label": "D",
+          "text": "s = 20 + 300w",
+          "isCorrect": false,
+          "explanation": "This switches the two numbers. The weekly deposit, 20, should multiply w, and the starting amount, 300, should stand alone. Check: when w = 2, this equation gives 20 + 600 = 620, not 340."
+        }
+      ],
+      "tags": [
+        "ALG-LIN"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-06-26T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "scope-rewrite",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-ALG-001:1",
+        "MATH:diagnostic:MATH-ALG-001:2",
+        "SCOPE:diagnostic:MATH-ALG-001"
+      ],
+      "revisionNotes": "Scope rewrite of the held diagnostic slot (module 2, same ID). Version 1 asked which line is parallel to y = 3x + 10, which needs formal slope and equal-slope parallelism (Grade 9 content per official-scope-evidence.md). Version 2 keeps the linear-relationship skill family at similar difficulty but asks students to find a constant weekly rate and a starting amount from balances given in context and choose the matching equation (compare Grade 8 Practice B Item 46, fixed amount plus constant charge). Data are given in the stem text, so the MC4 subtype needs no table renderer. Every distractor is a specific error: first listed balance used as the start (B), the change between listed balances used without dividing by the 3 weeks (C), start and rate swapped (D). All four choices are new content, so all choice IDs are new (-v2-a to -v2-d). Tag changed from ALG-FUN to ALG-LIN. Per-choice explanations added. The version 1 original stays in source, held; past attempts keep their stored v1 answers."
+    },
+    {
+      "id": "MATH-ALG-002",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "Which of the following equations has the same solution as the equation 8x-4=52?",
+      "solutionExplanation": "Solve the original equation: add 4 to both sides to get 8x = 56, then divide both sides by 8 to get x = 7. Choice B, 2x − 1 = 13, gives 2x = 14 and x = 7, so it has the same solution. A faster route is to divide every term of 8x − 4 = 52 by 4, which gives 2x − 1 = 13 directly. The other choices have different solutions: A gives x = 6.5, C gives x = 6, and D gives x = 8.5. The correct answer is B.",
+      "commonTrap": "Dividing only some of the terms by 4. Dividing 8x and 52 by 4 but leaving −4 alone gives 2x − 4 = 13 (Choice D), whose solution is 8.5. Every term on both sides must be divided. Choice A comes from a different slip: changing −4 to +4 adds 8 to the left side, but only 4 was added to the right side.",
+      "choices": [
+        {
+          "id": "MATH-ALG-002-a",
+          "label": "A",
+          "text": "8x+4=56",
+          "isCorrect": false,
+          "explanation": "8x + 4 = 56 has the solution x = 6.5, since 8x = 52 and 52 ÷ 8 = 6.5. It comes from changing −4 to +4 on the left, which adds 8 to that side, while adding only 4 to the right side (52 + 4 = 56). Both sides must change by the same amount."
+        },
+        {
+          "id": "MATH-ALG-002-b",
+          "label": "B",
+          "text": "2x-1=13",
+          "isCorrect": true,
+          "explanation": "Correct. Dividing every term of 8x − 4 = 52 by 4 gives 2x − 1 = 13. Solving it: 2x = 14, so x = 7, the same solution as the original equation."
+        },
+        {
+          "id": "MATH-ALG-002-c",
+          "label": "C",
+          "text": "x/2=3",
+          "isCorrect": false,
+          "explanation": "x/2 = 3 has the solution x = 6. That is the result of subtracting 4 from 52 instead of adding 4: 8x = 48, so x = 6. To undo − 4, add 4 to both sides."
+        },
+        {
+          "id": "MATH-ALG-002-v2-d",
+          "label": "D",
+          "text": "2x-4=13",
+          "isCorrect": false,
+          "explanation": "2x − 4 = 13 has the solution x = 8.5, since 2x = 17. It comes from dividing 8x and 52 by 4 but leaving the −4 unchanged. When an equation is divided by 4, every term is divided, so −4 becomes −1."
+        }
+      ],
+      "tags": [
+        "ALG-EXP"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-06-26T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-ALG-002:1",
+        "MATH:diagnostic:MATH-ALG-002:2"
+      ],
+      "revisionNotes": "Distractor rebuild. Choices A (8x+4=56) and D (2x-3=10) both had solution x = 6.5. D is replaced by 2x-4=13 (solution 8.5), the specific error of dividing 8x and 52 by 4 but not the -4; new ID MATH-ALG-002-v2-d. Solution sets are now 6.5, 7, 6, 8.5, with only B equal to 7. Key unchanged (B). The trap no longer blames A on a one-sided subtraction (finding 2); A is explained as changing -4 to +4 (adding 8 to the left) while adding only 4 to the right. Per-choice explanations added; A, B, C keep their IDs because their text and correctness are unchanged."
+    },
+    {
+      "id": "MATH-ALG-005",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "stem": "A texting plan charges a flat monthly fee plus a per-text rate. Sending 50 texts costs $25. Sending 90 texts costs $37. What is the flat monthly fee?",
+      "solutionExplanation": "Choice B is correct. The only difference between the two bills is 40 more texts (90 − 50), which add $37 − $25 = $12. So each text costs $12 ÷ 40 = $0.30. In the $25 bill, the 50 texts cost 50 × $0.30 = $15, so the flat fee is $25 − $15 = $10. Check: $10 + 90 × $0.30 = $10 + $27 = $37. Choice A is incorrect: with an $8 fee, the 50 texts would cost $17, or $0.34 each, and 90 texts would then cost $8 + $30.60 = $38.60, not $37. Choice C is incorrect: $12 is the difference between the bills, the charge for the 40 extra texts. Choice D is incorrect: $15 is the charge for the 50 texts in the $25 bill, not the flat fee.",
+      "commonTrap": "Stopping at an intermediate amount. $12 is the extra charge for 40 more texts, and $15 is the charge for the 50 texts in the $25 bill; neither is the flat fee. Subtract the usage charge from a bill to find the fee: $25 − $15 = $10.",
+      "choices": [
+        {
+          "id": "MATH-ALG-005-a",
+          "label": "A",
+          "text": "$8.00",
+          "isCorrect": false,
+          "explanation": "$8.00 does not fit both bills. With an $8 fee, the 50 texts in the $25 bill would cost $17, or $0.34 per text, and then 90 texts would cost $8 + 90 × $0.34 = $38.60, not $37."
+        },
+        {
+          "id": "MATH-ALG-005-b",
+          "label": "B",
+          "text": "$10.00",
+          "isCorrect": true,
+          "explanation": "Correct. The 40 extra texts (90 − 50) add $37 − $25 = $12, so each text costs $12 ÷ 40 = $0.30. The 50 texts in the $25 bill cost 50 × $0.30 = $15, so the flat fee is $25 − $15 = $10."
+        },
+        {
+          "id": "MATH-ALG-005-c",
+          "label": "C",
+          "text": "$12.00",
+          "isCorrect": false,
+          "explanation": "$12.00 is the difference between the two bills, $37 − $25. That is the charge for the 40 extra texts, a usage charge, not the flat fee."
+        },
+        {
+          "id": "MATH-ALG-005-d",
+          "label": "D",
+          "text": "$15.00",
+          "isCorrect": false,
+          "explanation": "$15.00 is the usage charge inside the $25 bill: 50 texts × $0.30 = $15. The flat fee is what is left after removing the usage charge: $25 − $15 = $10."
+        }
+      ],
+      "tags": [
+        "ALG-LIN"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-ALG-005:1"
+      ],
+      "revisionNotes": "Feedback only; stem, choices, IDs and key unchanged. C ($12) is now explained as the bill difference, the charge for 40 extra texts, and D ($15) as the 50-text usage charge inside the $25 bill, so the fixed fee and the usage charge are clearly distinguished. A ($8) has no standard error path, so its feedback shows that an $8 fee does not fit both bills (it would make 90 texts cost $38.60). The solution no longer says 'subtract the two equations' (formal systems language); it reasons from the 40 extra texts. The trap now names the intermediate amounts students stop at. Per-choice explanations added."
+    },
+    {
+      "id": "MATH-ALG-006",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "Priya and Sam picked a total of 15 quarts of strawberries. Priya picked 3 more quarts than Sam. A farm stand pays $6 for each quart picked. How much money is Priya paid for the strawberries she picked?",
+      "solutionExplanation": "Let s be the number of quarts Sam picked. Priya picked 3 more, so she picked s + 3 quarts. Together they picked 15 quarts: s + (s + 3) = 15. Combine like terms: 2s + 3 = 15. Subtract 3 from both sides: 2s = 12, so s = 6. Priya picked 6 + 3 = 9 quarts. Check: 9 + 6 = 15 and 9 − 6 = 3. Priya is paid 9 × $6 = $54. The correct answer is C.",
+      "commonTrap": "Splitting the total evenly and then adding the whole difference to one person. Half of 15 is 7.5, and 7.5 + 3 = 10.5 quarts would leave Sam 4.5 quarts, a difference of 6 quarts instead of 3. Another trap is answering with Sam's pay, $36, instead of Priya's.",
+      "choices": [
+        {
+          "id": "MATH-ALG-006-v2-a",
+          "label": "A",
+          "text": "$36",
+          "isCorrect": false,
+          "explanation": "$36 is Sam's pay. Sam picked 6 quarts, and 6 × $6 = $36. The question asks for Priya's pay, and Priya picked 3 more quarts than Sam."
+        },
+        {
+          "id": "MATH-ALG-006-v2-b",
+          "label": "B",
+          "text": "$45",
+          "isCorrect": false,
+          "explanation": "$45 comes from splitting the 15 quarts evenly: 15 ÷ 2 = 7.5 quarts, and 7.5 × $6 = $45. Priya picked 3 more quarts than Sam, so the quarts are not split evenly."
+        },
+        {
+          "id": "MATH-ALG-006-v2-c",
+          "label": "C",
+          "text": "$54",
+          "isCorrect": true,
+          "explanation": "Correct. Let s be the number of quarts Sam picked, so Priya picked s + 3. Then s + (s + 3) = 15, so 2s + 3 = 15, 2s = 12, and s = 6. Priya picked 9 quarts and is paid 9 × $6 = $54."
+        },
+        {
+          "id": "MATH-ALG-006-v2-d",
+          "label": "D",
+          "text": "$63",
+          "isCorrect": false,
+          "explanation": "$63 comes from taking half the total and then adding all 3 extra quarts: 7.5 + 3 = 10.5 quarts, and 10.5 × $6 = $63. Then Sam would have 15 − 10.5 = 4.5 quarts, which is 6 quarts less than Priya, not 3."
+        }
+      ],
+      "tags": [
+        "ALG-LIN"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "scope-rewrite",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-ALG-006:1",
+        "MATH:diagnostic:MATH-ALG-006:2",
+        "SCOPE:diagnostic:MATH-ALG-006"
+      ],
+      "revisionNotes": "Scope rewrite of the held diagnostic slot (module 1, same ID). Version 1 presented the formal pair x + y = 15, x − y = 3 and carried ALG-SYS. Version 2 is a sum/difference story with the same numbers (total 15, difference 3) solved in one variable, s + (s + 3) = 15, as the audit proposed; the second step (9 quarts × $6) keeps the original two-step demand and the key value 54, now in dollars because it is money. Distractors are now specific errors (finding 1): Sam's pay ($36), an even split ($45), and half the total plus the whole difference ($63). Choice text changed (dollar amounts, new 63), so all choice IDs are new. Tag ALG-SYS replaced by ALG-LIN. Per-choice explanations added. Version 1 stays in source, held."
+    },
+    {
+      "id": "MATH-ALG-014",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "stem": "Maria is at least 5 years older than Carlos. Which of the following inequalities gives the relationship between Maria's age (m) and Carlos's age (c)?",
+      "solutionExplanation": "'Maria is at least 5 years older than Carlos' means Maria's age minus Carlos's age is 5 or more: m − c ≥ 5. The correct answer is A. Choice B uses 'at most' instead of 'at least.' Choice C can be rewritten as m + c ≤ 5, which describes the sum of the ages, not the difference. Choice D subtracts in the wrong order and describes Carlos as the older person.",
+      "commonTrap": "A common mistake is confusing \"at least\" with \"at most.\" This leads to the inequality m − c ≤ 5, which corresponds to answer B. Remember that \"at least\" means greater than or equal to.",
+      "choices": [
+        {
+          "id": "MATH-ALG-014-a",
+          "label": "A",
+          "text": "m − c ≥ 5",
+          "isCorrect": true,
+          "explanation": "Correct. 'Maria is at least 5 years older than Carlos' means the difference m − c is 5 or more: m − c ≥ 5."
+        },
+        {
+          "id": "MATH-ALG-014-b",
+          "label": "B",
+          "text": "m − c ≤ 5",
+          "isCorrect": false,
+          "explanation": "m − c ≤ 5 says Maria is at most 5 years older than Carlos. 'At least' means greater than or equal to, so the sign should be ≥."
+        },
+        {
+          "id": "MATH-ALG-014-c",
+          "label": "C",
+          "text": "5 − c ≥ m",
+          "isCorrect": false,
+          "explanation": "5 − c ≥ m can be rewritten as m + c ≤ 5, which says the two ages add to 5 or less. The statement is about the difference between the ages, not their sum."
+        },
+        {
+          "id": "MATH-ALG-014-v2-d",
+          "label": "D",
+          "text": "c − m ≥ 5",
+          "isCorrect": false,
+          "explanation": "c − m ≥ 5 subtracts in the wrong order. It says Carlos is at least 5 years older than Maria. Maria is the older one, so subtract Carlos's age from Maria's: m − c ≥ 5."
+        }
+      ],
+      "tags": [
+        "ALG-LIN"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-ALG-014:1"
+      ],
+      "revisionNotes": "Distractor rebuild. C (5 − c ≥ m) and D (5 − m ≥ c) both reduce to m + c ≤ 5. D is replaced by c − m ≥ 5, the distinct error of subtracting in the wrong order (it says Carlos is at least 5 years older); new ID MATH-ALG-014-v2-d. The four choices now define four different relationships (m − c ≥ 5, m − c ≤ 5, m + c ≤ 5, c − m ≥ 5) and only A matches the statement. Key unchanged (A). Solution extended and per-choice explanations added; A, B, C keep their IDs."
+    },
+    {
+      "id": "MATH-ALG-024",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "stem": "Emma has m stickers, and Noah has n stickers. If Emma gives 8 stickers to Noah, Emma will have three times as many stickers as Noah. Which equation shows the relationship between m and n?",
+      "solutionExplanation": "After Emma gives away 8 stickers, she has m - 8 stickers left. Noah receives those 8 stickers, so he has n + 8 stickers. Since Emma then has three times as many stickers as Noah, the correct equation is m - 8 = 3(n + 8).",
+      "commonTrap": "Tripling only Noah's original count. Writing m - 8 = 3n + 8 (Choice B) adds the 8 stickers after multiplying, but Emma will have three times Noah's entire new total, so the right side is 3(n + 8) = 3n + 24, not 3n + 8.",
+      "choices": [
+        {
+          "id": "MATH-ALG-024-a",
+          "label": "A",
+          "text": "m - 8 = 3(n + 8)",
+          "isCorrect": true,
+          "explanation": "Correct. After the trade, Emma has m - 8 stickers and Noah has n + 8. Emma's amount is three times Noah's new amount: m - 8 = 3(n + 8)."
+        },
+        {
+          "id": "MATH-ALG-024-b",
+          "label": "B",
+          "text": "m - 8 = 3n + 8",
+          "isCorrect": false,
+          "explanation": "m - 8 = 3n + 8 multiplies only Noah's original n by 3 and then adds 8. Noah's whole new total, n + 8, must be tripled: 3(n + 8) = 3n + 24, not 3n + 8."
+        },
+        {
+          "id": "MATH-ALG-024-c",
+          "label": "C",
+          "text": "3(m - 8) = n + 8",
+          "isCorrect": false,
+          "explanation": "3(m - 8) = n + 8 says Noah will have three times as many stickers as Emma. The problem says Emma will have three times as many, so the 3 multiplies Noah's amount."
+        },
+        {
+          "id": "MATH-ALG-024-d",
+          "label": "D",
+          "text": "3(m - 8) = n",
+          "isCorrect": false,
+          "explanation": "3(m - 8) = n reverses who has three times as many and also leaves out the 8 stickers Noah receives."
+        }
+      ],
+      "tags": [
+        "ALG-LIN"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-ALG-024:1"
+      ],
+      "revisionNotes": "Feedback only. The trap said B comes from forgetting to add 8 to Noah's total, which would give m - 8 = 3n. B (m - 8 = 3n + 8) actually multiplies only Noah's original count by 3 and adds the 8 afterward; the trap now says so and contrasts 3n + 8 with 3(n + 8) = 3n + 24. Per-choice explanations added; stem, choices, IDs and key unchanged."
+    },
+    {
+      "id": "MATH-ALG-032",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "stem": "Which inequality is equivalent to -4x + 12 > 28?",
+      "solutionExplanation": "Start by subtracting 12 from both sides of the inequality to get -4x > 16. Next, divide both sides by -4. Because you are dividing by a negative number, you must reverse the direction of the inequality. This gives x < -4. Therefore, the correct answer is Choice D.",
+      "commonTrap": "A common mistake is forgetting to reverse the inequality sign when dividing by -4. Students who make this error conclude that x > -4, leading them to choose Choice A. When you multiply or divide both sides of an inequality by a negative number, reverse the sign; multiplying or dividing by a positive number, or adding or subtracting the same number on both sides, keeps the sign.",
+      "choices": [
+        {
+          "id": "MATH-ALG-032-a",
+          "label": "A",
+          "text": "x > -4",
+          "isCorrect": false,
+          "explanation": "x > -4 comes from forgetting to reverse the inequality sign when dividing both sides by −4. The division 16 ÷ (−4) = −4 is right, but dividing by a negative number reverses the sign."
+        },
+        {
+          "id": "MATH-ALG-032-b",
+          "label": "B",
+          "text": "x < 4",
+          "isCorrect": false,
+          "explanation": "x < 4 reverses the sign correctly but drops the negative: 16 ÷ (−4) = −4, not 4."
+        },
+        {
+          "id": "MATH-ALG-032-c",
+          "label": "C",
+          "text": "x > 4",
+          "isCorrect": false,
+          "explanation": "x > 4 makes two errors: it drops the negative in 16 ÷ (−4) and does not reverse the sign. Check: x = 5 gives −4(5) + 12 = −8, which is not greater than 28."
+        },
+        {
+          "id": "MATH-ALG-032-d",
+          "label": "D",
+          "text": "x < -4",
+          "isCorrect": true,
+          "explanation": "Correct. Subtract 12 from both sides: −4x > 16. Divide both sides by −4 and reverse the sign: x < −4. Check: x = −5 gives −4(−5) + 12 = 32, which is greater than 28."
+        }
+      ],
+      "tags": [
+        "ALG-LIN"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-ALG-032:1"
+      ],
+      "revisionNotes": "Feedback only (optional finding adopted). The trap's rule 'the inequality symbol only changes direction when multiplying or dividing by a negative number' was broader than intended; it now states the rule within its operation scope (multiplying or dividing both sides by a negative reverses the sign; by a positive, or adding or subtracting, keeps it). Per-choice explanations added; stem, choices, IDs and key unchanged."
+    },
+    {
+      "id": "MATH-ALG-016",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "stem": "For the equation m · t = 84, what is the sum of the values of m when t = 1, when t = 2, and when t = 4?",
+      "solutionExplanation": "Since m · t = 84, solve for m by dividing 84 by the given value of t. When t = 1, m = 84. When t = 2, m = 42. When t = 4, m = 21. Adding these values gives 84 + 42 + 21 = 147. Therefore, the correct answer is A.",
+      "commonTrap": "Multiplying 84 by each value of t instead of dividing. That gives 84 + 168 + 336 = 588, which is not a choice, a sign to recheck the setup. A related slip is dividing by the wrong number for one value, such as using 84 ÷ 2 = 42 when t = 4, which gives 84 + 42 + 42 = 168 (Choice B).",
+      "choices": [
+        {
+          "id": "MATH-ALG-016-a",
+          "label": "A",
+          "text": "147",
+          "isCorrect": true,
+          "explanation": "Correct. Since m · t = 84, m = 84 ÷ t. The values are 84 ÷ 1 = 84, 84 ÷ 2 = 42, and 84 ÷ 4 = 21, and 84 + 42 + 21 = 147."
+        },
+        {
+          "id": "MATH-ALG-016-b",
+          "label": "B",
+          "text": "168",
+          "isCorrect": false,
+          "explanation": "168 is 84 + 42 + 42. It uses m = 42 for t = 4 by dividing 84 by 2 instead of by 4. When t = 4, m = 84 ÷ 4 = 21."
+        },
+        {
+          "id": "MATH-ALG-016-c",
+          "label": "C",
+          "text": "189",
+          "isCorrect": false,
+          "explanation": "189 is not the sum of the three values of m. With m = 84 and m = 42 for t = 1 and t = 2, a sum of 189 would need m = 63 when t = 4, but 63 × 4 = 252, not 84. The values are 84, 42, and 21, and their sum is 147."
+        },
+        {
+          "id": "MATH-ALG-016-d",
+          "label": "D",
+          "text": "210",
+          "isCorrect": false,
+          "explanation": "210 is not the sum of the three values of m. With m = 84 and m = 42 for t = 1 and t = 2, a sum of 210 would need m = 84 when t = 4, but 84 × 4 = 336, not 84. The values are 84, 42, and 21, and their sum is 147."
+        }
+      ],
+      "tags": [
+        "ALG-EXP"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-ALG-016:1"
+      ],
+      "revisionNotes": "Feedback only (optional finding adopted). The trap still names the multiply-instead-of-divide error (588, not a choice) but now also maps a misconception to a displayed choice: dividing by 2 instead of 4 for t = 4 gives 84 + 42 + 42 = 168 (B). C (189) and D (210) have no standard error path; their feedback shows the value of m they would require and that it fails m · t = 84. Per-choice explanations added; stem, choices, IDs and key unchanged."
+    },
+    {
+      "id": "MATH-ALG-020",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "stem": "Which expression is equivalent to (1/2)x + 6 − (x − 4)?",
+      "solutionExplanation": "Distribute the negative sign to get (1/2)x + 6 - x + 4. Combine like terms to obtain -(1/2)x + 10. Factoring out -(1/2) gives -(1/2)(x - 20). Therefore, the correct answer is A.",
+      "commonTrap": "Combining (1/2)x − x incorrectly. Since 1/2 − 1 = −1/2, the x-term is −(1/2)x; writing +(1/2)x instead gives (1/2)x + 10 = (1/2)(x + 20), Choice C. Another slip is forgetting to change the sign of −4 when removing the parentheses, which gives −(1/2)x + 2 = −(1/2)(x − 4); that expression is not a choice, so recheck the distribution if you get it.",
+      "choices": [
+        {
+          "id": "MATH-ALG-020-a",
+          "label": "A",
+          "text": "-(1/2)(x - 20)",
+          "isCorrect": true,
+          "explanation": "Correct. Distributing the negative sign gives (1/2)x + 6 − x + 4. Combining like terms gives −(1/2)x + 10. Factoring out −(1/2) gives −(1/2)(x − 20), because −(1/2) × (−20) = 10."
+        },
+        {
+          "id": "MATH-ALG-020-b",
+          "label": "B",
+          "text": "-(1/2)(x + 20)",
+          "isCorrect": false,
+          "explanation": "−(1/2)(x + 20) expands to −(1/2)x − 10. The x-term is right, but the constant has the wrong sign. To factor −(1/2) out of +10, the number inside the parentheses must be −20, since −(1/2) × (−20) = 10."
+        },
+        {
+          "id": "MATH-ALG-020-c",
+          "label": "C",
+          "text": "(1/2)(x + 20)",
+          "isCorrect": false,
+          "explanation": "(1/2)(x + 20) expands to (1/2)x + 10. This comes from combining (1/2)x − x as +(1/2)x instead of −(1/2)x. The constant, 10, is right."
+        },
+        {
+          "id": "MATH-ALG-020-d",
+          "label": "D",
+          "text": "(1/2)(x - 20)",
+          "isCorrect": false,
+          "explanation": "(1/2)(x − 20) expands to (1/2)x − 10, which is the opposite of the correct expression: both terms have the wrong sign."
+        }
+      ],
+      "tags": [
+        "ALG-EXP"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-ALG-020:1"
+      ],
+      "revisionNotes": "Feedback only (optional finding adopted without changing choices). The trap now explains a sign error that produces a displayed choice: combining (1/2)x − x as +(1/2)x gives (1/2)x + 10 = (1/2)(x + 20), Choice C. It keeps the note that forgetting to change the sign of −4 gives −(1/2)(x − 4), which is not a choice. Replacing a distractor with −(1/2)(x − 4) was not done, to keep the fixed form's choices. Per-choice explanations added; IDs and key unchanged."
+    },
+    {
+      "id": "MATH-GEO-001",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "stem": "In triangle ABC, angle C is a right angle, AC = 6, BC = 8, and AB = 10. Point D lies on AB such that CD is perpendicular to AB. What is the length of CD?",
+      "solutionExplanation": "Find the area of triangle ABC in two ways. Because angle C is a right angle, AC and BC can be the base and height: area = (1/2) × 6 × 8 = 24. Because CD is perpendicular to AB, AB can be the base and CD the height: area = (1/2) × 10 × CD = 5 × CD. Both expressions give the same area, so 5 × CD = 24 and CD = 24 ÷ 5 = 4.8. The correct answer is B.",
+      "commonTrap": "Assuming D is the midpoint of AB and answering 5, half of AB. The perpendicular from C does not meet AB at its midpoint in this triangle. Instead, write the area two ways and set them equal. Keep the 1/2 in both area expressions; dropping it on one side gives 2.4 or 9.6.",
+      "choices": [
+        {
+          "id": "MATH-GEO-001-v2-a",
+          "label": "A",
+          "text": "2.4",
+          "isCorrect": false,
+          "explanation": "2.4 comes from leaving out the 1/2 on the AB side: setting (1/2) × 6 × 8 = 24 equal to 10 × CD gives CD = 2.4. With AB as the base, the area is (1/2) × 10 × CD, so 24 = 5 × CD."
+        },
+        {
+          "id": "MATH-GEO-001-b",
+          "label": "B",
+          "text": "4.8",
+          "isCorrect": true,
+          "explanation": "Correct. Using the legs, the area is (1/2) × 6 × 8 = 24. Using AB as the base and CD as the height, the area is (1/2) × 10 × CD = 5 × CD. So 5 × CD = 24, and CD = 4.8."
+        },
+        {
+          "id": "MATH-GEO-001-c",
+          "label": "C",
+          "text": "5",
+          "isCorrect": false,
+          "explanation": "5 is half of AB, 10 ÷ 2. It treats D as the midpoint of AB, but the perpendicular from C does not meet AB at its midpoint in this triangle. Check: if CD were 5, the area would be (1/2) × 10 × 5 = 25, not 24."
+        },
+        {
+          "id": "MATH-GEO-001-v2-d",
+          "label": "D",
+          "text": "9.6",
+          "isCorrect": false,
+          "explanation": "9.6 comes from leaving out the 1/2 on the legs side: setting 6 × 8 = 48 equal to (1/2) × 10 × CD gives 5 × CD = 48 and CD = 9.6. The 1/2 belongs in both area expressions, so 5 × CD = 24."
+        }
+      ],
+      "tags": [
+        "GEO-TRI",
+        "GEO-ARV"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-07-12T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "scope-rewrite",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-GEO-001:1",
+        "MATH:diagnostic:MATH-GEO-001:2",
+        "SCOPE:diagnostic:MATH-GEO-001"
+      ],
+      "revisionNotes": "Scope rewrite of the held diagnostic slot (module 2, same ID), as the audit proposed: the stem now gives AB = 10, so no Pythagorean step is needed; CD = 4.8 follows from equating (1/2)(6)(8) and (1/2)(10)(CD). Key unchanged (4.8). The unmotivated distractors 4.6 and 5.4 are replaced by real area-equation errors (dropping the 1/2 on one side gives 2.4 or 9.6) with new IDs -v2-a and -v2-d; 4.8 and 5 keep their text, correctness and IDs. The 5 feedback now says plainly that 5 is half of AB and that the perpendicular from C does not meet AB at its midpoint here, with an area check, instead of relying on an unstated median fact (finding 1). Tag GEO-ARV added for the two-way area method. Per-choice explanations added. Version 1 stays in source, held."
+    },
+    {
+      "id": "MATH-GEO-002",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "A rectangular swimming pool is 20 feet long and 10 feet wide. It is surrounded by a uniform walkway that is 2 feet wide on all sides. What is the area of the walkway alone?",
+      "solutionExplanation": "Choice A is incorrect. This results from adding the walkway width to only one end of the length but to both ends of the width: the outer rectangle is (20 + 2) × (10 + 4) = 22 × 14 = 308 sq ft, and 308 − 200 = 108 sq ft. Choice B is incorrect. This results from multiplying the pool's perimeter by the walkway width: 2(20 + 10) × 2 = 60 × 2 = 120 sq ft. That counts the four strips along the sides of the pool but leaves out the four 2-by-2 corner squares, 4 × 4 = 16 sq ft. Choice C is correct. Pool area = 20 × 10 = 200 sq ft. The walkway adds 2 feet to each side, so the outer rectangle is (20 + 4) × (10 + 4) = 24 × 14 = 336 sq ft. Walkway area = 336 − 200 = 136 sq ft. Choice D is incorrect. This results from adding 2 feet to each dimension only once instead of twice: the outer rectangle is (20 + 2) × (10 + 2) = 22 × 12 = 264 sq ft, and 264 − 200 = 64 sq ft.",
+      "commonTrap": "The most common error is adding the walkway width to each dimension only once. A 2-foot walkway on ALL sides means each dimension increases by 4, 2 feet on each end. Students who add only 2 to each dimension will compute an outer rectangle that is too small.",
+      "choices": [
+        {
+          "id": "MATH-GEO-002-v2-a",
+          "label": "A",
+          "text": "108 sq ft",
+          "isCorrect": false,
+          "explanation": "108 sq ft comes from adding the walkway to only one end of the length but to both ends of the width: (20 + 2) × (10 + 4) = 22 × 14 = 308 sq ft, and 308 − 200 = 108 sq ft. The walkway is on all sides, so the length also grows by 4 feet."
+        },
+        {
+          "id": "MATH-GEO-002-b",
+          "label": "B",
+          "text": "120 sq ft",
+          "isCorrect": false,
+          "explanation": "120 sq ft is the pool's perimeter times the walkway width: 2(20 + 10) × 2 = 120 sq ft. That covers the four side strips but leaves out the four 2-by-2 corner squares, 4 × 4 = 16 sq ft. Adding them gives 136 sq ft."
+        },
+        {
+          "id": "MATH-GEO-002-c",
+          "label": "C",
+          "text": "136 sq ft",
+          "isCorrect": true,
+          "explanation": "Correct. The outer rectangle is (20 + 4) × (10 + 4) = 24 × 14 = 336 sq ft. Subtract the pool, 20 × 10 = 200 sq ft: 336 − 200 = 136 sq ft."
+        },
+        {
+          "id": "MATH-GEO-002-d",
+          "label": "D",
+          "text": "64 sq ft",
+          "isCorrect": false,
+          "explanation": "64 sq ft comes from adding 2 feet to each dimension only once: (20 + 2) × (10 + 2) = 22 × 12 = 264 sq ft, and 264 − 200 = 64 sq ft. A 2-foot walkway on both ends adds 4 feet to each dimension."
+        }
+      ],
+      "tags": [
+        "GEO-ARV"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-07-12T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-GEO-002:1",
+        "MATH:diagnostic:MATH-GEO-002:2"
+      ],
+      "revisionNotes": "Distractor/feedback pair rebuilt together. The stated partial-dimension error (adding 2 to only one end of the length but to both ends of the width) gives (20 + 2) × (10 + 4) − 200 = 308 − 200 = 108, not the displayed 112, and no stated pathway produced 112. Choice A is now 108 sq ft with new ID MATH-GEO-002-v2-a and its explanation shows that exact calculation. The false chain '22 × 12 = 264 − 200 = 64' is split into 22 × 12 = 264 sq ft, then 264 − 200 = 64 sq ft (finding 2). Choice B's explanation now also shows the 16 sq ft of corners it leaves out. Key unchanged (C, 136). Per-choice explanations added; B, C, D keep their IDs."
+    },
+    {
+      "id": "MATH-GEO-003",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "On a coordinate grid, point P is at (1, 3) and point Q is at (7, 11). Point R lies exactly halfway between P and Q. What are the coordinates of point R?",
+      "solutionExplanation": "Choice A is incorrect. This results from finding half of the horizontal and vertical changes from P to Q, (7 − 1)/2 = 3 and (11 − 3)/2 = 4, and reporting them as coordinates instead of adding them to P's coordinates: (1 + 3, 3 + 4) = (4, 7). Choice B is correct. Midpoint = ((1 + 7)/2, (3 + 11)/2) = (8/2, 14/2) = (4, 7). Choice C is incorrect. This results from computing the x-coordinate correctly (4) but misreading Q's y-coordinate as 13 instead of 11: (3 + 13)/2 = 8. Choice D is incorrect. (6, 8) is the horizontal and vertical change from P to Q: 7 − 1 = 6 and 11 − 3 = 8. These changes describe how to move from P to Q; they are not a location, and they are not the length of segment PQ.",
+      "commonTrap": "Subtracting the coordinates instead of averaging them. Subtracting P from Q gives the changes (6, 8), which describe the move from P to Q, not the location of the midpoint. The midpoint averages the x-coordinates and averages the y-coordinates: ((1 + 7)/2, (3 + 11)/2) = (4, 7).",
+      "choices": [
+        {
+          "id": "MATH-GEO-003-a",
+          "label": "A",
+          "text": "(3, 4)",
+          "isCorrect": false,
+          "explanation": "(3, 4) is half of the horizontal and vertical changes from P to Q: (7 − 1)/2 = 3 and (11 − 3)/2 = 4. To reach the midpoint, add these to P's coordinates: (1 + 3, 3 + 4) = (4, 7)."
+        },
+        {
+          "id": "MATH-GEO-003-b",
+          "label": "B",
+          "text": "(4, 7)",
+          "isCorrect": true,
+          "explanation": "Correct. Average the coordinates: ((1 + 7)/2, (3 + 11)/2) = (4, 7)."
+        },
+        {
+          "id": "MATH-GEO-003-c",
+          "label": "C",
+          "text": "(4, 8)",
+          "isCorrect": false,
+          "explanation": "(4, 8) has the correct x-coordinate, but its y-coordinate uses 13 instead of Q's y-coordinate, 11: (3 + 13)/2 = 8. The correct y-coordinate is (3 + 11)/2 = 7."
+        },
+        {
+          "id": "MATH-GEO-003-d",
+          "label": "D",
+          "text": "(6, 8)",
+          "isCorrect": false,
+          "explanation": "(6, 8) is the horizontal and vertical change from P to Q: 7 − 1 = 6 and 11 − 3 = 8. It describes the move from P to Q, not the location halfway between them."
+        }
+      ],
+      "tags": [
+        "GEO-COO"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-07-12T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-GEO-003:1"
+      ],
+      "revisionNotes": "Feedback only. The pair (6, 8) was called 'the distance between the points' and (3, 4) 'half the distance'. They are now called the horizontal and vertical changes from P to Q and half of those changes; the feedback separates these changes from the midpoint (4, 7) and notes they are not the length of PQ. Midpoint calculation unchanged. Per-choice explanations added; stem, choices, IDs and key unchanged."
+    },
+    {
+      "id": "MATH-GEO-004",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "A rectangular yard has a length that is 3 times its width. The yard is enclosed by 72 feet of fencing. What is the area of the yard?",
+      "solutionExplanation": "Choice A is incorrect. This results from finding the width correctly (9 feet) but computing the area as width × width: 9 × 9 = 81. Choice B is correct. Let width = w. Length = 3w. Perimeter: 2w + 2(3w) = 8w = 72, so w = 9 feet. Length = 27 feet. Check: 2(9) + 2(27) = 72. Area = 9 × 27 = 243 sq ft. Choice C is incorrect. This uses w + 3w = 72, which counts only one width and one length, so 4w = 72 and w = 18. The length would be 54, and 18 × 54 = 972. Choice D is incorrect. This uses the correct width, 9 feet, but finds the length by treating 72 as two lengths only (2 × length = 72, so length = 36), then computes 9 × 36 = 324.",
+      "commonTrap": "Students who set up the perimeter as 2w + 3w = 72 count both widths but only one length. That gives 5w = 72 and w = 14.4. The problem is not that 14.4 is a decimal, since side lengths can be fractions or decimals; the problem is the missing second length. The perimeter of a rectangle includes two lengths and two widths: 2w + 2(3w) = 8w = 72, so w = 9.",
+      "choices": [
+        {
+          "id": "MATH-GEO-004-a",
+          "label": "A",
+          "text": "81 sq ft",
+          "isCorrect": false,
+          "explanation": "81 is the width times itself, 9 × 9. The length is 3 × 9 = 27, so the area is 9 × 27 = 243."
+        },
+        {
+          "id": "MATH-GEO-004-b",
+          "label": "B",
+          "text": "243 sq ft",
+          "isCorrect": true,
+          "explanation": "Correct. The perimeter is 2w + 2(3w) = 8w = 72, so w = 9 and the length is 27. Area = 9 × 27 = 243 sq ft."
+        },
+        {
+          "id": "MATH-GEO-004-c",
+          "label": "C",
+          "text": "972 sq ft",
+          "isCorrect": false,
+          "explanation": "972 comes from w + 3w = 72, which counts only one width and one length. That gives w = 18 and length 54, and 18 × 54 = 972. The fence goes around all four sides."
+        },
+        {
+          "id": "MATH-GEO-004-d",
+          "label": "D",
+          "text": "324 sq ft",
+          "isCorrect": false,
+          "explanation": "324 uses the correct width, 9, but takes the length from 2 × length = 72, which ignores the widths. The length is 3 × 9 = 27, not 36."
+        }
+      ],
+      "tags": [
+        "GEO-QUAD"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-07-12T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-GEO-004:1"
+      ],
+      "revisionNotes": "Feedback only. The trap said the noninteger width 14.4 'signals an error'; side lengths can be noninteger, so the trap now identifies the actual error (2w + 3w counts only one length) and verifies the perimeter with 2w + 2(3w) = 8w = 72. Choice C's explanation is reworded (w + 3w = 72 counts one width and one length). Per-choice explanations added; stem, choices, IDs and key unchanged."
+    },
+    {
+      "id": "MATH-GEO-008",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "stem": "A rectangle has a length of 2x + 3 and a width of x. If the perimeter is 36, what is the area of the rectangle?",
+      "solutionExplanation": "Choice A is incorrect. 36 is the perimeter, not the area. Choice B is incorrect. It uses 2x = 10 as the length, leaving out the + 3: 10 × 5 = 50. Choice C is correct. Perimeter: 2[(2x + 3) + x] = 36. 2(3x + 3) = 36. 3x + 3 = 18. 3x = 15. x = 5. Length = 2(5) + 3 = 13. Width = 5. Area = 13 × 5 = 65. Choice D is incorrect. With x = 5, the sides are 13 and 5 (check: 2(13 + 5) = 36), so the area is 65, not 78.",
+      "commonTrap": "Stopping partway through the length. After finding x = 5, some students use 2x = 10 as the length and forget the + 3, getting 10 × 5 = 50. The length is 2x + 3 = 13, so the area is 13 × 5 = 65.",
+      "choices": [
+        {
+          "id": "MATH-GEO-008-a",
+          "label": "A",
+          "text": "36",
+          "isCorrect": false,
+          "explanation": "36 is the perimeter given in the problem, not the area."
+        },
+        {
+          "id": "MATH-GEO-008-b",
+          "label": "B",
+          "text": "50",
+          "isCorrect": false,
+          "explanation": "50 is 10 × 5. It uses 2x = 10 as the length and leaves out the + 3. The length is 2(5) + 3 = 13."
+        },
+        {
+          "id": "MATH-GEO-008-c",
+          "label": "C",
+          "text": "65",
+          "isCorrect": true,
+          "explanation": "Correct. 2[(2x + 3) + x] = 36 gives 3x + 3 = 18, so x = 5. The rectangle is 13 by 5, and 13 × 5 = 65."
+        },
+        {
+          "id": "MATH-GEO-008-d",
+          "label": "D",
+          "text": "78",
+          "isCorrect": false,
+          "explanation": "78 is not the area of this rectangle. With x = 5, the sides are 13 and 5, which give the perimeter 2(13 + 5) = 36, and the area is 13 × 5 = 65."
+        }
+      ],
+      "tags": [
+        "GEO-QUAD"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-07-12T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-GEO-008:1"
+      ],
+      "revisionNotes": "Feedback only (optional finding adopted). B (50) is now tied to dropping the + 3 from the length (5 × 10); D (78) has no standard error path, so its feedback checks the dimensions (13 by 5, perimeter 36, area 65). The trap, which named an answer not offered (length × length), now names the slip that gives B. Per-choice explanations added; stem, choices, IDs and key unchanged."
+    },
+    {
+      "id": "MATH-GEO-009",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "A circle has a radius of 6. What is the area of one quarter of the circle?",
+      "solutionExplanation": "Choice A is incorrect. This results from finding one quarter of the circumference instead of the area: 2π(6) ÷ 4 = 3π. Choice B is incorrect. 6π is π × 6, the radius times π without squaring the radius; it also equals half the circumference, 12π ÷ 2. Both are lengths, not areas. Choice C is correct. Area of full circle = πr² = π(6²) = 36π. One quarter = 36π ÷ 4 = 9π. Choice D is incorrect. This results from finding the full area of the circle, πr² = π(6²) = 36π.",
+      "commonTrap": "Students who divide the radius or diameter by 4 instead of dividing the final area by 4 will arrive at an incorrect and much smaller value.",
+      "choices": [
+        {
+          "id": "MATH-GEO-009-a",
+          "label": "A",
+          "text": "3π",
+          "isCorrect": false,
+          "explanation": "3π is one quarter of the circumference, 2π(6) ÷ 4. That is a length around the circle, not an area."
+        },
+        {
+          "id": "MATH-GEO-009-b",
+          "label": "B",
+          "text": "6π",
+          "isCorrect": false,
+          "explanation": "6π is π × 6, which uses the radius without squaring it; it is also half the circumference, 12π ÷ 2. Area uses the radius squared: π × 6² = 36π, and one quarter is 9π."
+        },
+        {
+          "id": "MATH-GEO-009-c",
+          "label": "C",
+          "text": "9π",
+          "isCorrect": true,
+          "explanation": "Correct. The full area is π × 6² = 36π, and one quarter is 36π ÷ 4 = 9π."
+        },
+        {
+          "id": "MATH-GEO-009-d",
+          "label": "D",
+          "text": "36π",
+          "isCorrect": false,
+          "explanation": "36π is the area of the whole circle. The question asks for one quarter: 36π ÷ 4 = 9π."
+        }
+      ],
+      "tags": [
+        "GEO-CRC"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-07-12T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-GEO-009:1"
+      ],
+      "revisionNotes": "Feedback only (optional finding adopted). The 6π explanation ('confusing the radius with part of the final answer') now names the computations that give 6π (π × 6 without squaring, or half of the circumference 12π) and distinguishes a length from square units. Per-choice explanations added; stem, choices, IDs and key unchanged."
+    },
+    {
+      "id": "MATH-GEO-010",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "stem": "A triangle has a base of 14 and a height of 9. If the base is doubled while the height stays the same, what is the new area of the triangle?",
+      "solutionExplanation": "Choice A is incorrect. This is the area of the original triangle before the base was doubled: ½ × 14 × 9 = 63. Choice B is incorrect. An area of 108 with height 9 would need a base of 24, since ½ × 24 × 9 = 108, but the doubled base is 28. Choice C is correct. New base = 28. Area = ½ × 28 × 9 = 126. Choice D is incorrect. This results from forgetting to apply the ½ factor in the area formula: 28 × 9 = 252.",
+      "commonTrap": "Choice A is the most common trap, students who correctly compute the original area may stop there without re-reading that the question asks for the new area after doubling the base.",
+      "choices": [
+        {
+          "id": "MATH-GEO-010-a",
+          "label": "A",
+          "text": "63",
+          "isCorrect": false,
+          "explanation": "63 is the original area, ½ × 14 × 9. The question asks for the area after the base is doubled to 28."
+        },
+        {
+          "id": "MATH-GEO-010-b",
+          "label": "B",
+          "text": "108",
+          "isCorrect": false,
+          "explanation": "108 does not match the new triangle. With height 9, an area of 108 needs a base of 24, since ½ × 24 × 9 = 108. The doubled base is 28, so the area is ½ × 28 × 9 = 126."
+        },
+        {
+          "id": "MATH-GEO-010-c",
+          "label": "C",
+          "text": "126",
+          "isCorrect": true,
+          "explanation": "Correct. The new base is 2 × 14 = 28, so the area is ½ × 28 × 9 = 126."
+        },
+        {
+          "id": "MATH-GEO-010-d",
+          "label": "D",
+          "text": "252",
+          "isCorrect": false,
+          "explanation": "252 is 28 × 9, which leaves out the ½ in the triangle area formula."
+        }
+      ],
+      "tags": [
+        "GEO-ARV"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-GEO-010:1"
+      ],
+      "revisionNotes": "Feedback only (optional finding adopted). B (108) was attributed to an unspecified arithmetic error; no standard error gives 108, so its feedback now shows it would need a base of 24 (not 28) with height 9. Per-choice explanations added; stem, choices, IDs and key (126, the diagnostic key; the bank copy's 189 belongs to different content) unchanged."
+    },
+    {
+      "id": "MATH-DAT-003",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "A bag contains 3 red marbles, 4 blue marbles, and 5 green marbles. If one marble is drawn at random, what is the probability that it is NOT red?",
+      "solutionExplanation": "Choice A is incorrect. This is the probability of drawing red, 3/12 = 1/4, not the probability of NOT drawing red. Choice B is incorrect. It is the probability of drawing blue, 4/12 = 1/3. Choice C is incorrect. It is the probability of NOT drawing blue, (3 + 5)/12 = 8/12 = 2/3. Choice D is correct. Total marbles = 3 + 4 + 5 = 12. P(red) = 3/12 = 1/4. P(not red) = 1 − 1/4 = 3/4.",
+      "commonTrap": "Students who correctly find P(red) but forget to subtract from 1 will select Choice A, reporting the probability of the wrong event.",
+      "choices": [
+        {
+          "id": "MATH-DAT-003-a",
+          "label": "A",
+          "text": "1/4",
+          "isCorrect": false,
+          "explanation": "1/4 is the probability of drawing red, 3/12. The question asks for NOT red, so subtract from 1: 1 − 1/4 = 3/4."
+        },
+        {
+          "id": "MATH-DAT-003-b",
+          "label": "B",
+          "text": "1/3",
+          "isCorrect": false,
+          "explanation": "1/3 is the probability of drawing blue, 4/12. Not red includes both blue and green marbles."
+        },
+        {
+          "id": "MATH-DAT-003-c",
+          "label": "C",
+          "text": "2/3",
+          "isCorrect": false,
+          "explanation": "2/3 is the probability of not drawing blue, (3 + 5)/12 = 8/12. It leaves out blue instead of red."
+        },
+        {
+          "id": "MATH-DAT-003-d",
+          "label": "D",
+          "text": "3/4",
+          "isCorrect": true,
+          "explanation": "Correct. There are 12 marbles, and 4 + 5 = 9 are not red, so the probability is 9/12 = 3/4. Equivalently, 1 − 3/12 = 3/4."
+        }
+      ],
+      "tags": [
+        "DAT-PROB"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-DAT-003:1"
+      ],
+      "revisionNotes": "Feedback only (optional finding adopted). B and C were called simplification errors; they are now identified as the probabilities of the wrong events: B = P(blue) = 4/12 = 1/3 and C = P(not blue) = 8/12 = 2/3. Per-choice explanations added; stem, choices, IDs and key unchanged."
+    },
+    {
+      "id": "MATH-DAT-DX06",
+      "subject": "MATH",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "A fair number cube has faces numbered 1 through 6. The cube is rolled two times. What is the probability that the first roll is an even number and the second roll is a number greater than 4?",
+      "solutionExplanation": "The two rolls are independent, so the probability of both events is the product of their probabilities. The even numbers are 2, 4, and 6, so P(first roll even) = 3/6 = 1/2. The numbers greater than 4 are 5 and 6, so P(second roll greater than 4) = 2/6 = 1/3. The probability of both is 1/2 × 1/3 = 1/6.",
+      "commonTrap": "Adding the probabilities of two independent events instead of multiplying them.",
+      "choices": [
+        {
+          "id": "MATH-DAT-DX06-a",
+          "label": "A",
+          "text": "5/36",
+          "isCorrect": false,
+          "explanation": "5/36 comes from adding the favorable outcomes, 3 + 2 = 5, and putting the sum over the 36 possible pairs of rolls. Out of 36 pairs, the number of favorable pairs is 3 × 2 = 6, not 5."
+        },
+        {
+          "id": "MATH-DAT-DX06-b",
+          "label": "B",
+          "text": "1/6",
+          "isCorrect": true,
+          "explanation": "Correct. P(first roll even) = 3/6 = 1/2 and P(second roll greater than 4) = 2/6 = 1/3. Because the rolls are independent, multiply: 1/2 × 1/3 = 1/6."
+        },
+        {
+          "id": "MATH-DAT-DX06-c",
+          "label": "C",
+          "text": "1/4",
+          "isCorrect": false,
+          "explanation": "1/4 comes from counting 4, 5, and 6 as greater than 4, which gives 3/6 = 1/2 for the second roll and 1/2 × 1/2 = 1/4. The number 4 is not greater than 4."
+        },
+        {
+          "id": "MATH-DAT-DX06-d",
+          "label": "D",
+          "text": "5/6",
+          "isCorrect": false,
+          "explanation": "5/6 comes from adding the probabilities, 1/2 + 1/3. Because the two rolls are independent, the probability that both events happen is the product of their probabilities: 1/2 × 1/3 = 1/6."
+        }
+      ],
+      "tags": [
+        "DAT-PROB"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "MATH:diagnostic:MATH-DAT-DX06:1"
+      ],
+      "revisionNotes": "Feedback only (optional finding adopted). Choice D's explanation now states the independence condition for multiplying probabilities, matching the full solution; Choice B's 'Correct.' now shows the calculation. Other explanations, stem, choices, IDs and key unchanged."
+    }
+  ]
+}
