@@ -1,0 +1,963 @@
+{
+  "track": "bank",
+  "description": "ELA reading comprehension (bank) revisions from the 2026-10-17 content audit: feedback corrections (ELA-RC-103, 129, 140, 141), the self-contained repair of the ELA-RC-135/136 two-part pair, stem precision (147, 159), passage fixes RC-P104, RC-P106 and RC-P111 with ELA-RC-164 synchronized, and style-fidelity rewrites of the seven bank direct-definition items (ELA-RC-001, 104, 111, 116, 122, 128, 134).",
+  "questions": [
+    {
+      "id": "ELA-RC-103",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-EV"
+      ],
+      "passageId": "RC-P101",
+      "stem": "Which sentence from the passage best supports the idea that otters, rather than differences in the environment, explained why some Aleutian islands had kelp forests and others did not?",
+      "choices": [
+        {
+          "id": "ELA-RC-103-a",
+          "label": "A",
+          "text": "Some of the islands had healthy otter populations; others had few or none.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Sets up the comparison but does not support the claim by itself. This sentence says nothing about the kelp or about the islands' environments, so it cannot show that otters, rather than the environment, explained the difference."
+        },
+        {
+          "id": "ELA-RC-103-b",
+          "label": "B",
+          "text": "Around islands with otters, kelp forests flourished.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Supports only half of the claim. This sentence shows that otters and kelp appeared together, but it says nothing about the islands' climate or geology. It leaves open whether some difference in the environment could explain the pattern, and the claim specifically says \"rather than differences in the environment.\""
+        },
+        {
+          "id": "ELA-RC-103-c",
+          "label": "C",
+          "text": "Because the islands were similar in climate and geology, the otters themselves appeared to be the deciding factor.",
+          "isCorrect": true,
+          "explanation": "Correct. This sentence notes that the islands were \"similar in climate and geology,\" which makes environmental differences an unlikely explanation and strengthens the inference that otters were \"the deciding factor.\" It addresses both halves of the claim. Notice that it does not prove no other cause was possible. The passage says only that the otters \"appeared to be\" the deciding factor."
+        },
+        {
+          "id": "ELA-RC-103-d",
+          "label": "D",
+          "text": "Much of that food consists of sea urchins, spiny animals that graze on kelp.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Relevant background, wrong focus. This sentence from paragraph 2 explains the food chain that links otters to kelp, but it says nothing about the Aleutian islands or about differences between their environments."
+        }
+      ],
+      "solutionExplanation": "The claim has two parts: otters explained the difference, and differences in the environment did not. Paragraph 4 ends, \"Because the islands were similar in climate and geology, the otters themselves appeared to be the deciding factor.\" Because the islands' environments were alike, climate and geology are unlikely to explain why only some islands had kelp forests, and that strengthens the inference that the otters did. This is the only choice that addresses both parts. The other sentences connect otters and kelp, or describe the food chain, but say nothing about whether the islands' environments differed.",
+      "commonTrap": "Choice B is tempting because it directly links otters to healthy kelp. But a pattern alone does not show a cause. Only choice C addresses the islands' climate and geology, which is what makes the otters the more likely explanation.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Feedback only (key C and all IDs unchanged). Choice C, choice B, choice A, the solution and the trap no longer say the climate/geology sentence \"rules out\" environmental causes. They now say similarity in climate and geology strengthens the inference that otters explain the difference, and note the passage's own hedge \"appeared to be\".",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "ELA-RC-C01"
+      ]
+    },
+    {
+      "id": "ELA-RC-129",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-INF"
+      ],
+      "passageId": "RC-P105",
+      "stem": "Based on paragraph 7, which statement can most reasonably be inferred?",
+      "choices": [
+        {
+          "id": "ELA-RC-129-a",
+          "label": "A",
+          "text": "Most of the concrete structures the Romans built are still standing today.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported. Paragraph 7 says, \"Countless others have long since collapsed,\" but the word \"Countless\" gives no total or fraction, so the passage never says whether most Roman structures still stand. The survivors may also be an unusually well-built group: they are \"in part, simply the ones that happened to be built well.\""
+        },
+        {
+          "id": "ELA-RC-129-b",
+          "label": "B",
+          "text": "Roman builders understood the chemistry that made their concrete last.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Contradicted by the text. The Romans improved their methods \"through trial and error,\" and paragraph 8 says they \"knew nothing of modern chemistry.\""
+        },
+        {
+          "id": "ELA-RC-129-c",
+          "label": "C",
+          "text": "Modern skyscrapers will collapse sooner than the Pantheon did.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Unsupported prediction. The passage says some modern structures \"show serious damage within a few decades,\" but it makes no prediction about skyscrapers."
+        },
+        {
+          "id": "ELA-RC-129-d",
+          "label": "D",
+          "text": "Looking only at surviving Roman structures may make Roman concrete seem more durable than it usually was.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraph 7 says the survivors are \"in part, simply the ones that happened to be built well\" and that \"Countless others have long since collapsed.\" If only the best examples remain, judging by them alone could overstate how durable Roman concrete was in general."
+        }
+      ],
+      "solutionExplanation": "Paragraph 7 says, \"the structures that survive today are, in part, simply the ones that happened to be built well. Countless others have long since collapsed.\" The reader can infer that the surviving structures are not a fair sample of all Roman concrete. Judging only by them could make the material seem more durable than it usually was.",
+      "commonTrap": "Choice B is tempting because paragraph 5 suggests Roman builders may have used hot mixing, which sounds like an expert technique. But paragraph 7 says they worked \"through trial and error,\" and paragraph 8 says they \"knew nothing of modern chemistry.\" Using a method that works is not the same as understanding why it works.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Feedback only (key D and all IDs unchanged). Choice A's explanation called \"most Roman structures still stand\" contradicted by \"Countless others have long since collapsed\"; \"countless\" gives no proportion, so A is now called unsupported, with the note that survivors may be an unusually well-built subset.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "ELA-RC-C02"
+      ]
+    },
+    {
+      "id": "ELA-RC-135",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-INF"
+      ],
+      "passageId": "RC-P106",
+      "stem": "Based on paragraph 5, what does the author suggest about the results of the original jam study?",
+      "choices": [
+        {
+          "id": "ELA-RC-135-a",
+          "label": "A",
+          "text": "They were shown to be wrong by the 2010 analysis.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Contradicted by the text. The author says directly that the 2010 finding \"did not mean that the original jam study was wrong.\""
+        },
+        {
+          "id": "ELA-RC-135-b",
+          "label": "B",
+          "text": "They have been matched by every study conducted since.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Contradicted by the text. Paragraph 4 says some later studies \"found no effect at all.\""
+        },
+        {
+          "id": "ELA-RC-135-c",
+          "label": "C",
+          "text": "They proved that choice overload is a universal rule of human behavior.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Reverses the text. Paragraph 5 says, \"Choice overload, it seemed, was not a universal rule of human behavior.\""
+        },
+        {
+          "id": "ELA-RC-135-v2-d",
+          "label": "D",
+          "text": "They cannot be assumed to occur in every setting.",
+          "isCorrect": true,
+          "explanation": "Correct. The author says the 2010 finding meant \"only that its result could not be counted on to appear everywhere.\" The later evidence limits how far the result can be applied. It does not show that the original result was false, and it does not show that the result holds everywhere."
+        }
+      ],
+      "solutionExplanation": "Paragraph 5 reports that, on average, the effect of having many options \"was close to zero\" across dozens of experiments. The author then heads off a misunderstanding: \"The finding did not mean that the original jam study was wrong, only that its result could not be counted on to appear everywhere.\" So the author is limiting how widely the jam study's result can be applied. The study is not called wrong, but its result cannot be assumed to occur in every setting. That is not the same as saying the result was proven true. Paragraph 6 adds that the effect appears \"in some situations but not in others.\"",
+      "commonTrap": "Choice A is tempting because an average effect \"close to zero\" sounds like a failure, so students conclude the original study must have been wrong. But an average of many experiments in different settings cannot by itself show that one particular study's result was false, and the author says the finding \"did not mean that the original jam study was wrong.\"",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Removed the two-part wrapper (\"This question has two parts. Answer Part A, then Part B.\" and \"Part A:\") so the item stands alone. Key D reworded from \"They showed a real effect, but one that does not appear in every situation\" to the supported limited-generalization inference \"They cannot be assumed to occur in every setting.\" (new ID ELA-RC-135-v2-d); the passage says the study was not shown wrong, which is not proof the effect is real. D explanation, solution and trap no longer equate \"not wrong\" with \"real\". A, B, C unchanged and keep IDs. Rechecked against RC-P106 v2.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "ELA-RC-C03",
+        "ELA-RC-C04",
+        "ELA-RC-P02"
+      ]
+    },
+    {
+      "id": "ELA-RC-136",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-EV"
+      ],
+      "passageId": "RC-P106",
+      "stem": "Which sentence from the passage best supports the idea that later research limited where the jam study's result could be expected to appear, without showing that the study was wrong?",
+      "choices": [
+        {
+          "id": "ELA-RC-136-a",
+          "label": "A",
+          "text": "The jam study became one of the most widely cited experiments in its field.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Popularity is not evidence about accuracy or reach. Being widely cited shows the study was influential, but it says nothing about whether its result appears in other settings or whether the study was wrong."
+        },
+        {
+          "id": "ELA-RC-136-b",
+          "label": "B",
+          "text": "Their conclusion surprised many: on average, the effect of having many options was close to zero.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Supports only part of the idea. A near-zero average across dozens of experiments suggests the effect does not appear everywhere, but this sentence does not say what that finding means for the original study. It leaves out the idea that the study was not shown to be wrong."
+        },
+        {
+          "id": "ELA-RC-136-c",
+          "label": "C",
+          "text": "The finding did not mean that the original jam study was wrong, only that its result could not be counted on to appear everywhere.",
+          "isCorrect": true,
+          "explanation": "Correct. This sentence supports both parts of the idea: the later finding \"did not mean that the original jam study was wrong,\" and the study's result \"could not be counted on to appear everywhere.\""
+        },
+        {
+          "id": "ELA-RC-136-d",
+          "label": "D",
+          "text": "The large display attracted more attention: about 60 percent of passing shoppers stopped at it, compared with about 40 percent at the small display.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Wrong focus. This sentence reports one finding of the original study but says nothing about what later research showed about it."
+        }
+      ],
+      "solutionExplanation": "The idea has two parts: later research limited where the jam study's result could be expected to appear, and it did not show that the study was wrong. The last sentence of paragraph 5 states both: \"The finding did not mean that the original jam study was wrong, only that its result could not be counted on to appear everywhere.\"",
+      "commonTrap": "Choice B is tempting because it comes from the same paragraph and reports the key finding of the 2010 analysis. But it gives only the average result. It does not explain what that result means for the original study, so it supports only part of the idea. Only choice C addresses both parts.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Stem \"Part B: Which sentence from the passage best supports the answer to Part A?\" replaced with a self-contained stem that names the claim (later research limited where the result could be expected to appear without showing the study was wrong), so the item is answerable when delivered alone. No reference to Part A remains. Key C (same quotation, same ID) matches ELA-RC-135 v2. Choice texts unchanged so all IDs kept. Removed the trap claim that an average near zero by itself \"points toward the study being wrong\", and removed \"real effect\" language from A and C.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "ELA-RC-C03",
+        "ELA-RC-C04",
+        "ELA-RC-P02"
+      ]
+    },
+    {
+      "id": "ELA-RC-140",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-VOC"
+      ],
+      "passageId": "RC-P107",
+      "stem": "Read this sentence from paragraph 3.\n\n\"She had written every measurement in her green composition notebook, and then she had closed the notebook and slid it under the table, behind her backpack, where it sat now like a secret holding its breath.\"\n\nWhat does the phrase \"like a secret holding its breath\" suggest about the notebook?",
+      "choices": [
+        {
+          "id": "ELA-RC-140-a",
+          "label": "A",
+          "text": "It is closed so tightly that no air can get inside it.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This is a literal reading of figurative language. A notebook cannot breathe. The phrase describes the tension of a hidden truth, not how tightly the notebook is closed."
+        },
+        {
+          "id": "ELA-RC-140-b",
+          "label": "B",
+          "text": "It makes Lena so nervous that she has trouble breathing during her speech.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This moves the description from the notebook to Lena. The phrase describes the notebook, and the passage never says Lena has trouble breathing while she speaks."
+        },
+        {
+          "id": "ELA-RC-140-c",
+          "label": "C",
+          "text": "It holds a secret that Lena has already forgotten about.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Lena has not forgotten. In paragraph 8 she \"thought of the notebook behind her backpack,\" and it decides what she says to the judge."
+        },
+        {
+          "id": "ELA-RC-140-d",
+          "label": "D",
+          "text": "It seems to wait tensely, as if it might be revealed at any moment.",
+          "isCorrect": true,
+          "explanation": "Correct. The notebook is personified as \"a secret holding its breath.\" A person holds their breath while waiting tensely for something to happen. The phrase suggests that the hidden notebook is waiting, as if it could be revealed at any moment. That is exactly what happens in paragraph 9, when Lena \"pulled out the notebook.\""
+        }
+      ],
+      "solutionExplanation": "The notebook is personified as \"a secret holding its breath.\" A person holds their breath while waiting tensely for something to happen. The phrase suggests that the hidden notebook is waiting, as if it could be revealed at any moment. That is exactly what happens in paragraph 9, when Lena \"pulled out the notebook.\"",
+      "commonTrap": "The literal reading, that the notebook is shut tight, is tempting because \"holding its breath\" sounds like something sealed. But in this story the notebook is hidden \"behind her backpack\" and holds the March results Lena has not shown anyone. The comparison builds suspense about whether that hidden truth will come out, and it does when she \"pulled out the notebook\" in paragraph 9.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Feedback only (key D and all IDs unchanged). Removed the unverified test-strategy claim \"On the SHSAT, a simile like this almost always describes a feeling or mood\" from the trap and replaced it with a passage-specific explanation of the suspense around the hidden notebook.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "ELA-RC-C05"
+      ]
+    },
+    {
+      "id": "ELA-RC-141",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "INDY-MS",
+      "tags": [
+        "RC-EV",
+        "RC-ANL"
+      ],
+      "passageId": "RC-P107",
+      "stem": "Which two sentences from the passage best support the idea that Lena comes to see her failed trial in a new way? Select two answers.",
+      "choices": [
+        {
+          "id": "ELA-RC-141-a",
+          "label": "A",
+          "text": "\"They looked green and confident.\" (paragraph 2)",
+          "isCorrect": false,
+          "explanation": "Incorrect. This sentence describes the healthy plants on Lena's table, not her view of the failed trial. It comes before any change in her thinking."
+        },
+        {
+          "id": "ELA-RC-141-b",
+          "label": "B",
+          "text": "\"He had made it sound simple, the way people make everything sound simple when it is not their project.\" (paragraph 4)",
+          "isCorrect": false,
+          "explanation": "Incorrect. This shows Lena's doubt about Danny's advice, but it does not show a new view of the failed trial. At this point she is still hiding the notebook."
+        },
+        {
+          "id": "ELA-RC-141-c",
+          "label": "C",
+          "text": "\"She heard herself say it, and something clicked, like a key finding its lock.\" (paragraph 11)",
+          "isCorrect": true,
+          "explanation": "Correct. As Lena answers the judge, she realizes that she changed the plants' windowsill between trials, so heat rather than music may explain the different results. The failed trial now makes sense to her."
+        },
+        {
+          "id": "ELA-RC-141-d",
+          "label": "D",
+          "text": "\"Dr. Pruitt listened without writing anything down, which was worse than if she had written a great deal.\" (paragraph 6)",
+          "isCorrect": false,
+          "explanation": "Incorrect. This shows Lena's nervousness during her speech. It says nothing about how she views the second trial."
+        },
+        {
+          "id": "ELA-RC-141-e",
+          "label": "E",
+          "text": "\"Then she took a marker from her backpack and, beneath the bar graph, in letters smaller than the title but just as blue, she wrote: TRIAL 2: SEE NOTEBOOK. NEW QUESTION: WAS IT THE HEAT?\" (paragraph 13)",
+          "isCorrect": true,
+          "explanation": "Correct. Lena now puts the failed trial on her poster for everyone to see and turns it into a new question. This is the opposite of hiding it behind her backpack."
+        }
+      ],
+      "ms": {
+        "selectCount": 2,
+        "instruction": "Select two answers.",
+        "solutionExplanation": "The claim is that Lena comes to see the failed trial in a new way. In paragraph 11, while explaining the trials, she realizes that she changed the plants' windowsill between trials, so heat rather than music may explain the different results: \"Maybe the first group was just warmer.\" At that moment \"something clicked, like a key finding its lock.\" In paragraph 13, she writes on her poster \"TRIAL 2: SEE NOTEBOOK. NEW QUESTION: WAS IT THE HEAT?\" The results she once hid are now displayed as the source of a new question."
+      },
+      "solutionExplanation": "The claim is that Lena comes to see the failed trial in a new way. In paragraph 11, while explaining the trials, she realizes that she changed the plants' windowsill between trials, so heat rather than music may explain the different results: \"Maybe the first group was just warmer.\" At that moment \"something clicked, like a key finding its lock.\" In paragraph 13, she writes on her poster \"TRIAL 2: SEE NOTEBOOK. NEW QUESTION: WAS IT THE HEAT?\" The results she once hid are now displayed as the source of a new question.",
+      "commonTrap": "The Danny sentence is tempting because it shows Lena questioning the plan to hide the trial. But doubting advice is not the same as seeing the trial differently. Only the \"key finding its lock\" moment and the new poster label show her new understanding.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Feedback only (keys C and E, selectCount 2 and all IDs unchanged). Choice C explanation, top-level solutionExplanation and nested ms.solutionExplanation all said the plants were moved \"near the radiator\"; paragraph 11 says Lena moved them to the other side of the classroom because of the radiator. All three now say she changed the plants' windowsill between trials, so heat rather than music may explain the results, and the two solution copies are identical.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "ELA-RC-C06"
+      ]
+    },
+    {
+      "id": "ELA-RC-147",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-EV"
+      ],
+      "passageId": "RC-P108",
+      "stem": "Which quotation from the passage best shows that the move affects Tomás's father more than he first lets on?",
+      "choices": [
+        {
+          "id": "ELA-RC-147-a",
+          "label": "A",
+          "text": "\"He wrapped plates in newspaper, taped boxes shut with one long screech of tape, and whistled under his breath.\" (paragraph 3)",
+          "isCorrect": false,
+          "explanation": "Incorrect. This shows the father's calm surface, the behavior that makes Tomás think his father does not care. It does not show the hidden feelings underneath."
+        },
+        {
+          "id": "ELA-RC-147-b",
+          "label": "B",
+          "text": "\"My parents listened, nodded, and signed the lease anyway.\" (paragraph 2)",
+          "isCorrect": false,
+          "explanation": "Incorrect. This shows the parents' decision to move, not how the father feels about leaving."
+        },
+        {
+          "id": "ELA-RC-147-c",
+          "label": "C",
+          "text": "\"I had always known that, in the way you know facts about your parents without ever really thinking about them.\" (paragraph 10)",
+          "isCorrect": false,
+          "explanation": "Incorrect. This sentence is about Tomás's own awareness of where his father grew up. It does not show the father's emotion."
+        },
+        {
+          "id": "ELA-RC-147-d",
+          "label": "D",
+          "text": "\"His jaw was tight. For the first time all morning, he wasn't whistling.\" (paragraph 10)",
+          "isCorrect": true,
+          "explanation": "Correct. All morning, Tomás reads his father's whistling and fast packing as a sign that \"He didn't seem to care at all\" (paragraph 3). In paragraph 10, once the father's marks are found, Tomás notices \"His jaw was tight. For the first time all morning, he wasn't whistling.\" The tight jaw and the missing whistle show feelings the father had been hiding."
+        }
+      ],
+      "solutionExplanation": "All morning, Tomás reads his father's whistling and fast packing as a sign that \"He didn't seem to care at all\" (paragraph 3). In paragraph 10, once the father's marks are found, Tomás notices \"His jaw was tight. For the first time all morning, he wasn't whistling.\" The tight jaw and the missing whistle show feelings the father had been hiding.",
+      "commonTrap": "The whistling sentence from paragraph 3 is tempting because it describes the father directly. But it shows what he lets on, not what he feels. The question asks for the moment the hidden feeling shows through.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Stem wording only: \"Which sentence from the passage\" -> \"Which quotation from the passage\", because keyed choice D contains two sentences. Key D, all choice texts and all IDs unchanged.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "ELA-RC-C07"
+      ]
+    },
+    {
+      "id": "ELA-RC-159",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-EV"
+      ],
+      "passageId": "RC-P110",
+      "stem": "Which quotation from the passage best supports the idea that Lola changes her story to fit what her listener needs?",
+      "choices": [
+        {
+          "id": "ELA-RC-159-a",
+          "label": "A",
+          "text": "\"I was nineteen and frightened, and I don't remember the weather.\" (paragraph 12)",
+          "isCorrect": false,
+          "explanation": "Incorrect. This explains why the details can vary, since Lola does not remember them. It does not show that she chooses details based on her listener."
+        },
+        {
+          "id": "ELA-RC-159-b",
+          "label": "B",
+          "text": "\"She did not look surprised.\" (paragraph 9)",
+          "isCorrect": false,
+          "explanation": "Incorrect. This shows that Lola expected the question, but it does not explain how or why she changes the story."
+        },
+        {
+          "id": "ELA-RC-159-c",
+          "label": "C",
+          "text": "\"You are nervous, though you don't say so. So I gave you a bright morning and a woman who said welcome.\" (paragraph 10)",
+          "isCorrect": true,
+          "explanation": "Correct. In paragraph 10 Lola explains why the narrator heard a different version: \"You are nervous, though you don't say so. So I gave you a bright morning and a woman who said welcome.\" The word \"So\" connects the listener's need (nervousness) to Lola's choice of details. This directly shows her fitting the story to the listener."
+        },
+        {
+          "id": "ELA-RC-159-d",
+          "label": "D",
+          "text": "\"Every Thanksgiving, after the pie and before the dishes, my grandmother told the ferry story.\" (paragraph 1)",
+          "isCorrect": false,
+          "explanation": "Incorrect. This shows that the story is a family tradition, not that Lola adjusts it for different listeners."
+        }
+      ],
+      "solutionExplanation": "In paragraph 10 Lola explains why the narrator heard a different version: \"You are nervous, though you don't say so. So I gave you a bright morning and a woman who said welcome.\" The word \"So\" connects the listener's need (nervousness) to Lola's choice of details. This directly shows her fitting the story to the listener.",
+      "commonTrap": "The \"I don't remember the weather\" quotation is the strongest trap. It is close in topic, since it explains why the details change. But the claim is about fitting the listener's needs, and only the paragraph 10 quotation connects a listener to a chosen detail.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Stem wording only: \"Which sentence from the passage\" -> \"Which quotation from the passage\", because keyed choice C contains two sentences. Key C, all choice texts and all IDs unchanged.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "ELA-RC-C07"
+      ]
+    },
+    {
+      "id": "ELA-RC-164",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-VOC"
+      ],
+      "passageId": "RC-P111",
+      "stem": "Read this sentence from paragraph 3.\n\n\"Instead I spent my days rubbing the same board back and forth until my arms ached, while the saw stood nearby like a dog I was forbidden to pet.\"\n\nWhat does the comparison suggest about the saw?",
+      "choices": [
+        {
+          "id": "ELA-RC-164-a",
+          "label": "A",
+          "text": "It was old and noisy, like a dog that barks all day.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Nothing in the comparison refers to noise or age. The phrase \"forbidden to pet\" points to wanting something you cannot touch."
+        },
+        {
+          "id": "ELA-RC-164-b",
+          "label": "B",
+          "text": "It was dangerous and likely to attack anyone who came near it.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This misreads the image. People want to pet friendly dogs, not dangerous ones. The comparison is about temptation, not threat."
+        },
+        {
+          "id": "ELA-RC-164-c",
+          "label": "C",
+          "text": "It tempted the narrator even though the narrator was not allowed to use it.",
+          "isCorrect": true,
+          "explanation": "Correct. A dog you are forbidden to pet is close by and appealing, but off-limits. The simile shows that the saw tempted the narrator the whole time it stood nearby, even though it was \"not allowed\" (paragraph 2). That temptation pays off in paragraph 8, when the narrator uses the saw anyway."
+        },
+        {
+          "id": "ELA-RC-164-d",
+          "label": "D",
+          "text": "It belonged to someone other than Mr. Albescu.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Nothing suggests the saw belongs to anyone else. The narrator watched Mr. Albescu \"use the saw a hundred times\" (paragraph 8)."
+        }
+      ],
+      "solutionExplanation": "A dog you are forbidden to pet is close by and appealing, but off-limits. The simile shows that the saw tempted the narrator the whole time it stood nearby, even though it was \"not allowed\" (paragraph 2). That temptation pays off in paragraph 8, when the narrator uses the saw anyway.",
+      "commonTrap": "The \"dangerous\" choice is tempting because table saws really are dangerous. But the simile is about wanting to pet the dog. Ask what feeling the comparison gives the narrator: desire for something off-limits.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Quoted sentence in the stem updated to match RC-P111 v2 paragraph 3 (\"the saw stood nearby\" instead of \"the saw sat in the corner\"). Choice C explanation and solution changed \"sat in the corner\" to \"stood nearby\". Task, key C, choice texts and all IDs unchanged.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "ELA-RC-P03"
+      ]
+    },
+    {
+      "id": "ELA-RC-001",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-INF"
+      ],
+      "passageId": "RC-P-001",
+      "stem": "In paragraph 6, the author says that \"the group as a whole reaches a sound decision\" even though \"none compares all the choices.\" Based on the passage, which statement best explains how the swarm can choose well when no single scout knows about every site?",
+      "choices": [
+        {
+          "id": "ELA-RC-001-v2-a",
+          "label": "A",
+          "text": "The oldest foragers know the countryside so well that any one of them could pick the best site without help from the others.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This misreads paragraph 2. The scouts do \"know the surrounding countryside,\" but paragraph 6 says \"Each scout knows only about the site she has visited.\" No single scout could make the choice alone."
+        },
+        {
+          "id": "ELA-RC-001-v2-b",
+          "label": "B",
+          "text": "The queen gathers the reports from all of the scouts and then chooses the site that the most dancers have advertised.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This assumes a leader makes the decision. Paragraph 2 says \"The queen does not lead the search; she simply waits in the middle of the cluster.\""
+        },
+        {
+          "id": "ELA-RC-001-v2-c",
+          "label": "C",
+          "text": "Scouts check advertised sites for themselves and dance longer for better ones, so strong sites gain support while weak ones lose it.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraph 3 says \"the number of times a scout repeats her dance reflects how good she judges the site to be,\" and paragraph 4 says watchers \"fly out to inspect the advertised site for themselves.\" As a result, \"A strong site therefore attracts more and more supporters, while a weak site's backers gradually fall silent.\" Many separate judgments add up to a good group choice."
+        },
+        {
+          "id": "ELA-RC-001-v2-d",
+          "label": "D",
+          "text": "Each scout keeps dancing for the first site she finds until every bee in the swarm has agreed to move there.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This contradicts paragraph 4: \"Each scout's dancing also grows weaker with each trip she makes, so no bee can keep promoting a site forever.\" Paragraph 5 also says the signal is that \"much of the search team,\" not every bee, favors a spot."
+        }
+      ],
+      "solutionExplanation": "Paragraph 6 explains that the swarm chooses well even though \"Each scout knows only about the site she has visited, and none compares all the choices.\" The earlier paragraphs show how this works. A scout's dance is longer for a better site: \"the number of times a scout repeats her dance reflects how good she judges the site to be\" (paragraph 3). Other bees \"fly out to inspect the advertised site for themselves\" and dance for it only \"If they also find it suitable\" (paragraph 4). So \"A strong site therefore attracts more and more supporters, while a weak site's backers gradually fall silent.\" The decision is sound because it combines many independent checks, not because any one bee knows best. Choice C is correct.",
+      "commonTrap": "Choice A is tempting because paragraph 2 describes the scouts as experienced foragers who \"know the surrounding countryside,\" which sounds like enough knowledge to decide alone. But paragraph 6 says each scout knows only her own site. The swarm's good judgment comes from combining many scouts' reports, not from one expert.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "John Wei",
+      "trackerReviewer": "",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Style-fidelity rewrite (alignment judgment, not a correctness defect). Replaced the direct-definition task (\"sound\" means \"reliable\") with a passage-dependent inference about why the group decision is sound despite each scout's limited knowledge, following the audit direction. New stem, four new options (IDs ELA-RC-001-v2-a to -d), key C, per-choice explanations, solution and trap. Tag RC-VOC -> RC-INF. Checked against siblings: ELA-RC-002 asks for the sentence showing no one bee decides, 175 asks why scouts wait for a crowd before piping; this item asks how the dance-and-recruit process produces a good group choice.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "ELA-RC-A01",
+        "VOCAB:bank:ELA-RC-001"
+      ]
+    },
+    {
+      "id": "ELA-RC-104",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-TXT"
+      ],
+      "passageId": "RC-P101",
+      "stem": "Read these sentences from paragraph 6.\n\nWhen otters are present, they keep urchin numbers in check, and the kelp thrives. When otters vanish, urchins multiply and strip the forest, and the fish and other creatures that depend on the kelp for food and shelter lose their homes as well.\n\nHow does the contrast in these sentences help develop the idea of a \"trophic cascade\"?",
+      "choices": [
+        {
+          "id": "ELA-RC-104-v2-a",
+          "label": "A",
+          "text": "It shows that urchins are the most powerful species in the kelp forest, since they decide whether the kelp survives.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This stops at the middle of the chain. Urchins do eat the kelp, but whether they \"multiply\" depends on whether otters are present. The paragraph traces the effect back to \"the top predator.\""
+        },
+        {
+          "id": "ELA-RC-104-v2-b",
+          "label": "B",
+          "text": "It shows that a change in the number of otters affects not only the urchins they eat but also the kelp and the animals that rely on it.",
+          "isCorrect": true,
+          "explanation": "Correct. With otters, urchins stay \"in check\" and \"the kelp thrives.\" Without otters, urchins \"multiply and strip the forest,\" and the creatures that depend on the kelp \"lose their homes as well.\" One change at the top passes down through every level, which is what the author means by \"the influence of the top predator tumbles down through each level below it.\""
+        },
+        {
+          "id": "ELA-RC-104-v2-c",
+          "label": "C",
+          "text": "It shows that otters protect the kelp mainly by competing with the urchins for the same food.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This misreads the food chain. Otters do not eat kelp. The paragraph says \"Otters eat urchins; urchins eat kelp,\" so otters protect the kelp by eating the animals that graze on it."
+        },
+        {
+          "id": "ELA-RC-104-v2-d",
+          "label": "D",
+          "text": "It shows that the cascade moves upward, so the amount of kelp controls how many otters can survive.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This reverses the direction of the cascade. The author says the influence of the top predator \"tumbles down through each level below it,\" from otters to urchins to kelp."
+        }
+      ],
+      "solutionExplanation": "Paragraph 6 first lays out the chain: \"Otters eat urchins; urchins eat kelp.\" The two contrasting sentences then show what happens at each level when the otters are present or absent. With otters, urchins are kept \"in check\" and \"the kelp thrives.\" Without otters, \"urchins multiply and strip the forest,\" and the animals that depend on the kelp lose their homes. The paragraph names this chain reaction a trophic cascade, \"because the influence of the top predator tumbles down through each level below it.\" The contrast shows one change at the top spreading down the whole chain, so choice B is correct.",
+      "commonTrap": "Choice A is tempting because the urchins are the animals that actually destroy the kelp. But the contrast is built around whether otters are present or absent. The urchins only pass along an effect that starts with the top predator.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Style-fidelity rewrite (alignment judgment, not a correctness defect). Replaced the direct-definition task (\"in check\" means \"held within limits\") with a text-structure question on how the controlled-versus-multiplying urchin contrast develops the trophic-cascade explanation, following the audit direction. New stem, four new options (IDs ELA-RC-104-v2-a to -d), key B, explanations, solution and trap. Tag RC-VOC -> RC-TXT. Does not duplicate 102 (role of paragraph 5), 105 (paragraph 7 inference) or 106 (evidence of harm from losing a predator).",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "ELA-RC-A01",
+        "VOCAB:bank:ELA-RC-104"
+      ]
+    },
+    {
+      "id": "ELA-RC-111",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-INF"
+      ],
+      "passageId": "RC-P102",
+      "stem": "Read this sentence from paragraph 1.\n\nWealthier families sometimes paid for water hauled in by cart, but most New Yorkers had no choice except the neighborhood pump.\n\nWhat does this contrast suggest about the city's water problem in the early 1800s?",
+      "choices": [
+        {
+          "id": "ELA-RC-111-v2-a",
+          "label": "A",
+          "text": "The neighborhood pumps gave the cleanest water in the city, so most New Yorkers preferred to use them.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This misses the words \"no choice.\" People used the pumps because they had no other option, and the paragraph says the wells \"became polluted by waste seeping into the ground.\""
+        },
+        {
+          "id": "ELA-RC-111-v2-b",
+          "label": "B",
+          "text": "Wealthier families made the wells dirty by refusing to share the water that was delivered to them by cart.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This invents a cause. Paragraph 1 says the wells were polluted \"by waste seeping into the ground\" as more people crowded onto Manhattan, not by anything wealthy families did."
+        },
+        {
+          "id": "ELA-RC-111-v2-c",
+          "label": "C",
+          "text": "Water carts already brought enough clean water for the whole city, so the problem was nearly solved.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This stretches a small detail. Only \"Wealthier families\" bought cart water, and only \"sometimes.\" Paragraphs 2 and 3 show the problem growing worse, with a cholera outbreak and a fire that firefighters could not stop."
+        },
+        {
+          "id": "ELA-RC-111-v2-d",
+          "label": "D",
+          "text": "Most residents had to rely on local water whether or not it was safe, while only families with money had another option.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraph 1 says the wells \"became polluted\" and that \"some of it was dangerous to drink.\" Paying for water \"hauled in by cart\" was a way around that, but only \"Wealthier families\" could do it. Everyone else \"had no choice except the neighborhood pump.\""
+        }
+      ],
+      "solutionExplanation": "Paragraph 1 explains that the city's wells \"became polluted by waste seeping into the ground\" and that some of the water \"was dangerous to drink.\" The sentence then sets two groups side by side. \"Wealthier families\" could sometimes pay to have water \"hauled in by cart,\" but \"most New Yorkers had no choice except the neighborhood pump.\" The contrast shows that the problem was not shared equally: most people were stuck with the local supply, and only those with money could get around it. Choice D is correct.",
+      "commonTrap": "Choice A is tempting because the sentence says most New Yorkers used the pump, which can sound like a preference. But the words \"no choice except\" show they used it because they had no alternative, and the same paragraph says the wells were polluted.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Style-fidelity rewrite (alignment judgment, not a correctness defect). Replaced the direct-definition task (\"drew\" means \"obtained\") with an inference about what the contrast between cart-delivered water and the neighborhood pump shows about unequal access, following the audit direction. New stem, four new options (IDs ELA-RC-111-v2-a to -d), key D, explanations, solution and trap. Tag RC-VOC -> RC-INF. Does not duplicate 107 (central idea), 108 (sequence), 109 (purpose of the Great Fire), 110 (gravity-flow evidence) or 112 (paragraphs 7 and 8 inference).",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "ELA-RC-A01",
+        "VOCAB:bank:ELA-RC-111"
+      ]
+    },
+    {
+      "id": "ELA-RC-116",
+      "subject": "ELA",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-TXT"
+      ],
+      "passageId": "RC-P103",
+      "stem": "Paragraph 4 begins, \"Her discovery brought international recognition.\" How does the rest of the paragraph develop this claim?",
+      "choices": [
+        {
+          "id": "ELA-RC-116-v2-a",
+          "label": "A",
+          "text": "It suggests that Mitchell was honored mainly because she was the first woman to discover a comet.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This mixes up two different achievements. The medal was promised to \"the first person to discover a comet with a telescope.\" Being \"the first woman elected\" refers to the academy, not to the reason for the medal."
+        },
+        {
+          "id": "ELA-RC-116-v2-b",
+          "label": "B",
+          "text": "It describes honors from both Europe and America, including a king's medal, news coverage, and election to an academy.",
+          "isCorrect": true,
+          "explanation": "Correct. The medal came from \"the king of Denmark,\" the news was reported by \"Newspapers on both sides of the Atlantic,\" and she was elected to \"the American Academy of Arts and Sciences.\" Honors from more than one country show that the recognition was international."
+        },
+        {
+          "id": "ELA-RC-116-v2-c",
+          "label": "C",
+          "text": "It shows that European astronomers doubted Mitchell's observations until she could prove them accurate.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This distorts the \"confusion\" in the paragraph. The question was who saw the comet first, because \"an astronomer in Rome had reported the same comet.\" No one is said to doubt that her observations were accurate."
+        },
+        {
+          "id": "ELA-RC-116-v2-d",
+          "label": "D",
+          "text": "It explains how Mitchell used her new fame to create opportunities for other women in science.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This describes paragraph 5, which begins \"Mitchell could have enjoyed her fame quietly\" and says \"she used it to open doors for others.\" Paragraph 4 is about the honors she received."
+        }
+      ],
+      "solutionExplanation": "Paragraph 4 opens with a claim: \"Her discovery brought international recognition.\" The rest of the paragraph supports it with examples from different places. A gold medal promised by \"the king of Denmark\" was awarded to Mitchell once it was clear \"that she had seen it first.\" \"Newspapers on both sides of the Atlantic\" reported the news. And in 1848 she became \"the first woman elected to the American Academy of Arts and Sciences.\" These honors from Europe and America show that her achievement was noticed beyond her own country. Choice B is correct.",
+      "commonTrap": "Choice C is tempting because the paragraph mentions \"some confusion at first\" involving an astronomer in Rome, which can sound like doubt about Mitchell's work. But the confusion was only about who reported the comet first, and it ended with the medal being \"awarded to Mitchell.\"",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Style-fidelity rewrite (alignment judgment, not a correctness defect). Replaced the direct-definition task (\"recognition\" means \"praise and honor\") with a question on how the medal, newspaper coverage and academy election develop the claim of international recognition, following the audit direction. New stem, four new options (IDs ELA-RC-116-v2-a to -d), key B, explanations, solution and trap. Tag RC-VOC -> RC-TXT. Does not duplicate 113 (central idea), 114 (role of paragraph 3), 115 (upbringing evidence), 117 (paragraph 7 view) or 118 (teaching evidence).",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "ELA-RC-A01",
+        "VOCAB:bank:ELA-RC-116"
+      ]
+    },
+    {
+      "id": "ELA-RC-122",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-TXT"
+      ],
+      "passageId": "RC-P104",
+      "stem": "Read these sentences from paragraph 7.\n\nStep by step, the disease retreated. South America became free of smallpox, and then Asia.\n\nWhat is the effect of describing smallpox as having \"retreated\"?",
+      "choices": [
+        {
+          "id": "ELA-RC-122-v2-a",
+          "label": "A",
+          "text": "It suggests that the disease had gone into hiding in animals and might return once the campaign ended.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This contradicts paragraph 4, which says the virus \"infected only humans, so it could not hide in animals and return later.\""
+        },
+        {
+          "id": "ELA-RC-122-v2-b",
+          "label": "B",
+          "text": "It suggests that the disease disappeared all at once after the bifurcated needle was invented.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This ignores \"Step by step.\" The paragraph shows the disease leaving one region at a time, and the needle is only one of the tools described in paragraph 6."
+        },
+        {
+          "id": "ELA-RC-122-v2-c",
+          "label": "C",
+          "text": "It presents the campaign as a struggle in which health workers steadily pushed the disease out of one region after another.",
+          "isCorrect": true,
+          "explanation": "Correct. The word \"retreated\" describes an enemy losing ground, and \"Step by step\" shows it happening gradually, as South America and then Asia became free of smallpox. Paragraph 8 continues the idea, calling the result \"The victory over smallpox\" and the disease \"a common enemy.\""
+        },
+        {
+          "id": "ELA-RC-122-v2-d",
+          "label": "D",
+          "text": "It suggests that health workers had to pull back from regions where the disease was too widespread to fight.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This gives the retreat to the wrong side. In the sentence, it is \"the disease\" that retreated, while the workers kept going \"from village to village\" (paragraph 6)."
+        }
+      ],
+      "solutionExplanation": "Paragraph 7 says, \"Step by step, the disease retreated. South America became free of smallpox, and then Asia.\" To retreat is to lose ground, the way an army does when it is pushed back. The next sentence shows what that looked like: whole regions became free of the disease, one after another. The word makes the campaign feel like a long battle that health workers were winning, an idea paragraph 8 completes when it calls the result \"The victory over smallpox\" over \"a common enemy.\" Choice C is correct.",
+      "commonTrap": "Choice D is tempting because \"retreat\" is a word about armies, and students may picture the health workers as the army that pulled back. But the subject of the sentence is \"the disease.\" The disease is the side losing ground.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Style-fidelity rewrite (alignment judgment, not a correctness defect). Replaced the direct-definition task (\"retreated\" means \"became less widespread\") with a word-choice effect question on how portraying the disease as retreating contributes to the account of the global campaign, following the audit direction. New stem, four new options (IDs ELA-RC-122-v2-a to -d), key C, explanations, solution and trap. Tag RC-VOC -> RC-TXT. Checked against RC-P104 v2 (paragraph 7 wording change does not touch the quoted sentences). Does not duplicate 119 to 121, 123 or 124.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "ELA-RC-A01",
+        "VOCAB:bank:ELA-RC-122"
+      ]
+    },
+    {
+      "id": "ELA-RC-128",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-TXT"
+      ],
+      "passageId": "RC-P105",
+      "stem": "How does paragraph 5 contribute to the passage's account of how scientists investigated Roman concrete?",
+      "choices": [
+        {
+          "id": "ELA-RC-128-v2-a",
+          "label": "A",
+          "text": "It reports the test showing that cracks in hot-mixed concrete closed within two weeks.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Wrong paragraph. The crack test and its result (\"Within two weeks, the cracks had closed\") come in paragraph 6, after paragraph 5 has offered the new explanation."
+        },
+        {
+          "id": "ELA-RC-128-v2-b",
+          "label": "B",
+          "text": "It explains how seawater dissolved volcanic ash and formed rare crystals inside ancient piers.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Wrong discovery. The seawater and the \"rare crystal called aluminous tobermorite\" belong to the 2017 study in paragraph 4. Paragraph 5 is about lime lumps."
+        },
+        {
+          "id": "ELA-RC-128-v2-c",
+          "label": "C",
+          "text": "It confirms the earlier belief that Roman builders were often careless when they mixed their materials.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This reverses the paragraph. The idea of \"careless mixing\" is the older assumption, and the MIT team \"proposed a different explanation.\""
+        },
+        {
+          "id": "ELA-RC-128-v2-d",
+          "label": "D",
+          "text": "It shows researchers treating a long-noticed feature of the concrete as a clue to how it was made, not as a sign of poor work.",
+          "isCorrect": true,
+          "explanation": "Correct. Researchers \"had noticed small white lumps of lime\" for a long time, and \"Many assumed the lumps were a sign of careless mixing or poor-quality materials.\" The MIT team \"proposed a different explanation\": the lumps could be what hot mixing with quicklime \"would naturally leave behind.\""
+        }
+      ],
+      "solutionExplanation": "Paragraph 5 describes \"A second clue\" in the investigation. It begins with something researchers had seen for years: \"small white lumps of lime scattered through Roman concrete.\" It then gives the old view, that \"Many assumed the lumps were a sign of careless mixing or poor-quality materials,\" and the new one: the MIT team argued the Romans \"may have mixed their concrete using quicklime,\" a method that \"would naturally leave behind white lumps of lime.\" The paragraph shows scientists reinterpreting old evidence as a clue to the Roman method, which paragraph 6 then tests. Choice D is correct.",
+      "commonTrap": "Choice A is tempting because the crack test is the most memorable result about the lime lumps. But that test is in paragraph 6. Paragraph 5 sets it up by changing how researchers understood the lumps in the first place.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Style-fidelity rewrite (alignment judgment, not a correctness defect). Replaced the direct-definition task (\"sets\" means \"hardens\", paragraph 7) with a text-structure question on how paragraph 5's reinterpretation of the lime lumps develops the account of the scientific investigation, following the audit direction. New stem, four new options (IDs ELA-RC-128-v2-a to -d), key D, explanations, solution and trap. Tag RC-VOC -> RC-TXT. Avoids the paragraph 7 limitation items (126, 129) and the paragraph 6 experiment evidence item (127); the paragraph 6 result appears only as a wrong-paragraph distractor.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "ELA-RC-A01",
+        "VOCAB:bank:ELA-RC-128"
+      ]
+    },
+    {
+      "id": "ELA-RC-134",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "RC-TXT"
+      ],
+      "passageId": "RC-P106",
+      "stem": "Read this sentence from paragraph 8.\n\nA single striking experiment can capture the public imagination, but one result, however memorable, is only the beginning of an investigation.\n\nHow does the contrast in this sentence develop the author's point about scientific evidence?",
+      "choices": [
+        {
+          "id": "ELA-RC-134-v2-a",
+          "label": "A",
+          "text": "It suggests that a result that draws public attention still has to be tested in many settings before it can be well understood.",
+          "isCorrect": true,
+          "explanation": "Correct. The sentence sets a \"striking\" result that captures attention against the idea that it \"is only the beginning of an investigation.\" The next sentence finishes the point: \"Only when many researchers test an idea in many settings does a clearer and more accurate understanding emerge.\""
+        },
+        {
+          "id": "ELA-RC-134-v2-b",
+          "label": "B",
+          "text": "It suggests that memorable experiments are usually mistaken and should not be trusted at all.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This goes too far. Calling a result \"the beginning\" means it needs more testing, not that it is false. Paragraph 5 says the later finding \"did not mean that the original jam study was wrong.\""
+        },
+        {
+          "id": "ELA-RC-134-v2-c",
+          "label": "C",
+          "text": "It suggests that scientists should try to design experiments that will capture the public imagination.",
+          "isCorrect": false,
+          "explanation": "Incorrect. This turns a description into advice. The author notes that striking results attract attention but warns that attention is not enough. The sentence does not tell scientists to seek it."
+        },
+        {
+          "id": "ELA-RC-134-v2-d",
+          "label": "D",
+          "text": "It suggests that public interest in a study is what convinces other researchers that its result is correct.",
+          "isCorrect": false,
+          "explanation": "Incorrect. The passage shows the opposite. The idea of choice overload \"spread quickly\" and the jam study became widely cited (paragraph 3), but later researchers who tested the idea got mixed results (paragraph 4)."
+        }
+      ],
+      "solutionExplanation": "Paragraph 8 contrasts two ideas: a \"striking experiment can capture the public imagination,\" but \"one result, however memorable, is only the beginning of an investigation.\" The passage has already shown this with the jam study, which became famous (paragraph 3) and was then retested with mixed results (paragraphs 4 and 5). The author's point follows in the final sentence: \"Only when many researchers test an idea in many settings does a clearer and more accurate understanding emerge.\" Choice A is correct.",
+      "commonTrap": "Choice B is tempting because the passage shows the jam study's famous result did not hold up everywhere. But the author never says the study was wrong. A first result is a starting point that needs more testing, not a result to throw away.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude"
+      ],
+      "revisionNotes": "Style-fidelity rewrite (alignment judgment, not a correctness defect). Replaced the direct-definition task (\"striking\" means \"attention-grabbing\") with a question on how the contrast between a striking result and the beginning of an investigation develops the author's point about scientific evidence, following the audit direction. New stem, four new options (IDs ELA-RC-134-v2-a to -d), key A, explanations, solution and trap. Tag RC-VOC -> RC-TXT. Checked against RC-P106 v2. Distinct from 131 (central idea), 132 (paragraph 4 vs 3) and 135 (what paragraph 5 implies about the jam study's result).",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "ELA-RC-A01",
+        "VOCAB:bank:ELA-RC-134",
+        "ELA-RC-P02"
+      ]
+    }
+  ],
+  "passages": [
+    {
+      "id": "RC-P104",
+      "title": "The End of Smallpox",
+      "sourceMeta": "Original DrillMaster passage",
+      "body": "1 For thousands of years, smallpox was one of the most feared diseases on Earth. It caused a high fever and a painful rash of fluid-filled blisters that spread across the body. Roughly three out of every ten people who caught the most common form of the disease died, and many survivors were left with deep scars or blindness. In the twentieth century alone, smallpox killed hundreds of millions of people. Today, it kills no one. The story of how that happened is one of the greatest achievements in the history of public health.\n\n2 The first great step came in 1796, when the English doctor Edward Jenner tested an idea based on country wisdom. Milkmaids who caught cowpox, a mild disease, seemed never to catch smallpox. Jenner deliberately infected a boy with material from a cowpox sore and later showed that the boy did not become sick when exposed to smallpox. Jenner's method, which became known as vaccination from the Latin word for cow, spread around the world. Over the next century and a half, vaccination drove smallpox out of many wealthy countries.\n\n3 Yet in much of the world, the disease remained common. In 1967, when the World Health Organization launched an intensified campaign to wipe out smallpox everywhere, the disease was still found in more than thirty countries, and an estimated ten million to fifteen million people were infected each year. Many experts doubted the effort could succeed. No disease had ever been eliminated from the entire planet.\n\n4 Smallpox, however, had weaknesses that made it a good target. The virus infected only humans, so it could not hide in animals and return later. Its rash was easy to recognize, which meant that health workers could identify cases quickly, even in remote villages. And a single dose of the vaccine provided strong protection for years.\n\n5 Even with these advantages, the early strategy of vaccinating as many people as possible proved difficult. In crowded regions with few roads and limited supplies, reaching every person was nearly impossible. So health workers adopted a different approach, often called ring vaccination. Instead of trying to vaccinate everyone, teams searched for new cases. When they found one, they isolated the sick person and quickly vaccinated everyone around that person: family members, neighbors, and anyone else who might have been exposed. Each ring of protected people formed a barrier the virus could not cross. An American doctor working in Nigeria, William Foege, helped show that this approach could stop outbreaks even when vaccine was in short supply.\n\n6 New tools helped the strategy succeed. A freeze-dried vaccine could be stored for long periods in hot climates without refrigeration. A simple device called the bifurcated needle, a short steel rod with two prongs at one end, held a tiny drop of vaccine between its prongs. Workers could learn to use it in minutes, and it required far less vaccine per person than older methods. Thousands of local health workers carried these needles from village to village, often on foot.\n\n7 Step by step, the disease retreated. South America became free of smallpox, and then Asia. The last naturally occurring case was found in October 1977 in a hospital cook named Ali Maow Maalin in Somalia. He recovered, and health workers vaccinated everyone he had been in contact with. After two more years of careful searching turned up no further naturally occurring cases, a commission of experts confirmed that smallpox was gone. In 1980, the World Health Organization officially declared the world free of smallpox.\n\n8 The victory over smallpox changed what people believed was possible. It proved that nations could cooperate across borders, even during periods of political tension, to defeat a common enemy. It also taught lessons that guide public health workers today: that finding cases quickly can matter as much as treating them, and that simple, well-designed tools in trained hands can accomplish what expensive technology alone cannot. Only one other disease, a cattle illness called rinderpest, has since been wiped out.",
+      "contentVersion": 2,
+      "auditFindings": [
+        "ELA-RC-P01"
+      ],
+      "revisionNotes": "Paragraph 7: \"turned up no new cases\" -> \"turned up no further naturally occurring cases\". WHO records laboratory-associated smallpox cases in Birmingham in 1978, so an unqualified \"no new cases\" after the 1977 Somalia case was inaccurate. The 1977 last natural case, 1979 commission and 1980 WHO declaration sequence is unchanged. Rechecked ELA-RC-119 to 124: every quotation (including ELA-RC-123's \"two more years of careful searching\") and paragraph reference still matches; ELA-RC-122 is separately rewritten."
+    },
+    {
+      "id": "RC-P106",
+      "title": "Too Many Choices?",
+      "sourceMeta": "Original DrillMaster passage",
+      "body": "1 Imagine walking into a grocery store and finding a table offering free samples of jam. If the table displayed twenty-four flavors, would you be more likely to buy a jar than if it displayed only six? Most people would guess yes. More options, after all, should make it easier to find something you like, and many stores proudly advertise their wide selection as a reason to shop there. A famous experiment, however, suggested the opposite.\n\n2 In 2000, psychologists Sheena Iyengar and Mark Lepper published the results of a study conducted at an upscale grocery store in California. The researchers set up a tasting booth and alternated between a display of twenty-four varieties of jam and a display of only six. Shoppers who stopped at the booth received a coupon toward the purchase of any jam of that brand. The large display attracted more attention: about 60 percent of passing shoppers stopped at it, compared with about 40 percent at the small display. But when it came to buying, the pattern reversed. About 30 percent of the shoppers who stopped at the small display later bought jam, while only about 3 percent of those at the large display did.\n\n3 The researchers proposed that too many choices can overwhelm people. When faced with a long list of similar options, shoppers may worry about picking the wrong one, find the comparison exhausting, or simply put off deciding. The idea, which came to be known as \"choice overload,\" spread quickly. It appeared in popular books, business magazines, and lectures, and some companies used it as a reason to trim their product lines. The jam study became one of the most widely cited experiments in its field.\n\n4 As often happens in science, however, the story turned out to be more complicated. Over the following years, other researchers tried to repeat the effect in different settings, using a wide range of products and decisions. Some found that large assortments did discourage people from choosing, just as the jam study had. Others found no effect at all, and a few found that more options actually left people more satisfied.\n\n5 In 2010, a team of researchers combined the results of dozens of these experiments in a single analysis. Their conclusion surprised many: on average, the effect of having many options was close to zero. Choice overload, it seemed, was not a universal rule of human behavior. The finding did not mean that the original jam study was wrong, only that its result could not be counted on to appear everywhere.\n\n6 Later work has tried to explain why the effect appears in some situations but not in others. One review suggested that choice overload is most likely when the options are hard to compare, when people do not already know what they prefer, and when the decision itself feels difficult. A shopper who already knows she loves strawberry jam may not be troubled by twenty-four flavors at all. A shopper with no favorite, facing two dozen unfamiliar jars, may give up and walk away.\n\n7 This more detailed picture has practical value. Instead of simply cutting the number of choices, a store or website can make choices easier to handle. Grouping options into clear categories, highlighting a few recommendations, or describing differences in plain language may help people find what they want without feeling lost. A large selection, in other words, is not necessarily the problem. A confusing one may be.\n\n8 The history of the jam study also offers a lesson about how science works. A single striking experiment can capture the public imagination, but one result, however memorable, is only the beginning of an investigation. Only when many researchers test an idea in many settings does a clearer and more accurate understanding emerge.",
+      "contentVersion": 2,
+      "auditFindings": [
+        "ELA-RC-P02"
+      ],
+      "revisionNotes": "Paragraph 2: replaced the claim that the 24-jam and 6-jam displays ran on different days with \"alternated between a display of twenty-four varieties of jam and a display of only six\" (Iyengar's own account describes switching the assortments within hours). The 60/40 percent stopping rates (of passing shoppers) and 30/3 percent purchase rates (of shoppers who stopped) and their denominators are unchanged. Rechecked ELA-RC-131 to 136: all quotations and paragraph references still match; 134, 135 and 136 are separately revised."
+    },
+    {
+      "id": "RC-P111",
+      "title": "What Hurry Costs",
+      "sourceMeta": "Original DrillMaster passage",
+      "body": "In this story, a teenager spends the summer as an apprentice in a furniture maker's shop in the Bronx.\n\nWhat Hurry Costs\n\n1 For the first three weeks of my apprenticeship, Mr. Albescu did not let me cut a single board. I swept. I sorted screws into coffee cans by size. Mostly, I sanded. He would hand me a plank and a block wrapped in sandpaper, say, \"Until it feels like the inside of your wrist,\" and walk away.\n\n2 The shop on Webster Avenue smelled of sawdust and linseed oil and the coffee Mr. Albescu brewed so strong it could have stripped paint. Along the back wall hung his tools, each in its own outline traced in black marker, so that an empty space shouted whenever something was missing. In the middle of the room stood the table saw, which I was not allowed to touch.\n\n3 I had taken the job because I wanted to build things. My cousin had posted a video of a coffee table he built in a single weekend, and I imagined myself doing the same. Instead I spent my days rubbing the same board back and forth until my arms ached, while the saw stood nearby like a dog I was forbidden to pet.\n\n4 \"When do I get to make something?\" I finally asked him at the end of the third week.\n\n5 Mr. Albescu ran his thumb along the board I had been sanding and frowned slightly, the way a doctor frowns at an X-ray. \"You are making something,\" he said. \"You are making your hands.\"\n\n6 I thought this was the kind of thing old men said to avoid answering questions.\n\n7 The following Monday he was called away to deliver a cabinet in Riverdale. \"Sand the tabletop,\" he told me. \"Nothing else.\" The door closed behind him, and the shop went quiet.\n\n8 I lasted about twenty minutes. Then I took a scrap of oak from the pile and marked a line. I had watched him use the saw a hundred times. I knew where his hands went. I switched it on, and the blade woke up with a whine that filled the whole room.\n\n9 The cut wandered. I felt it pull to the left, and when I switched the saw off, the edge of the board curved like a lazy river. Worse, the blade had left a dark burn mark where I had pushed too hard. I stood there with my heart pounding, listening for his truck.\n\n10 I tried to hide it at the bottom of the scrap pile. But when Mr. Albescu came back, he looked once around the shop, the way he always did, and then he walked to the pile and pulled out my board as if it had called his name.\n\n11 I waited for him to shout. Instead he turned the board over in his hands for a long time. Then he walked to a small pine cabinet that had stood in the corner all summer, pulled out its bottom drawer, and set the drawer on the workbench beside my board. The drawer was crooked. Its front sat at a slight angle, and one corner joint gapped open wide enough to slide a coin into.\n\n12 \"My first piece,\" he said. \"I was fifteen. My teacher told me to wait, and I did not wait.\" He tapped the gap. \"I keep it so I remember what hurry costs.\"\n\n13 I looked at the crooked drawer, and then at the tools on the wall, each one returned to its outline, and for the first time I understood that the patience in this room had not always been there. It had been built, the way you build anything, one slow stroke at a time.\n\n14 He handed me the sanding block. \"The tabletop,\" he said. \"Until it feels like the inside of your wrist.\"\n\n15 This time I did not argue. I picked up the block and began, and I tried to feel the wood the way he did, listening with my fingers for the places that were not yet smooth.",
+      "contentVersion": 2,
+      "auditFindings": [
+        "ELA-RC-P03"
+      ],
+      "revisionNotes": "Paragraph 3: \"the saw sat in the corner\" -> \"the saw stood nearby\". Paragraph 2 places the table saw \"In the middle of the room\", so the corner location contradicted it with no move described. The forbidden-temptation simile is intact. The pine cabinet that \"had stood in the corner all summer\" (paragraph 11) is a different object and is unchanged. ELA-RC-164 quotes this sentence and is revised to match; ELA-RC-161, 162, 163, 165 and 166 rechecked, no quotation touches the changed words."
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+[
+  {
+    "key": "ELA-RC-C01",
+    "disposition": "fixed",
+    "revision": "bank:ELA-RC-103@2",
+    "note": "Feedback only; key C kept. Explanations, solution and trap say similar climate and geology strengthens the otter inference rather than ruling out all environmental causes."
+  },
+  {
+    "key": "ELA-RC-C02",
+    "disposition": "fixed",
+    "revision": "bank:ELA-RC-129@2",
+    "note": "Feedback only; key D kept. Choice A now called unsupported (countless gives no proportion), not contradicted."
+  },
+  {
+    "key": "ELA-RC-C03",
+    "disposition": "fixed",
+    "revision": "bank:ELA-RC-135@2",
+    "note": "Also bank:ELA-RC-136@2. Q135 key reworded to \"They cannot be assumed to occur in every setting.\" (new ID ELA-RC-135-v2-d); Q136 keyed quotation C unchanged and aligned. No explanation equates not-disproved with real, and the near-zero-average-means-wrong trap claim is removed."
+  },
+  {
+    "key": "ELA-RC-C04",
+    "disposition": "fixed",
+    "revision": "bank:ELA-RC-136@2",
+    "note": "Also bank:ELA-RC-135@2. Content-only repair (the audit's preferred route): Q135 two-part wrapper removed and Q136 stem names the claim it asks evidence for, with no Part A/Part B reference. Each item is independently answerable, so no atomic pairing or A-before-B delivery rule is needed. Runtime delivery paths were not changed or verified here."
+  },
+  {
+    "key": "ELA-RC-C05",
+    "disposition": "fixed",
+    "revision": "bank:ELA-RC-140@2",
+    "note": "Trap no longer claims SHSAT similes \"almost always\" describe a mood; explains this passage's suspense."
+  },
+  {
+    "key": "ELA-RC-C06",
+    "disposition": "fixed",
+    "revision": "bank:ELA-RC-141@2",
+    "note": "Choice C explanation, solutionExplanation and ms.solutionExplanation now agree: windowsill changed between trials, heat may explain results. Keys C/E kept."
+  },
+  {
+    "key": "ELA-RC-C07",
+    "disposition": "fixed",
+    "revision": "bank:ELA-RC-147@2",
+    "note": "Also bank:ELA-RC-159@2. \"Which sentence\" -> \"Which quotation\" in both stems; keys 147 D and 159 C and all choice IDs kept."
+  },
+  {
+    "key": "ELA-RC-P01",
+    "disposition": "fixed",
+    "revision": "bank:RC-P104@2",
+    "note": "Paragraph 7 now says no further naturally occurring cases. ELA-RC-119 to 124 rechecked (122 separately rewritten)."
+  },
+  {
+    "key": "ELA-RC-P02",
+    "disposition": "fixed",
+    "revision": "bank:RC-P106@2",
+    "note": "Paragraph 2 says the researchers alternated between the 24-jam and 6-jam displays; percentages and denominators unchanged. ELA-RC-131 to 136 rechecked."
+  },
+  {
+    "key": "ELA-RC-P03",
+    "disposition": "fixed",
+    "revision": "bank:RC-P111@2",
+    "note": "Also bank:ELA-RC-164@2. Paragraph 3 saw \"stood nearby\" (no longer \"in the corner\"); ELA-RC-164 quotation and feedback updated to match."
+  },
+  {
+    "key": "VOCAB:bank:ELA-RC-001",
+    "disposition": "fixed",
+    "revision": "bank:ELA-RC-001@2",
+    "note": "Direct-definition item rewritten as an original passage-dependent question per the audit direction (style-fidelity judgment, not a correctness defect); new choice IDs; tag no longer RC-VOC. Needs editorial review."
+  },
+  {
+    "key": "VOCAB:bank:ELA-RC-104",
+    "disposition": "fixed",
+    "revision": "bank:ELA-RC-104@2",
+    "note": "Direct-definition item rewritten as an original passage-dependent question per the audit direction (style-fidelity judgment, not a correctness defect); new choice IDs; tag no longer RC-VOC. Needs editorial review."
+  },
+  {
+    "key": "VOCAB:bank:ELA-RC-111",
+    "disposition": "fixed",
+    "revision": "bank:ELA-RC-111@2",
+    "note": "Direct-definition item rewritten as an original passage-dependent question per the audit direction (style-fidelity judgment, not a correctness defect); new choice IDs; tag no longer RC-VOC. Needs editorial review."
+  },
+  {
+    "key": "VOCAB:bank:ELA-RC-116",
+    "disposition": "fixed",
+    "revision": "bank:ELA-RC-116@2",
+    "note": "Direct-definition item rewritten as an original passage-dependent question per the audit direction (style-fidelity judgment, not a correctness defect); new choice IDs; tag no longer RC-VOC. Needs editorial review."
+  },
+  {
+    "key": "VOCAB:bank:ELA-RC-122",
+    "disposition": "fixed",
+    "revision": "bank:ELA-RC-122@2",
+    "note": "Direct-definition item rewritten as an original passage-dependent question per the audit direction (style-fidelity judgment, not a correctness defect); new choice IDs; tag no longer RC-VOC. Needs editorial review."
+  },
+  {
+    "key": "VOCAB:bank:ELA-RC-128",
+    "disposition": "fixed",
+    "revision": "bank:ELA-RC-128@2",
+    "note": "Direct-definition item rewritten as an original passage-dependent question per the audit direction (style-fidelity judgment, not a correctness defect); new choice IDs; tag no longer RC-VOC. Needs editorial review."
+  },
+  {
+    "key": "VOCAB:bank:ELA-RC-134",
+    "disposition": "fixed",
+    "revision": "bank:ELA-RC-134@2",
+    "note": "Direct-definition item rewritten as an original passage-dependent question per the audit direction (style-fidelity judgment, not a correctness defect); new choice IDs; tag no longer RC-VOC. Needs editorial review."
+  },
+  {
+    "key": "ELA-RC-A01",
+    "disposition": "fixed",
+    "revision": "bank:ELA-RC-001@2",
+    "note": "Umbrella for the nine direct-definition items (style-fidelity alignment judgment, not a correctness defect). Bank part: ELA-RC-001, 104, 111, 116, 122, 128 and 134 rewritten at bank @2, each citing ELA-RC-A01 and its VOCAB:bank key. Diagnostic part: RC-BRB-001-Q3 and RC-DX-MEM-Q2 rewritten at diagnostic @2 (see ela-diagnostic ledger VOCAB:diagnostic keys). All nine need editorial approval."
+  }
+]
