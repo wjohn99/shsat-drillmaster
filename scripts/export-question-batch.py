@@ -222,9 +222,29 @@ def tracker_row(q: dict, passages: dict) -> dict:
     return row
 
 
+PIPELINE_START = "2026-10-17"
+
+
+def validate_pipeline(src: Path, batch: dict) -> list[str]:
+    """Batches dated after the pipeline start need an independent review (content/PIPELINE.md)."""
+    name = src.parent.name
+    if not re.match(r"^\d{4}-\d{2}-\d{2}", name) or name[:10] <= PIPELINE_START:
+        return []
+    errors: list[str] = []
+    for q in batch["questions"]:
+        review = q.get("independentReview") or {}
+        if review.get("verdict") != "pass" or not review.get("reviewer"):
+            errors.append(f"{q.get('id')}: needs independentReview with verdict 'pass' (content/REVIEW.md)")
+        elif review.get("reviewer") in (q.get("revisedBy") or []):
+            errors.append(f"{q.get('id')}: the reviewer cannot be the writer")
+    if batch.get("passages") and not batch.get("factCheck"):
+        errors.append("batch has passages but no factCheck notes")
+    return errors
+
+
 def export(src: Path) -> bool:
     batch = json.loads(src.read_text(encoding="utf-8"))
-    errors = validate(batch)
+    errors = validate(batch) + validate_pipeline(src, batch)
     if errors:
         print(f"{src}:\n  " + "\n  ".join(errors))
         return False
