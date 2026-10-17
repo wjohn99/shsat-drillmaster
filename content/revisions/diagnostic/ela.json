@@ -1,0 +1,630 @@
+{
+  "track": "diagnostic",
+  "description": "ELA revisions to the fixed diagnostic form (2026-10-17 content audit). Feedback-only fixes keep every ID and key; substantive revisions (RC-BRB-001-Q3, RC-BRB-001-Q7, RC-DX-INF1-Q7, RC-DX-MEM-Q2) keep the item ID in the same form slot and give changed choices new -v2- IDs. Passage RC-BRB-001 paragraph 6 corrected. Diagnostic copies only: never bank content.",
+  "questions": [
+    {
+      "id": "RC-BRB-001-Q3",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "Read this sentence from paragraph 3.\n\n\"After years of designing successful suspension bridges, he proposed an ambitious plan that used massive stone towers to support enormous steel cables.\"\n\nHow do the words \"ambitious,\" \"massive,\" and \"enormous\" contribute to the author's portrayal of the project?",
+      "solutionExplanation": "Correct. Paragraph 2 explains that the bridge would need to \"stretch farther than any suspension bridge previously constructed.\" Calling the plan \"ambitious\" and its towers and cables \"massive\" and \"enormous\" stresses how large and bold Roebling's design was. This word choice reinforces why \"Many experts believed such a bridge could never be built\" and prepares for the final paragraph's point that the bridge overcame \"problems once considered impossible.\"",
+      "commonTrap": "B is tempting because \"tragedy struck almost immediately\" after the plan was proposed, so a student may read the size words as a warning. But the injury happened \"while surveying the site,\" and the author presents the bold plan with admiration rather than criticism.",
+      "passageId": "RC-BRB-001",
+      "choices": [
+        {
+          "id": "RC-BRB-001-Q3-v2-a",
+          "label": "A",
+          "text": "They suggest that the plan was too costly, which explains why city leaders were slow to approve it.",
+          "isCorrect": false,
+          "explanation": "Incorrect. The passage never mentions the cost of the plan or any delay by city leaders. The words \"ambitious,\" \"massive,\" and \"enormous\" describe the size and boldness of the design, not its price."
+        },
+        {
+          "id": "RC-BRB-001-Q3-v2-b",
+          "label": "B",
+          "text": "They suggest that Roebling's design was reckless, which foreshadows the injury and illness that later struck the project.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Nothing in the passage calls the design careless. Roebling had \"years of designing successful suspension bridges,\" and he \"argued that its strength would allow the bridge to span the river safely.\" His injury happened \"while surveying the site,\" and the later illness came from working in the pressurized caissons, not from the size of his plan. The author's attitude is admiring, as the final description of the bridge as \"a symbol of engineering ingenuity\" shows."
+        },
+        {
+          "id": "RC-BRB-001-Q3-v2-c",
+          "label": "C",
+          "text": "They emphasize the daring scale of Roebling's plan, which reinforces the point in paragraph 2 that the bridge would attempt something no earlier suspension bridge had achieved.",
+          "isCorrect": true,
+          "explanation": "Correct. Paragraph 2 explains that the bridge would need to \"stretch farther than any suspension bridge previously constructed.\" Calling the plan \"ambitious\" and its towers and cables \"massive\" and \"enormous\" stresses how large and bold Roebling's design was. This word choice reinforces why \"Many experts believed such a bridge could never be built\" and prepares for the final paragraph's point that the bridge overcame \"problems once considered impossible.\""
+        },
+        {
+          "id": "RC-BRB-001-Q3-v2-d",
+          "label": "D",
+          "text": "They show that Roebling relied on proven materials, which suggests that the plan involved little risk.",
+          "isCorrect": false,
+          "explanation": "Incorrect. The same paragraph says that \"steel wire was still a relatively new building material,\" so the plan depended on a material that had not been fully proven. The descriptive words stress the plan's boldness, not its safety."
+        }
+      ],
+      "tags": [
+        "RC-TXT"
+      ],
+      "timeToSolve": 150,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "VOCAB:diagnostic:RC-BRB-001-Q3",
+        "ELA-RC-A01"
+      ],
+      "revisionNotes": "Style-fidelity rewrite (ELA-RC-A01). The direct-definition stem (\"ambitious\" most nearly means) is replaced with a passage-dependent word-choice effect question: how \"ambitious,\" \"massive,\" and \"enormous\" in paragraph 3 portray the project. Key C connects the word choices to paragraph 2's unprecedented-span obstacle; distractors are unsupported cost (A), a reckless-design misreading triggered by the next sentence's tragedy (B, the trap), and a reversal of the new-material detail (D). All four choices have new IDs (-v2-a to -v2-d); key stays at C. Tag changed from RC-VOC to RC-TXT (author's technique). Avoids duplicating Q1 (central idea), Q2 (paragraph 2 role), Q4 (unfamiliar methods) and Q9 (final-paragraph significance). Quotations checked verbatim against RC-BRB-001 v2."
+    },
+    {
+      "id": "RC-BRB-001-Q7",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "Which sentence from the passage best supports the idea that the engineers adjusted their plans when problems arose?",
+      "solutionExplanation": "Correct. After inspectors found that some supplied wire did not meet the required standards, the engineers changed their approach. They strengthened the cables with additional high-quality wire rather than dismantling completed sections and starting over.",
+      "commonTrap": "B does show the project responding to an unexpected event, but it is a leadership change rather than an example of engineers modifying a construction plan.",
+      "passageId": "RC-BRB-001",
+      "choices": [
+        {
+          "id": "RC-BRB-001-Q7-a",
+          "label": "A",
+          "text": "\"Engineers and city leaders began searching for a permanent way to connect the two shores.\"",
+          "isCorrect": false,
+          "explanation": "Incorrect. This sentence explains why the bridge was proposed, not how engineers adapted to a construction problem."
+        },
+        {
+          "id": "RC-BRB-001-Q7-b",
+          "label": "B",
+          "text": "\"Leadership of the project passed to his son, Washington Roebling.\"",
+          "isCorrect": false,
+          "explanation": "Incorrect. This describes a change in leadership after John Roebling's death, but it does not show an engineering solution."
+        },
+        {
+          "id": "RC-BRB-001-Q7-v2-c",
+          "label": "C",
+          "text": "\"Rather than dismantling completed sections, the engineers strengthened the cables by adding additional high-quality wire.\"",
+          "isCorrect": true,
+          "explanation": "Correct. After inspectors found that some supplied wire did not meet the required standards, the engineers changed their approach. They strengthened the cables with additional high-quality wire rather than dismantling completed sections and starting over."
+        },
+        {
+          "id": "RC-BRB-001-Q7-d",
+          "label": "D",
+          "text": "\"Thousands of people crossed it on opening day, eager to experience one of the greatest engineering achievements of its time.\"",
+          "isCorrect": false,
+          "explanation": "Incorrect. This describes the public response after the bridge opened."
+        }
+      ],
+      "tags": [
+        "RC-EV"
+      ],
+      "timeToSolve": 150,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "ELA-RC-C14"
+      ],
+      "revisionNotes": "Choice C quotes paragraph 6, which was revised (RC-BRB-001 v2) to say \"additional high-quality wire\" instead of the overstated \"thousands of additional wires\". Choice C text updated to the exact revised sentence and given the new ID RC-BRB-001-Q7-v2-c; C remains the only correct answer. C explanation and solution reworded to match. Choices A, B and D and the trap are unchanged and still quote the passage exactly."
+    },
+    {
+      "id": "RC-DX-INF1-Q7",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "Which statement best describes how the table relates to the passage?",
+      "solutionExplanation": "Correct. Every figure in the table is reported in the article (paragraphs 1, 2, and 10), and the columns show the year, the place, and the kind of count for each figure. Because the counts measure different things, only like-for-like rows can be compared directly: worldwide nests rose from 702 in 1985 to nearly 20,000 in 2009, and Texas nests rose from 6 in 1996 to 209 in 2012. The 1947 row counts nesting turtles on one beach in one day, so it cannot be compared numerically with the later nest counts. The earlier decline and the drop after 2009 are described in the paragraphs, not shown by matching rows in the table.",
+      "commonTrap": "B is tempting because the project years (1978 to 1988) and the egg relocation are major details, and students assume a table in this article must track the project. Checking the column headings shows the table reports nests and nesting turtles instead. Another trap is reading the table as a direct record of a fall and rise: the 1947 row counts turtles on one beach in one day, while later rows count nests, so those rows cannot be compared as numbers.",
+      "passageId": "RC-DX-INF1",
+      "choices": [
+        {
+          "id": "RC-DX-INF1-Q7-a",
+          "label": "A",
+          "text": "It gives new information that contradicts the article's claim that nesting decreased after 2009.",
+          "isCorrect": false,
+          "explanation": "Incorrect. The table's last worldwide figure is from 2009, so it says nothing about worldwide nesting after that year. It does not contradict paragraph 11."
+        },
+        {
+          "id": "RC-DX-INF1-Q7-b",
+          "label": "B",
+          "text": "It lists the number of eggs moved to Padre Island during each year of the project.",
+          "isCorrect": false,
+          "explanation": "Incorrect. Paragraph 6 gives only a total of 22,507 eggs moved from 1978 to 1988, and that figure is not in the table. The table lists turtle and nest counts, not eggs moved."
+        },
+        {
+          "id": "RC-DX-INF1-Q7-v2-c",
+          "label": "C",
+          "text": "It gathers counts reported in the article and identifies where, when, and what was counted for each one.",
+          "isCorrect": true,
+          "explanation": "Correct. Every figure in the table is reported in the article (paragraphs 1, 2, and 10), and the columns show the year, the place, and the kind of count for each figure. Because the counts measure different things, only like-for-like rows can be compared directly: worldwide nests rose from 702 in 1985 to nearly 20,000 in 2009, and Texas nests rose from 6 in 1996 to 209 in 2012. The 1947 row counts nesting turtles on one beach in one day, so it cannot be compared numerically with the later nest counts. The earlier decline and the drop after 2009 are described in the paragraphs, not shown by matching rows in the table."
+        },
+        {
+          "id": "RC-DX-INF1-Q7-d",
+          "label": "D",
+          "text": "It explains the causes of the drop in Kemp's ridley nesting that began in 2010.",
+          "isCorrect": false,
+          "explanation": "Incorrect. The table contains only numbers, not reasons. Paragraph 11 says scientists \"are still working to determine the cause\" of the decline."
+        }
+      ],
+      "tags": [
+        "RC-TXT"
+      ],
+      "timeToSolve": 150,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "ELA-RC-C08"
+      ],
+      "revisionNotes": "Key C said the table makes \"the decline and recovery easier to compare,\" but the 1947 row (turtles on one beach in one day) cannot be compared with the 1985 worldwide annual nest count, which is the same warning RC-DX-INF1-Q6 choice B teaches. C now says the table gathers reported counts and identifies where, when, and what was counted (new ID RC-DX-INF1-Q7-v2-c; key stays C). The C explanation and solution explain only the valid like-for-like increases (1985 to 2009 worldwide nests; 1996 to 2012 Texas nests) and note that the decline and post-2009 drop are described in prose. Trap corrected from \"nesting females\" to \"nesting turtles\" to match the table and adds the unit-mismatch warning. Choices A, B, D unchanged and still wrong."
+    },
+    {
+      "id": "RC-DX-POEM-Q3",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "Read lines 24 through 26.\n\nWas a dew-drop on a blade,\nAnd a pair of moments after\nWas the whirling guess I made,—\n\nWhat does the phrase \"the whirling guess I made\" suggest about the city at that moment?",
+      "solutionExplanation": "Correct. The city shrinks from \"tiny, shiny\" (line 20) to \"a dew-drop on a blade\" (line 24), and \"a pair of moments after\" (line 25) it is only a \"guess.\" The speaker, dizzy and whirling, is so high that the city can only be guessed at rather than clearly seen.",
+      "commonTrap": "B is the most tempting because \"whirling\" suggests spinning, and a dizzy speaker might well see the city as if it were spinning. But B accounts only for the motion word. It misses the increasing uncertainty in \"guess,\" which completes the city's shrinking from \"tiny, shiny\" to \"a dew-drop on a blade\" to a place the speaker can barely make out.",
+      "passageId": "RC-DX-POEM",
+      "choices": [
+        {
+          "id": "RC-DX-POEM-Q3-a",
+          "label": "A",
+          "text": "The speaker can no longer remember which city the climb started from.",
+          "isCorrect": false,
+          "explanation": "The speaker has just called it \"the city I was born in\" (line 13), so there is no sign of forgetting. The \"guess\" is about seeing the city, not remembering it."
+        },
+        {
+          "id": "RC-DX-POEM-Q3-b",
+          "label": "B",
+          "text": "The city looks as if it is spinning because the wind is so strong.",
+          "isCorrect": false,
+          "explanation": "The word \"whirling\" does echo the speaker's \"rocking, spinning\" motion (line 9), and a dizzy climber could see the city as if it were spinning, so B may account for \"whirling.\" But B explains only that one word. It misses \"guess,\" the word that completes the city's shrinking from \"tiny, shiny\" (line 20) to \"a dew-drop on a blade\" (line 24) to something the speaker can only guess at. The phrase shows the city becoming harder and harder to make out, which B does not capture."
+        },
+        {
+          "id": "RC-DX-POEM-Q3-c",
+          "label": "C",
+          "text": "The speaker is trying to estimate how far away the Giant's sky still is.",
+          "isCorrect": false,
+          "explanation": "The lines are about what the speaker sees \"When I shot a glance below\" (line 21), not about the distance still left to climb upward."
+        },
+        {
+          "id": "RC-DX-POEM-Q3-d",
+          "label": "D",
+          "text": "The city is now so far below that the speaker can barely tell where it is.",
+          "isCorrect": true,
+          "explanation": "Correct. The city shrinks from \"tiny, shiny\" (line 20) to \"a dew-drop on a blade\" (line 24), and \"a pair of moments after\" (line 25) it is only a \"guess.\" The speaker, dizzy and whirling, is so high that the city can only be guessed at rather than clearly seen."
+        }
+      ],
+      "tags": [
+        "RC-VOC"
+      ],
+      "timeToSolve": 150,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "ELA-RC-C12"
+      ],
+      "revisionNotes": "Choice B says the city \"looks as if\" it is spinning; the old explanation and trap rejected it because the speaker, not the city, spins, which is invalid for an appearance claim. B is now rejected because it accounts for \"whirling\" alone and misses the increasing uncertainty of \"guess\" in the progression tiny, shiny city to dew-drop to guess. Rechecked for one best answer: only D accounts for the city shrinking until it can only be guessed at; A, B and C remain clearly weaker. Key D, all IDs, stem, choices and solution unchanged."
+    },
+    {
+      "id": "RC-DX-POEM-Q4",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "Which lines from the poem best support the idea that the speaker feels joy and fear at the same time during the climb?",
+      "solutionExplanation": "Correct. In line 22 the speaker is \"Shaken with a giddy laughter,\" and in line 23 the speaker is \"blissfully afraid.\" The words \"giddy laughter\" and \"blissfully\" convey delight, while \"afraid\" directly names fear. (\"Shaken\" describes the laughter itself, so it is not the evidence of fear.) The phrase \"blissfully afraid\" joins delight and fear in two words, which is exactly the mixed feeling the question describes.",
+      "commonTrap": "A is tempting because it is one of the most vivid moments of danger in the poem. Students who choose it find evidence for half of the idea (fear) but not the other half (joy).",
+      "passageId": "RC-DX-POEM",
+      "choices": [
+        {
+          "id": "RC-DX-POEM-Q4-a",
+          "label": "A",
+          "text": "\"And I felt my foot slip, / And I scratched the wind and whined,\" (lines 36 and 37)",
+          "isCorrect": false,
+          "explanation": "These lines show only fear and panic. The speaker slips and \"whined\" (line 37), with no sign of joy."
+        },
+        {
+          "id": "RC-DX-POEM-Q4-b",
+          "label": "B",
+          "text": "\"Shaken with a giddy laughter, / Sick and blissfully afraid,\" (lines 22 and 23)",
+          "isCorrect": true,
+          "explanation": "Correct. In line 22 the speaker is \"Shaken with a giddy laughter,\" and in line 23 the speaker is \"blissfully afraid.\" The words \"giddy laughter\" and \"blissfully\" convey delight, while \"afraid\" directly names fear. (\"Shaken\" describes the laughter itself, so it is not the evidence of fear.) The phrase \"blissfully afraid\" joins delight and fear in two words, which is exactly the mixed feeling the question describes."
+        },
+        {
+          "id": "RC-DX-POEM-Q4-c",
+          "label": "C",
+          "text": "\"Ho, Giant! This is I! / I have built me a bean-stalk into your sky!\" (lines 1 and 2)",
+          "isCorrect": false,
+          "explanation": "These lines show excitement and pride at arriving, but they contain no fear. They also describe the speaker calling out at the top rather than feelings \"during the climb.\""
+        },
+        {
+          "id": "RC-DX-POEM-Q4-d",
+          "label": "D",
+          "text": "\"I make bean-stalks, I'm / A builder, like yourself,\" (lines 43 and 44)",
+          "isCorrect": false,
+          "explanation": "These lines show the speaker's confidence as a builder after the climb is over. They express pride, not a mix of joy and fear."
+        }
+      ],
+      "tags": [
+        "RC-EV"
+      ],
+      "timeToSolve": 150,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "ELA-RC-C13"
+      ],
+      "revisionNotes": "Solution and choice B explanation treated \"Shaken\" as evidence of fear, but in \"Shaken with a giddy laughter\" the word describes the laughter. They now cite \"afraid\" as the fear evidence and \"blissfully\" and \"giddy laughter\" as delight, using \"blissfully afraid\" for the simultaneous emotions. Key B, all IDs, stem, choices and trap unchanged."
+    },
+    {
+      "id": "RC-DX-MEM-Q1",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "Which statement best describes the central idea of the passage?",
+      "solutionExplanation": "This is correct. Paragraphs 1 and 2 show the narrator's new humility beside Washington, paragraph 3 shows that this humility came with \"a sense of dignity\" because \"he and I were Fellow Citizens,\" and paragraph 5 ends with her \"proclaiming to the world my love for my new-found country.\" The statement covers the whole passage.",
+      "commonTrap": "D is tempting because paragraph 4 really does describe her daydreaming about \"Heroes.\" The misconception is treating a single vivid detail as the central idea of the whole passage.",
+      "passageId": "RC-DX-MEM",
+      "choices": [
+        {
+          "id": "RC-DX-MEM-Q1-a",
+          "label": "A",
+          "text": "The narrator's lessons in an American school convinced her that she was more capable than the classmates and relatives she had known before.",
+          "isCorrect": false,
+          "explanation": "This choice reverses the narrator's change. In paragraph 1 she says her earlier \"self-consciousness had bordered on conceit,\" but that after studying Washington she \"grew humble all at once, seeing how insignificant I was beside the Great.\""
+        },
+        {
+          "id": "RC-DX-MEM-Q1-b",
+          "label": "B",
+          "text": "Studying George Washington made the narrator feel humbled by his greatness but also proud to share citizenship with him, giving her a new sense of belonging to America.",
+          "isCorrect": true,
+          "explanation": "This is correct. Paragraphs 1 and 2 show the narrator's new humility beside Washington, paragraph 3 shows that this humility came with \"a sense of dignity\" because \"he and I were Fellow Citizens,\" and paragraph 5 ends with her \"proclaiming to the world my love for my new-found country.\" The statement covers the whole passage."
+        },
+        {
+          "id": "RC-DX-MEM-Q1-c",
+          "label": "C",
+          "text": "The narrator decided that honesty was the most important quality a citizen could have, so she stopped looking for ways to escape punishment.",
+          "isCorrect": false,
+          "explanation": "The passage mentions Washington as the boy \"who would not tell a lie\" (paragraph 2), but honesty is only one of the qualities she admires (\"strictly good, perfectly wise, and unfailingly valiant\"), and she never ranks it above every other quality a citizen could have. She also never says that she stopped looking for ways to escape punishment. Paragraph 3 does say, \"I strove to conduct myself as befitted a Fellow Citizen,\" but that describes a general sense of civic responsibility, not the specific decision this choice describes. The choice is too narrow and adds ideas not in the text."
+        },
+        {
+          "id": "RC-DX-MEM-Q1-d",
+          "label": "D",
+          "text": "The narrator's interest in American history led her to give up reading and spend her afternoons daydreaming about the heroes of the Revolution.",
+          "isCorrect": false,
+          "explanation": "Paragraph 4 says she \"began to dream again\" and left her \"pet book forgotten under my arm,\" but this is one detail about her after school hours, not the main idea. She also does not say she gave up reading altogether."
+        }
+      ],
+      "tags": [
+        "RC-MI"
+      ],
+      "timeToSolve": 150,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "ELA-RC-C10"
+      ],
+      "revisionNotes": "Choice C explanation said the narrator \"never says she changed how she behaved,\" which contradicts paragraph 3 (\"I strove to conduct myself as befitted a Fellow Citizen\"). It now rejects C for its specific claims: the passage does not rank honesty above every other virtue or say she stopped trying to escape punishment, and it acknowledges her general sense of civic responsibility. Key B, all IDs, stem, choices and trap unchanged."
+    },
+    {
+      "id": "RC-DX-MEM-Q2",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "Read these sentences from paragraph 2.\n\n\"What I loved in my friends was not inimitable. One could be downright good if one really wanted to. One could be learned if one had books and teachers. . . . But a human being strictly good, perfectly wise, and unfailingly valiant, all at the same time, I had never heard or dreamed of.\"\n\nHow does the comparison between the narrator's friends and George Washington contribute to the narrator's feelings in paragraph 2?",
+      "solutionExplanation": "This is correct. The narrator says the qualities she loved in her friends were \"not inimitable\" because \"One could be downright good if one really wanted to\" and \"One could be learned if one had books and teachers.\" Washington, by contrast, was \"strictly good, perfectly wise, and unfailingly valiant, all at the same time,\" a combination she \"had never heard or dreamed of.\" The comparison raises Washington above everyone she knows and leads to her admission that \"I could not compare myself to George Washington,\" developing both her admiration for him and her humility about herself.",
+      "commonTrap": "C is tempting because the passage says \"One could be learned if one had books and teachers,\" and the narrator loves school. The misconception is applying that sentence to Washington, when it describes the qualities of her friends that anyone could copy.",
+      "passageId": "RC-DX-MEM",
+      "choices": [
+        {
+          "id": "RC-DX-MEM-Q2-v2-a",
+          "label": "A",
+          "text": "It shows why Washington seems beyond her reach: her friends' good qualities could be gained through effort or schooling, but Washington combined goodness, wisdom, and courage at once, so her admiration for him grows as her opinion of herself shrinks.",
+          "isCorrect": true,
+          "explanation": "This is correct. The narrator says the qualities she loved in her friends were \"not inimitable\" because \"One could be downright good if one really wanted to\" and \"One could be learned if one had books and teachers.\" Washington, by contrast, was \"strictly good, perfectly wise, and unfailingly valiant, all at the same time,\" a combination she \"had never heard or dreamed of.\" The comparison raises Washington above everyone she knows and leads to her admission that \"I could not compare myself to George Washington,\" developing both her admiration for him and her humility about herself."
+        },
+        {
+          "id": "RC-DX-MEM-Q2-v2-b",
+          "label": "B",
+          "text": "It suggests that the narrator has stopped valuing her friends, since she now believes that only Washington's qualities are worth loving.",
+          "isCorrect": false,
+          "explanation": "The narrator still speaks of \"What I loved in my friends.\" The comparison shows that their good qualities could be copied, not that those qualities are worthless or that she has stopped valuing her friends."
+        },
+        {
+          "id": "RC-DX-MEM-Q2-v2-c",
+          "label": "C",
+          "text": "It suggests that the narrator expects to equal Washington someday, since she believes that books and teachers can make anyone learned.",
+          "isCorrect": false,
+          "explanation": "This choice applies the friends' side of the comparison to Washington. Books and teachers can make a person \"learned,\" but the narrator says Washington \"was as inimitable as he was irreproachable\" and admits that \"I could never be the First President of the United States.\" The comparison shows that she does not expect to equal him."
+        },
+        {
+          "id": "RC-DX-MEM-Q2-v2-d",
+          "label": "D",
+          "text": "It suggests that the narrator sees honesty as the source of Washington's greatness, since she believes that never telling a lie would make her his equal.",
+          "isCorrect": false,
+          "explanation": "The narrator mentions \"the noble boy who would not tell a lie,\" but she then says, \"Even if I had never, never told a lie, I could not compare myself to George Washington.\" Honesty alone would not make her his equal, because she also lacks his courage: \"I was not brave.\""
+        }
+      ],
+      "tags": [
+        "RC-TXT"
+      ],
+      "timeToSolve": 150,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "substantive",
+      "auditFindings": [
+        "VOCAB:diagnostic:RC-DX-MEM-Q2",
+        "ELA-RC-A01"
+      ],
+      "revisionNotes": "Style-fidelity rewrite (ELA-RC-A01). The direct-definition stem (what does \"inimitable\" mean) is replaced with a passage-dependent question on how the comparison between the narrator's imitable friends and Washington's combined virtues develops her admiration and humility in paragraph 2. Key A is supported by \"not inimitable,\" the two \"One could\" sentences, \"all at the same time,\" and \"I could not compare myself to George Washington\". Distractors: rejecting friends (B), misapplying the books-and-teachers sentence to Washington (C, the trap), and honesty as sufficient (D, refuted by \"Even if I had never, never told a lie\"). All choices have new IDs (-v2-a to -v2-d); key stays at A. Tag changed from RC-VOC to RC-TXT. Distinct from Q5, whose key is the formerly/now contrast across paragraphs 1 and 2, and from Q3 (paragraph 3 dignity). Quotations checked verbatim."
+    },
+    {
+      "id": "RC-DX-MEM-Q4",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "Which sentence from the passage best supports the idea that the narrator's sense of \"my country\" came more from feeling than from knowledge?",
+      "solutionExplanation": "This is correct. Paragraph 5 sets up a direct contrast. The narrator first says that her country \"was not a thing that I understood,\" and this sentence explains that she could still \"feel it,\" comparing that feeling to the way one felt \"God\" or \"myself.\" Placing what she could not understand against what she could feel shows that her sense of \"my country\" came from emotion rather than from knowledge.",
+      "commonTrap": "A is tempting because it is the sentence in which the narrator first mentions \"my country.\" The misconception is choosing a sentence that uses the same words as the question instead of one that supports the specific claim about feeling versus knowledge.",
+      "passageId": "RC-DX-MEM",
+      "choices": [
+        {
+          "id": "RC-DX-MEM-Q4-a",
+          "label": "A",
+          "text": "\"As I read how the patriots planned the Revolution, and the women gave their sons to die in battle, and the heroes led to victory, and the rejoicing people set up the Republic, it dawned on me gradually what was meant by *my country*.\" (paragraph 5)",
+          "isCorrect": false,
+          "explanation": "This sentence describes the narrator gradually learning what \"my country\" meant through reading about historical events. It suggests understanding built from information, so it does not support the idea that her sense of country came mainly from feeling."
+        },
+        {
+          "id": "RC-DX-MEM-Q4-b",
+          "label": "B",
+          "text": "\"It thrilled me to realize what sudden greatness had fallen on me; and at the same time it sobered me, as with a sense of responsibility.\" (paragraph 3)",
+          "isCorrect": false,
+          "explanation": "This sentence shows strong emotion, but it is about her new status as a citizen related to Washington, not about how she understood the idea of \"my country.\" It supports a different idea in paragraph 3."
+        },
+        {
+          "id": "RC-DX-MEM-Q4-c",
+          "label": "C",
+          "text": "\"But I knew one could say 'my country' and *feel* it, as one felt 'God' or 'myself.'\" (paragraph 5)",
+          "isCorrect": true,
+          "explanation": "This is correct. Paragraph 5 sets up a direct contrast. The narrator first says that her country \"was not a thing that I understood,\" and this sentence explains that she could still \"feel it,\" comparing that feeling to the way one felt \"God\" or \"myself.\" Placing what she could not understand against what she could feel shows that her sense of \"my country\" came from emotion rather than from knowledge."
+        },
+        {
+          "id": "RC-DX-MEM-Q4-d",
+          "label": "D",
+          "text": "\"When the class read, and it came my turn, my voice shook and the book trembled in my hands.\" (paragraph 1)",
+          "isCorrect": false,
+          "explanation": "This sentence shows the narrator's nervous excitement about Washington during reading lessons in paragraph 1. It shows emotion, but it comes before she thinks about \"my country\" at all, so it does not address how she understood her country."
+        }
+      ],
+      "tags": [
+        "RC-EV"
+      ],
+      "timeToSolve": 150,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "ELA-RC-C11"
+      ],
+      "revisionNotes": "Solution and choice C explanation claimed that italics on \"feel\" stress emotion, but the supplied passage body has no italics on \"feel\" or \"understood\" (and the app renders no emphasis markup). Removed the typography claim and the asterisk markup from the explanations; they now rely on the explicit contrast between \"was not a thing that I understood\" and \"feel it\" in paragraph 5. Key C, all IDs, stem, choices and trap unchanged. Choice texts A and C still contain literal asterisks around \"my country\" and \"feel\"; changing them would alter choice text on a taken fixed form and is left for editorial review."
+    },
+    {
+      "id": "RC-DX-INF2-Q6",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "Read this sentence from paragraph 7.\n\n\"Trees that depend heavily on moisture during the growing season will have wider rings during rainy periods and narrower rings during dry periods.\"\n\nA scientist finds several unusually narrow rings in a row in a tree that depends heavily on moisture. What would the scientist most likely conclude?",
+      "solutionExplanation": "Correct. The sentence states that moisture-sensitive trees form \"narrower rings during dry periods,\" so several narrow rings in a row would point to several dry years.",
+      "commonTrap": "B is tempting because paragraph 7 discusses both temperature and moisture, and students may mix up which kind of tree responds to which condition.",
+      "passageId": "RC-DX-INF2",
+      "choices": [
+        {
+          "id": "RC-DX-INF2-Q6-a",
+          "label": "A",
+          "text": "The tree was damaged by logging during those years.",
+          "isCorrect": false,
+          "explanation": "Paragraph 3 explains that scientists choose sites where humans have not altered the forest \"with activities such as grazing and logging,\" and the sentence in paragraph 7 connects narrow rings to dry weather, not logging."
+        },
+        {
+          "id": "RC-DX-INF2-Q6-b",
+          "label": "B",
+          "text": "The area had several unusually warm growing seasons.",
+          "isCorrect": false,
+          "explanation": "The evidence in the question is about a tree that depends heavily on moisture, so its narrow rings point to dry years; nothing in the passage supports concluding that those years were unusually warm. In paragraph 7's example of trees that depend heavily on temperature, warm periods are linked to \"wider rings,\" not narrower ones, so warmth is not a reasonable explanation for a run of narrow rings."
+        },
+        {
+          "id": "RC-DX-INF2-Q6-c",
+          "label": "C",
+          "text": "The area went through a dry period lasting several years.",
+          "isCorrect": true,
+          "explanation": "Correct. The sentence states that moisture-sensitive trees form \"narrower rings during dry periods,\" so several narrow rings in a row would point to several dry years."
+        },
+        {
+          "id": "RC-DX-INF2-Q6-d",
+          "label": "D",
+          "text": "The tree stopped growing and died during those years.",
+          "isCorrect": false,
+          "explanation": "A tree that forms rings is still growing, since paragraph 1 says a tree \"adds a new ring\" each year as it grows. Narrow rings show slow growth, not that the tree died."
+        }
+      ],
+      "tags": [
+        "RC-INF"
+      ],
+      "timeToSolve": 150,
+      "createdAt": "2026-09-17T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "ELA-RC-C09"
+      ],
+      "revisionNotes": "Choice B explanation no longer claims that warmth does not affect moisture-sensitive trees (the passage describes the main growth constraint, not immunity to other influences). It now says the stated evidence supports dry years rather than an inference about unusual warmth, and that in the passage's temperature example warmth goes with wider rings. Key C, all IDs, stem, choices and trap unchanged."
+    },
+    {
+      "id": "ELA-REB-001",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "Which sentence contains an error in its construction and should be revised?\n\n(1) Marcus had always wanted to visit the Museum of Natural History, so his parents surprised him with tickets for his birthday. \n(2) Rushing through the entrance, the dinosaur fossils were the first things Marcus noticed. \n(3) He spent nearly two hours in the fossil hall, sketching the bones in his notebook. \n(4) By the end of the day, Marcus had decided that paleontology was his favorite subject in science.",
+      "solutionExplanation": "Sentence 1 is not the answer. The two independent clauses are properly joined with a comma and the coordinating conjunction \"so.\" There is no error in construction.  Sentence 2 is correct. This sentence contains a dangling modifier. The opening participial phrase \"Rushing through the entrance\" must logically describe the subject of the main clause that follows it. Here that subject is \"the dinosaur fossils,\" and fossils cannot rush anywhere. A corrected version would read: \"Rushing through the entrance, Marcus immediately noticed the dinosaur fossils.\"  Sentence 3 is not the answer. The participial phrase \"sketching the bones in his notebook\" describes \"He,\" the subject of the sentence, who is Marcus. There is no error in construction.  Sentence 4 is not the answer. The opening phrase \"By the end of the day\" is a time phrase that tells when Marcus had decided; it does not describe a person, so the subject-attachment rule for participial phrases does not apply to it. The sentence is correctly built.",
+      "commonTrap": "Sentence 4 opens with an introductory phrase, \"By the end of the day,\" which can look like the opening phrase in sentence 2. But it is a time phrase that tells when Marcus had decided, not an -ing phrase describing someone's action, so it does not need to attach to a particular person. An introductory phrase is not automatically an error.",
+      "choices": [
+        {
+          "id": "ELA-REB-001-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false
+        },
+        {
+          "id": "ELA-REB-001-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": true
+        },
+        {
+          "id": "ELA-REB-001-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": false
+        },
+        {
+          "id": "ELA-REB-001-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": false
+        }
+      ],
+      "tags": [
+        "RE-SEN"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-06-26T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "RE:diagnostic:ELA-REB-001:1"
+      ],
+      "revisionNotes": "Diagnostic version only (the bank ELA-REB-001 is different content and is not touched). The solution and trap said the temporal phrase \"By the end of the day\" modifies or describes Marcus; it now says the phrase tells when Marcus had decided and that the subject-attachment rule does not apply to it. The overbroad rule \"whenever a sentence opens with an -ing phrase, the very next noun must be the person doing that action\" is replaced with the rule restricted to the participial modifier in sentence 2: it must logically describe the subject of the main clause. Sentence 3 feedback now names \"He\" as the subject. Key B, all IDs, stem and choices unchanged."
+    },
+    {
+      "id": "ELA-REB-003",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "Which sentence of the paragraph should be revised to correct a vague pronoun?\n\n(1) Coach Rivera and the team captain met before the game to discuss their strategy. \n(2) The captain told the coach that he was worried the opposing team had studied their plays. \n(3) Both of them agreed that the team needed to stay focused and execute the game plan. \n(4) By halftime, the players had settled into a rhythm and were playing with confidence.",
+      "solutionExplanation": "Sentence 1 does not contain a vague pronoun. The pronoun \"their\" clearly refers to Coach Rivera and the team captain together.  Sentence 2 contains a vague pronoun. The pronoun \"he\" is unclear; it could refer to either the captain or the coach. The sentence should be revised to identify who was worried, for example: \"The captain told the coach that the captain was worried the opposing team had studied their plays.\" A more natural revision is \"The captain expressed concern to the coach that the opposing team had studied their plays.\"  Sentence 3 does not contain a vague pronoun. \"Both of them\" clearly refers to the coach and the captain introduced in sentence 1.  Sentence 4 does not contain a vague pronoun. \"The players\" is a clear and specific noun.",
+      "commonTrap": "Sentence 1 uses \"their,\" which refers to both Coach Rivera and the team captain, two people clearly identified in the same sentence. Students may flag this, but it is not vague. The vagueness in sentence 2 is subtler because \"he\" has two possible antecedents, and both could be referred to as \"he.\"",
+      "choices": [
+        {
+          "id": "ELA-REB-003-a",
+          "label": "A",
+          "text": "sentence 1",
+          "isCorrect": false
+        },
+        {
+          "id": "ELA-REB-003-b",
+          "label": "B",
+          "text": "sentence 2",
+          "isCorrect": true
+        },
+        {
+          "id": "ELA-REB-003-c",
+          "label": "C",
+          "text": "sentence 3",
+          "isCorrect": false
+        },
+        {
+          "id": "ELA-REB-003-d",
+          "label": "D",
+          "text": "sentence 4",
+          "isCorrect": false
+        }
+      ],
+      "tags": [
+        "RE-PRO"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-06-26T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "RE:diagnostic:ELA-REB-003:1"
+      ],
+      "revisionNotes": "Diagnostic version only (bank ELA-REB-003 is different content and is not touched). Fixed the comma splice \"The pronoun \"he\" is unclear, it could refer...\" with a semicolon, split the run-on revision examples into two sentences, and added the missing commas in the trap (\"their,\" which...; \"flag this, but\"). The trap no longer asserts the two people's gender, which the paragraph does not state; it says both could be referred to as \"he.\" Key B, all IDs, stem and choices unchanged."
+    },
+    {
+      "id": "ELA-REB-005",
+      "subject": "ELA",
+      "module": "1",
+      "subtype": "MC4_A-D",
+      "stem": "Read these sentences.\n\n(1) Malika practiced piano every day after school.  \n(2) She performed flawlessly at the winter recital.  What is the best way to combine the sentences to clarify the relationship between the ideas?",
+      "solutionExplanation": "Choice A does not correctly clarify the relationship. The conjunction \"but\" signals contrast, which is inaccurate here: nothing about daily practice makes a flawless performance surprising.  Choice B correctly clarifies the relationship. The conjunction \"so\" expresses cause and effect: Malika practiced every day, and as a result she performed flawlessly. This is the most logical relationship between the two ideas.  Choice C does not correctly clarify the relationship. The conjunction \"and\" adds the second idea to the first, but it does not make the cause-and-effect relationship explicit. It leaves the reader to infer that the practice led to the strong performance.  Choice D does not correctly clarify the relationship. The conjunction \"although\" suggests that Malika performed flawlessly in spite of her practice, which is illogical.",
+      "commonTrap": "Choice C is tempting because \"and\" is a neutral connector that makes the sentence grammatically correct. But the question asks for the combination that best clarifies the relationship between the ideas, and \"and\" does not state cause and effect. Of the four choices, only \"so\" makes clear why the performance went well.",
+      "choices": [
+        {
+          "id": "ELA-REB-005-a",
+          "label": "A",
+          "text": "Malika practiced piano every day after school, but she performed flawlessly at the winter recital.",
+          "isCorrect": false
+        },
+        {
+          "id": "ELA-REB-005-b",
+          "label": "B",
+          "text": "Malika practiced piano every day after school, so she performed flawlessly at the winter recital.",
+          "isCorrect": true
+        },
+        {
+          "id": "ELA-REB-005-c",
+          "label": "C",
+          "text": "Malika practiced piano every day after school, and she performed flawlessly at the winter recital.",
+          "isCorrect": false
+        },
+        {
+          "id": "ELA-REB-005-d",
+          "label": "D",
+          "text": "Although Malika practiced piano every day after school, she performed flawlessly at the winter recital.",
+          "isCorrect": false
+        }
+      ],
+      "tags": [
+        "RE-SEN"
+      ],
+      "timeToSolve": 90,
+      "createdAt": "2026-06-26T12:00:00Z",
+      "reviewStatus": "provisional",
+      "contentVersion": 2,
+      "changeType": "feedback",
+      "auditFindings": [
+        "RE:diagnostic:ELA-REB-005:1"
+      ],
+      "revisionNotes": "Diagnostic version only (bank ELA-REB-005 is different content and is not touched). Fixed the two comma splices in the solution (choice A and choice B sentences now use a colon). Choice C feedback no longer says \"and\" expresses no logical connection; it says \"and\" adds an idea but does not make the causal relationship explicit. The trap's overbroad \"So is the only conjunction\" is limited to the four choices. Key B, all IDs, stem and choices unchanged."
+    }
+  ],
+  "passages": [
+    {
+      "id": "RC-BRB-001",
+      "title": "The Building of the Brooklyn Bridge",
+      "sourceMeta": "Informational / historical · DrillMaster Reading Comprehension Unit (Google Doc, id 1qsBH1Z2HV8kMvE7Sqm07n178q5BxEXB-Gp3vHicO82o), passage RC-BRB-001",
+      "body": "The Building of the Brooklyn Bridge\n\n1 In the middle of the nineteenth century, New York City was growing rapidly. Thousands of people crossed the East River each day between Manhattan and Brooklyn, which at the time were separate cities. Ferries carried passengers back and forth, but bad weather, strong currents, and winter ice often delayed travel or made it dangerous. Engineers and city leaders began searching for a permanent way to connect the two shores.\n\n2 Many experts believed such a bridge could never be built. The East River was wide and busy, with countless ships traveling through its waters each day. Any bridge would need to stretch farther than any suspension bridge previously constructed while remaining high enough for sailing vessels to pass underneath. In addition, the riverbed was deep and difficult to reach, creating another major obstacle for builders.\n\n3 The engineer John Augustus Roebling believed these problems could be solved. After years of designing successful suspension bridges, he proposed an ambitious plan that used massive stone towers to support enormous steel cables. At the time, steel wire was still a relatively new building material, but Roebling argued that its strength would allow the bridge to span the river safely. Construction began in 1869, but tragedy struck almost immediately. Roebling suffered a serious injury while surveying the site and died a few weeks later. Leadership of the project passed to his son, Washington Roebling.\n\n4 Washington Roebling faced challenges that few engineers had encountered before. To build the bridge's foundations, workers entered large wooden chambers called caissons, which were lowered to the riverbed. Air was pumped into the chambers to keep water out while workers dug deeper into the river floor. Although the system allowed construction to continue below the water, many workers became seriously ill after leaving the pressurized chambers too quickly. The condition, later understood as decompression sickness, also affected Washington Roebling and permanently limited his ability to supervise the project in person.\n\n5 As Washington's health declined, another important figure emerged. His wife, Emily Warren Roebling, began carrying instructions, reviewing engineering plans, and communicating with construction crews. Over time, she developed an extensive understanding of the bridge's design and became an essential link between her husband and the workers at the construction site. Although she did not hold the title of engineer, many historians credit her with helping ensure that the project continued moving forward during its most difficult years.\n\n6 Even after overcoming these setbacks, construction was far from complete. Inspectors discovered that some of the steel wire supplied for the bridge did not meet the required standards. Rather than dismantling completed sections, the engineers strengthened the cables by adding additional high-quality wire. The solution increased the bridge's margin of safety while allowing construction to continue without beginning the project again.\n\n7 After fourteen years of work, the Brooklyn Bridge opened to the public on May 24, 1883. Thousands of people crossed it on opening day, eager to experience one of the greatest engineering achievements of its time. The bridge quickly became more than a convenient route across the river. It demonstrated that careful planning, scientific innovation, and persistence could overcome problems once considered impossible. More than a century later, the Brooklyn Bridge remains both an important transportation route and a symbol of engineering ingenuity.",
+      "contentVersion": 2,
+      "auditFindings": [
+        "ELA-RC-C14"
+      ],
+      "revisionNotes": "Paragraph 6: replaced \"thousands of additional wires\" with \"additional high-quality wire\". The National Register nomination (PDF p. 6) reports 152 extra wires per cable, hundreds across four cables, not thousands. The inference that engineers adapted to defective wire without starting over is preserved. Paragraph numbering and every other sentence are unchanged. Linked questions RC-BRB-001-Q1 to Q9 were rechecked against the revised text: Q7 choice C quoted the changed sentence and is revised; Q3 is separately rewritten (ELA-RC-A01); Q1, Q2, Q4, Q5, Q6, Q8 and Q9 quote or paraphrase only unchanged text and need no change."
+    }
+  ]
+}

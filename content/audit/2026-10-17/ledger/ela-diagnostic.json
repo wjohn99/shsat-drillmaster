@@ -1,0 +1,74 @@
+[
+  {
+    "key": "ELA-RC-C08",
+    "disposition": "fixed",
+    "revision": "diagnostic:RC-DX-INF1-Q7@2",
+    "note": "Key C rewritten to say the table gathers reported counts and identifies where, when and what was counted (new ID RC-DX-INF1-Q7-v2-c). Explanation covers only like-for-like increases (1985 to 2009 worldwide nests; 1996 to 2012 Texas nests), consistent with Q6 choice B's unit warning."
+  },
+  {
+    "key": "ELA-RC-C09",
+    "disposition": "fixed",
+    "revision": "diagnostic:RC-DX-INF2-Q6@2",
+    "note": "Choice B explanation now says the moisture evidence supports dry years, not unusual warmth, without claiming warmth cannot affect moisture-sensitive trees. Feedback only; key C."
+  },
+  {
+    "key": "ELA-RC-C10",
+    "disposition": "fixed",
+    "revision": "diagnostic:RC-DX-MEM-Q1@2",
+    "note": "Choice C explanation acknowledges paragraph 3's civic conduct and rejects C's specific honesty-ranking and escaping-punishment claims. Feedback only; key B."
+  },
+  {
+    "key": "ELA-RC-C11",
+    "disposition": "fixed",
+    "revision": "diagnostic:RC-DX-MEM-Q4@2",
+    "note": "Italics claim removed from solution and choice C explanation; explanation uses the explicit understood/feel contrast in paragraph 5. Feedback only; key C. Literal asterisks remain in choice texts A and C (not rendered as italics) and are flagged for editorial review."
+  },
+  {
+    "key": "ELA-RC-C12",
+    "disposition": "fixed",
+    "revision": "diagnostic:RC-DX-POEM-Q3@2",
+    "note": "Choice B explanation and trap no longer reject an appearance claim as literal rotation; B is rejected for missing the increasing uncertainty of guess. One best answer (D) rechecked. Feedback only."
+  },
+  {
+    "key": "ELA-RC-C13",
+    "disposition": "fixed",
+    "revision": "diagnostic:RC-DX-POEM-Q4@2",
+    "note": "Solution and choice B cite afraid as fear and blissfully / giddy laughter as delight; Shaken is identified as describing the laughter. Feedback only; key B."
+  },
+  {
+    "key": "ELA-RC-C14",
+    "disposition": "fixed",
+    "revision": "diagnostic:RC-BRB-001@2",
+    "note": "Passage paragraph 6 now says additional high-quality wire instead of thousands of additional wires. RC-BRB-001-Q7@2 choice C updated to the exact revised sentence (new ID RC-BRB-001-Q7-v2-c). All nine linked questions rechecked; no other linked item quoted the changed text."
+  },
+  {
+    "key": "VOCAB:diagnostic:RC-BRB-001-Q3",
+    "disposition": "fixed",
+    "revision": "diagnostic:RC-BRB-001-Q3@2",
+    "note": "Direct-definition item rewritten as a word-choice effect question on ambitious / massive / enormous in paragraph 3; new choice IDs; tag RC-TXT. Cites ELA-RC-A01."
+  },
+  {
+    "key": "VOCAB:diagnostic:RC-DX-MEM-Q2",
+    "disposition": "fixed",
+    "revision": "diagnostic:RC-DX-MEM-Q2@2",
+    "note": "Direct-definition item rewritten as a question on how the friends versus Washington comparison develops admiration and humility; new choice IDs; tag RC-TXT. Cites ELA-RC-A01."
+  },
+  {
+    "key": "RE:diagnostic:ELA-REB-001:1",
+    "disposition": "fixed",
+    "revision": "diagnostic:ELA-REB-001@2",
+    "note": "By the end of the day explained as a time phrase; attachment rule restricted to the participial modifier in sentence 2. Feedback only; key B; diagnostic copy only."
+  },
+  {
+    "key": "RE:diagnostic:ELA-REB-003:1",
+    "disposition": "fixed",
+    "revision": "diagnostic:ELA-REB-003@2",
+    "note": "Comma splice and missing commas in solution and trap fixed; unsupported gender assumption removed. Feedback only; key B; diagnostic copy only."
+  },
+  {
+    "key": "RE:diagnostic:ELA-REB-005:1",
+    "disposition": "fixed",
+    "revision": "diagnostic:ELA-REB-005@2",
+    "note": "Comma splices fixed; and described as not making the causal relationship explicit; only-so claim limited to the four choices. Feedback only; key B; diagnostic copy only."
+  }
+]
