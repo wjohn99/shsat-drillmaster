@@ -1956,6 +1956,20 @@
    "severity": "high",
    "classification": "implementation",
    "summary": "Retag ALG-004, ALG-106, ALG-115 (and similar) away from misleading ALG-SYS labels."
+  },
+  {
+   "key": "HANDOFF:RE-P102-honey-sourcing",
+   "source": "ELA-CLAUDE-CODE-HANDOFF.md (Priority 3, item 5)",
+   "track": "bank",
+   "ids": [
+    "RE-P102",
+    "ELA-RE-109"
+   ],
+   "recommendation": "verify-or-soften",
+   "required": false,
+   "severity": "low",
+   "classification": "sourcing",
+   "summary": "RE-P102 ancient-honey claim flagged for sourcing or replacement; not confirmed false by the audit."
   }
  ]
 }

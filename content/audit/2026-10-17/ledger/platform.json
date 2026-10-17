@@ -124,5 +124,11 @@
   "disposition": "fixed",
   "revision": null,
   "note": "Originals are never edited: revisions live in content/revisions/<track>/ and overlay by ID within their own track only. Bank and diagnostic copies are separate (tests pin ALG-004 25/20, APP-011 64/60, GEO-010 189/126, diagnostic REB-004 'wakes'). Substantive revisions give changed choices new -v2 IDs so stored answers cannot point at new content. Tests: contentRevisions.test.ts, auditCoverage.test.ts."
+ },
+ {
+  "key": "HANDOFF:RE-P102-honey-sourcing",
+  "disposition": "fixed",
+  "revision": "bank:RE-P102@2",
+  "note": "No authoritative source checked in this pass confirms the tomb-honey claim, so RE-P102 v2 hedges it ('is reported to have still been safe to eat'); it remains the off-topic sentence ELA-RE-109 asks students to delete. ELA-RE-109@2 (feedback) hedges its solution to match. Worth a source check by an editor."
  }
 ]

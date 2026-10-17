@@ -119,6 +119,9 @@ describe("revision files", () => {
         expect(originalPassages[file.track].has(passage.id), `${file.track}:${passage.id}`).toBe(true);
         expect(passage.contentVersion).toBeGreaterThanOrEqual(2);
         expect(passage.auditFindings.length).toBeGreaterThan(0);
+        for (const key of passage.auditFindings) {
+          expect(findingKeys.has(key), `${passage.id}: unknown finding ${key}`).toBe(true);
+        }
       }
     }
   });

@@ -1,0 +1,146 @@
+[
+  {
+    "key": "RE:bank:ELA-REB-004:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-004@2",
+    "note": "Added solution, trap and all four per-choice explanations after repairing the stimulus."
+  },
+  {
+    "key": "RE:bank:ELA-REB-004:2",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-004@2",
+    "note": "Sentence 2 now reads \"wakes\" (present) in a past narrative; B identifies it and the correction is \"woke\". Diagnostic version untouched."
+  },
+  {
+    "key": "RE:bank:ELA-REB-143:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-143@2",
+    "note": "One-team context added in the stimulus; only team's + its is defensible. Feedback cites the supplied number cue."
+  },
+  {
+    "key": "RE:bank:ELA-REB-007:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-007@2",
+    "note": "Task now states the intended referent (school board alone) and asks which edit makes it clear; feedback acknowledges valid joint reference of \"they\"."
+  },
+  {
+    "key": "RE:bank:ELA-REB-124:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-124@2",
+    "note": "Passage-internal premise added in sentence 1 (most students returned slips); restrictive clause, no paired commas; feedback cites the premise."
+  },
+  {
+    "key": "RE:bank:ELA-REB-145:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-145@2",
+    "note": "Comma distractor replaced with an unequivocally invalid period option; colon is the single defensible completion."
+  },
+  {
+    "key": "RE:bank:ELA-REB-002:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-002@2",
+    "note": "Solution, trap and all per-choice explanations added; key D unchanged."
+  },
+  {
+    "key": "RE:bank:ELA-REB-002:2",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-002@2",
+    "note": "RE-APP replaced by RE-MOD (primary) + RE-SEN."
+  },
+  {
+    "key": "RE:bank:ELA-REB-003:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-003@2",
+    "note": "Solution, trap and all per-choice explanations added; key B unchanged."
+  },
+  {
+    "key": "RE:bank:ELA-REB-005:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-005@2",
+    "note": "Solution, trap and all per-choice explanations added; key B unchanged."
+  },
+  {
+    "key": "RE:bank:ELA-REB-001:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-001@2",
+    "note": "Sentence numbering fixed to (1); RE-APP replaced by RE-MOD."
+  },
+  {
+    "key": "RE:bank:ELA-REB-008:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-008@2",
+    "note": "False no-pronouns claim replaced with the relative-pronoun explanation."
+  },
+  {
+    "key": "RE:bank:ELA-RE-103:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-RE-103@2",
+    "note": "Herself explanation limited to this construction."
+  },
+  {
+    "key": "RE:bank:ELA-RE-112:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-RE-112@2",
+    "note": "RE-P103 sentence 6 now establishes nonbinding advice (passage v2); correct verb tied to that evidence. Linked RE-111/113/114/115 rechecked, unaffected. Separately (handoff P3 item 5, no index key): RE-P102 sentence 15 ancient-honey claim softened to a reported claim in RE-P102 v2; RE-106 to 110 unaffected."
+  },
+  {
+    "key": "RE:bank:ELA-RE-119:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-RE-119@2",
+    "note": "No universal past-perfect rule; explanation tied to agreement and the clarity of had grown."
+  },
+  {
+    "key": "RE:bank:ELA-REB-101:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-101@2",
+    "note": "Correction procedure now deletes both the comma and who."
+  },
+  {
+    "key": "RE:bank:ELA-REB-111:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-111@2",
+    "note": "Clarity criterion in stem; no universal past-perfect rule; D explanation made precise."
+  },
+  {
+    "key": "RE:bank:ELA-REB-129:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-129@2",
+    "note": "Semicolon rule scoped to clause-joining use."
+  },
+  {
+    "key": "RE:bank:ELA-REB-131:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-131@2",
+    "note": "B replaced with an unequivocally incorrect edit; feedback identifies the real error. \"Therefore\" is not called a clause."
+  },
+  {
+    "key": "RE:bank:ELA-REB-134:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-134@2",
+    "note": "No-apostrophe-for-plurals rule scoped to ordinary nouns."
+  },
+  {
+    "key": "RE:bank:ELA-REB-141:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-141@2",
+    "note": "Wrong ordinal replaced with the option's opening words."
+  },
+  {
+    "key": "RE:bank:ELA-REB-147:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-147@2",
+    "note": "Myself explanation tied to this sentence's subject."
+  },
+  {
+    "key": "RE:bank:ELA-REB-148:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-148@2",
+    "note": "Effect/affect shortcut tied to meaning."
+  },
+  {
+    "key": "RE:bank:ELA-REB-149:1",
+    "disposition": "fixed",
+    "revision": "bank:ELA-REB-149@2",
+    "note": "\"Late arrival\" replaced with last-minute arrival / arrival just as the band began."
+  }
+]
