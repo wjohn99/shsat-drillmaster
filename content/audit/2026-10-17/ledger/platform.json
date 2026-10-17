@@ -1,0 +1,128 @@
+[
+ {
+  "key": "SCOPE:bank:MATH-ALG-001",
+  "disposition": "held",
+  "revision": null,
+  "note": "Listed in content/scope/grade8-holds.json with clearedByContentVersion null. Excluded from every current pool by loadFullPracticeCatalog and from diagnostic assembly; original kept in source and returned by loadHeldAdvancedArchive(). Clears only with documented current Grade 8 evidence or a reviewed in-scope revision. Tests: src/test/scopeHolds.test.ts."
+ },
+ {
+  "key": "SCOPE:bank:MATH-ALG-105",
+  "disposition": "held",
+  "revision": null,
+  "note": "Listed in content/scope/grade8-holds.json with clearedByContentVersion null. Excluded from every current pool by loadFullPracticeCatalog and from diagnostic assembly; original kept in source and returned by loadHeldAdvancedArchive(). Clears only with documented current Grade 8 evidence or a reviewed in-scope revision. Tests: src/test/scopeHolds.test.ts."
+ },
+ {
+  "key": "SCOPE:bank:MATH-ALG-112",
+  "disposition": "held",
+  "revision": null,
+  "note": "Listed in content/scope/grade8-holds.json with clearedByContentVersion null. Excluded from every current pool by loadFullPracticeCatalog and from diagnostic assembly; original kept in source and returned by loadHeldAdvancedArchive(). Clears only with documented current Grade 8 evidence or a reviewed in-scope revision. Tests: src/test/scopeHolds.test.ts."
+ },
+ {
+  "key": "SCOPE:bank:MATH-ALG-114",
+  "disposition": "held",
+  "revision": null,
+  "note": "Listed in content/scope/grade8-holds.json with clearedByContentVersion null. Excluded from every current pool by loadFullPracticeCatalog and from diagnostic assembly; original kept in source and returned by loadHeldAdvancedArchive(). Clears only with documented current Grade 8 evidence or a reviewed in-scope revision. Tests: src/test/scopeHolds.test.ts."
+ },
+ {
+  "key": "SCOPE:bank:MATH-GEO-007",
+  "disposition": "held",
+  "revision": null,
+  "note": "Listed in content/scope/grade8-holds.json with clearedByContentVersion null. Excluded from every current pool by loadFullPracticeCatalog and from diagnostic assembly; original kept in source and returned by loadHeldAdvancedArchive(). Clears only with documented current Grade 8 evidence or a reviewed in-scope revision. Tests: src/test/scopeHolds.test.ts."
+ },
+ {
+  "key": "SCOPE:bank:MATH-GEO-103",
+  "disposition": "held",
+  "revision": null,
+  "note": "Listed in content/scope/grade8-holds.json with clearedByContentVersion null. Excluded from every current pool by loadFullPracticeCatalog and from diagnostic assembly; original kept in source and returned by loadHeldAdvancedArchive(). Clears only with documented current Grade 8 evidence or a reviewed in-scope revision. Tests: src/test/scopeHolds.test.ts."
+ },
+ {
+  "key": "SCOPE:bank:MATH-GEO-104",
+  "disposition": "held",
+  "revision": null,
+  "note": "Listed in content/scope/grade8-holds.json with clearedByContentVersion null. Excluded from every current pool by loadFullPracticeCatalog and from diagnostic assembly; original kept in source and returned by loadHeldAdvancedArchive(). Clears only with documented current Grade 8 evidence or a reviewed in-scope revision. Tests: src/test/scopeHolds.test.ts."
+ },
+ {
+  "key": "SCOPE:bank:MATH-GEO-110",
+  "disposition": "held",
+  "revision": null,
+  "note": "Listed in content/scope/grade8-holds.json with clearedByContentVersion null. Excluded from every current pool by loadFullPracticeCatalog and from diagnostic assembly; original kept in source and returned by loadHeldAdvancedArchive(). Clears only with documented current Grade 8 evidence or a reviewed in-scope revision. Tests: src/test/scopeHolds.test.ts."
+ },
+ {
+  "key": "SCOPE:bank:MATH-GEO-111",
+  "disposition": "held",
+  "revision": null,
+  "note": "Listed in content/scope/grade8-holds.json with clearedByContentVersion null. Excluded from every current pool by loadFullPracticeCatalog and from diagnostic assembly; original kept in source and returned by loadHeldAdvancedArchive(). Clears only with documented current Grade 8 evidence or a reviewed in-scope revision. Tests: src/test/scopeHolds.test.ts."
+ },
+ {
+  "key": "SCOPE:bank:MATH-GEO-113",
+  "disposition": "held",
+  "revision": null,
+  "note": "Listed in content/scope/grade8-holds.json with clearedByContentVersion null. Excluded from every current pool by loadFullPracticeCatalog and from diagnostic assembly; original kept in source and returned by loadHeldAdvancedArchive(). Clears only with documented current Grade 8 evidence or a reviewed in-scope revision. Tests: src/test/scopeHolds.test.ts."
+ },
+ {
+  "key": "SCOPE:bank:MATH-GEO-115",
+  "disposition": "held",
+  "revision": null,
+  "note": "Listed in content/scope/grade8-holds.json with clearedByContentVersion null. Excluded from every current pool by loadFullPracticeCatalog and from diagnostic assembly; original kept in source and returned by loadHeldAdvancedArchive(). Clears only with documented current Grade 8 evidence or a reviewed in-scope revision. Tests: src/test/scopeHolds.test.ts."
+ },
+ {
+  "key": "SCOPE:bank:MATH-GEO-116",
+  "disposition": "held",
+  "revision": null,
+  "note": "Listed in content/scope/grade8-holds.json with clearedByContentVersion null. Excluded from every current pool by loadFullPracticeCatalog and from diagnostic assembly; original kept in source and returned by loadHeldAdvancedArchive(). Clears only with documented current Grade 8 evidence or a reviewed in-scope revision. Tests: src/test/scopeHolds.test.ts."
+ },
+ {
+  "key": "SCOPE:bank:MATH-NUM-110",
+  "disposition": "held",
+  "revision": null,
+  "note": "Listed in content/scope/grade8-holds.json with clearedByContentVersion null. Excluded from every current pool by loadFullPracticeCatalog and from diagnostic assembly; original kept in source and returned by loadHeldAdvancedArchive(). Clears only with documented current Grade 8 evidence or a reviewed in-scope revision. Tests: src/test/scopeHolds.test.ts."
+ },
+ {
+  "key": "SCOPE:bank:MATH-NUM-111",
+  "disposition": "held",
+  "revision": null,
+  "note": "Listed in content/scope/grade8-holds.json with clearedByContentVersion null. Excluded from every current pool by loadFullPracticeCatalog and from diagnostic assembly; original kept in source and returned by loadHeldAdvancedArchive(). Clears only with documented current Grade 8 evidence or a reviewed in-scope revision. Tests: src/test/scopeHolds.test.ts."
+ },
+ {
+  "key": "PROMPT:tei-scoring",
+  "disposition": "fixed",
+  "revision": null,
+  "note": "Every current question in both tracks is run through the real scorer in src/test/contentIntegrity.test.ts: MC exactly one key, MS exact count with swap/too-few negatives, IC unique valid mapping with wrong-option negatives, DND zone/pool references, EE every accepted form plus a wrong value. Found and fixed a runtime bug: INDY-CGT questions answered by number (ee spec, no choices; MATH-DAT-115) were always scored wrong and rendered no input. Fixed in src/lib/sessionGrading.ts and QuestionResponseFields.tsx; regression tests fail on the old code and pass on the new. MS instruction now states the exact count."
+ },
+ {
+  "key": "PROMPT:app-001-wp-feedback",
+  "disposition": "already-fixed",
+  "revision": null,
+  "note": "Verified, no content change needed: getQuestionSolutionExplanation() falls back to wp.solutionExplanation for INDY-WP, which is what the solution panel uses. Test: contentIntegrity.test.ts 'MATH-APP-001 resolves its explanation from the nested wp spec'."
+ },
+ {
+  "key": "PROMPT:dat-dx09-ee-cgt",
+  "disposition": "already-fixed",
+  "revision": null,
+  "note": "Verified: QuestionResponseFields renders the CGT table and the equation-editor input for MATH-DAT-DX09, the scorer accepts every accepted form, and the solution resolves. Tests: contentIntegrity.test.ts and responseFields.test.tsx (jsdom render). Any content change is recorded by the diagnostic math revision."
+ },
+ {
+  "key": "PROMPT:diagnostic-choice-feedback-fallback",
+  "disposition": "already-fixed",
+  "revision": null,
+  "note": "Verified, not a blank-feedback bug: every diagnostic question whose choices lack per-choice explanations has a substantive top-level solution the review screen shows. Test: contentIntegrity.test.ts 'every diagnostic choice without its own explanation falls back to a substantive solution'. Revised diagnostic items also gain per-choice explanations."
+ },
+ {
+  "key": "PROMPT:diagnostic-form-safety",
+  "disposition": "fixed",
+  "revision": null,
+  "note": "assembleDiagnosticExam() refuses held versions, reports them per section as heldIds, and marks the form incomplete; the start page shows held slots. The three held diagnostic slots get same-ID in-scope replacements (content/revisions/diagnostic/math.json), so the form stays 50 + 50 in official order. Historical attempts keep their stored scores; events now record contentVersion and the review dialog flags answers given to an earlier version. Tests: scopeHolds.test.ts."
+ },
+ {
+  "key": "PROMPT:review-status-defaults",
+  "disposition": "deferred",
+  "revision": null,
+  "note": "Product decision, not changed: tracker-only and original diagnostic records have no reviewStatus, and questionReviewStatus() reads that as final. That is not human approval. Switching the default would put a Provisional label on the live diagnostic and legacy items, so it is isolated and reported for Jed/John to decide. No item was promoted; every revision is provisional; test contentRevisions.test.ts 'review status' documents both facts."
+ },
+ {
+  "key": "PROMPT:version-safety",
+  "disposition": "fixed",
+  "revision": null,
+  "note": "Originals are never edited: revisions live in content/revisions/<track>/ and overlay by ID within their own track only. Bank and diagnostic copies are separate (tests pin ALG-004 25/20, APP-011 64/60, GEO-010 189/126, diagnostic REB-004 'wakes'). Substantive revisions give changed choices new -v2 IDs so stored answers cannot point at new content. Tests: contentRevisions.test.ts, auditCoverage.test.ts."
+ }
+]

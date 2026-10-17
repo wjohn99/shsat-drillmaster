@@ -1,0 +1,36 @@
+{
+  "scope": "Bank versions only; no source fixes were applied.",
+  "tests": {
+    "ELA-REB-004": [
+      "The bank draft contains exactly one inappropriate tense shift, e.g., wakes in sentence 2; all other sentences remain correct.",
+      "The key is B and the repaired wording is woke.",
+      "The separate diagnostic version is not overwritten or silently deduplicated."
+    ],
+    "ELA-REB-143": [
+      "Context explicitly establishes one soccer team, or teams' is replaced with an unambiguously invalid option.",
+      "After reconstructing every slot combination, only team's + its is defensible under the supplied context.",
+      "Feedback cites the supplied number cue rather than asserting an unstated fact."
+    ],
+    "ELA-REB-007": [
+      "Context states that exactly one party released the statement, or the task explicitly asks for wording identifying the school board alone.",
+      "The designated answer uniquely repairs that specified ambiguity.",
+      "Feedback acknowledges that they can correctly refer to a compound antecedent when joint reference is intended."
+    ],
+    "ELA-REB-124": [
+      "Context explicitly distinguishes students who submitted slips from students who did not, or the stem explicitly requests a restriction applying only to non-submitters.",
+      "The intended restrictive clause takes no paired commas, and the alternative all-students reading is excluded by the supplied context.",
+      "Feedback no longer invents the premise that not every student missed the deadline."
+    ],
+    "ELA-REB-145": [
+      "Replace the comma completion with an unequivocally invalid option, or ask which choice most clearly introduces the list.",
+      "The colon remains the unique defensible answer under the revised criterion.",
+      "Feedback explains colon + announced list without declaring all appositive-list comma uses wrong."
+    ]
+  },
+  "ELA-REB-131-adjudication": {
+    "recommendation": "revise",
+    "severity": "medium",
+    "reason": "Option B can be parsed with clause-final therefore, so the feedback claiming a comma splice is wrong. Option A best preserves the intended causal relation; this is not an unequivocal second-answer finding.",
+    "test": "Replace B with an unambiguously incorrect punctuation edit and ensure its explanation correctly identifies that actual error."
+  }
+}

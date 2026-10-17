@@ -214,6 +214,18 @@ export interface Choice {
 /** Second-review gate. Missing status is treated as final (legacy Jed Approved items). */
 export type ReviewStatus = "provisional" | "final";
 
+/** Which copy of an ID a record belongs to. Bank and diagnostic versions of the same ID are separate content. */
+export type ContentTrack = "bank" | "diagnostic";
+
+/**
+ * A current-product audience hold. The question is not wrong; it is out of scope for the
+ * Grade 8 (Grade 9 entry) product. The original stays in source for future review.
+ */
+export interface ScopeHold {
+  audience: "grade8";
+  reason: string;
+}
+
 export interface Question {
   id: string;
   subject: Subject;
@@ -225,6 +237,13 @@ export interface Question {
    * Only tutors see the Provisional label. Legacy tracker items omit this.
    */
   reviewStatus?: ReviewStatus;
+  /**
+   * Content version for this ID within its track (bank or diagnostic). Originals are 1.
+   * Each audited revision in content/revisions increments it; the original stays in its source file.
+   */
+  contentVersion?: number;
+  /** Set when this version is held from the current Grade 8 product (see content/scope). */
+  scopeHold?: ScopeHold;
   stem: string;
   /** Tutor-facing note on the wrong-answer lure (tracker column P). */
   commonTrap?: string;
@@ -263,6 +282,8 @@ export interface Passage {
   sourceMeta?: string;
   body: string;
   questions: Question[];
+  /** Original passages are 1; audited revisions in content/revisions increment it. */
+  contentVersion?: number;
 }
 
 export interface Form {

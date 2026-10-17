@@ -92,7 +92,7 @@ export function QuestionResponseFields({
           showSolution={showSolution}
         />
       )}
-      {question.subtype === "INDY-EE" && question.ee && (
+      {question.ee && (question.subtype === "INDY-EE" || !question.choices?.length) && (
         <EquationEditorBlock
           key={question.id}
           spec={question.ee}
@@ -105,7 +105,9 @@ export function QuestionResponseFields({
       {isIndyCheckboxMultiSubtype(question.subtype) && question.choices && (
         <div className="space-y-3">
           <p className="text-sm text-muted-foreground">
-            {question.subtype === "INDY-MS" ? "Select all answers that apply." : "Select all that apply."}
+            {question.subtype === "INDY-MS" && question.ms
+              ? `Select ${question.ms.selectCount} answers.`
+              : "Select all that apply."}
           </p>
           {question.choices.map((choice) => {
             const selected = parseAtaAnswer(raw);

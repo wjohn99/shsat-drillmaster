@@ -16,6 +16,7 @@ export function canSubmitQuestionAnswer(q: Question, raw: string | undefined): b
     return allIcSlotsFilled(q.ic, selections);
   }
   if (q.subtype === "INDY-EE" && q.ee) return (raw ?? "").trim() !== "";
+  if (isNumericEntryWithoutChoices(q)) return (raw ?? "").trim() !== "";
   if (q.subtype === "INDY-HS") return Boolean(raw);
   if (q.subtype === "INDY-GIF") return Boolean(raw);
   if (isIndyCheckboxMultiSubtype(q.subtype)) return parseAtaAnswer(raw).length > 0;
@@ -23,8 +24,18 @@ export function canSubmitQuestionAnswer(q: Question, raw: string | undefined): b
   return Boolean(raw);
 }
 
+/**
+ * Numeric entry carried by another subtype, e.g. an INDY-CGT table question answered with
+ * an `ee` spec and no choices. Without this it fell through to the choice check and could
+ * never be scored correct.
+ */
+function isNumericEntryWithoutChoices(q: Question): boolean {
+  return Boolean(q.ee) && !q.choices?.length;
+}
+
 export function isQuestionAnswerCorrect(q: Question, raw: string | undefined): boolean {
   if (q.subtype === "INDY-EE" && q.ee) return isEeAnswerCorrect(q.ee, raw ?? "");
+  if (isNumericEntryWithoutChoices(q)) return isEeAnswerCorrect(q.ee, raw ?? "");
   if (q.subtype === "INDY-DND" && q.dnd) {
     const placements = parseDndPlacementsForQuestion(q.dnd, raw);
     return isDndPlacementCorrect(q.dnd, placements);

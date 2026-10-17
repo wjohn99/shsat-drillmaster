@@ -809,6 +809,12 @@ export default function DiagnosticExam() {
                     {exam.ela.missingIds.length === 1 ? "" : "s"}
                   </p>
                 ) : null}
+                {exam.ela.heldIds.length > 0 ? (
+                  <p className="text-xs text-destructive mt-1">
+                    {exam.ela.heldIds.length} slot
+                    {exam.ela.heldIds.length === 1 ? "" : "s"} held for Grade 8 scope review
+                  </p>
+                ) : null}
               </div>
               <div className="rounded-lg border p-4">
                 <p className="text-sm text-muted-foreground">Math</p>
@@ -819,6 +825,12 @@ export default function DiagnosticExam() {
                   <p className="text-xs text-destructive mt-1">
                     Missing {exam.math.missingIds.length} listed ID
                     {exam.math.missingIds.length === 1 ? "" : "s"}
+                  </p>
+                ) : null}
+                {exam.math.heldIds.length > 0 ? (
+                  <p className="text-xs text-destructive mt-1">
+                    {exam.math.heldIds.length} slot
+                    {exam.math.heldIds.length === 1 ? "" : "s"} held for Grade 8 scope review
                   </p>
                 ) : null}
               </div>

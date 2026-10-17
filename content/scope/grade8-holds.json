@@ -1,0 +1,139 @@
+{
+  "audience": "grade8",
+  "description": "Versions held from the current Grade 8 (Grade 9 entry) product by the 2026-10-17 content audit. Held versions are valid content kept in source for a possible future Grade 9 test-taker product; they are excluded from every current pool. A hold clears only for a fully reviewed in-scope revision at or above clearedByContentVersion, or with documented current official Grade 8 evidence for the required skill. Tags alone never clear a hold.",
+  "holds": [
+    {
+      "id": "MATH-ALG-001",
+      "track": "bank",
+      "reason": "Direct parallel-line/slope knowledge. Valid content, outside the current Grade 8 product scope.",
+      "evidence": "content/audit/2026-10-17/official-scope-evidence.md; math-full-review row MATH-ALG-001 (merged-bank)",
+      "clearedByContentVersion": null
+    },
+    {
+      "id": "MATH-ALG-006",
+      "track": "bank",
+      "reason": "Paired simultaneous equations in formal system presentation. Valid content, outside the current Grade 8 product scope.",
+      "evidence": "content/audit/2026-10-17/official-scope-evidence.md; math-full-review row MATH-ALG-006 (merged-bank)",
+      "clearedByContentVersion": 2
+    },
+    {
+      "id": "MATH-ALG-105",
+      "track": "bank",
+      "reason": "Formal substitution system. Valid content, outside the current Grade 8 product scope.",
+      "evidence": "content/audit/2026-10-17/official-scope-evidence.md; math-full-review row MATH-ALG-105 (merged-bank)",
+      "clearedByContentVersion": null
+    },
+    {
+      "id": "MATH-ALG-112",
+      "track": "bank",
+      "reason": "Formal pair of equations combined to obtain x+y. Valid content, outside the current Grade 8 product scope.",
+      "evidence": "content/audit/2026-10-17/official-scope-evidence.md; math-full-review row MATH-ALG-112 (merged-bank)",
+      "clearedByContentVersion": null
+    },
+    {
+      "id": "MATH-ALG-114",
+      "track": "bank",
+      "reason": "Assumed function notation f(a), f(2a). Valid content, outside the current Grade 8 product scope.",
+      "evidence": "content/audit/2026-10-17/official-scope-evidence.md; math-full-review row MATH-ALG-114 (merged-bank)",
+      "clearedByContentVersion": null
+    },
+    {
+      "id": "MATH-GEO-001",
+      "track": "bank",
+      "reason": "Pythagorean theorem required to find hypotenuse and then altitude. Valid content, outside the current Grade 8 product scope.",
+      "evidence": "content/audit/2026-10-17/official-scope-evidence.md; math-full-review row MATH-GEO-001 (merged-bank)",
+      "clearedByContentVersion": 2
+    },
+    {
+      "id": "MATH-GEO-007",
+      "track": "bank",
+      "reason": "Pythagorean theorem: find hypotenuse. Valid content, outside the current Grade 8 product scope.",
+      "evidence": "content/audit/2026-10-17/official-scope-evidence.md; math-full-review row MATH-GEO-007 (merged-bank)",
+      "clearedByContentVersion": null
+    },
+    {
+      "id": "MATH-GEO-103",
+      "track": "bank",
+      "reason": "Pythagorean theorem: ladder height. Valid content, outside the current Grade 8 product scope.",
+      "evidence": "content/audit/2026-10-17/official-scope-evidence.md; math-full-review row MATH-GEO-103 (merged-bank)",
+      "clearedByContentVersion": null
+    },
+    {
+      "id": "MATH-GEO-104",
+      "track": "bank",
+      "reason": "Pythagorean theorem: isosceles-triangle altitude. Valid content, outside the current Grade 8 product scope.",
+      "evidence": "content/audit/2026-10-17/official-scope-evidence.md; math-full-review row MATH-GEO-104 (merged-bank)",
+      "clearedByContentVersion": null
+    },
+    {
+      "id": "MATH-GEO-110",
+      "track": "bank",
+      "reason": "Direct coordinate slope calculation. Valid content, outside the current Grade 8 product scope.",
+      "evidence": "content/audit/2026-10-17/official-scope-evidence.md; math-full-review row MATH-GEO-110 (merged-bank)",
+      "clearedByContentVersion": null
+    },
+    {
+      "id": "MATH-GEO-111",
+      "track": "bank",
+      "reason": "Diagonal coordinate distance via Pythagorean reasoning. Valid content, outside the current Grade 8 product scope.",
+      "evidence": "content/audit/2026-10-17/official-scope-evidence.md; math-full-review row MATH-GEO-111 (merged-bank)",
+      "clearedByContentVersion": null
+    },
+    {
+      "id": "MATH-GEO-113",
+      "track": "bank",
+      "reason": "Diagonal coordinate distance via Pythagorean reasoning. Valid content, outside the current Grade 8 product scope.",
+      "evidence": "content/audit/2026-10-17/official-scope-evidence.md; math-full-review row MATH-GEO-113 (merged-bank)",
+      "clearedByContentVersion": null
+    },
+    {
+      "id": "MATH-GEO-115",
+      "track": "bank",
+      "reason": "Cylinder volume-to-radius then lateral surface area. Valid content, outside the current Grade 8 product scope.",
+      "evidence": "content/audit/2026-10-17/official-scope-evidence.md; math-full-review row MATH-GEO-115 (merged-bank)",
+      "clearedByContentVersion": null
+    },
+    {
+      "id": "MATH-GEO-116",
+      "track": "bank",
+      "reason": "Pythagorean theorem: rectangle side from diagonal. Valid content, outside the current Grade 8 product scope.",
+      "evidence": "content/audit/2026-10-17/official-scope-evidence.md; math-full-review row MATH-GEO-116 (merged-bank)",
+      "clearedByContentVersion": null
+    },
+    {
+      "id": "MATH-NUM-110",
+      "track": "bank",
+      "reason": "Scientific-notation operation and normalization. Valid content, outside the current Grade 8 product scope.",
+      "evidence": "content/audit/2026-10-17/official-scope-evidence.md; math-full-review row MATH-NUM-110 (merged-bank)",
+      "clearedByContentVersion": null
+    },
+    {
+      "id": "MATH-NUM-111",
+      "track": "bank",
+      "reason": "Radical equation followed by root evaluation. Valid content, outside the current Grade 8 product scope.",
+      "evidence": "content/audit/2026-10-17/official-scope-evidence.md; math-full-review row MATH-NUM-111 (merged-bank)",
+      "clearedByContentVersion": null
+    },
+    {
+      "id": "MATH-ALG-001",
+      "track": "diagnostic",
+      "reason": "Direct parallel-line/slope knowledge. Valid content, outside the current Grade 8 product scope.",
+      "evidence": "content/audit/2026-10-17/official-scope-evidence.md; math-full-review row MATH-ALG-001 (diagnostic)",
+      "clearedByContentVersion": 2
+    },
+    {
+      "id": "MATH-ALG-006",
+      "track": "diagnostic",
+      "reason": "Paired simultaneous equations in formal system presentation. Valid content, outside the current Grade 8 product scope.",
+      "evidence": "content/audit/2026-10-17/official-scope-evidence.md; math-full-review row MATH-ALG-006 (diagnostic)",
+      "clearedByContentVersion": 2
+    },
+    {
+      "id": "MATH-GEO-001",
+      "track": "diagnostic",
+      "reason": "Pythagorean theorem required to find hypotenuse and then altitude. Valid content, outside the current Grade 8 product scope.",
+      "evidence": "content/audit/2026-10-17/official-scope-evidence.md; math-full-review row MATH-GEO-001 (diagnostic)",
+      "clearedByContentVersion": 2
+    }
+  ]
+}

@@ -3,7 +3,7 @@ import { tag } from "@/data/taggingScheme";
 
 type RawTag = string | { code: string };
 
-type RawQuestion = {
+export type RawQuestion = {
   id: string;
   subject: Subject;
   module: QuestionModule;
@@ -25,14 +25,16 @@ type RawQuestion = {
   solutionExplanation?: string;
   createdAt?: string;
   reviewStatus?: Question["reviewStatus"];
+  contentVersion?: number;
 };
 
-type RawPassage = {
+export type RawPassage = {
   id: string;
   title: string;
   lexile?: number;
   sourceMeta?: string;
   body: string;
+  contentVersion?: number;
 };
 
 type RawBatch = {
@@ -58,7 +60,7 @@ function hydrateTags(rawTags: RawTag[] | undefined): Question["tags"] {
   });
 }
 
-function hydrateQuestion(raw: RawQuestion): Question {
+export function hydrateQuestion(raw: RawQuestion): Question {
   return {
     id: raw.id,
     subject: raw.subject,
@@ -81,10 +83,11 @@ function hydrateQuestion(raw: RawQuestion): Question {
     timeToSolve: raw.timeToSolve && raw.timeToSolve > 0 ? raw.timeToSolve : DEFAULT_TIME_TO_SOLVE_SECONDS,
     createdAt: raw.createdAt ?? new Date().toISOString(),
     reviewStatus: raw.reviewStatus === "final" ? "final" : "provisional",
+    contentVersion: raw.contentVersion && raw.contentVersion > 1 ? raw.contentVersion : 1,
   };
 }
 
-function hydratePassage(raw: RawPassage): Passage {
+export function hydratePassage(raw: RawPassage): Passage {
   return {
     id: raw.id,
     title: raw.title,
@@ -92,6 +95,7 @@ function hydratePassage(raw: RawPassage): Passage {
     sourceMeta: raw.sourceMeta,
     body: raw.body,
     questions: [],
+    contentVersion: raw.contentVersion && raw.contentVersion > 1 ? raw.contentVersion : 1,
   };
 }
 

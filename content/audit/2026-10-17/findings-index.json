@@ -1,0 +1,1961 @@
+{
+ "auditCommit": "9f58bd15fb5cd9a06983a3f906f05985b27d4a7e",
+ "findings": [
+  {
+   "key": "MATH:diagnostic:MATH-ALG-001:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-ALG-001"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "medium",
+   "classification": "solution_completeness",
+   "summary": "Solution gives instructions to rearrange choices but never shows the rearrangement or states the equal-slope rule explicitly; per-choice explanations are absent."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-ALG-001:2",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-ALG-001"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "medium",
+   "classification": "grade8_scope_review",
+   "summary": "Formal slope/parallel-line demand is beyond the stated through-Grade 7 ceiling for the Grade 8 product; slope is Grade 8 curricular content and explicitly represented in Grade 9 practice."
+  },
+  {
+   "key": "MATH:bank:MATH-ALG-001:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-ALG-001"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "medium",
+   "classification": "missing_explanation",
+   "summary": "Merged-bank tracker version has no solutionExplanation, commonTrap, or per-choice explanations. The key is correct. Stem uses plural \"lines are\" for a single-select item and lacks a question mark."
+  },
+  {
+   "key": "MATH:bank:MATH-ALG-001:2",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-ALG-001"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope_hold",
+   "summary": "Direct parallel-line/slope knowledge"
+  },
+  {
+   "key": "MATH:diagnostic:MATH-ALG-002:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-ALG-002"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "distractor_duplication",
+   "summary": "Two incorrect choices have the same solution, reducing diagnostic coverage."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-ALG-002:2",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-ALG-002"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "incorrect_feedback",
+   "summary": "The trap says a subtraction was not applied to both sides, which does not explain choice A from the original equation."
+  },
+  {
+   "key": "MATH:bank:MATH-ALG-002:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-ALG-002"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "missing_explanation",
+   "summary": "Merged-bank tracker version has no solutionExplanation, commonTrap, or per-choice explanations. Key B is correct; punctuation and equation spacing are unfinished."
+  },
+  {
+   "key": "MATH:bank:MATH-ALG-002:2",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-ALG-002"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "pedagogical_judgment",
+   "summary": "Wrong choices A and D both solve to x = 6.5, so two distractors cover the same solution rather than distinct errors. This does not create a second correct answer."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-ALG-005:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-ALG-005"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "distractor_feedback",
+   "summary": "C/D rationales fail to identify the directly meaningful intermediate quantities."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-ALG-006:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-ALG-006"
+   ],
+   "recommendation": "hold",
+   "required": false,
+   "severity": "low",
+   "classification": "distractor_feedback",
+   "summary": "Incorrect choices are explained only as unspecified arithmetic/sign errors."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-ALG-006:2",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-ALG-006"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "medium",
+   "classification": "grade8_scope_review",
+   "summary": "The stimulus explicitly presents simultaneous linear equations and carries ALG-SYS. Hold under the conservative Grade 8 product scope gate, while acknowledging that this special sum/difference problem can be solved by one-variable arithmetic and does not intrinsically require a general systems algorithm."
+  },
+  {
+   "key": "MATH:bank:MATH-ALG-006:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-ALG-006"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope_hold",
+   "summary": "Paired simultaneous equations in formal system presentation"
+  },
+  {
+   "key": "MATH:diagnostic:MATH-ALG-014:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-ALG-014"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "distractor_duplication",
+   "summary": "C and D are algebraically equivalent distractors."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-ALG-016:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-ALG-016"
+   ],
+   "recommendation": "keep",
+   "required": false,
+   "severity": "low",
+   "classification": "distractor_feedback",
+   "summary": "The explained multiply-instead-of-divide error gives588, which is absent; existing alternatives lack targeted explanations."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-ALG-020:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-ALG-020"
+   ],
+   "recommendation": "keep",
+   "required": false,
+   "severity": "low",
+   "classification": "distractor_alignment",
+   "summary": "The trap leads to an expression absent from the choices."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-ALG-024:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-ALG-024"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "incorrect_feedback",
+   "summary": "The described omission does not match the displayed wrong equation."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-ALG-032:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-ALG-032"
+   ],
+   "recommendation": "keep",
+   "required": false,
+   "severity": "low",
+   "classification": "wording",
+   "summary": "\"Only\" is broader than the intended rule for applying arithmetic operations to both sides."
+  },
+  {
+   "key": "MATH:bank:MATH-ALG-105:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-ALG-105"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope_hold",
+   "summary": "Formal substitution system"
+  },
+  {
+   "key": "MATH:bank:MATH-ALG-112:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-ALG-112"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope_hold",
+   "summary": "Formal pair of equations combined to obtain x+y"
+  },
+  {
+   "key": "MATH:bank:MATH-ALG-114:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-ALG-114"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope_hold",
+   "summary": "Assumed function notation f(a), f(2a)"
+  },
+  {
+   "key": "MATH:diagnostic:MATH-APP-001:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-APP-001"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "notation",
+   "summary": "Multiplication signs are missing and \"add\" is duplicated."
+  },
+  {
+   "key": "MATH:bank:MATH-APP-001:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-APP-001"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "feedback_completeness",
+   "summary": "Correct solution exists only in wp.solutionExplanation; top-level explanation/commonTrap and all choice explanations are absent. Whether feedback appears depends on renderer fallback not included in snapshot."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-APP-003:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-APP-003"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "notation",
+   "summary": "Choice D explanation contains an invalid equality chain."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-APP-007:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-APP-007"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "notation",
+   "summary": "The exact strict inequality is replaced with a rounded decimal as if equivalent."
+  },
+  {
+   "key": "MATH:bank:MATH-APP-007:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-APP-007"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "notation_precision",
+   "summary": "The exact threshold t > 100/17 is written as t > 5.88 without an approximation marker. This does not change the whole-year answer, but it is not an exact real-valued equivalence."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-APP-009:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-APP-009"
+   ],
+   "recommendation": "keep",
+   "required": false,
+   "severity": "low",
+   "classification": "clarity",
+   "summary": "Uniform-motion conclusion assumes neither rider stops at the library before the catch-up point."
+  },
+  {
+   "key": "MATH:bank:MATH-APP-009:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-APP-009"
+   ],
+   "recommendation": "keep",
+   "required": false,
+   "severity": "low",
+   "classification": "editorial_judgment",
+   "summary": "Catch-up arithmetic assumes both keep moving at the stated speeds until meeting; the library distance and stopping behavior are unspecified."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-APP-010:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-APP-010"
+   ],
+   "recommendation": "keep",
+   "required": false,
+   "severity": "low",
+   "classification": "distractor_feedback",
+   "summary": "Choice C is attributed only to an unspecified arithmetic error."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-APP-011:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-APP-011"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "diagnostic_validity",
+   "summary": "Both legs have the same speed, so this cannot diagnose the common error of unweighted averaging of different speeds."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-APP-012:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-APP-012"
+   ],
+   "recommendation": "keep",
+   "required": false,
+   "severity": "low",
+   "classification": "distractor_feedback",
+   "summary": "B and C have generic error labels rather than the specific obvious time errors."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-APP-014:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-APP-014"
+   ],
+   "recommendation": "revise",
+   "required": false,
+   "severity": "low",
+   "classification": "pedagogical_method_framing",
+   "summary": "The trap frames a valid proportion as more error-prone without explaining why. It does not explicitly assert that the proportion is invalid; this is a pedagogical rewording recommendation, not a false-equation finding."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-APP-014:2",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-APP-014"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "distractor_feedback",
+   "summary": "The 100-minute distractor is attributed to rounding without a calculation that could round to100."
+  },
+  {
+   "key": "MATH:bank:MATH-APP-106:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-APP-106"
+   ],
+   "recommendation": "keep",
+   "required": false,
+   "severity": "low",
+   "classification": "editorial_judgment",
+   "summary": "Combined-work answer assumes each pipe has a constant independent flow rate when used together. This is a conventional textbook assumption but unstated."
+  },
+  {
+   "key": "MATH:bank:MATH-DAT-002:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-DAT-002"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "editorial_precision",
+   "summary": "The sentence \"The 7th score must also be at the new average\" incorrectly describes the actual score as equal to 85; it must be 91. The following calculation is correct but the baseline wording is misleading."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-DAT-003:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-DAT-003"
+   ],
+   "recommendation": "keep",
+   "required": false,
+   "severity": "low",
+   "classification": "distractor_feedback",
+   "summary": "B/C are called simplification errors despite corresponding to meaningful wrong events."
+  },
+  {
+   "key": "MATH:bank:MATH-DAT-101:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-DAT-101"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "factual_explanation_error",
+   "summary": "The trap says \"Each of the first 4 tests is 2 points below 87\" and choice D similarly says the four earlier tests are two points below the target. Only their average is given; individual scores can differ."
+  },
+  {
+   "key": "MATH:bank:MATH-DAT-106:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-DAT-106"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "editorial_precision",
+   "summary": "\"The 12 students are 6 below 86\" blurs the group mean with individual scores. The calculation uses their collective 72-point shortfall, which is valid, but the asserted individual reading is not warranted."
+  },
+  {
+   "key": "MATH:bank:MATH-DAT-107:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-DAT-107"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "bank_near_duplicate",
+   "summary": "This is a near-exact duplicate of MATH-DAT-003: identical count multiset {3,4,5}, complement of the three-marble color, same four answer choices, same correct label D, and matching distractor reasoning. Only color names change. Mathematical correctness is unaffected."
+  },
+  {
+   "key": "MATH:bank:MATH-DAT-116:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-DAT-116"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "factual_explanation_error",
+   "summary": "Choice D says \"Only the 5 weekdays are below the new mean.\" This is directly contradicted by the graph: Thursday=36 and Friday=42, both above 33. The intended statement concerns the five-day mean, not all five individual days."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-DAT-DX06:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-DAT-DX06"
+   ],
+   "recommendation": "keep",
+   "required": false,
+   "severity": "low",
+   "classification": "wording",
+   "summary": "The last sentence omits the independence condition for multiplying marginal probabilities."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-DAT-DX10:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-DAT-DX10"
+   ],
+   "recommendation": "keep",
+   "required": false,
+   "severity": "low",
+   "classification": "visual_assessment",
+   "summary": "The payload supplies a frequency table rather than the described line plot. The math is fully determinate, but this does not directly test reading plotted X marks."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-GEO-001:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-GEO-001"
+   ],
+   "recommendation": "hold",
+   "required": false,
+   "severity": "low",
+   "classification": "incorrect_feedback",
+   "summary": "The explanation of5 would be clearer if it named the median-to-hypotenuse theorem used by the mistaken assumption."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-GEO-001:2",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-GEO-001"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "medium",
+   "classification": "grade8_scope_review",
+   "summary": "The current stem requires deriving hypotenuse10 from legs6 and8 using Pythagorean knowledge. This warrants Grade 8 scope review/hold based on curricular placement and lack of a required-Pythagorean analogue in the current 200 official Grade 8 math items; it is not a wrong-key finding or a categorical DOE prohibition."
+  },
+  {
+   "key": "MATH:bank:MATH-GEO-001:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-GEO-001"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope_hold",
+   "summary": "Requires finding the hypotenuse from perpendicular legs 6 and 8 before finding the altitude from equal-area expressions. The mathematics is correct, but this demand is not supported for the user's Grade 8 test-taker-only bank by the verified scope evidence."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-GEO-002:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-GEO-002"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "incorrect_feedback",
+   "summary": "Choice A’s described partial-dimension calculation does not produce112."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-GEO-002:2",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-GEO-002"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "notation",
+   "summary": "Choice D explanation includes an invalid equality chain."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-GEO-003:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-GEO-003"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "terminology",
+   "summary": "The displacement pair(6,8) is repeatedly called the distance between the points."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-GEO-004:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-GEO-004"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "misleading_instruction",
+   "summary": "A noninteger dimension is presented as a signal that the setup is wrong, even though dimensions may be noninteger."
+  },
+  {
+   "key": "MATH:bank:MATH-GEO-007:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-GEO-007"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope_hold",
+   "summary": "Directly asks for the hypotenuse from legs 9 and 12. Choice A also uses the irrational radical 3sqrt(7). The mathematics is correct, but this demand is not supported for the user's Grade 8 test-taker-only bank by the verified scope evidence."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-GEO-008:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-GEO-008"
+   ],
+   "recommendation": "keep",
+   "required": false,
+   "severity": "low",
+   "classification": "distractor_feedback",
+   "summary": "B and D feedback is generic rather than reproducible."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-GEO-009:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-GEO-009"
+   ],
+   "recommendation": "keep",
+   "required": false,
+   "severity": "low",
+   "classification": "distractor_feedback",
+   "summary": "The6π distractor explanation is vague."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-GEO-010:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-GEO-010"
+   ],
+   "recommendation": "keep",
+   "required": false,
+   "severity": "low",
+   "classification": "distractor_feedback",
+   "summary": "B=108 is attributed only to an unspecified arithmetic error."
+  },
+  {
+   "key": "MATH:bank:MATH-GEO-012:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-GEO-012"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "factual_explanation_error",
+   "summary": "\"Percent increases on two dimensions multiply, they do not add\" is inaccurate as stated: multiplying 50% by 50% gives 25%, not the 125% increase in area. It is the multiplicative growth factors, 1.5 and 1.5, that multiply."
+  },
+  {
+   "key": "MATH:bank:MATH-GEO-103:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-GEO-103"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope_hold",
+   "summary": "Requires recovering a right-triangle leg from hypotenuse 13 and leg 5; the ladder context does not remove that demand. The mathematics is correct, but this demand is not supported for the user's Grade 8 test-taker-only bank by the verified scope evidence."
+  },
+  {
+   "key": "MATH:bank:MATH-GEO-104:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-GEO-104"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope_hold",
+   "summary": "Requires the altitude sqrt(10^2-8^2) after bisecting an isosceles triangle of sides 10,10,16. The mathematics is correct, but this demand is not supported for the user's Grade 8 test-taker-only bank by the verified scope evidence."
+  },
+  {
+   "key": "MATH:bank:MATH-GEO-108:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-GEO-108"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "scope_appropriate_solution_rewrite",
+   "summary": "Current teaching route explicitly uses the Pythagorean theorem and irrational radicals. The target quantity can instead be derived from triangle and square areas without either prerequisite."
+  },
+  {
+   "key": "MATH:bank:MATH-GEO-110:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-GEO-110"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope_hold",
+   "summary": "Directly asks for the slope between two coordinate points; the required operation is the signed change-in-y/change-in-x slope definition. NYSED NY-8.EE.5-6 places formal slope in Grade 8; official Grade 9 Mini Form 1 p.12, Item 6 explicitly assesses slope. No primary current Grade 8 analogue was established."
+  },
+  {
+   "key": "MATH:bank:MATH-GEO-111:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-GEO-111"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope_hold",
+   "summary": "Requires five Euclidean diagonal-distance checks. Points are not axis-aligned with (1,2); subtracting grid coordinates alone cannot establish distance 5. The mathematics is correct, but this demand is not supported for the user's Grade 8 test-taker-only bank by the verified scope evidence."
+  },
+  {
+   "key": "MATH:bank:MATH-GEO-113:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-GEO-113"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope_hold",
+   "summary": "Requires Euclidean distance for a diagonal displacement of 8 horizontally and 6 vertically. This is not a same-row/same-column coordinate-distance problem. The mathematics is correct, but this demand is not supported for the user's Grade 8 test-taker-only bank by the verified scope evidence."
+  },
+  {
+   "key": "MATH:bank:MATH-GEO-115:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-GEO-115"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope_hold",
+   "summary": "Requires the cylinder volume formula to infer r², then infer r and use circumference x height for lateral surface area. This is not just summing supplied rectangular or triangular faces. NYSED NY-8.G.9 assigns cylinder-volume applications to Grade 8. The official-scope reviewer found no matching Grade 8 A-D cylinder-volume-to-radius/lateral-area item. Absence from the sample does not establish an explicit DOE ban."
+  },
+  {
+   "key": "MATH:bank:MATH-GEO-116:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-GEO-116"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope_hold",
+   "summary": "Requires the unknown rectangle side sqrt(26^2-10^2) from a diagonal and one side before computing perimeter. The mathematics is correct, but this demand is not supported for the user's Grade 8 test-taker-only bank by the verified scope evidence."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-NUM-004:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-NUM-004"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "incorrect_feedback",
+   "summary": "Including either endpoint alone does not produce the stated distractor4."
+  },
+  {
+   "key": "MATH:bank:MATH-NUM-006:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-NUM-006"
+   ],
+   "recommendation": "keep",
+   "required": false,
+   "severity": "low",
+   "classification": "editorial_judgment",
+   "summary": "The next-difference rule is inferred from a finite list. The intended answer 73 is conventional but a finite prefix does not mathematically determine a unique continuation."
+  },
+  {
+   "key": "MATH:diagnostic:MATH-NUM-009:1",
+   "source": "math-actionable-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-NUM-009"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "incorrect_feedback",
+   "summary": "Choice A is described as merely close to the red count, although it is exactly the red count."
+  },
+  {
+   "key": "MATH:bank:MATH-NUM-106:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-NUM-106"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "false_explanation",
+   "summary": "Choice A explanation says 0.4 → 0.0004 moves the decimal four places. It moves it three places."
+  },
+  {
+   "key": "MATH:bank:MATH-NUM-106:2",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-NUM-106"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "stem_ambiguity",
+   "summary": "\"A 250-milliliter water sample is 0.4% salt\" does not state whether the percentage is by volume or mass; the requested milliliters implicitly assumes volume. Salt concentrations are not automatically volume fractions."
+  },
+  {
+   "key": "MATH:bank:MATH-NUM-110:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-NUM-110"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "medium",
+   "classification": "grade8_scope_hold",
+   "summary": "Scientific-notation operation and normalization"
+  },
+  {
+   "key": "MATH:bank:MATH-NUM-111:1",
+   "source": "math-actionable-findings.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-NUM-111"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "medium",
+   "classification": "grade8_scope_hold",
+   "summary": "Radical equation followed by root evaluation"
+  },
+  {
+   "key": "ELA-RC-C01",
+   "source": "ela-rc-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-RC-103"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "confirmed_explanation_overstatement",
+   "summary": "Similarity of climate and geology is described as ruling out environmental causes"
+  },
+  {
+   "key": "ELA-RC-C02",
+   "source": "ela-rc-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-RC-129"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "confirmed_explanation_logic",
+   "summary": "Countless failures do not logically disprove a majority-survival claim"
+  },
+  {
+   "key": "ELA-RC-C03",
+   "source": "ela-rc-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-RC-135",
+    "ELA-RC-136"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "confirmed_explanation_overstatement",
+   "summary": "Not disproving a study is treated as proving its effect real"
+  },
+  {
+   "key": "ELA-RC-C04",
+   "source": "ela-rc-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-RC-135",
+    "ELA-RC-136"
+   ],
+   "recommendation": "hold_pending_delivery_verification",
+   "required": true,
+   "severity": "high",
+   "classification": "conditional_delivery_dependency",
+   "summary": "Part B lacks the Part A question in its own record"
+  },
+  {
+   "key": "ELA-RC-C05",
+   "source": "ela-rc-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-RC-140"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "unsupported_test_strategy",
+   "summary": "Trap teaches a sweeping claim about SHSAT similes"
+  },
+  {
+   "key": "ELA-RC-C06",
+   "source": "ela-rc-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-RC-141"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "confirmed_passage_misread",
+   "summary": "Explanation reverses or invents the direction of the plant move"
+  },
+  {
+   "key": "ELA-RC-C07",
+   "source": "ela-rc-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-RC-147",
+    "ELA-RC-159"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "confirmed_stem_precision",
+   "summary": "Sentence stem includes a two-sentence keyed quotation"
+  },
+  {
+   "key": "ELA-RC-C08",
+   "source": "ela-rc-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "RC-DX-INF1-Q7"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "confirmed_evidence_scope",
+   "summary": "Table is described as making a decline directly comparable despite mismatched measures"
+  },
+  {
+   "key": "ELA-RC-C09",
+   "source": "ela-rc-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "RC-DX-INF2-Q6"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "confirmed_explanation_overstatement",
+   "summary": "Distractor rationale treats temperature and moisture sensitivity as exclusive"
+  },
+  {
+   "key": "ELA-RC-C10",
+   "source": "ela-rc-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "RC-DX-MEM-Q1"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "confirmed_explanation_contradiction",
+   "summary": "Rationale denies a behavioral change mentioned elsewhere"
+  },
+  {
+   "key": "ELA-RC-C11",
+   "source": "ela-rc-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "RC-DX-MEM-Q4"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "confirmed_text_explanation_mismatch",
+   "summary": "Explanation analyzes italics absent from supplied passage text"
+  },
+  {
+   "key": "ELA-RC-C12",
+   "source": "ela-rc-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "RC-DX-POEM-Q3"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "confirmed_distractor_explanation_logic",
+   "summary": "An appearance claim is rejected as though it claimed literal rotation"
+  },
+  {
+   "key": "ELA-RC-C13",
+   "source": "ela-rc-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "RC-DX-POEM-Q4"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "confirmed_phrase_misread",
+   "summary": "Shaken with laughter is treated as direct evidence of fear"
+  },
+  {
+   "key": "ELA-RC-C14",
+   "source": "ela-rc-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "RC-BRB-001",
+    "RC-BRB-001-Q7"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "confirmed_historical_quantity",
+   "summary": "Passage overstates the amount of extra bridge wire"
+  },
+  {
+   "key": "ELA-RC-P01",
+   "source": "ela-rc-findings.csv",
+   "track": "bank",
+   "ids": [
+    "RC-P104"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "confirmed_historical_qualification",
+   "summary": "No-new-cases wording overlooks the 1978 laboratory-associated cases"
+  },
+  {
+   "key": "ELA-RC-P02",
+   "source": "ela-rc-findings.csv",
+   "track": "bank",
+   "ids": [
+    "RC-P106"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "confirmed_experiment_description",
+   "summary": "Jam display conditions are incorrectly assigned to different days"
+  },
+  {
+   "key": "ELA-RC-P03",
+   "source": "ela-rc-findings.csv",
+   "track": "bank",
+   "ids": [
+    "RC-P111",
+    "ELA-RC-164"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "confirmed_continuity",
+   "summary": "Saw changes location within opening description"
+  },
+  {
+   "key": "ELA-RC-A01",
+   "source": "ela-rc-findings.csv",
+   "track": "specified_bank_and_diagnostic",
+   "ids": [
+    "ELA-RC-001",
+    "ELA-RC-104",
+    "ELA-RC-111",
+    "ELA-RC-116",
+    "ELA-RC-122",
+    "ELA-RC-128",
+    "ELA-RC-134",
+    "RC-BRB-001-Q3",
+    "RC-DX-MEM-Q2"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "alignment_judgment_not_correctness_defect",
+   "summary": "Nine direct definition items differ from observed current official item style"
+  },
+  {
+   "key": "RE:bank:ELA-RE-103:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-RE-103"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "revise",
+   "summary": "The distractor explanation incorrectly limits herself to reflexive object use; herself also has an intensive use."
+  },
+  {
+   "key": "RE:bank:ELA-RE-112:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-RE-112"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "revise",
+   "summary": "The intended answer relies on institutional authority and tone not established by the passage, and the rejection of insists confuses insistence with power to enforce."
+  },
+  {
+   "key": "RE:bank:ELA-RE-119:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-RE-119"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "revise",
+   "summary": "The key is sound, but feedback teaches that any action earlier than another past action must use past perfect."
+  },
+  {
+   "key": "RE:bank:ELA-REB-101:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-101"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "revise",
+   "summary": "The procedural correction says deleting who alone fixes the fragment, but doing only that leaves a comma between subject and verb."
+  },
+  {
+   "key": "RE:bank:ELA-REB-111:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-111"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "revise",
+   "summary": "The best answer is B, but the explanation overgeneralizes past-perfect requirements and characterizes option D’s sequence too mechanically."
+  },
+  {
+   "key": "RE:bank:ELA-REB-124:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-124"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "hold",
+   "summary": "The comma judgment assumes that only some students failed to submit slips, but that intended meaning is not supplied. Sentence 2 is grammatical with an all-students nonrestrictive reading."
+  },
+  {
+   "key": "RE:bank:ELA-REB-129:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-129"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "revise",
+   "summary": "Unqualified semicolon rule is false for complex lists and conflicts with the very next corpus item ELA-REB-130."
+  },
+  {
+   "key": "RE:bank:ELA-REB-131:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-131"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "revise",
+   "summary": "Option B feedback identifies a comma splice where the alleged second clause is only the adverb therefore."
+  },
+  {
+   "key": "RE:bank:ELA-REB-134:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-134"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "revise",
+   "summary": "The ordinary-apples correction is right, but the no-apostrophe-for-plurals rule is stated without exceptions."
+  },
+  {
+   "key": "RE:bank:ELA-REB-141:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-141"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "revise",
+   "summary": "The common-trap note names the third option even though the sky distractor is second and the third option is the keyed answer."
+  },
+  {
+   "key": "RE:bank:ELA-REB-143:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-143"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "hold",
+   "summary": "Both team’s and teams’ are grammatical in the first slot: a locker room can belong to one team or be shared by several, and the sentence does not specify which."
+  },
+  {
+   "key": "RE:bank:ELA-REB-145:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-145"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "medium",
+   "classification": "hold",
+   "summary": "The comma distractor supports a grammatical appositive-list reading; the colon is clearer, but the prompt asks for the correct punctuation without a clarity criterion."
+  },
+  {
+   "key": "RE:bank:ELA-REB-147:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-147"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "revise",
+   "summary": "The myself explanation states a universal condition rather than the governing antecedent relationship in this particular sentence."
+  },
+  {
+   "key": "RE:bank:ELA-REB-148:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-148"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "revise",
+   "summary": "The common-trap shortcut could teach that noun use alone always decides effect versus affect."
+  },
+  {
+   "key": "RE:bank:ELA-REB-149:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-149"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "revise",
+   "summary": "Feedback calls the arrival late even though the sentence says the group arrived just as the performance began."
+  },
+  {
+   "key": "RE:bank:ELA-REB-007:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-007"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "hold",
+   "summary": "They has a clear available joint antecedent in the previous compound subject. The question does not establish a need to name just one party."
+  },
+  {
+   "key": "RE:bank:ELA-REB-008:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-008"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "revise",
+   "summary": "The explanation says sentence 2 has no pronouns, but that is a relative pronoun referring to sense of smallness."
+  },
+  {
+   "key": "RE:bank:ELA-REB-001:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-001"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "revise",
+   "summary": "Inconsistent first sentence numbering and an apostrophe tag on a dangling-modifier question."
+  },
+  {
+   "key": "RE:bank:ELA-REB-002:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-002"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "revise",
+   "summary": "Bank version has no solutionExplanation, commonTrap, or per-choice explanation."
+  },
+  {
+   "key": "RE:bank:ELA-REB-002:2",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-002"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "revise",
+   "summary": "RE-APP is used on a modifier item, unlike the apostrophe items in this corpus."
+  },
+  {
+   "key": "RE:bank:ELA-REB-003:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-003"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "revise",
+   "summary": "Bank version has no solutionExplanation, commonTrap, or per-choice explanation."
+  },
+  {
+   "key": "RE:bank:ELA-REB-004:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-004"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "revise",
+   "summary": "Bank version has no solutionExplanation, commonTrap, or per-choice explanation."
+  },
+  {
+   "key": "RE:bank:ELA-REB-004:2",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-004"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "hold",
+   "summary": "There is no inappropriate tense shift, so the keyed answer is unsupported and none of the options answers the stem."
+  },
+  {
+   "key": "RE:bank:ELA-REB-005:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-REB-005"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "revise",
+   "summary": "Bank version has no solutionExplanation, commonTrap, or per-choice explanation."
+  },
+  {
+   "key": "RE:diagnostic:ELA-REB-001:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "ELA-REB-001"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "medium",
+   "classification": "revise",
+   "summary": "The key is correct, but feedback incorrectly says the temporal phrase By the end of the day modifies/describes Marcus and overgeneralizes the next-noun/person rule."
+  },
+  {
+   "key": "RE:diagnostic:ELA-REB-003:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "ELA-REB-003"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "revise",
+   "summary": "The instructional explanation itself contains a comma splice."
+  },
+  {
+   "key": "RE:diagnostic:ELA-REB-005:1",
+   "source": "ela-revision-audit-findings.csv",
+   "track": "diagnostic",
+   "ids": [
+    "ELA-REB-005"
+   ],
+   "recommendation": "revise",
+   "required": true,
+   "severity": "low",
+   "classification": "revise",
+   "summary": "The explanation contains comma splices and says and expresses no logical connection, rather than no explicit causal connection."
+  },
+  {
+   "key": "VOCAB:bank:ELA-RC-001",
+   "source": "ela-vocabulary-classification.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-RC-001"
+   ],
+   "recommendation": "rewrite",
+   "required": true,
+   "severity": "medium",
+   "classification": "style_fidelity",
+   "summary": "Direct-definition item: rewrite as passage-dependent effect/function/inference. Direction: Ask why the author describes the group decision as sound despite each scout’s limited knowledge; test collective judgment rather than a synonym."
+  },
+  {
+   "key": "VOCAB:bank:ELA-RC-104",
+   "source": "ela-vocabulary-classification.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-RC-104"
+   ],
+   "recommendation": "rewrite",
+   "required": true,
+   "severity": "medium",
+   "classification": "style_fidelity",
+   "summary": "Direct-definition item: rewrite as passage-dependent effect/function/inference. Direction: Ask how the contrast between urchins kept in check and urchins multiplying develops the explanation of a trophic cascade."
+  },
+  {
+   "key": "VOCAB:bank:ELA-RC-111",
+   "source": "ela-vocabulary-classification.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-RC-111"
+   ],
+   "recommendation": "rewrite",
+   "required": true,
+   "severity": "medium",
+   "classification": "style_fidelity",
+   "summary": "Direct-definition item: rewrite as passage-dependent effect/function/inference. Direction: Replace the definition task with a passage-based inference about how the contrast between cart-delivered water and neighborhood pumps develops the unequal-access problem."
+  },
+  {
+   "key": "VOCAB:bank:ELA-RC-116",
+   "source": "ela-vocabulary-classification.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-RC-116"
+   ],
+   "recommendation": "rewrite",
+   "required": true,
+   "severity": "medium",
+   "classification": "style_fidelity",
+   "summary": "Direct-definition item: rewrite as passage-dependent effect/function/inference. Direction: Ask how the medal, newspaper coverage and academy election develop the claim of international recognition."
+  },
+  {
+   "key": "VOCAB:bank:ELA-RC-122",
+   "source": "ela-vocabulary-classification.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-RC-122"
+   ],
+   "recommendation": "rewrite",
+   "required": true,
+   "severity": "medium",
+   "classification": "style_fidelity",
+   "summary": "Direct-definition item: rewrite as passage-dependent effect/function/inference. Direction: Ask how portraying the disease as retreating contributes to the account of the global campaign."
+  },
+  {
+   "key": "VOCAB:bank:ELA-RC-128",
+   "source": "ela-vocabulary-classification.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-RC-128"
+   ],
+   "recommendation": "rewrite",
+   "required": true,
+   "severity": "medium",
+   "classification": "style_fidelity",
+   "summary": "Direct-definition item: rewrite as passage-dependent effect/function/inference. Direction: Replace the definition task with a new passage-dependent question about how researchers reinterpret the lime lumps in paragraph 5; avoid duplicating existing paragraph-7 qualification items."
+  },
+  {
+   "key": "VOCAB:bank:ELA-RC-134",
+   "source": "ela-vocabulary-classification.csv",
+   "track": "bank",
+   "ids": [
+    "ELA-RC-134"
+   ],
+   "recommendation": "rewrite",
+   "required": true,
+   "severity": "medium",
+   "classification": "style_fidelity",
+   "summary": "Direct-definition item: rewrite as passage-dependent effect/function/inference. Direction: Ask how the contrast between a striking result and the beginning of an investigation develops the author’s point about scientific evidence."
+  },
+  {
+   "key": "VOCAB:diagnostic:RC-BRB-001-Q3",
+   "source": "ela-vocabulary-classification.csv",
+   "track": "diagnostic",
+   "ids": [
+    "RC-BRB-001-Q3"
+   ],
+   "recommendation": "rewrite",
+   "required": true,
+   "severity": "medium",
+   "classification": "style_fidelity",
+   "summary": "Direct-definition item: rewrite as passage-dependent effect/function/inference. Direction: Ask how ambitious, setbacks and ingenuity contribute to the author’s portrayal of the project, with passage-based alternatives."
+  },
+  {
+   "key": "VOCAB:diagnostic:RC-DX-MEM-Q2",
+   "source": "ela-vocabulary-classification.csv",
+   "track": "diagnostic",
+   "ids": [
+    "RC-DX-MEM-Q2"
+   ],
+   "recommendation": "rewrite",
+   "required": true,
+   "severity": "medium",
+   "classification": "style_fidelity",
+   "summary": "Direct-definition item: rewrite as passage-dependent effect/function/inference. Direction: Ask how contrasting the friends’ imitable qualities with Washington’s inimitable virtues develops the narrator’s admiration and humility."
+  },
+  {
+   "key": "SCOPE:bank:MATH-ALG-001",
+   "source": "math-full-review.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-ALG-001"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope",
+   "summary": "Direct parallel-line/slope knowledge. Valid content, outside the current Grade 8 product scope."
+  },
+  {
+   "key": "SCOPE:bank:MATH-ALG-006",
+   "source": "math-full-review.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-ALG-006"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope",
+   "summary": "Paired simultaneous equations in formal system presentation. Valid content, outside the current Grade 8 product scope."
+  },
+  {
+   "key": "SCOPE:bank:MATH-ALG-105",
+   "source": "math-full-review.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-ALG-105"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope",
+   "summary": "Formal substitution system. Valid content, outside the current Grade 8 product scope."
+  },
+  {
+   "key": "SCOPE:bank:MATH-ALG-112",
+   "source": "math-full-review.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-ALG-112"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope",
+   "summary": "Formal pair of equations combined to obtain x+y. Valid content, outside the current Grade 8 product scope."
+  },
+  {
+   "key": "SCOPE:bank:MATH-ALG-114",
+   "source": "math-full-review.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-ALG-114"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope",
+   "summary": "Assumed function notation f(a), f(2a). Valid content, outside the current Grade 8 product scope."
+  },
+  {
+   "key": "SCOPE:bank:MATH-GEO-001",
+   "source": "math-full-review.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-GEO-001"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope",
+   "summary": "Pythagorean theorem required to find hypotenuse and then altitude. Valid content, outside the current Grade 8 product scope."
+  },
+  {
+   "key": "SCOPE:bank:MATH-GEO-007",
+   "source": "math-full-review.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-GEO-007"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope",
+   "summary": "Pythagorean theorem: find hypotenuse. Valid content, outside the current Grade 8 product scope."
+  },
+  {
+   "key": "SCOPE:bank:MATH-GEO-103",
+   "source": "math-full-review.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-GEO-103"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope",
+   "summary": "Pythagorean theorem: ladder height. Valid content, outside the current Grade 8 product scope."
+  },
+  {
+   "key": "SCOPE:bank:MATH-GEO-104",
+   "source": "math-full-review.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-GEO-104"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope",
+   "summary": "Pythagorean theorem: isosceles-triangle altitude. Valid content, outside the current Grade 8 product scope."
+  },
+  {
+   "key": "SCOPE:bank:MATH-GEO-110",
+   "source": "math-full-review.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-GEO-110"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope",
+   "summary": "Direct coordinate slope calculation. Valid content, outside the current Grade 8 product scope."
+  },
+  {
+   "key": "SCOPE:bank:MATH-GEO-111",
+   "source": "math-full-review.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-GEO-111"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope",
+   "summary": "Diagonal coordinate distance via Pythagorean reasoning. Valid content, outside the current Grade 8 product scope."
+  },
+  {
+   "key": "SCOPE:bank:MATH-GEO-113",
+   "source": "math-full-review.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-GEO-113"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope",
+   "summary": "Diagonal coordinate distance via Pythagorean reasoning. Valid content, outside the current Grade 8 product scope."
+  },
+  {
+   "key": "SCOPE:bank:MATH-GEO-115",
+   "source": "math-full-review.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-GEO-115"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope",
+   "summary": "Cylinder volume-to-radius then lateral surface area. Valid content, outside the current Grade 8 product scope."
+  },
+  {
+   "key": "SCOPE:bank:MATH-GEO-116",
+   "source": "math-full-review.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-GEO-116"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope",
+   "summary": "Pythagorean theorem: rectangle side from diagonal. Valid content, outside the current Grade 8 product scope."
+  },
+  {
+   "key": "SCOPE:bank:MATH-NUM-110",
+   "source": "math-full-review.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-NUM-110"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope",
+   "summary": "Scientific-notation operation and normalization. Valid content, outside the current Grade 8 product scope."
+  },
+  {
+   "key": "SCOPE:bank:MATH-NUM-111",
+   "source": "math-full-review.csv",
+   "track": "bank",
+   "ids": [
+    "MATH-NUM-111"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope",
+   "summary": "Radical equation followed by root evaluation. Valid content, outside the current Grade 8 product scope."
+  },
+  {
+   "key": "SCOPE:diagnostic:MATH-ALG-001",
+   "source": "math-full-review.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-ALG-001"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope",
+   "summary": "Direct parallel-line/slope knowledge. Valid content, outside the current Grade 8 product scope."
+  },
+  {
+   "key": "SCOPE:diagnostic:MATH-ALG-006",
+   "source": "math-full-review.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-ALG-006"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope",
+   "summary": "Paired simultaneous equations in formal system presentation. Valid content, outside the current Grade 8 product scope."
+  },
+  {
+   "key": "SCOPE:diagnostic:MATH-GEO-001",
+   "source": "math-full-review.csv",
+   "track": "diagnostic",
+   "ids": [
+    "MATH-GEO-001"
+   ],
+   "recommendation": "hold",
+   "required": true,
+   "severity": "high",
+   "classification": "grade8_scope",
+   "summary": "Pythagorean theorem required to find hypotenuse and then altitude. Valid content, outside the current Grade 8 product scope."
+  },
+  {
+   "key": "PROMPT:tei-scoring",
+   "source": "CLAUDE_CODE_IMPLEMENTATION_PROMPT.txt",
+   "track": "both",
+   "ids": [],
+   "recommendation": "implement",
+   "required": true,
+   "severity": "high",
+   "classification": "implementation",
+   "summary": "Validate TEI payloads and actual scorers (MS cardinality, IC mappings, DND references, EE forms, CGT payloads, visible feedback)."
+  },
+  {
+   "key": "PROMPT:app-001-wp-feedback",
+   "source": "CLAUDE_CODE_IMPLEMENTATION_PROMPT.txt",
+   "track": "both",
+   "ids": [],
+   "recommendation": "implement",
+   "required": true,
+   "severity": "high",
+   "classification": "implementation",
+   "summary": "MATH-APP-001 explanation lives only under wp; verify rendering route."
+  },
+  {
+   "key": "PROMPT:dat-dx09-ee-cgt",
+   "source": "CLAUDE_CODE_IMPLEMENTATION_PROMPT.txt",
+   "track": "both",
+   "ids": [],
+   "recommendation": "implement",
+   "required": true,
+   "severity": "high",
+   "classification": "implementation",
+   "summary": "MATH-DAT-DX09 is INDY-EE with a CGT table; verify rendering and scoring."
+  },
+  {
+   "key": "PROMPT:diagnostic-choice-feedback-fallback",
+   "source": "CLAUDE_CODE_IMPLEMENTATION_PROMPT.txt",
+   "track": "both",
+   "ids": [],
+   "recommendation": "implement",
+   "required": true,
+   "severity": "high",
+   "classification": "implementation",
+   "summary": "Diagnostic math lacks per-choice explanations; test a substantive fallback."
+  },
+  {
+   "key": "PROMPT:diagnostic-form-safety",
+   "source": "CLAUDE_CODE_IMPLEMENTATION_PROMPT.txt",
+   "track": "both",
+   "ids": [],
+   "recommendation": "implement",
+   "required": true,
+   "severity": "high",
+   "classification": "implementation",
+   "summary": "Diagnostic keeps 50/50 only via reviewed replacements or reports a blocked slot."
+  },
+  {
+   "key": "PROMPT:review-status-defaults",
+   "source": "CLAUDE_CODE_IMPLEMENTATION_PROMPT.txt",
+   "track": "both",
+   "ids": [],
+   "recommendation": "implement",
+   "required": true,
+   "severity": "high",
+   "classification": "implementation",
+   "summary": "Missing reviewStatus defaults to final for tracker/diagnostic records; isolate and report, no promotion."
+  },
+  {
+   "key": "PROMPT:near-duplicates",
+   "source": "CLAUDE_CODE_IMPLEMENTATION_PROMPT.txt",
+   "track": "both",
+   "ids": [],
+   "recommendation": "implement",
+   "required": true,
+   "severity": "high",
+   "classification": "implementation",
+   "summary": "MATH-DAT-003 / MATH-DAT-107 bank near-duplicates: substantive variant or co-occurrence prevention."
+  },
+  {
+   "key": "PROMPT:version-safety",
+   "source": "CLAUDE_CODE_IMPLEMENTATION_PROMPT.txt",
+   "track": "both",
+   "ids": [],
+   "recommendation": "implement",
+   "required": true,
+   "severity": "high",
+   "classification": "implementation",
+   "summary": "Bank and diagnostic versions stay separate; originals and attempt history preserved."
+  },
+  {
+   "key": "PROMPT:geo-108-route",
+   "source": "CLAUDE_CODE_IMPLEMENTATION_PROMPT.txt",
+   "track": "both",
+   "ids": [],
+   "recommendation": "implement",
+   "required": true,
+   "severity": "high",
+   "classification": "implementation",
+   "summary": "GEO-108 four-triangle teaching route; remove Pythagorean/radical requirement from all feedback."
+  },
+  {
+   "key": "PROMPT:retag-alg-sys",
+   "source": "CLAUDE_CODE_IMPLEMENTATION_PROMPT.txt",
+   "track": "both",
+   "ids": [],
+   "recommendation": "implement",
+   "required": true,
+   "severity": "high",
+   "classification": "implementation",
+   "summary": "Retag ALG-004, ALG-106, ALG-115 (and similar) away from misleading ALG-SYS labels."
+  }
+ ]
+}

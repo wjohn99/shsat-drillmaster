@@ -131,6 +131,7 @@ export function SessionQuestionRunner({
       correct,
       elapsedSeconds,
       tags: currentQuestion.tags.map((t) => t.code),
+      contentVersion: currentQuestion.contentVersion ?? 1,
     };
     eventsByQuestionId.current.set(currentQuestion.id, evt);
 

@@ -276,6 +276,9 @@ export function DiagnosticItemReview({ exam, events }: DiagnosticItemReviewProps
                   {!selectedEvent?.answer && answered
                     ? " This sitting did not store the selected choice."
                     : null}
+                  {selectedEvent && (selectedEvent.contentVersion ?? 1) !== (selected.contentVersion ?? 1)
+                    ? " This item was revised after this sitting. The score shown is from the version the student answered; the question below is the current version."
+                    : null}
                 </DialogDescription>
               </DialogHeader>
               <div className="flex flex-wrap items-center gap-2">

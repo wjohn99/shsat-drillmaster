@@ -1,0 +1,68 @@
+id,version,stem,classification,term,currentAnswer,recommendation,proposedDirection
+ELA-RC-001,bank,"Read this sentence from paragraph 6.
+
+Yet because good sites earn longer dances and poor ones are abandoned, the group as a whole reaches a sound decision.
+
+What does the word ""sound"" mean as it is used in this sentence?",direct_definition,sound,reliable,rewrite_for_style_fidelity,Ask why the author describes the group decision as sound despite each scout’s limited knowledge; test collective judgment rather than a synonym.
+ELA-RC-104,bank,"As used in paragraph 6, the phrase ""in check"" most nearly means",direct_definition,in check,held within limits,rewrite_for_style_fidelity,Ask how the contrast between urchins kept in check and urchins multiplying develops the explanation of a trophic cascade.
+ELA-RC-111,bank,"As used in paragraph 1, the word ""drew"" most nearly means",direct_definition,drew,obtained,rewrite_for_style_fidelity,Replace the definition task with a passage-based inference about how the contrast between cart-delivered water and neighborhood pumps develops the unequal-access problem.
+ELA-RC-116,bank,"As used in paragraph 4, the word ""recognition"" most nearly means",direct_definition,recognition,praise and honor,rewrite_for_style_fidelity,"Ask how the medal, newspaper coverage and academy election develop the claim of international recognition."
+ELA-RC-122,bank,"As used in paragraph 7, the word ""retreated"" most nearly means",direct_definition,retreated,became less widespread,rewrite_for_style_fidelity,Ask how portraying the disease as retreating contributes to the account of the global campaign.
+ELA-RC-128,bank,"As used in paragraph 7, the word ""sets"" most nearly means",direct_definition,sets,hardens,rewrite_for_style_fidelity,Replace the definition task with a new passage-dependent question about how researchers reinterpret the lime lumps in paragraph 5; avoid duplicating existing paragraph-7 qualification items.
+ELA-RC-134,bank,"As used in paragraph 8, the word ""striking"" most nearly means",direct_definition,striking,attention-grabbing,rewrite_for_style_fidelity,Ask how the contrast between a striking result and the beginning of an investigation develops the author’s point about scientific evidence.
+ELA-RC-140,bank,"Read this sentence from paragraph 3.
+
+""She had written every measurement in her green composition notebook, and then she had closed the notebook and slid it under the table, behind her backpack, where it sat now like a secret holding its breath.""
+
+What does the phrase ""like a secret holding its breath"" suggest about the notebook?",figurative_or_contextual_interpretation,,,keep_contextual_interpretation,Retain contextual/figurative interpretation; address any separately listed content issues.
+ELA-RC-146,bank,"Read this sentence from paragraph 13.
+
+""We traced his marks too, onto the same strip of paper, his faint lines below my dark ones, like the roots of a plant beneath its stem.""
+
+What does the comparison to ""the roots of a plant"" suggest?",figurative_or_contextual_interpretation,,,keep_contextual_interpretation,Retain contextual/figurative interpretation; address any separately listed content issues.
+ELA-RC-152,bank,"Read this sentence from paragraph 5.
+
+""She did not explain, because she did not know how to say that first board had become a kind of address, the place where she lived.""
+
+What does this description suggest about first board?",figurative_or_contextual_interpretation,,,keep_contextual_interpretation,Retain contextual/figurative interpretation; address any separately listed content issues.
+ELA-RC-158,bank,"Read this sentence from paragraph 14.
+
+""Underneath, where my paragraphs about the 1970s were supposed to go, I wrote about a story that bends to fit whoever is listening, the way a river bends to fit its banks without ever stopping being a river.""
+
+What does the comparison to a river suggest about Lola's story?",figurative_or_contextual_interpretation,,,keep_contextual_interpretation,Retain contextual/figurative interpretation; address any separately listed content issues.
+ELA-RC-164,bank,"Read this sentence from paragraph 3.
+
+""Instead I spent my days rubbing the same board back and forth until my arms ached, while the saw sat in the corner like a dog I was forbidden to pet.""
+
+What does the comparison suggest about the saw?",figurative_or_contextual_interpretation,,,keep_contextual_interpretation,Retain contextual/figurative interpretation; address any separately listed content issues.
+ELA-RC-170,bank,"In line 10, what does the phrase ""as if my fear had weight and it could feel it"" suggest?",figurative_or_contextual_interpretation,,,keep_contextual_interpretation,Retain contextual/figurative interpretation; address any separately listed content issues.
+RC-BRB-001-Q3,diagnostic,"As used in paragraph 3, the word ""ambitious"" most nearly means",direct_definition,ambitious,bold and difficult,rewrite_for_style_fidelity,"Ask how ambitious, setbacks and ingenuity contribute to the author’s portrayal of the project, with passage-based alternatives."
+RC-DX-LIT-Q2,diagnostic,"Read this sentence from paragraph 3.
+
+""He was not merely a big snake, I thought—he was a circus monstrosity.""
+
+What does the phrase ""circus monstrosity"" suggest about how Jim sees the snake?",figurative_or_contextual_interpretation,,,keep_contextual_interpretation,Retain contextual/figurative interpretation; address any separately listed content issues.
+RC-DX-INF1-Q2,diagnostic,"Read this sentence from paragraph 3.
+
+""Nearly all Kemp's ridley eggs were literally in one basket!""
+
+What does the sentence suggest about the Kemp's ridley at that time?",figurative_or_contextual_interpretation,,,keep_contextual_interpretation,Retain contextual/figurative interpretation; address any separately listed content issues.
+RC-DX-POEM-Q3,diagnostic,"Read lines 24 through 26.
+
+Was a dew-drop on a blade,
+And a pair of moments after
+Was the whirling guess I made,—
+
+What does the phrase ""the whirling guess I made"" suggest about the city at that moment?",figurative_or_contextual_interpretation,,,keep_contextual_interpretation,Retain contextual/figurative interpretation; address any separately listed content issues.
+RC-DX-MEM-Q2,diagnostic,"Read these sentences from paragraph 2.
+
+""What I loved in my friends was not inimitable. One could be downright good if one really wanted to.""
+
+""This wonderful George Washington was as inimitable as he was irreproachable.""
+
+As used in the passage, what does the word ""inimitable"" mean?",direct_definition,inimitable,impossible to copy or equal,rewrite_for_style_fidelity,Ask how contrasting the friends’ imitable qualities with Washington’s inimitable virtues develops the narrator’s admiration and humility.
+RC-DX-INF2-Q3,diagnostic,"Read this sentence from paragraph 3.
+
+""Individual trees are selected based on their apparent age—the oldest provide the longest climate histories—and positions that are likely to make the trees most sensitive to environmental conditions, such as away from streams or springs that can mask the potential moisture-sensitive history in the annual rings.""
+
+The phrase ""mask the potential moisture-sensitive history"" suggests that trees growing near streams or springs",figurative_or_contextual_interpretation,,,keep_contextual_interpretation,Retain contextual/figurative interpretation; address any separately listed content issues.

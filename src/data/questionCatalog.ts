@@ -6,7 +6,11 @@
  * 2. **Content batches** — JSON files under content/batches. Same ID replaces the tracker row.
  * 3. **Diagnostic holdback** — items/passages from Diagnostic_100_for_John.xlsx stay
  *    reserved for `/practice/diagnostic`, except tutors can review batch revisions.
- * 4. **Legacy (not loaded):** `mockData.ts`, `converted_questions.json`.
+ * 4. **Audited revisions** — content/revisions/<track>/*.json replace a record by ID within
+ *    its own track (bank or diagnostic). Originals stay untouched in their source files.
+ * 5. **Grade 8 scope holds** — content/scope/grade8-holds.json. Held versions are excluded
+ *    from every current pool and kept for review via `loadHeldAdvancedArchive()`.
+ * 6. **Legacy (not loaded):** `mockData.ts`, `converted_questions.json`.
  *
  * Provisional batch items stay in the student and demo banks. Only the Provisional label is tutor-only.
  */
@@ -14,6 +18,8 @@ import type { Form, Passage, Question } from "@/types";
 import type { UserRole } from "@/types/auth";
 import type { SubjectNavigation } from "@/types/navigation";
 import { loadContentBatches } from "@/data/contentBatches";
+import { overlayRevisions, passageRevisions, questionRevisions } from "@/data/contentRevisions";
+import { annotateScopeHolds, GRADE8_SCOPE_HOLDS, isHeldFromCurrentProduct } from "@/data/scopeHolds";
 import { normalizeQuestionTags } from "@/data/taggingScheme";
 import { buildNavigationData } from "@/data/navigationData";
 import { diagnosticPassages } from "@/data/diagnosticPassages";
@@ -48,8 +54,8 @@ function buildForms(questions: Question[]): Form[] {
   ];
 }
 
-/** Tracker first, then batches (batch wins on ID). Passages come from batches. */
-function mergedPracticeBank(): { questions: Question[]; passages: Passage[] } {
+/** Tracker first, then batches (batch wins on ID). Passages come from batches. Version 1 only. */
+function originalPracticeBank(): { questions: Question[]; passages: Passage[] } {
   const batches = loadContentBatches();
   const questionsById = new Map<string, Question>();
   for (const question of trackerQuestions) {
@@ -61,6 +67,18 @@ function mergedPracticeBank(): { questions: Question[]; passages: Passage[] } {
   return {
     questions: [...questionsById.values()],
     passages: batches.passages,
+  };
+}
+
+/** Current bank: originals with bank revisions applied and scope holds annotated. Includes held versions. */
+export function loadRevisedBank(): { questions: Question[]; passages: Passage[] } {
+  const original = originalPracticeBank();
+  return {
+    questions: annotateScopeHolds(
+      overlayRevisions(original.questions, questionRevisions("bank")),
+      "bank",
+    ),
+    passages: overlayRevisions(original.passages, passageRevisions("bank")),
   };
 }
 
@@ -86,10 +104,30 @@ export function buildQuestionCatalog(
   };
 }
 
-/** Full practice bank, including provisional tutor-review items. */
+/**
+ * Full current practice bank, including provisional tutor-review items.
+ * Grade 8 scope-held versions are excluded here, so no practice, bank, worksheet,
+ * Blitz, or assigned-set path can serve them.
+ */
 export function loadFullPracticeCatalog(): QuestionCatalog {
-  const bank = mergedPracticeBank();
-  return buildQuestionCatalog(bank.questions, bank.passages);
+  const bank = loadRevisedBank();
+  const questions = bank.questions.filter((question) => !isHeldFromCurrentProduct(question));
+  return buildQuestionCatalog(questions, bank.passages);
+}
+
+/**
+ * Held advanced originals, kept for review and a possible future Grade 9 test-taker product.
+ * Not used by any current student, demo, or tutor pool.
+ */
+export function loadHeldAdvancedArchive(): { track: "bank" | "diagnostic"; question: Question }[] {
+  const bankOriginals = new Map(originalPracticeBank().questions.map((q) => [q.id, q]));
+  const diagnosticOriginals = new Map(diagnosticQuestions.map((q) => [q.id, q]));
+  return GRADE8_SCOPE_HOLDS.flatMap((entry) => {
+    const source = entry.track === "bank" ? bankOriginals : diagnosticOriginals;
+    const original = source.get(entry.id);
+    if (!original) return [];
+    return [{ track: entry.track, question: annotateScopeHolds([original], entry.track)[0] }];
+  });
 }
 
 export function filterCatalogForViewer(
@@ -117,9 +155,18 @@ export function loadQuestionCatalogSync(role?: UserRole | null): QuestionCatalog
   return filterCatalogForViewer(loadFullPracticeCatalog(), role);
 }
 
-/** Diagnostic exam only. Do not pass this catalog into Practice, Worksheets, Bank, or Blitz. */
+/**
+ * Diagnostic exam only. Do not pass this catalog into Practice, Worksheets, Bank, or Blitz.
+ * Diagnostic revisions replace a slot's record in place (same ID, same position); held versions
+ * are annotated, and `assembleDiagnosticExam` refuses to serve them.
+ */
 export function loadDiagnosticQuestionCatalog(): QuestionCatalog {
-  return buildQuestionCatalog(diagnosticQuestions, diagnosticPassages);
+  const questions = annotateScopeHolds(
+    overlayRevisions(diagnosticQuestions, questionRevisions("diagnostic")),
+    "diagnostic",
+  );
+  const passages = overlayRevisions(diagnosticPassages, passageRevisions("diagnostic"));
+  return buildQuestionCatalog(questions, passages);
 }
 
 export function getFilteredQuestions(

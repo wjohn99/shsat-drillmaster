@@ -33,6 +33,7 @@ function parseEvent(raw: unknown): SessionAnalyticsEvent {
     elapsedSeconds: Number(e.elapsedSeconds) || 0,
     tags: Array.isArray(e.tags) ? e.tags.map(String) : [],
     ...(typeof e.answer === "string" && e.answer.length > 0 ? { answer: e.answer } : {}),
+    ...(typeof e.contentVersion === "number" ? { contentVersion: e.contentVersion } : {}),
   };
 }
 

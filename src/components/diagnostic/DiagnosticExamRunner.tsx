@@ -186,6 +186,7 @@ export function DiagnosticExamRunner({
         correct: isQuestionAnswerCorrect(question, value),
         elapsedSeconds,
         tags: question.tags.map((t) => t.code),
+        contentVersion: question.contentVersion ?? 1,
         ...(value ? { answer: value } : {}),
       };
       const prev = eventsByQuestionId.current.get(question.id);

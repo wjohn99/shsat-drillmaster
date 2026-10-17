@@ -1,6 +1,6 @@
 import type { Passage, Question } from "@/types";
-import { diagnosticPassages } from "@/data/diagnosticPassages";
 import { loadDiagnosticQuestionCatalog } from "@/data/questionCatalog";
+import { isHeldFromCurrentProduct } from "@/data/scopeHolds";
 import {
   DIAGNOSTIC_ELA_QUESTION_IDS,
   DIAGNOSTIC_MATH_QUESTION_IDS,
@@ -22,6 +22,11 @@ export interface DiagnosticSection {
   questions: Question[];
   units: DiagnosticUnit[];
   missingIds: string[];
+  /**
+   * Form slots whose current version is held from the Grade 8 product and has no
+   * in-scope replacement. These are never served; the form is not complete while any exist.
+   */
+  heldIds: string[];
 }
 
 export interface AssembledDiagnosticExam {
@@ -45,9 +50,10 @@ function resolveIds(
   ids: string[],
   byId: Map<string, Question>,
   expectedSubject: DiagnosticSubject,
-): { questions: Question[]; missingIds: string[] } {
+): { questions: Question[]; missingIds: string[]; heldIds: string[] } {
   const questions: Question[] = [];
   const missingIds: string[] = [];
+  const heldIds: string[] = [];
   const seen = new Set<string>();
 
   for (const id of ids) {
@@ -59,10 +65,14 @@ function resolveIds(
       missingIds.push(trimmed);
       continue;
     }
+    if (isHeldFromCurrentProduct(question)) {
+      heldIds.push(trimmed);
+      continue;
+    }
     questions.push(question);
   }
 
-  return { questions, missingIds };
+  return { questions, missingIds, heldIds };
 }
 
 export function groupDiagnosticUnits(questions: Question[]): DiagnosticUnit[] {
@@ -106,12 +116,14 @@ export function assembleDiagnosticExam(): AssembledDiagnosticExam {
     questions: elaResolved.questions,
     units: groupDiagnosticUnits(elaResolved.questions),
     missingIds: elaResolved.missingIds,
+    heldIds: elaResolved.heldIds,
   };
   const math: DiagnosticSection = {
     subject: "MATH",
     questions: mathResolved.questions,
     units: groupDiagnosticUnits(mathResolved.questions),
     missingIds: mathResolved.missingIds,
+    heldIds: mathResolved.heldIds,
   };
 
   return {
@@ -124,7 +136,9 @@ export function assembleDiagnosticExam(): AssembledDiagnosticExam {
       ela.questions.length === SHSAT_DIAGNOSTIC_SPEC.elaCount &&
       math.questions.length === SHSAT_DIAGNOSTIC_SPEC.mathCount &&
       ela.missingIds.length === 0 &&
-      math.missingIds.length === 0,
+      math.missingIds.length === 0 &&
+      ela.heldIds.length === 0 &&
+      math.heldIds.length === 0,
   };
 }
 
@@ -171,7 +185,7 @@ export function elaPartLabel(part: ElaPart): string {
 
 export function passageForQuestion(
   question: Question,
-  passages: Passage[] = diagnosticPassages,
+  passages: Passage[] = loadDiagnosticQuestionCatalog().passages,
 ): Passage | undefined {
   if (!question.passageId) return undefined;
   return passages.find((p) => p.id === question.passageId);
@@ -214,6 +228,7 @@ export function buildDiagnosticCompletionEvents(
       correct: isQuestionAnswerCorrect(question, answer),
       elapsedSeconds: Number((existing?.elapsedSeconds ?? 0).toFixed(1)),
       tags: question.tags.map((tag) => tag.code),
+      contentVersion: existing?.contentVersion ?? question.contentVersion ?? 1,
       ...(answer ? { answer } : {}),
     };
   });
@@ -234,6 +249,7 @@ export function mergeDiagnosticEventsWithExam(
       correct: existing?.correct === true,
       elapsedSeconds: Number((existing?.elapsedSeconds ?? 0).toFixed(1)),
       tags: existing?.tags?.length ? existing.tags : question.tags.map((tag) => tag.code),
+      ...(existing?.contentVersion ? { contentVersion: existing.contentVersion } : {}),
       ...(existing?.answer ? { answer: existing.answer } : {}),
     };
   });

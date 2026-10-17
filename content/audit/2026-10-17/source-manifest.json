@@ -1,0 +1,137 @@
+{
+  "readAt": "2026-10-17",
+  "mainCommit": "9f58bd15fb5cd9a06983a3f906f05985b27d4a7e",
+  "files": [
+    {
+      "path": "content/batches/2026-10-11-backlog-a/questions.json",
+      "url": "https://github.com/wjohn99/shsat-drillmaster/blob/9f58bd15fb5cd9a06983a3f906f05985b27d4a7e/content/batches/2026-10-11-backlog-a/questions.json",
+      "sha": "3fcbb608ac85af80ba848714eeeed3ab474faaa4",
+      "count": 33,
+      "passageCount": 0
+    },
+    {
+      "path": "content/batches/2026-10-11-backlog-b/questions.json",
+      "url": "https://github.com/wjohn99/shsat-drillmaster/blob/9f58bd15fb5cd9a06983a3f906f05985b27d4a7e/content/batches/2026-10-11-backlog-b/questions.json",
+      "sha": "634de778adfc22b6e1e245a485b213a207621001",
+      "count": 32,
+      "passageCount": 1
+    },
+    {
+      "path": "content/batches/2026-10-11-ela-re-passages/questions.json",
+      "url": "https://github.com/wjohn99/shsat-drillmaster/blob/9f58bd15fb5cd9a06983a3f906f05985b27d4a7e/content/batches/2026-10-11-ela-re-passages/questions.json",
+      "sha": "3343b18dfad4ad4e67c4f078d5fbadefb432914a",
+      "count": 20,
+      "passageCount": 4
+    },
+    {
+      "path": "content/batches/2026-10-11-ela-revising/questions.json",
+      "url": "https://github.com/wjohn99/shsat-drillmaster/blob/9f58bd15fb5cd9a06983a3f906f05985b27d4a7e/content/batches/2026-10-11-ela-revising/questions.json",
+      "sha": "b271b3f2a498a55a9e9278cc7af5c2667bef57b8",
+      "count": 50,
+      "passageCount": 0
+    },
+    {
+      "path": "content/batches/2026-10-11-math-alg-app-geo/questions.json",
+      "url": "https://github.com/wjohn99/shsat-drillmaster/blob/9f58bd15fb5cd9a06983a3f906f05985b27d4a7e/content/batches/2026-10-11-math-alg-app-geo/questions.json",
+      "sha": "ad059693486086771b031bee625d5b779b88c583",
+      "count": 36,
+      "passageCount": 0
+    },
+    {
+      "path": "content/batches/2026-10-11-math-num-dat/questions.json",
+      "url": "https://github.com/wjohn99/shsat-drillmaster/blob/9f58bd15fb5cd9a06983a3f906f05985b27d4a7e/content/batches/2026-10-11-math-num-dat/questions.json",
+      "sha": "7e427d4ad12985d96d9e777165d93d96a762e96f",
+      "count": 36,
+      "passageCount": 0
+    },
+    {
+      "path": "content/batches/2026-10-11-rc-informational/questions.json",
+      "url": "https://github.com/wjohn99/shsat-drillmaster/blob/9f58bd15fb5cd9a06983a3f906f05985b27d4a7e/content/batches/2026-10-11-rc-informational/questions.json",
+      "sha": "22dd899682ed7297e9232115cdef38f177b4eb88",
+      "count": 36,
+      "passageCount": 6
+    },
+    {
+      "path": "content/batches/2026-10-11-rc-literary/questions.json",
+      "url": "https://github.com/wjohn99/shsat-drillmaster/blob/9f58bd15fb5cd9a06983a3f906f05985b27d4a7e/content/batches/2026-10-11-rc-literary/questions.json",
+      "sha": "dfb3e7525993569ae9b9303abec14ac39555972b",
+      "count": 36,
+      "passageCount": 6
+    },
+    {
+      "path": "content/batches/2026-10-11-reviewed-backlog/questions.json",
+      "url": "https://github.com/wjohn99/shsat-drillmaster/blob/9f58bd15fb5cd9a06983a3f906f05985b27d4a7e/content/batches/2026-10-11-reviewed-backlog/questions.json",
+      "sha": "816c984a0e4bc5691974d72f9b55595259a897aa",
+      "count": 21,
+      "passageCount": 0
+    },
+    {
+      "path": "content/batches/2026-10-11-top-up/questions.json",
+      "url": "https://github.com/wjohn99/shsat-drillmaster/blob/9f58bd15fb5cd9a06983a3f906f05985b27d4a7e/content/batches/2026-10-11-top-up/questions.json",
+      "sha": "c466199cf436aec883e4011d554e9b37c65da54b",
+      "count": 20,
+      "passageCount": 1
+    },
+    {
+      "path": "content/batches/2026-10-12-published-unapproved/questions.json",
+      "url": "https://github.com/wjohn99/shsat-drillmaster/blob/9f58bd15fb5cd9a06983a3f906f05985b27d4a7e/content/batches/2026-10-12-published-unapproved/questions.json",
+      "sha": "fd1c0af4fa43a82f284e39a5f0effe32cca6c0a1",
+      "count": 14,
+      "passageCount": 0
+    },
+    {
+      "path": "src/data/diagnosticQuestions.ts",
+      "url": "https://github.com/wjohn99/shsat-drillmaster/blob/9f58bd15fb5cd9a06983a3f906f05985b27d4a7e/src/data/diagnosticQuestions.ts",
+      "sha": "3b7eb2d548796739a3d76b20aec7b2087235fc0f"
+    },
+    {
+      "path": "src/data/questionCatalog.ts",
+      "url": "https://github.com/wjohn99/shsat-drillmaster/blob/9f58bd15fb5cd9a06983a3f906f05985b27d4a7e/src/data/questionCatalog.ts",
+      "sha": "070fb9230983e0c51caf711ec61cafb8390a6b92"
+    },
+    {
+      "path": "src/data/contentBatches.ts",
+      "url": "https://github.com/wjohn99/shsat-drillmaster/blob/9f58bd15fb5cd9a06983a3f906f05985b27d4a7e/src/data/contentBatches.ts",
+      "sha": "b63f5a10d29c240dde116881a64c6576332a38ed"
+    },
+    {
+      "path": "src/data/trackerQuestions.ts",
+      "url": "https://github.com/wjohn99/shsat-drillmaster/blob/9f58bd15fb5cd9a06983a3f906f05985b27d4a7e/src/data/trackerQuestions.ts",
+      "sha": "d95e0e23b3310d4299b49a7d8dae19c526a48545"
+    },
+    {
+      "path": "src/data/shsatDiagnosticForm.ts",
+      "url": "https://github.com/wjohn99/shsat-drillmaster/blob/9f58bd15fb5cd9a06983a3f906f05985b27d4a7e/src/data/shsatDiagnosticForm.ts",
+      "sha": "dc559d0eda05f8c28e4a1ba2bf91a0190b235e81"
+    },
+    {
+      "path": "src/lib/questionVisibility.ts",
+      "url": "https://github.com/wjohn99/shsat-drillmaster/blob/9f58bd15fb5cd9a06983a3f906f05985b27d4a7e/src/lib/questionVisibility.ts",
+      "sha": "21e8fc6bd9a231908bef4335b741304aecc048db"
+    },
+    {
+      "path": "src/lib/reviewStatus.ts",
+      "url": "https://github.com/wjohn99/shsat-drillmaster/blob/9f58bd15fb5cd9a06983a3f906f05985b27d4a7e/src/lib/reviewStatus.ts",
+      "sha": "df2b86ee6b49d8a5b7a70bb3e797e0863f58ff06"
+    },
+    {
+      "path": "src/data/diagnosticPassages.ts",
+      "url": "https://github.com/wjohn99/shsat-drillmaster/blob/9f58bd15fb5cd9a06983a3f906f05985b27d4a7e/src/data/diagnosticPassages.ts",
+      "sha": "f8caae135ee4c38fa7bd5909c62d936588e37254"
+    },
+    {
+      "path": "src/contexts/QuestionsContext.tsx",
+      "url": "https://github.com/wjohn99/shsat-drillmaster/blob/9f58bd15fb5cd9a06983a3f906f05985b27d4a7e/src/contexts/QuestionsContext.tsx",
+      "sha": "2964fdc6103a36280427921a2e4b4205a4553204"
+    },
+    {
+      "path": "Diagnostic_100_for_John.xlsx",
+      "url": "https://drive.google.com/file/d/1cGizK47uFH4VpmG92vjNWrJ5HnoQlPvh/view",
+      "driveFileId": "1cGizK47uFH4VpmG92vjNWrJ5HnoQlPvh",
+      "modifiedTime": "2026-09-17T07:33:53.000Z",
+      "sizeBytes": 82059,
+      "questionCount": 100
+    }
+  ],
+  "evidenceBoundary": "All current counts are repository-source calculations, not a live Firebase/deployment check or proof of human review completion."
+}
