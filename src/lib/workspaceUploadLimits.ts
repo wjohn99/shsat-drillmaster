@@ -1,3 +1,4 @@
+import { isSharedWorkspaceTemplateStoragePath } from "@/lib/workspaceBoardTemplateTypes";
 import type { WorkspaceCardAttachment } from "@/types/workspace";
 
 /** Must stay in sync with `storage.rules` and Firestore attachment rules. */
@@ -33,10 +34,10 @@ export function summarizeBoardPdfUsage(
   let pdfBytes = 0;
   for (const list of attachmentsByCard) {
     for (const a of activeAttachments(list)) {
-      if (a.kind === "file") {
-        pdfCount += 1;
-        pdfBytes += a.sizeBytes || 0;
-      }
+      if (a.kind !== "file") continue;
+      if (isSharedWorkspaceTemplateStoragePath(a.storagePath)) continue;
+      pdfCount += 1;
+      pdfBytes += a.sizeBytes || 0;
     }
   }
   return { pdfCount, pdfBytes };

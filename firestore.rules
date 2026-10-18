@@ -333,8 +333,13 @@ service cloud.firestore {
                 && request.resource.data.externalUrl.size() <= 2048)
               || (request.resource.data.kind == 'file'
                 && request.resource.data.storagePath is string
-                && request.resource.data.storagePath.matches(
-                  'workspace/' + boardId + '/cards/' + cardId + '/[A-Za-z0-9._-]+'
+                && (
+                  request.resource.data.storagePath.matches(
+                    'workspace/' + boardId + '/cards/' + cardId + '/[A-Za-z0-9._-]+'
+                  )
+                  || request.resource.data.storagePath.matches(
+                    'workspace-templates/[a-z0-9_-]+/[A-Za-z0-9._-]+'
+                  )
                 )
                 && request.resource.data.contentType in ['application/pdf', 'image/jpeg', 'image/png']
                 && request.resource.data.sizeBytes is int

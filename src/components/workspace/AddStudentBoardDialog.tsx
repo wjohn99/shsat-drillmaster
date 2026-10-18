@@ -20,6 +20,11 @@ import {
   DEFAULT_WORKSPACE_BOARD_COLOR,
   WORKSPACE_BOARD_COLORS,
 } from "@/lib/workspaceBoardColors";
+import {
+  applyWorkspaceBoardTemplate,
+  DEFAULT_WORKSPACE_BOARD_TEMPLATE_ID,
+  WORKSPACE_BOARD_TEMPLATE_OPTIONS,
+} from "@/lib/workspaceBoardTemplates";
 import { createWorkspaceBoard, fetchStudentsWithoutBoard } from "@/lib/workspaceService";
 import type { StudentOption } from "@/types/assignment";
 import { cn } from "@/lib/utils";
@@ -39,6 +44,7 @@ export function AddStudentBoardDialog({
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [selectedUid, setSelectedUid] = useState("");
+  const [templateId, setTemplateId] = useState(DEFAULT_WORKSPACE_BOARD_TEMPLATE_ID);
   const [boardColor, setBoardColor] = useState(DEFAULT_WORKSPACE_BOARD_COLOR);
   const [error, setError] = useState<string | null>(null);
 
@@ -50,6 +56,7 @@ export function AddStudentBoardDialog({
       setLoading(true);
       setError(null);
       setSelectedUid("");
+      setTemplateId(DEFAULT_WORKSPACE_BOARD_TEMPLATE_ID);
       setBoardColor(DEFAULT_WORKSPACE_BOARD_COLOR);
       try {
         const rows = await fetchStudentsWithoutBoard();
@@ -76,6 +83,17 @@ export function AddStudentBoardDialog({
     setError(null);
     try {
       const boardId = await createWorkspaceBoard(student, { color: boardColor });
+      try {
+        await applyWorkspaceBoardTemplate(boardId, templateId);
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? `Board created, but the template did not finish. ${err.message}`
+            : "Board created, but the template did not finish.",
+        );
+        onCreated(boardId);
+        return;
+      }
       onCreated(boardId);
       onOpenChange(false);
     } catch (err) {
@@ -91,8 +109,8 @@ export function AddStudentBoardDialog({
         <DialogHeader>
           <DialogTitle>Add student workspace</DialogTitle>
           <DialogDescription>
-            Creates an empty board for a signed-up student so you can import Trello data or add
-            lists yourself. All tutors can view and manage it; the student only sees their own.
+            Creates a board for a signed-up student. Pick a template for the lists and files, or
+            start blank. All tutors can view and manage it; the student only sees their own.
           </DialogDescription>
         </DialogHeader>
 
@@ -107,19 +125,42 @@ export function AddStudentBoardDialog({
           </p>
         ) : (
           <div className="space-y-4">
-            <Select value={selectedUid} onValueChange={setSelectedUid}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a student" />
-              </SelectTrigger>
-              <SelectContent>
-                {students.map((student) => (
-                  <SelectItem key={student.uid} value={student.uid}>
-                    {student.displayName}
-                    {student.email ? ` (${student.email})` : ""}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="space-y-2">
+              <Label>Student</Label>
+              <Select value={selectedUid} onValueChange={setSelectedUid}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a student" />
+                </SelectTrigger>
+                <SelectContent>
+                  {students.map((student) => (
+                    <SelectItem key={student.uid} value={student.uid}>
+                      {student.displayName}
+                      {student.email ? ` (${student.email})` : ""}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Template</Label>
+              <Select value={templateId} onValueChange={setTemplateId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a template" />
+                </SelectTrigger>
+                <SelectContent>
+                  {WORKSPACE_BOARD_TEMPLATE_OPTIONS.map((option) => (
+                    <SelectItem key={option.id} value={option.id}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                {WORKSPACE_BOARD_TEMPLATE_OPTIONS.find((option) => option.id === templateId)
+                  ?.description}
+              </p>
+            </div>
 
             <div className="space-y-2">
               <Label>Board color</Label>
@@ -159,7 +200,7 @@ export function AddStudentBoardDialog({
               ) : (
                 <UserPlus className="h-4 w-4 mr-2" />
               )}
-              Create board
+              {submitting ? "Creating board..." : "Create board"}
             </Button>
           </div>
         )}

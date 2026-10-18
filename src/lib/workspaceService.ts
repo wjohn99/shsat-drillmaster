@@ -591,6 +591,7 @@ export function pickDefaultHomeworkListId(lists: WorkspaceList[]): string | null
 export async function createWorkspaceList(
   boardId: string,
   title: string,
+  opts?: { kind?: WorkspaceList["kind"] },
 ): Promise<string> {
   const db = getFirebaseDb();
   const lists = await fetchWorkspaceLists(boardId);
@@ -598,7 +599,7 @@ export async function createWorkspaceList(
 
   const docRef = await addDoc(collection(db, BOARDS_COLLECTION, boardId, "lists"), {
     title: title.trim().slice(0, 200),
-    kind: "custom",
+    kind: opts?.kind ?? "custom",
     position,
     createdAt: serverTimestamp(),
   });

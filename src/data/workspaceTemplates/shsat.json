@@ -1,0 +1,253 @@
+{
+  "id": "shsat",
+  "label": "SHSAT",
+  "description": "Practice tests with PDFs, session cards, and parent contact info.",
+  "lists": [
+    {
+      "title": "Session Summaries",
+      "kind": "sessions",
+      "cards": [
+        {
+          "title": "xx.xx.xx Session 1",
+          "description": "",
+          "attachments": []
+        },
+        {
+          "title": "xx.xx.xx Trial Session",
+          "description": "Name:\nDate:\nStart Time:\nDuration:\nLocation:",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "title": "SHSAT Practice Tests",
+      "kind": "tests",
+      "cards": [
+        {
+          "title": "Diagnostic Test",
+          "description": "Date:\nMath:\nELA:",
+          "attachments": []
+        },
+        {
+          "title": "SHSAT 2018-2019 Form A",
+          "description": "Date:\nMath:\nELA:",
+          "attachments": [
+            {
+              "trelloAttachmentId": "6aa18c51875ea743be5b9992",
+              "trelloCardId": "6aa18c51875ea743be5b986f",
+              "trelloFileName": "20182019_form_a_(3).pdf",
+              "fileName": "SHSAT 2018-2019 Form A",
+              "storageFileName": "6aa18c51875ea743be5b9992_20182019_form_a__3_.pdf",
+              "storagePath": "workspace-templates/shsat/6aa18c51875ea743be5b9992_20182019_form_a__3_.pdf",
+              "sizeBytes": 883605,
+              "contentType": "application/pdf"
+            },
+            {
+              "trelloAttachmentId": "6aa18c51875ea743be5b9994",
+              "trelloCardId": "6aa18c51875ea743be5b986f",
+              "trelloFileName": "20182019_form_a_-_answers_(2).pdf",
+              "fileName": "SHSAT 2018-2019 Form A - Answer Key",
+              "storageFileName": "6aa18c51875ea743be5b9994_20182019_form_a_-_answers__2_.pdf",
+              "storagePath": "workspace-templates/shsat/6aa18c51875ea743be5b9994_20182019_form_a_-_answers__2_.pdf",
+              "sizeBytes": 441069,
+              "contentType": "application/pdf"
+            }
+          ]
+        },
+        {
+          "title": "SHSAT 2018-2019 Form B",
+          "description": "Date:\nMath:\nELA:",
+          "attachments": [
+            {
+              "trelloAttachmentId": "6aa18c51875ea743be5b9982",
+              "trelloCardId": "6aa18c51875ea743be5b987b",
+              "trelloFileName": "20182019_form_b.pdf",
+              "fileName": "SHSAT 2018-2019 Form B",
+              "storageFileName": "6aa18c51875ea743be5b9982_20182019_form_b.pdf",
+              "storagePath": "workspace-templates/shsat/6aa18c51875ea743be5b9982_20182019_form_b.pdf",
+              "sizeBytes": 1071264,
+              "contentType": "application/pdf"
+            },
+            {
+              "trelloAttachmentId": "6aa18c51875ea743be5b9984",
+              "trelloCardId": "6aa18c51875ea743be5b987b",
+              "trelloFileName": "20182019_form_b_-_answers.pdf",
+              "fileName": "SHSAT 2018-2019 Form B - Answer Key",
+              "storageFileName": "6aa18c51875ea743be5b9984_20182019_form_b_-_answers.pdf",
+              "storagePath": "workspace-templates/shsat/6aa18c51875ea743be5b9984_20182019_form_b_-_answers.pdf",
+              "sizeBytes": 462284,
+              "contentType": "application/pdf"
+            }
+          ]
+        },
+        {
+          "title": "SHSAT 2019-2020 Form A",
+          "description": "Date:\nMath:\nELA:",
+          "attachments": [
+            {
+              "trelloAttachmentId": "6aa18c51875ea743be5b997e",
+              "trelloCardId": "6aa18c51875ea743be5b9878",
+              "trelloFileName": "SHSAT_2019-2020_Form_A.pdf",
+              "fileName": "SHSAT 2019-2020 Form A",
+              "storageFileName": "6aa18c51875ea743be5b997e_SHSAT_2019-2020_Form_A.pdf",
+              "storagePath": "workspace-templates/shsat/6aa18c51875ea743be5b997e_SHSAT_2019-2020_Form_A.pdf",
+              "sizeBytes": 1271323,
+              "contentType": "application/pdf"
+            },
+            {
+              "trelloAttachmentId": "6aa18c51875ea743be5b9980",
+              "trelloCardId": "6aa18c51875ea743be5b9878",
+              "trelloFileName": "SHSAT_2019-2020_Form_A_-_Answer_Key.pdf",
+              "fileName": "SHSAT 2019-2020 Form A - Answer Key",
+              "storageFileName": "6aa18c51875ea743be5b9980_SHSAT_2019-2020_Form_A_-_Answer_Key.pdf",
+              "storagePath": "workspace-templates/shsat/6aa18c51875ea743be5b9980_SHSAT_2019-2020_Form_A_-_Answer_Key.pdf",
+              "sizeBytes": 827417,
+              "contentType": "application/pdf"
+            }
+          ]
+        },
+        {
+          "title": "SHSAT 2019-2020 Form B",
+          "description": "Date:\nMath:\nELA:",
+          "attachments": [
+            {
+              "trelloAttachmentId": "6aa18c51875ea743be5b998a",
+              "trelloCardId": "6aa18c51875ea743be5b9875",
+              "trelloFileName": "SHSAT_2019-2020_Form_B_-_Answer_Key.pdf",
+              "fileName": "SHSAT 2019-2020 Form B - Answer Key",
+              "storageFileName": "6aa18c51875ea743be5b998a_SHSAT_2019-2020_Form_B_-_Answer_Key.pdf",
+              "storagePath": "workspace-templates/shsat/6aa18c51875ea743be5b998a_SHSAT_2019-2020_Form_B_-_Answer_Key.pdf",
+              "sizeBytes": 770661,
+              "contentType": "application/pdf"
+            },
+            {
+              "trelloAttachmentId": "6aa18c51875ea743be5b998c",
+              "trelloCardId": "6aa18c51875ea743be5b9875",
+              "trelloFileName": "SHSAT_2019-2020_Form_B.pdf",
+              "fileName": "SHSAT 2019-2020 Form B",
+              "storageFileName": "6aa18c51875ea743be5b998c_SHSAT_2019-2020_Form_B.pdf",
+              "storagePath": "workspace-templates/shsat/6aa18c51875ea743be5b998c_SHSAT_2019-2020_Form_B.pdf",
+              "sizeBytes": 1188607,
+              "contentType": "application/pdf"
+            }
+          ]
+        },
+        {
+          "title": "SHSAT 2020-2021 Form A",
+          "description": "Date:\nMath:\nELA:",
+          "attachments": [
+            {
+              "trelloAttachmentId": "6aa18c51875ea743be5b998e",
+              "trelloCardId": "6aa18c51875ea743be5b9872",
+              "trelloFileName": "SHSAT_2020-2021_Form_A_-_Answer_Key.pdf",
+              "fileName": "SHSAT 2020-2021 Form A - Answer Key",
+              "storageFileName": "6aa18c51875ea743be5b998e_SHSAT_2020-2021_Form_A_-_Answer_Key.pdf",
+              "storagePath": "workspace-templates/shsat/6aa18c51875ea743be5b998e_SHSAT_2020-2021_Form_A_-_Answer_Key.pdf",
+              "sizeBytes": 808085,
+              "contentType": "application/pdf"
+            },
+            {
+              "trelloAttachmentId": "6aa18c51875ea743be5b9990",
+              "trelloCardId": "6aa18c51875ea743be5b9872",
+              "trelloFileName": "SHSAT_2020-2021_Form_A.pdf",
+              "fileName": "SHSAT 2020-2021 Form A",
+              "storageFileName": "6aa18c51875ea743be5b9990_SHSAT_2020-2021_Form_A.pdf",
+              "storagePath": "workspace-templates/shsat/6aa18c51875ea743be5b9990_SHSAT_2020-2021_Form_A.pdf",
+              "sizeBytes": 1501851,
+              "contentType": "application/pdf"
+            }
+          ]
+        },
+        {
+          "title": "SHSAT 2020-2021 Form B",
+          "description": "Date:\nMath:\nELA:",
+          "attachments": [
+            {
+              "trelloAttachmentId": "6aa18c51875ea743be5b9986",
+              "trelloCardId": "6aa18c51875ea743be5b987e",
+              "trelloFileName": "SHSAT_2020-2021_Form_B_-_Answer_Key.pdf",
+              "fileName": "SHSAT 2020-2021 Form B - Answer Key",
+              "storageFileName": "6aa18c51875ea743be5b9986_SHSAT_2020-2021_Form_B_-_Answer_Key.pdf",
+              "storagePath": "workspace-templates/shsat/6aa18c51875ea743be5b9986_SHSAT_2020-2021_Form_B_-_Answer_Key.pdf",
+              "sizeBytes": 729178,
+              "contentType": "application/pdf"
+            },
+            {
+              "trelloAttachmentId": "6aa18c51875ea743be5b9988",
+              "trelloCardId": "6aa18c51875ea743be5b987e",
+              "trelloFileName": "SHSAT_2020-2021_Form_B.pdf",
+              "fileName": "SHSAT 2020-2021 Form B",
+              "storageFileName": "6aa18c51875ea743be5b9988_SHSAT_2020-2021_Form_B.pdf",
+              "storagePath": "workspace-templates/shsat/6aa18c51875ea743be5b9988_SHSAT_2020-2021_Form_B.pdf",
+              "sizeBytes": 1419517,
+              "contentType": "application/pdf"
+            }
+          ]
+        },
+        {
+          "title": "SHSAT 2022-2023 Form A",
+          "description": "Date:\nMath:\nELA:",
+          "attachments": [
+            {
+              "trelloAttachmentId": "6aa18c51875ea743be5b9998",
+              "trelloCardId": "6aa18c51875ea743be5b986c",
+              "trelloFileName": "SHSAT_2022-2023_Form_A_-_Answer_Key.pdf",
+              "fileName": "SHSAT 2022-2023 Form A - Answer Key",
+              "storageFileName": "6aa18c51875ea743be5b9998_SHSAT_2022-2023_Form_A_-_Answer_Key.pdf",
+              "storagePath": "workspace-templates/shsat/6aa18c51875ea743be5b9998_SHSAT_2022-2023_Form_A_-_Answer_Key.pdf",
+              "sizeBytes": 7579804,
+              "contentType": "application/pdf"
+            },
+            {
+              "trelloAttachmentId": "6aa18c51875ea743be5b9996",
+              "trelloCardId": "6aa18c51875ea743be5b986c",
+              "trelloFileName": "SHSAT_2022-2023_Form_A.pdf",
+              "fileName": "SHSAT 2022-2023 Form A",
+              "storageFileName": "6aa18c51875ea743be5b9996_SHSAT_2022-2023_Form_A.pdf",
+              "storagePath": "workspace-templates/shsat/6aa18c51875ea743be5b9996_SHSAT_2022-2023_Form_A.pdf",
+              "sizeBytes": 7236857,
+              "contentType": "application/pdf"
+            }
+          ]
+        },
+        {
+          "title": "SHSAT 2022-2023 Form B",
+          "description": "Date:\nMath:\nELA:",
+          "attachments": [
+            {
+              "trelloAttachmentId": "6aa18c51875ea743be5b997c",
+              "trelloCardId": "6aa18c51875ea743be5b9869",
+              "trelloFileName": "SHSAT_2022-2023_Form_B_-_Answer_Key.pdf",
+              "fileName": "SHSAT 2022-2023 Form B - Answer Key",
+              "storageFileName": "6aa18c51875ea743be5b997c_SHSAT_2022-2023_Form_B_-_Answer_Key.pdf",
+              "storagePath": "workspace-templates/shsat/6aa18c51875ea743be5b997c_SHSAT_2022-2023_Form_B_-_Answer_Key.pdf",
+              "sizeBytes": 7839562,
+              "contentType": "application/pdf"
+            },
+            {
+              "trelloAttachmentId": "6aa18c51875ea743be5b997a",
+              "trelloCardId": "6aa18c51875ea743be5b9869",
+              "trelloFileName": "SHSAT_2022-2023_Form_B.pdf",
+              "fileName": "SHSAT 2022-2023 Form B",
+              "storageFileName": "6aa18c51875ea743be5b997a_SHSAT_2022-2023_Form_B.pdf",
+              "storagePath": "workspace-templates/shsat/6aa18c51875ea743be5b997a_SHSAT_2022-2023_Form_B.pdf",
+              "sizeBytes": 6772619,
+              "contentType": "application/pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Info",
+      "kind": "info",
+      "cards": [
+        {
+          "title": "Parent Contact Info",
+          "description": "Name:\n\nEmail:\n\nCell:",
+          "attachments": []
+        }
+      ]
+    }
+  ]
+}

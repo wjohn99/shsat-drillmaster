@@ -31,6 +31,12 @@ service firebase.storage {
       return canAccessWorkspaceBoard(boardId) || isApprovedParentOf(boardId);
     }
 
+    // Shared board-template PDFs (SHSAT practice tests, later exam packs).
+    match /workspace-templates/{templateId}/{fileName} {
+      allow read: if isSignedIn() && fileName.matches('.*\\.pdf$');
+      allow write: if false;
+    }
+
     // Workspace homework files: PDF, JPEG, and PNG. No uploads anywhere else in the bucket.
     match /workspace/{boardId}/cards/{cardId}/{fileName} {
       allow read: if canReadWorkspaceFile(boardId);

@@ -14,13 +14,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { HighlightableText } from "@/components/exam/HighlightableText";
 import { QuestionResponseFields } from "@/components/question/QuestionResponseFields";
@@ -110,6 +103,7 @@ export function DiagnosticExamRunner({
   const [confirmExit, setConfirmExit] = useState(false);
   const [pausing, setPausing] = useState(false);
   const [notesOpen, setNotesOpen] = useState(false);
+  const notesRef = useRef<HTMLTextAreaElement>(null);
 
   const finishedRef = useRef(false);
   const leavingRef = useRef(false);
@@ -234,6 +228,11 @@ export function DiagnosticExamRunner({
   );
 
   finishExamRef.current = finishExam;
+
+  useEffect(() => {
+    if (!notesOpen) return;
+    notesRef.current?.focus();
+  }, [notesOpen]);
 
   useEffect(() => {
     const id = window.setInterval(() => {
@@ -737,11 +736,29 @@ export function DiagnosticExamRunner({
       </div>
 
       {!confirmSectionSubmit ? (
-        <div className="z-20 shrink-0 border-t bg-background/95 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
-          <div className="container flex items-center justify-between gap-2 px-4">
-            <Button variant="outline" onClick={() => setNotesOpen(true)}>
+        <div className="z-20 shrink-0 border-t bg-background/95 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+          {notesOpen ? (
+            <div id="diagnostic-notepad" className="container space-y-2 px-4 pt-2">
+              <p className="text-sm font-medium">Notes</p>
+              <Textarea
+                ref={notesRef}
+                value={notepad}
+                onChange={(e) => setNotepad(e.target.value)}
+                placeholder="Scratch notes for this exam (saved to your account)."
+                className="h-28 resize-none text-sm sm:h-32"
+                aria-label="Exam notes"
+              />
+            </div>
+          ) : null}
+          <div className="container flex items-center justify-between gap-2 px-4 pt-2">
+            <Button
+              variant={notesOpen ? "default" : "outline"}
+              aria-expanded={notesOpen}
+              aria-controls={notesOpen ? "diagnostic-notepad" : undefined}
+              onClick={() => setNotesOpen((open) => !open)}
+            >
               <StickyNote className="h-4 w-4 mr-2" />
-              Notes
+              {notesOpen ? "Hide notes" : "Notes"}
             </Button>
             <div className="flex min-w-0 items-center justify-end gap-2">
               {isPassageSet ? (
@@ -763,21 +780,6 @@ export function DiagnosticExamRunner({
           </div>
         </div>
       ) : null}
-
-      <Sheet open={notesOpen} onOpenChange={setNotesOpen}>
-        <SheetContent side="bottom" className="max-h-[70vh]">
-          <SheetHeader>
-            <SheetTitle>Notepad</SheetTitle>
-            <SheetDescription>Scratch notes for this exam, saved to your account.</SheetDescription>
-          </SheetHeader>
-          <Textarea
-            value={notepad}
-            onChange={(e) => setNotepad(e.target.value)}
-            placeholder="Scratch notes for this exam (saved to your account)."
-            className="mt-4 min-h-[160px] text-sm"
-          />
-        </SheetContent>
-      </Sheet>
 
       <AlertDialog
         open={confirmExit}

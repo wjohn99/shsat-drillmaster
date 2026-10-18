@@ -12,6 +12,7 @@
     "storage:provision": "node scripts/provision-firebase-storage.mjs drillmaster-cee20 us-central1",
     "import:trello": "node scripts/import-trello-board.mjs",
     "import:drive": "node scripts/import-drive-folder.mjs",
+    "seed:workspace-template": "node scripts/seed-workspace-board-template.mjs",
     "functions:deploy": "firebase deploy --only functions",
     "lint": "eslint .",
     "preview": "vite preview",
