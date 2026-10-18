@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, BookOpen, Clock, Flag, StickyNote } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Clock, Flag, Loader2, StickyNote } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,12 +14,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { HighlightableText } from "@/components/exam/HighlightableText";
 import { QuestionResponseFields } from "@/components/question/QuestionResponseFields";
 import { DiagnosticSectionMap, type DiagnosticMapCell } from "@/components/diagnostic/DiagnosticSectionMap";
 import { useExamLock } from "@/contexts/ExamLockContext";
 import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
+import { MathText } from "@/lib/mathText";
 import { parseAtaAnswer, serializeAtaAnswer } from "@/lib/indyAta";
 import { canSubmitQuestionAnswer, isQuestionAnswerCorrect } from "@/lib/sessionGrading";
 import {
@@ -100,6 +108,8 @@ export function DiagnosticExamRunner({
   );
   const [confirmSectionSubmit, setConfirmSectionSubmit] = useState(false);
   const [confirmExit, setConfirmExit] = useState(false);
+  const [pausing, setPausing] = useState(false);
+  const [notesOpen, setNotesOpen] = useState(false);
 
   const finishedRef = useRef(false);
   const leavingRef = useRef(false);
@@ -289,41 +299,26 @@ export function DiagnosticExamRunner({
   const persistProgressRef = useRef(persistProgress);
   persistProgressRef.current = persistProgress;
 
-  const queueRemoteSave = useCallback((save: DiagnosticExamSave, flush = false) => {
+  const queueRemoteSave = useCallback((save: DiagnosticExamSave) => {
     if (remoteSaveTimerRef.current) {
       window.clearTimeout(remoteSaveTimerRef.current);
       remoteSaveTimerRef.current = null;
     }
-    const write = () => {
-      if (finishedRef.current) return;
-      const task = saveDiagnosticProgress(userId, save)
-        .then(() => {
-          if (finishedRef.current) return;
+    const enqueue = () => {
+      if (finishedRef.current || leavingRef.current) return;
+      const task = remoteSaveChainRef.current
+        .catch(() => undefined)
+        .then(async () => {
+          if (finishedRef.current || leavingRef.current) return;
           const latest = loadDiagnosticSave(userId);
-          if (latest && latest.updatedAt > save.updatedAt) {
-            return saveDiagnosticProgress(userId, latest);
-          }
+          const payload =
+            latest && latest.updatedAt >= save.updatedAt ? latest : save;
+          await saveDiagnosticProgress(userId, payload);
         })
-        .catch((err: unknown) => {
-          if (flush) {
-            toast({
-              title: "Saved on this device",
-              description:
-                err instanceof Error
-                  ? err.message
-                  : "Could not sync this attempt to your account yet.",
-              variant: "destructive",
-            });
-          }
-        })
-        .then(() => undefined);
+        .catch(() => undefined);
       remoteSaveChainRef.current = task;
     };
-    if (flush) {
-      write();
-      return;
-    }
-    remoteSaveTimerRef.current = window.setTimeout(write, 800);
+    remoteSaveTimerRef.current = window.setTimeout(enqueue, 800);
   }, [userId]);
 
   useEffect(() => {
@@ -346,29 +341,34 @@ export function DiagnosticExamRunner({
   }, [userId]);
 
   const pauseAndLeave = useCallback(async () => {
-    if (finishedRef.current) return;
+    if (finishedRef.current || leavingRef.current || pausing) return;
     leavingRef.current = true;
+    setPausing(true);
     if (remoteSaveTimerRef.current) {
       window.clearTimeout(remoteSaveTimerRef.current);
       remoteSaveTimerRef.current = null;
     }
     const save = persistProgress({ paused: true });
-    if (save) {
-      try {
-        await saveDiagnosticProgress(userId, save);
-      } catch (err) {
-        toast({
-          title: "Paused on this device",
-          description:
-            err instanceof Error
-              ? err.message
-              : "Could not sync the pause to your account. Reopen this device if you can.",
-          variant: "destructive",
-        });
-      }
+    try {
+      await remoteSaveChainRef.current.catch(() => undefined);
+      if (save) await saveDiagnosticProgress(userId, save);
+      setConfirmExit(false);
+      onExit();
+    } catch (err) {
+      leavingRef.current = false;
+      persistProgress();
+      toast({
+        title: "Could not save to your account",
+        description:
+          err instanceof Error
+            ? err.message
+            : "Stay on this exam and try Pause again. Progress is only on this device until that succeeds.",
+        variant: "destructive",
+      });
+    } finally {
+      setPausing(false);
     }
-    onExit();
-  }, [onExit, persistProgress, userId]);
+  }, [onExit, persistProgress, pausing, userId]);
 
   useEffect(() => {
     const onBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -564,7 +564,9 @@ export function DiagnosticExamRunner({
               variant="stem"
             />
           ) : (
-            <p className="text-base leading-relaxed whitespace-pre-wrap">{currentQuestion.stem}</p>
+            <p className="text-base leading-relaxed whitespace-pre-wrap">
+              <MathText text={currentQuestion.stem} />
+            </p>
           )}
         </div>
       </div>
@@ -598,34 +600,13 @@ export function DiagnosticExamRunner({
     </div>
   );
 
-  const navButtons = (
-    <div className="flex shrink-0 justify-between gap-2">
-      {isPassageSet ? (
-        <Button
-          variant="outline"
-          onClick={goPrevInSet}
-          disabled={questionIndexInUnit === 0 || unitLocked}
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Previous in set
-        </Button>
-      ) : (
-        <span />
-      )}
-      <Button onClick={goNext} disabled={!canAdvanceCurrent}>
-        {nextLabel}
-        <ArrowRight className="h-4 w-4 ml-2" />
-      </Button>
-    </div>
-  );
-
   return (
     <div className="flex h-dvh max-h-dvh flex-col overflow-hidden">
       <Header />
-      <div className="container flex min-h-0 flex-1 flex-col gap-3 overflow-hidden py-3">
-        <div className="flex shrink-0 flex-wrap items-center justify-between gap-3">
+      <div className="container flex min-h-0 flex-1 flex-col overflow-hidden px-4">
+        <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 py-2">
           <div className="flex min-w-0 items-center gap-3">
-            <Button variant="ghost" onClick={() => setConfirmExit(true)}>
+            <Button variant="ghost" disabled={pausing} onClick={() => setConfirmExit(true)}>
               <ArrowLeft className="h-4 w-4 mr-2" />
               Pause
             </Button>
@@ -664,43 +645,47 @@ export function DiagnosticExamRunner({
         </div>
 
         {confirmSectionSubmit ? (
-          <Card className="mx-auto max-w-xl">
-            <CardHeader>
-              <CardTitle>Submit {section.subject}?</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-sm text-muted-foreground">
-                You cannot return to this section after you submit. Unanswered items will be scored as
-                incorrect.
-              </p>
-              <p className="text-sm">
-                Answered {answeredInSection} of {sectionQuestions.length} questions.
-              </p>
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={() => setConfirmSectionSubmit(false)}>
-                  Keep working
-                </Button>
-                <Button onClick={submitSection}>
-                  {isLastSection ? "Submit exam" : `Submit ${section.subject}`}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="min-h-0 flex-1 overflow-y-auto py-2">
+            <Card className="mx-auto max-w-xl">
+              <CardHeader>
+                <CardTitle>Submit {section.subject}?</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  You cannot return to this section after you submit. Unanswered items will be scored as
+                  incorrect.
+                </p>
+                <p className="text-sm">
+                  Answered {answeredInSection} of {sectionQuestions.length} questions.
+                </p>
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={() => setConfirmSectionSubmit(false)}>
+                    Keep working
+                  </Button>
+                  <Button onClick={submitSection}>
+                    {isLastSection ? "Submit exam" : `Submit ${section.subject}`}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         ) : (
           <>
-            <DiagnosticSectionMap
-              subject={section.subject}
-              answered={answeredInSection}
-              total={sectionQuestions.length}
-              cells={mapCells}
-              jumpHint={jumpHint}
-              showFlagged={Boolean(isPassageSet)}
-              onJump={jumpToMappedQuestion}
-            />
+            <div className="shrink-0 pb-2">
+              <DiagnosticSectionMap
+                subject={section.subject}
+                answered={answeredInSection}
+                total={sectionQuestions.length}
+                cells={mapCells}
+                jumpHint={jumpHint}
+                showFlagged={Boolean(isPassageSet)}
+                onJump={jumpToMappedQuestion}
+              />
+            </div>
 
             {passage ? (
-              <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden md:grid md:h-full md:grid-cols-2 md:grid-rows-1">
-                <Card className="flex h-full min-h-0 flex-col overflow-hidden max-md:h-[min(36vh,18rem)] max-md:max-h-[min(36vh,18rem)] max-md:shrink-0">
+              <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,36vh)_minmax(0,1fr)] gap-3 overflow-hidden md:grid-cols-2 md:grid-rows-[minmax(0,1fr)]">
+                <Card className="flex min-h-0 flex-col overflow-hidden">
                   <CardHeader className="shrink-0 p-4 pb-2">
                     <CardTitle className="flex items-center gap-2 text-base">
                       <BookOpen className="h-4 w-4" />
@@ -726,22 +711,7 @@ export function DiagnosticExamRunner({
                   </CardContent>
                 </Card>
 
-                <div className="flex h-full min-h-0 flex-1 flex-col gap-3 overflow-hidden">
-                  <Card className="flex min-h-0 flex-1 flex-col overflow-hidden">
-                    <CardHeader className="shrink-0 p-4 pb-2">{questionMeta}</CardHeader>
-                    <CardContent
-                      ref={questionPaneRef}
-                      className="min-h-0 flex-1 space-y-6 overflow-y-auto overscroll-contain p-4 pt-0"
-                    >
-                      {questionStem}
-                    </CardContent>
-                  </Card>
-                  {navButtons}
-                </div>
-              </div>
-            ) : (
-              <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden">
-                <Card className="flex min-h-0 flex-1 flex-col overflow-hidden">
+                <Card className="flex min-h-0 min-w-0 flex-col overflow-hidden">
                   <CardHeader className="shrink-0 p-4 pb-2">{questionMeta}</CardHeader>
                   <CardContent
                     ref={questionPaneRef}
@@ -750,39 +720,98 @@ export function DiagnosticExamRunner({
                     {questionStem}
                   </CardContent>
                 </Card>
-                {navButtons}
               </div>
+            ) : (
+              <Card className="flex min-h-0 flex-1 flex-col overflow-hidden">
+                <CardHeader className="shrink-0 p-4 pb-2">{questionMeta}</CardHeader>
+                <CardContent
+                  ref={questionPaneRef}
+                  className="min-h-0 flex-1 space-y-6 overflow-y-auto overscroll-contain p-4 pt-0"
+                >
+                  {questionStem}
+                </CardContent>
+              </Card>
             )}
-
-            <details className="shrink-0 rounded-xl border glass-surface p-4">
-              <summary className="flex cursor-pointer list-none items-center gap-2 font-serif text-base font-semibold tracking-tight [&::-webkit-details-marker]:hidden">
-                <StickyNote className="h-4 w-4" />
-                Notepad
-                <span className="ml-auto text-xs font-normal text-muted-foreground">Scratch notes</span>
-              </summary>
-              <Textarea
-                value={notepad}
-                onChange={(e) => setNotepad(e.target.value)}
-                placeholder="Scratch notes for this exam (saved to your account)."
-                className="mt-3 min-h-[88px] text-sm"
-              />
-            </details>
           </>
         )}
       </div>
 
-      <AlertDialog open={confirmExit} onOpenChange={setConfirmExit}>
+      {!confirmSectionSubmit ? (
+        <div className="z-20 shrink-0 border-t bg-background/95 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+          <div className="container flex items-center justify-between gap-2 px-4">
+            <Button variant="outline" onClick={() => setNotesOpen(true)}>
+              <StickyNote className="h-4 w-4 mr-2" />
+              Notes
+            </Button>
+            <div className="flex min-w-0 items-center justify-end gap-2">
+              {isPassageSet ? (
+                <Button
+                  variant="outline"
+                  onClick={goPrevInSet}
+                  disabled={questionIndexInUnit === 0 || unitLocked}
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  <span className="hidden sm:inline">Previous in set</span>
+                  <span className="sm:hidden">Prev</span>
+                </Button>
+              ) : null}
+              <Button onClick={goNext} disabled={!canAdvanceCurrent}>
+                {nextLabel}
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      <Sheet open={notesOpen} onOpenChange={setNotesOpen}>
+        <SheetContent side="bottom" className="max-h-[70vh]">
+          <SheetHeader>
+            <SheetTitle>Notepad</SheetTitle>
+            <SheetDescription>Scratch notes for this exam, saved to your account.</SheetDescription>
+          </SheetHeader>
+          <Textarea
+            value={notepad}
+            onChange={(e) => setNotepad(e.target.value)}
+            placeholder="Scratch notes for this exam (saved to your account)."
+            className="mt-4 min-h-[160px] text-sm"
+          />
+        </SheetContent>
+      </Sheet>
+
+      <AlertDialog
+        open={confirmExit}
+        onOpenChange={(open) => {
+          if (pausing) return;
+          setConfirmExit(open);
+        }}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Pause and save this diagnostic?</AlertDialogTitle>
             <AlertDialogDescription>
-              The timer stops. Your answers are saved to your account, so you can resume on this
+              The timer stops after this sitting is stored in your account. You can resume on this
               device or another computer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep working</AlertDialogCancel>
-            <AlertDialogAction onClick={() => void pauseAndLeave()}>Pause and save</AlertDialogAction>
+            <AlertDialogCancel disabled={pausing}>Keep working</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={pausing}
+              onClick={(event) => {
+                event.preventDefault();
+                void pauseAndLeave();
+              }}
+            >
+              {pausing ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Saving to your account…
+                </>
+              ) : (
+                "Pause and save"
+              )}
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

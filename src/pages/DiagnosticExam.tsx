@@ -1028,7 +1028,7 @@ export default function DiagnosticExam() {
                   size="lg"
                   variant="outline"
                   onClick={startNew}
-                  disabled={!canPreview || !canStartNew}
+                  disabled={!canPreview || !canStartNew || progressLoading}
                 >
                   Start over and erase answers
                 </Button>

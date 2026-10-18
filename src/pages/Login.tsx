@@ -160,7 +160,7 @@ export default function Login() {
               </p>
             ) : audience === "demo" ? (
               <p className="text-sm text-muted-foreground">
-                Sign in with Google to create a demo account.
+                Sign in with Google to open or create a demo account.
               </p>
             ) : (
               <div className="space-y-3">

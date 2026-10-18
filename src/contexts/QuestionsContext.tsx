@@ -15,7 +15,9 @@ import {
 } from "@/data/questionCatalog";
 import { getQuestionsForTopic } from "@/data/navigationData";
 import { filterQuestions, type QuestionFilterInput } from "@/lib/questionFilters";
+import { applyJedApprovalsToQuestions } from "@/lib/reviewStatus";
 import { useAuth } from "@/contexts/AuthContext";
+import { useQuestionReviews } from "@/contexts/QuestionReviewContext";
 import type { Form, Passage, Question } from "@/types";
 import type { SubjectNavigation } from "@/types/navigation";
 
@@ -41,6 +43,7 @@ const QuestionsContext = createContext<QuestionsContextValue | null>(null);
 
 export function QuestionsProvider({ children }: { children: ReactNode }) {
   const { profile, loading: authLoading } = useAuth();
+  const { states: reviewStates } = useQuestionReviews();
   const [fullCatalog, setFullCatalog] = useState<QuestionCatalog | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -75,15 +78,19 @@ export function QuestionsProvider({ children }: { children: ReactNode }) {
   const catalog = useMemo(() => {
     if (!fullCatalog) return null;
     const role = authLoading ? undefined : profile?.role;
-    return filterCatalogForViewer(fullCatalog, role);
-  }, [fullCatalog, authLoading, profile?.role]);
+    const withApprovals = {
+      ...fullCatalog,
+      questions: applyJedApprovalsToQuestions(fullCatalog.questions, reviewStates),
+    };
+    return filterCatalogForViewer(withApprovals, role);
+  }, [fullCatalog, authLoading, profile?.role, reviewStates]);
 
   const getFilteredQuestions = useCallback(
     (filters: QuestionFilterInput, source?: Question[]) => {
       const pool = source ?? catalog?.questions ?? [];
-      return filterQuestions(filters, pool);
+      return filterQuestions(filters, pool, reviewStates);
     },
-    [catalog],
+    [catalog, reviewStates],
   );
 
   const getQuestionById = useCallback(
@@ -103,11 +110,14 @@ export function QuestionsProvider({ children }: { children: ReactNode }) {
     (ids: string[]) => {
       if (!fullCatalog) return [];
       const byId = new Map(fullCatalog.questions.map((question) => [question.id, question]));
-      return ids
-        .map((id) => byId.get(id))
-        .filter((question): question is Question => question !== undefined);
+      return applyJedApprovalsToQuestions(
+        ids
+          .map((id) => byId.get(id))
+          .filter((question): question is Question => question !== undefined),
+        reviewStates,
+      );
     },
-    [fullCatalog],
+    [fullCatalog, reviewStates],
   );
 
   const getPassagesForQuestions = useCallback(

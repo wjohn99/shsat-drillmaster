@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Loader2, Pencil, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,12 @@ import { fetchAssignmentsForTutor, fetchTutors } from "@/lib/assignmentService";
 import { pickLatestCompletedAssignment } from "@/lib/dashboardStats";
 import { firstAndLatestDiagnostic } from "@/lib/diagnosticReport";
 import { fetchPracticeSessionsForTutor } from "@/lib/practiceSessionService";
-import { fetchAllWorkspaceBoards, resolvedAssignedTutorUid } from "@/lib/workspaceService";
+import {
+  fetchAllWorkspaceBoards,
+  isDemoAccountBoard,
+  resolvedAssignedTutorUid,
+} from "@/lib/workspaceService";
+import { useAuth } from "@/contexts/AuthContext";
 import type { TutorOption, WorksheetAssignment } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type { WorkspaceBoard } from "@/types/workspace";
@@ -26,6 +31,7 @@ interface TutorWorkspaceHomeProps {
 }
 
 export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWorkspaceHomeProps) {
+  const { profile } = useAuth();
   const [boards, setBoards] = useState<WorkspaceBoard[]>([]);
   const [sessions, setSessions] = useState<PracticeSessionRecord[]>([]);
   const [assignments, setAssignments] = useState<WorksheetAssignment[]>([]);
@@ -35,7 +41,7 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
   const [addOpen, setAddOpen] = useState(false);
   const [editingBoard, setEditingBoard] = useState<WorkspaceBoard | null>(null);
 
-  const loadBoards = async () => {
+  const loadBoards = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -49,7 +55,7 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
           : fetchAssignmentsForTutor().catch(() => [] as WorksheetAssignment[]),
         fetchTutors().catch(() => [] as TutorOption[]),
       ]);
-      setBoards(boardRows);
+      setBoards(boardRows.filter((board) => !isDemoAccountBoard(board, profile?.uid)));
       setSessions(sessionRows);
       setAssignments(assignmentRows);
       setTutors(tutorRows);
@@ -58,11 +64,11 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
     } finally {
       setLoading(false);
     }
-  };
+  }, [profile?.uid, readOnly]);
 
   useEffect(() => {
     void loadBoards();
-  }, []);
+  }, [loadBoards]);
 
   const lastSessionByStudent = useMemo(() => {
     const map = new Map<string, PracticeSessionRecord>();

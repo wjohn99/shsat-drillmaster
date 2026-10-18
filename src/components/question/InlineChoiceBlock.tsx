@@ -1,4 +1,5 @@
 import type { IcSpec } from "@/types";
+import { MathText } from "@/lib/mathText";
 import { cn } from "@/lib/utils";
 
 type InlineChoiceBlockProps = {
@@ -33,7 +34,11 @@ export function InlineChoiceBlock({
       <p className="text-base leading-relaxed text-foreground [text-wrap:pretty]">
         {spec.segments.map((seg, i) => {
           if (seg.type === "text") {
-            return <span key={i}>{seg.value}</span>;
+            return (
+              <span key={i}>
+                <MathText text={seg.value} />
+              </span>
+            );
           }
           const def = slotDef(spec, seg.slotId);
           const value = selections[seg.slotId] ?? "";

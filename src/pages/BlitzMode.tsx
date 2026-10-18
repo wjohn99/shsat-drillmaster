@@ -28,6 +28,7 @@ import { parseIcSelectionsForQuestion, serializeIcSelections } from "@/lib/indyI
 import { parseDndPlacementsForQuestion, serializeDndPlacements } from "@/lib/indyDnd";
 import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
 import { HighlightableText } from "@/components/exam/HighlightableText";
+import { MathText } from "@/lib/mathText";
 import { canSubmitQuestionAnswer, isQuestionAnswerCorrect } from "@/lib/sessionGrading";
 import { DIAGNOSTIC_RESERVED_QUESTION_IDS } from "@/data/shsatDiagnosticForm";
 import { SessionResultsDashboard } from "@/components/session/SessionResultsDashboard";
@@ -315,7 +316,9 @@ export default function BlitzMode() {
           </div>
         ) : (
           <div className="prose prose-sm max-w-none">
-            <p className="text-base leading-relaxed whitespace-pre-wrap">{q.stem}</p>
+            <p className="text-base leading-relaxed whitespace-pre-wrap">
+              <MathText text={q.stem} />
+            </p>
           </div>
         )}
 
@@ -384,7 +387,7 @@ export default function BlitzMode() {
                     className="flex-1 cursor-pointer text-sm leading-relaxed"
                   >
                     <span className="font-medium mr-2">{choice.label}.</span>
-                    {choice.text}
+                    <MathText text={choice.text} />
                   </Label>
                 </div>
               );
@@ -410,7 +413,7 @@ export default function BlitzMode() {
                     <RadioGroupItem value={choice.id} id={choice.id} className="mt-1" />
                     <Label htmlFor={choice.id} className="flex-1 cursor-pointer text-sm leading-relaxed">
                       <span className="font-medium mr-2">{choice.label}.</span>
-                      {choice.text}
+                      <MathText text={choice.text} />
                     </Label>
                   </div>
                 ))}

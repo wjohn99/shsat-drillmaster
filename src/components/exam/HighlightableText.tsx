@@ -14,6 +14,7 @@ import {
   saveHighlightRanges,
   type HighlightRange,
 } from "@/lib/highlightRanges";
+import { MathText } from "@/lib/mathText";
 
 const MARK_CLASS =
   "rounded-sm px-px bg-[#FFEB3B] text-foreground dark:bg-[#FDD835] dark:text-foreground";
@@ -27,19 +28,25 @@ function renderHighlightedText(text: string, ranges: HighlightRange[]) {
   for (const r of sorted) {
     if (r.start > cursor) {
       nodes.push(
-        <span key={`t-${k++}`}>{text.slice(cursor, r.start)}</span>
+        <span key={`t-${k++}`}>
+          <MathText text={text.slice(cursor, r.start)} keepEmphasisMarkers />
+        </span>
       );
     }
     const end = Math.min(r.end, text.length);
     nodes.push(
       <mark key={`m-${k++}`} className={MARK_CLASS}>
-        {text.slice(r.start, end)}
+        <MathText text={text.slice(r.start, end)} keepEmphasisMarkers />
       </mark>
     );
     cursor = end;
   }
   if (cursor < text.length) {
-    nodes.push(<span key={`t-${k++}`}>{text.slice(cursor)}</span>);
+    nodes.push(
+      <span key={`t-${k++}`}>
+        <MathText text={text.slice(cursor)} keepEmphasisMarkers />
+      </span>
+    );
   }
   return <>{nodes}</>;
 }

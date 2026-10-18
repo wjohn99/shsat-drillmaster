@@ -25,6 +25,7 @@ import { HighlightableText } from "@/components/exam/HighlightableText";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
 import { ProvisionalBadge } from "@/components/question/ProvisionalBadge";
 import { useState } from "react";
+import { MathText } from "@/lib/mathText";
 
 export default function TopicQuestions() {
   const { navigationData, getQuestionsForTopic, passages, loading } = useQuestions();
@@ -186,7 +187,9 @@ export default function TopicQuestions() {
                   </div>
                 ) : (
                   <div className="prose prose-sm max-w-none">
-                    <p className="text-base leading-relaxed whitespace-pre-wrap">{question.stem}</p>
+                    <p className="text-base leading-relaxed whitespace-pre-wrap">
+                      <MathText text={question.stem} />
+                    </p>
                   </div>
                 )}
 
@@ -240,7 +243,7 @@ export default function TopicQuestions() {
                             className="flex-1 cursor-pointer text-sm leading-relaxed"
                           >
                             <span className="font-medium mr-2">{choice.label}.</span>
-                            {choice.text}
+                            <MathText text={choice.text} />
                           </Label>
                         </div>
                       );
@@ -274,7 +277,7 @@ export default function TopicQuestions() {
                             className="flex-1 cursor-pointer text-sm leading-relaxed"
                           >
                             <span className="font-medium mr-2">{choice.label}.</span>
-                            {choice.text}
+                            <MathText text={choice.text} />
                           </Label>
                         </div>
                       ))}

@@ -180,6 +180,43 @@
 }
 
 @layer components {
+  .math-mixed {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    margin: 0 0.08em;
+    vertical-align: middle;
+  }
+
+  .math-sign {
+    margin-right: 0.08em;
+  }
+
+  .math-whole {
+    margin-right: 0.14em;
+  }
+
+  .math-frac {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+    vertical-align: middle;
+  }
+
+  .math-num,
+  .math-den {
+    font-size: 0.82em;
+    padding: 0 0.16em;
+  }
+
+  .math-bar {
+    display: block;
+    width: 100%;
+    border-top: 1.5px solid currentColor;
+    margin: 1px 0;
+  }
+
   .glass-control,
   .glass-chrome,
   .glass-surface,
@@ -203,7 +240,7 @@
     box-shadow: none !important;
   }
 
-  .glass-control:hover:not(:disabled):not([data-disabled="true"]) {
+  .glass-control:hover:not(:disabled):not([data-disabled="true"]):not([data-state="checked"]) {
     background-color: hsl(var(--glass-control-bg-hover));
   }
 

@@ -53,6 +53,12 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'tutor';
     }
 
+    function isJed() {
+      return isTutor()
+        && request.auth.token.email is string
+        && request.auth.token.email.lower() == 'jed@steppreptutoring.com';
+    }
+
     function isDemo() {
       return isSignedIn()
         && exists(/databases/$(database)/documents/users/$(request.auth.uid))
@@ -126,6 +132,7 @@ service cloud.firestore {
         && (
           request.resource.data.role == resource.data.role
           || (resource.data.role != 'demo' && request.resource.data.role != 'demo')
+          || (resource.data.role == 'student' && request.resource.data.role == 'demo')
         );
 
       match /bookmarks/{questionId} {
@@ -232,11 +239,11 @@ service cloud.firestore {
         && (!('deletedAt' in request.resource.data)
           || request.resource.data.deletedAt == resource.data.deletedAt)
         && request.resource.data.diff(resource.data).affectedKeys()
-            .hasOnly(['studentName', 'studentEmail', 'color', 'archivedAt', 'roadmap', 'roadmapUpdatedAt', 'updatedAt', 'diagnosticExtendedTime', 'diagnosticAssigned', 'assignedTutorUid', 'assignedTutorName', 'assignedTutorEmail']);
+            .hasOnly(['studentName', 'studentEmail', 'color', 'archivedAt', 'roadmap', 'roadmapUpdatedAt', 'updatedAt', 'diagnosticExtendedTime', 'diagnosticAssigned', 'demoAccount', 'assignedTutorUid', 'assignedTutorName', 'assignedTutorEmail']);
 
       allow update: if isTutor()
         && request.resource.data.diff(resource.data).affectedKeys()
-          .hasOnly(['diagnosticExtendedTime', 'diagnosticAssigned', 'updatedAt']);
+          .hasOnly(['diagnosticExtendedTime', 'diagnosticAssigned', 'demoAccount', 'updatedAt']);
 
       allow update: if isTutor()
         && request.resource.data.assignedTutorUid is string
@@ -510,6 +517,42 @@ service cloud.firestore {
             .hasOnly(['status', 'studentUid', 'studentName', 'updatedAt']);
 
       allow delete: if false;
+    }
+
+    match /question_reviews/{questionId} {
+      allow read: if isTutor();
+
+      allow create: if isTutor()
+        && request.resource.data.questionId == questionId
+        && (
+          request.resource.data.jedApproved == false
+          || isJed()
+        );
+
+      allow update: if isTutor()
+        && request.resource.data.questionId == questionId
+        && (
+          isJed()
+          || (
+            request.resource.data.jedApproved == resource.data.jedApproved
+            && request.resource.data.get('jedApprovedByUid', null)
+              == resource.data.get('jedApprovedByUid', null)
+            && request.resource.data.get('jedApprovedByEmail', null)
+              == resource.data.get('jedApprovedByEmail', null)
+            && request.resource.data.get('jedApprovedAtMs', null)
+              == resource.data.get('jedApprovedAtMs', null)
+          )
+        );
+
+      allow delete: if false;
+
+      match /entries/{tutorUid} {
+        allow read: if isTutor();
+        allow create, update: if isTutor()
+          && request.auth.uid == tutorUid
+          && request.resource.data.tutorUid == tutorUid;
+        allow delete: if false;
+      }
     }
   }
 }

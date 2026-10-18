@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import type { DndSpec, DndZone } from "@/types";
+import { MathText } from "@/lib/mathText";
 import { cn } from "@/lib/utils";
 
 const DND_MIME = "application/x-indy-dnd-id";
@@ -98,7 +99,7 @@ export function DndBlock({ spec, placements, onChange, disabled, showSolution }:
           className
         )}
       >
-        {item.text}
+        <MathText text={item.text} />
       </div>
     );
   };

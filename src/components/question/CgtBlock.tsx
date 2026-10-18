@@ -1,4 +1,5 @@
 import type { CgtSpec } from "@/types";
+import { MathText } from "@/lib/mathText";
 import { cn } from "@/lib/utils";
 
 type CgtBlockProps = {
@@ -29,7 +30,7 @@ function CgtTable({
     <div className="overflow-x-auto rounded-lg border border-foreground/15 bg-muted/20">
       {visual.caption ? (
         <p className="border-b border-foreground/10 bg-muted/40 px-3 py-2 text-center text-sm font-medium">
-          {visual.caption}
+          <MathText text={visual.caption} />
         </p>
       ) : null}
       <table className="w-full min-w-[280px] border-collapse text-sm">
@@ -41,7 +42,7 @@ function CgtTable({
                 scope="col"
                 className="px-3 py-2 text-left font-semibold text-foreground"
               >
-                {h}
+                <MathText text={h} />
               </th>
             ))}
           </tr>
@@ -51,7 +52,7 @@ function CgtTable({
             <tr key={ri} className="border-b border-foreground/10 last:border-0">
               {row.map((cell, ci) => (
                 <td key={ci} className="px-3 py-2 text-foreground">
-                  {cell}
+                  <MathText text={String(cell)} />
                 </td>
               ))}
             </tr>

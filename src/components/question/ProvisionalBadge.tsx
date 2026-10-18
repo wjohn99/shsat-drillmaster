@@ -1,6 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
-import { isProvisionalQuestion } from "@/lib/reviewStatus";
+import { useQuestionReviews } from "@/contexts/QuestionReviewContext";
+import { canReviewQuestions } from "@/lib/questionReviewService";
+import { isProvisionalQuestion, needsJedApproval } from "@/lib/reviewStatus";
 import { cn } from "@/lib/utils";
 import type { Question } from "@/types";
 
@@ -11,7 +13,9 @@ type ProvisionalBadgeProps = {
 
 export function ProvisionalBadge({ question, className }: ProvisionalBadgeProps) {
   const { profile } = useAuth();
-  if (profile?.role !== "tutor" || !isProvisionalQuestion(question)) return null;
+  const { states } = useQuestionReviews();
+  if (!canReviewQuestions(profile?.role) || !isProvisionalQuestion(question)) return null;
+  const awaitingJed = needsJedApproval(question, states.get(question.id));
   return (
     <Badge
       variant="outline"
@@ -19,9 +23,9 @@ export function ProvisionalBadge({ question, className }: ProvisionalBadgeProps)
         "border-amber-400/80 bg-amber-50 text-[10px] font-semibold uppercase tracking-wide text-amber-900",
         className,
       )}
-      title="Under review."
+      title={awaitingJed ? "A tutor reviewed this. Waiting on Jed." : "Under review."}
     >
-      Provisional
+      {awaitingJed ? "Awaiting Jed" : "Provisional"}
     </Badge>
   );
 }

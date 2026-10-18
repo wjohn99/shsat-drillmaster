@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "@/hooks/use-toast";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -30,7 +32,7 @@ import {
 import { fetchPracticeSessionsForTutor } from "@/lib/practiceSessionService";
 import { fetchDiagnosticProgressForTutor } from "@/lib/diagnosticProgressService";
 import { buildTutorDashboardAnalytics, DIAGNOSTIC_STATUS_LABEL } from "@/lib/dashboardAnalytics";
-import { fetchAllWorkspaceBoards } from "@/lib/workspaceService";
+import { fetchAllWorkspaceBoards, isDemoAccountBoard } from "@/lib/workspaceService";
 import {
   countCompletedThisWeek,
   countOpenAssignments,
@@ -48,6 +50,7 @@ const RECENT_LIMIT = 10;
 
 export function TutorDashboard() {
   const navigate = useNavigate();
+  const { enterDemoMode, demoBusy, profile } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [students, setStudents] = useState<StudentOption[]>([]);
@@ -84,18 +87,27 @@ export function TutorDashboard() {
 
         if (cancelled) return;
 
+        const hiddenDemoUids = new Set(
+          boards
+            .filter((board) => isDemoAccountBoard(board, profile?.uid))
+            .map((board) => board.studentUid),
+        );
         const nameByUid = new Map(studentList.map((s) => [s.uid, s.displayName]));
-        const rows: TutorAssignmentRow[] = assignments.map((a) => ({
-          ...a,
-          studentName: nameByUid.get(a.assignedToStudentUid) ?? "Student",
-        }));
+        const rows: TutorAssignmentRow[] = assignments
+          .filter((a) => !hiddenDemoUids.has(a.assignedToStudentUid))
+          .map((a) => ({
+            ...a,
+            studentName: nameByUid.get(a.assignedToStudentUid) ?? "Student",
+          }));
 
-        setStudents(studentList);
+        setStudents(studentList.filter((student) => !hiddenDemoUids.has(student.uid)));
         setAllAssignments(rows);
-        setSessions(sessionRows);
-        setDiagnosticInProgressUids(inProgressUids);
+        setSessions(sessionRows.filter((session) => !hiddenDemoUids.has(session.userId)));
+        setDiagnosticInProgressUids(inProgressUids.filter((uid) => !hiddenDemoUids.has(uid)));
         setDiagnosticAssignedUids(
-          boards.filter((board) => board.diagnosticAssigned).map((board) => board.studentUid),
+          boards
+            .filter((board) => board.diagnosticAssigned && !hiddenDemoUids.has(board.studentUid))
+            .map((board) => board.studentUid),
         );
       } catch (err) {
         if (!cancelled) {
@@ -109,7 +121,7 @@ export function TutorDashboard() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [profile?.uid]);
 
   const analytics = useMemo(
     () =>
@@ -169,6 +181,45 @@ export function TutorDashboard() {
       subtitle="Manage worksheets and track student progress."
     >
       <div className="space-y-8">
+        <Card className="border-primary/20">
+          <CardHeader>
+            <CardTitle className="text-lg">Demo account mode</CardTitle>
+            <CardDescription>
+              Test out the demo account here. No second Google account. Dashboard, practice,
+              worksheets, and workspace match a first-time demo student, and they are interactive.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button
+              type="button"
+              disabled={demoBusy}
+              onClick={() => {
+                void (async () => {
+                  try {
+                    await enterDemoMode();
+                    navigate("/dashboard", { replace: true });
+                  } catch (err) {
+                    toast({
+                      title: "Could not open demo account mode",
+                      description: err instanceof Error ? err.message : "Please try again.",
+                      variant: "destructive",
+                    });
+                  }
+                })();
+              }}
+            >
+              {demoBusy ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Opening student view…
+                </>
+              ) : (
+                "Enter demo account"
+              )}
+            </Button>
+          </CardContent>
+        </Card>
+
         <section className="grid sm:grid-cols-3 gap-4">
           <StatTile label="Students" value={stats.students} icon={Users} />
           <StatTile

@@ -84,6 +84,7 @@ function parseBoard(
           typeof data.roadmap === "object" &&
           (data.roadmap as { diagnosticAssigned?: unknown }).diagnosticAssigned),
     ),
+    demoAccount: Boolean(data.demoAccount),
     roadmap: parseStudentRoadmap(data.roadmap),
     roadmapUpdatedAt: data.roadmapUpdatedAt ?? null,
   };
@@ -150,9 +151,20 @@ export async function fetchStudentsWithoutBoard(): Promise<StudentOption[]> {
   return students.filter((s) => !boardStudentUids.has(s.uid));
 }
 
+export function isDemoAccountBoard(
+  board: Pick<WorkspaceBoard, "demoAccount" | "studentUid" | "createdByUid">,
+  tutorUid?: string,
+): boolean {
+  return (
+    Boolean(board.demoAccount) ||
+    board.studentUid === board.createdByUid ||
+    Boolean(tutorUid && board.studentUid === tutorUid)
+  );
+}
+
 export async function createWorkspaceBoard(
   student: StudentOption,
-  opts?: { color?: string },
+  opts?: { color?: string; demoAccount?: boolean; diagnosticAssigned?: boolean },
 ): Promise<string> {
   const auth = getFirebaseAuth();
   const tutorUid = auth.currentUser?.uid;
@@ -189,7 +201,12 @@ export async function createWorkspaceBoard(
       assignedTutorName: auth.currentUser?.displayName || auth.currentUser?.email || "Tutor",
       assignedTutorEmail: auth.currentUser?.email || "",
       createdAt: now,
-      roadmap: serializeStudentRoadmap(emptyStudentRoadmap()),
+      ...(opts?.demoAccount ? { demoAccount: true } : {}),
+      ...(opts?.diagnosticAssigned ? { diagnosticAssigned: true } : {}),
+      roadmap: {
+        ...serializeStudentRoadmap(emptyStudentRoadmap()),
+        ...(opts?.diagnosticAssigned ? { diagnosticAssigned: true } : {}),
+      },
       roadmapUpdatedAt: now,
       updatedAt: now,
     });
@@ -230,6 +247,13 @@ export async function updateWorkspaceBoardDetails(
   }
 
   await updateDoc(doc(getFirebaseDb(), BOARDS_COLLECTION, boardId), next);
+}
+
+export async function markWorkspaceBoardDemoAccount(boardId: string): Promise<void> {
+  await updateDoc(doc(getFirebaseDb(), BOARDS_COLLECTION, boardId), {
+    demoAccount: true,
+    updatedAt: serverTimestamp(),
+  });
 }
 
 export function resolvedAssignedTutorUid(board: {

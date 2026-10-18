@@ -12,12 +12,19 @@ import {
 } from "@/data/taggingScheme";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
 import { ProvisionalBadge } from "@/components/question/ProvisionalBadge";
+import { MathText } from "@/lib/mathText";
+import { useAuth } from "@/contexts/AuthContext";
+import { useQuestionReviews } from "@/contexts/QuestionReviewContext";
+import { canReviewQuestions } from "@/lib/questionReviewService";
 
 interface QuestionCardProps {
   question: Question;
 }
 
 export const QuestionCard = ({ question }: QuestionCardProps) => {
+  const { profile } = useAuth();
+  const { states } = useQuestionReviews();
+  const reviewCount = states.get(question.id)?.reviewerUids.length ?? 0;
   const subjectVariant = question.subject === 'MATH' ? 'math' : 'ela';
   const contentTags = question.tags.filter((t) => !isFormatTagCode(t.code));
   const formatTag = question.tags.find((t) => isFormatTagCode(t.code));
@@ -64,7 +71,7 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
 
         {/* Question stem preview */}
         <p className="text-sm text-foreground leading-relaxed mb-3 line-clamp-3">
-          {question.stem}
+          <MathText text={question.stem} />
         </p>
 
         {/* Content skill tags */}
@@ -98,6 +105,11 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
           <Badge variant="outline" className="text-xs">
             {formatLabel}
           </Badge>
+          {canReviewQuestions(profile?.role) && reviewCount > 0 && (
+            <span>
+              {reviewCount} tutor review{reviewCount === 1 ? "" : "s"}
+            </span>
+          )}
         </div>
       </CardContent>
 

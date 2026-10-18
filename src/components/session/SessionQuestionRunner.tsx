@@ -9,6 +9,7 @@ import { ArrowLeft, ArrowRight, BookOpen, Flag, Printer } from "lucide-react";
 import { useQuestions } from "@/contexts/QuestionsContext";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
 import { ProvisionalBadge } from "@/components/question/ProvisionalBadge";
+import { QuestionReviewPanel } from "@/components/question/QuestionReviewPanel";
 import { QuestionResponseFields } from "@/components/question/QuestionResponseFields";
 import { QuestionSolutionPanel } from "@/components/question/QuestionSolutionPanel";
 import { getSelectedChoiceIds } from "@/lib/questionExplanation";
@@ -17,6 +18,7 @@ import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
 import { parseAtaAnswer, serializeAtaAnswer } from "@/lib/indyAta";
 import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
 import { HighlightableText } from "@/components/exam/HighlightableText";
+import { MathText } from "@/lib/mathText";
 import { canSubmitQuestionAnswer, isQuestionAnswerCorrect } from "@/lib/sessionGrading";
 import { openWorksheetPrintTab } from "@/lib/worksheetPrint";
 import { toast } from "@/hooks/use-toast";
@@ -316,7 +318,9 @@ export function SessionQuestionRunner({
                   </div>
                 ) : (
                   <div className="prose prose-sm max-w-none">
-                    <p className="text-base leading-relaxed whitespace-pre-wrap">{currentQuestion.stem}</p>
+                    <p className="text-base leading-relaxed whitespace-pre-wrap">
+                      <MathText text={currentQuestion.stem} />
+                    </p>
                   </div>
                 )}
 
@@ -339,6 +343,8 @@ export function SessionQuestionRunner({
                 )}
               </CardContent>
             </Card>
+
+            <QuestionReviewPanel question={currentQuestion} className="mt-6" />
 
             <div className="flex justify-between mt-6">
               <Button variant="outline" onClick={prevQuestion} disabled={currentQuestionIndex === 0}>

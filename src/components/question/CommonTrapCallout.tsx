@@ -1,4 +1,5 @@
 import { AlertTriangle } from "lucide-react";
+import { MathText } from "@/lib/mathText";
 
 type CommonTrapCalloutProps = {
   commonTrap: string;
@@ -11,7 +12,9 @@ export function CommonTrapCallout({ commonTrap }: CommonTrapCalloutProps) {
         <AlertTriangle className="h-4 w-4 shrink-0" aria-hidden />
         Common trap
       </div>
-      <p className="text-sm leading-relaxed text-amber-950/90 dark:text-amber-100/90">{commonTrap}</p>
+      <p className="text-sm leading-relaxed text-amber-950/90 dark:text-amber-100/90">
+        <MathText text={commonTrap} />
+      </p>
     </div>
   );
 }

@@ -13,6 +13,7 @@ import { WpBlock } from "@/components/question/WpBlock";
 import { isIndyCheckboxMultiSubtype, parseAtaAnswer } from "@/lib/indyAta";
 import { parseDndPlacementsForQuestion, serializeDndPlacements } from "@/lib/indyDnd";
 import { parseIcSelectionsForQuestion, serializeIcSelections } from "@/lib/indyIc";
+import { MathText } from "@/lib/mathText";
 import { cn } from "@/lib/utils";
 import type { Question } from "@/types";
 
@@ -136,7 +137,7 @@ export function QuestionResponseFields({
                     )}
                   >
                     <span className="font-medium mr-2">{choice.label}.</span>
-                    {choice.text}
+                    <MathText text={choice.text} />
                   </Label>
                   {onToggleEliminate && !showSolution ? (
                     <button
@@ -177,7 +178,7 @@ export function QuestionResponseFields({
                       )}
                     >
                       <span className="font-medium mr-2">{choice.label}.</span>
-                      {choice.text}
+                      <MathText text={choice.text} />
                     </Label>
                     {onToggleEliminate && !showSolution ? (
                       <button

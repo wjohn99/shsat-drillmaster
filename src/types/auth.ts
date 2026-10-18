@@ -10,6 +10,8 @@ export interface AppUserProfile {
   role: UserRole;
   createdAt: Timestamp;
   lastActiveAt?: Timestamp;
+  /** Tutor-only. When true, the app opens demo account mode on this login. */
+  demoMode?: boolean;
 }
 
 export interface AuthUser {

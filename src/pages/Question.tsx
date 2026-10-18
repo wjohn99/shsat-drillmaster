@@ -25,8 +25,10 @@ import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
 import { useQuestions } from "@/contexts/QuestionsContext";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
 import { ProvisionalBadge } from "@/components/question/ProvisionalBadge";
+import { QuestionReviewPanel } from "@/components/question/QuestionReviewPanel";
 import { QuestionSolutionPanel } from "@/components/question/QuestionSolutionPanel";
 import { getSelectedChoiceIds } from "@/lib/questionExplanation";
+import { MathText } from "@/lib/mathText";
 import { useQuestionBookmarks } from "@/contexts/QuestionBookmarksContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
@@ -378,7 +380,9 @@ export default function Question() {
                   </div>
                 ) : (
                   <div className="prose prose-sm max-w-none">
-                    <p className="text-base leading-relaxed whitespace-pre-wrap">{question.stem}</p>
+                    <p className="text-base leading-relaxed whitespace-pre-wrap">
+                      <MathText text={question.stem} />
+                    </p>
                   </div>
                 )}
 
@@ -473,7 +477,7 @@ export default function Question() {
                                 } ${showWrongPick ? "text-destructive" : ""} ${showMissed ? "text-warning" : ""}`}
                               >
                                 <span className="font-medium mr-2">{choice.label}.</span>
-                                {choice.text}
+                                <MathText text={choice.text} />
                               </Label>
                               {showSolution && choice.isCorrect && (
                                 <CheckCircle className="h-4 w-4 shrink-0 text-success mt-1" />
@@ -521,7 +525,7 @@ export default function Question() {
                               }`}
                             >
                               <span className="font-medium mr-2">{choice.label}.</span>
-                              {choice.text}
+                              <MathText text={choice.text} />
                             </Label>
                             {showSolution && choice.isCorrect && (
                               <CheckCircle className="h-4 w-4 text-success mt-1" />
@@ -608,6 +612,8 @@ export default function Question() {
                 )}
               </CardContent>
             </Card>
+
+            <QuestionReviewPanel question={question} />
 
             {/* User Notes */}
             <Card>

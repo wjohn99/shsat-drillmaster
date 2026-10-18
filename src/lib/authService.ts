@@ -35,6 +35,8 @@ export function authErrorMessage(error: unknown): string {
         return "This site isn't authorized for Google sign-in. Add the domain in Firebase Authentication → Settings → Authorized domains.";
       case "auth/network-request-failed":
         return "Network error during sign-in. Check your connection and try again.";
+      case "permission-denied":
+        return "This Google account could not be saved as a demo login. Use the Demo tab. If it was already a tutor account, sign in as a tutor.";
       default:
         return error.message;
     }
@@ -142,6 +144,7 @@ function parseUserProfile(snapshot: DocumentSnapshot): AppUserProfile {
     role: data.role as UserRole,
     createdAt: data.createdAt,
     lastActiveAt: data.lastActiveAt,
+    demoMode: data.demoMode === true,
   };
 }
 
@@ -176,7 +179,7 @@ async function writeUserProfile(firebaseUser: User): Promise<AppUserProfile> {
     }
     role = "tutor";
   } else if (intent?.demo) {
-    if (existingRole === "demo") {
+    if (existingRole === "demo" || existingRole === "student") {
       role = "demo";
     } else if (existingRole) {
       clearStagedParentSignIn();

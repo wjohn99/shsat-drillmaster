@@ -48,7 +48,7 @@ export async function saveDiagnosticProgress(
   if (auth.currentUser?.uid !== userId) {
     throw new Error("You must be signed in to save diagnostic progress.");
   }
-  await setDoc(progressDoc(userId), toFirestorePayload(userId, save), { merge: true });
+  await setDoc(progressDoc(userId), toFirestorePayload(userId, save));
 }
 
 export async function fetchDiagnosticProgress(

@@ -1,4 +1,6 @@
-import type { FilterOptions, Question, QuestionModule } from "@/types";
+import { needsJedApproval, needsTutorReview } from "@/lib/reviewStatus";
+import type { FilterOptions, Question, QuestionModule, ReviewQueueFilter } from "@/types";
+import type { QuestionReviewState } from "@/types/questionReview";
 
 export type QuestionFilterInput = Partial<{
   subjects: string[];
@@ -8,11 +10,13 @@ export type QuestionFilterInput = Partial<{
   passageOnly: boolean;
   searchQuery: string;
   userStatus: string[];
+  reviewQueue: ReviewQueueFilter[];
 }>;
 
 export function filterQuestions(
   filters: QuestionFilterInput,
   catalog: Question[],
+  reviewStates?: Map<string, QuestionReviewState>,
 ): Question[] {
   return catalog.filter((question) => {
     if (filters.subjects?.length && !filters.subjects.includes(question.subject)) {
@@ -148,6 +152,21 @@ export function filterQuestions(
       }
     }
 
+    if (filters.reviewQueue?.length) {
+      const state = reviewStates?.get(question.id);
+      const unreviewed = needsTutorReview(question, state);
+      const awaitingJed = needsJedApproval(question, state);
+      const wantProvisional = filters.reviewQueue.includes("provisional");
+      const wantJed = filters.reviewQueue.includes("needs_jed");
+      if (wantProvisional && wantJed) {
+        if (!unreviewed && !awaitingJed) return false;
+      } else if (wantJed) {
+        if (!awaitingJed) return false;
+      } else if (wantProvisional && !unreviewed) {
+        return false;
+      }
+    }
+
     return true;
   });
 }
@@ -156,8 +175,9 @@ export function filterQuestions(
 export function getFilteredQuestions(
   filters: QuestionFilterInput,
   catalog: Question[],
+  reviewStates?: Map<string, QuestionReviewState>,
 ): Question[] {
-  return filterQuestions(filters, catalog);
+  return filterQuestions(filters, catalog, reviewStates);
 }
 
 export type { FilterOptions };

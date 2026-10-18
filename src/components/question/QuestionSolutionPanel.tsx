@@ -9,6 +9,7 @@ import {
   questionHasExplanationContent,
 } from "@/lib/questionExplanation";
 import type { Choice, Question } from "@/types";
+import { MathText } from "@/lib/mathText";
 import { cn } from "@/lib/utils";
 
 type QuestionSolutionPanelProps = {
@@ -67,7 +68,9 @@ function ChoiceBreakdownCard({
         ) : null}
       </div>
       {explanation ? (
-        <p className="text-sm leading-relaxed text-foreground/90">{explanation}</p>
+        <p className="text-sm leading-relaxed text-foreground/90">
+          <MathText text={explanation} />
+        </p>
       ) : (
         <p className="text-sm italic text-muted-foreground">
           {correct ? "This is the correct choice." : "This choice is incorrect."}
@@ -134,7 +137,7 @@ export function QuestionSolutionPanel({
             How to solve it
           </h5>
           <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
-            {solutionText}
+            <MathText text={solutionText} />
           </p>
         </section>
       ) : null}

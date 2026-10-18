@@ -8,9 +8,14 @@ import { Switch } from "@/components/ui/switch";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Search, Filter, RotateCcw, ChevronDown } from "lucide-react";
-import { FilterOptions, QuestionModule, Subject } from "@/types";
+import { FilterOptions, QuestionModule, ReviewQueueFilter, Subject } from "@/types";
 import { QUESTION_FORMAT_TAGS, TAG_CATEGORIES } from "@/data/taggingScheme";
 import { moduleBadgeColor, moduleLabel, QUESTION_MODULES } from "@/lib/questionModule";
+import { useAuth } from "@/contexts/AuthContext";
+import { useQuestionReviews } from "@/contexts/QuestionReviewContext";
+import { useQuestions } from "@/contexts/QuestionsContext";
+import { canReviewQuestions } from "@/lib/questionReviewService";
+import { needsJedApproval, needsTutorReview } from "@/lib/reviewStatus";
 
 interface FilterPanelProps {
   totalCount: number;
@@ -32,7 +37,12 @@ export const FilterPanel = ({
   const [selectedFormatTags, setSelectedFormatTags] = useState<string[]>([]);
   const [passageOnly, setPassageOnly] = useState(false);
   const [selectedUserStatus, setSelectedUserStatus] = useState<string[]>([]);
+  const [selectedReviewQueue, setSelectedReviewQueue] = useState<ReviewQueueFilter[]>([]);
   const [tagSearchOpen, setTagSearchOpen] = useState(false);
+  const { profile } = useAuth();
+  const { questions } = useQuestions();
+  const { states: reviewStates } = useQuestionReviews();
+  const showReviewFilters = canReviewQuestions(profile?.role);
 
   const subjects: Subject[] = ['MATH', 'ELA'];
   const userStatusOptions = [
@@ -40,6 +50,18 @@ export const FilterPanel = ({
     { value: 'correct', label: 'Correct' },
     { value: 'bookmarked', label: 'Bookmarked' }
   ];
+  const reviewQueueOptions: { value: ReviewQueueFilter; label: string }[] = [
+    { value: "provisional", label: "Provisional" },
+    { value: "needs_jed", label: "Reviewed" },
+  ];
+  const reviewCounts = {
+    provisional: questions.filter((question) =>
+      needsTutorReview(question, reviewStates.get(question.id)),
+    ).length,
+    needs_jed: questions.filter((question) =>
+      needsJedApproval(question, reviewStates.get(question.id)),
+    ).length,
+  };
 
   const onFiltersChangeRef = useRef(onFiltersChange);
   onFiltersChangeRef.current = onFiltersChange;
@@ -54,6 +76,7 @@ export const FilterPanel = ({
       passageOnly,
       searchQuery,
       userStatus: selectedUserStatus,
+      reviewQueue: selectedReviewQueue,
     };
     const serialized = JSON.stringify(nextFilters);
     if (serialized === lastSyncedFiltersRef.current) {
@@ -75,6 +98,7 @@ export const FilterPanel = ({
     passageOnly,
     searchQuery,
     selectedUserStatus,
+    selectedReviewQueue,
   ]);
 
   const resetFilters = () => {
@@ -85,6 +109,7 @@ export const FilterPanel = ({
     setSelectedFormatTags([]);
     setPassageOnly(false);
     setSelectedUserStatus([]);
+    setSelectedReviewQueue([]);
     lastSyncedFiltersRef.current = "";
   };
 
@@ -292,6 +317,31 @@ export const FilterPanel = ({
           <Label htmlFor="passage-only" className="text-sm">Passage-based only</Label>
         </div>
       </div>
+
+      {showReviewFilters && (
+        <>
+          <Separator className="mb-6" />
+          <div className="mb-6">
+            <Label className="text-sm font-medium mb-3 block">Review</Label>
+            <div className="flex flex-col gap-2">
+              {reviewQueueOptions.map((option) => (
+                <Chip
+                  key={option.value}
+                  variant={selectedReviewQueue.includes(option.value) ? "selected" : "default"}
+                  onClick={() =>
+                    toggleArraySelection(selectedReviewQueue, setSelectedReviewQueue, option.value)
+                  }
+                  count={reviewCounts[option.value]}
+                  className="justify-start"
+                  size="sm"
+                >
+                  {option.label}
+                </Chip>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
 
       <Separator className="mb-6" />
 

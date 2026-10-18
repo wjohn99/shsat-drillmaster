@@ -9,7 +9,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { LogOut, User, Menu } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthLink } from "@/components/auth/AuthLink";
 import { DemoWelcomeDialog } from "@/components/auth/DemoWelcomeDialog";
 import { useAuth } from "@/contexts/AuthContext";
@@ -34,7 +34,8 @@ type NavItem = {
 
 export const Header = () => {
   const location = useLocation();
-  const { profile, signOut } = useAuth();
+  const navigate = useNavigate();
+  const { profile, isDemoMode, demoBusy, exitDemoMode, signOut } = useAuth();
   const { locked, requestLeave } = useExamLock();
 
   const isActive = (path: string) => location.pathname === path;
@@ -50,6 +51,13 @@ export const Header = () => {
 
   const workspacePath =
     profile?.role === "student" && profile.uid ? `/workspace/${profile.uid}` : "/workspace";
+
+  const leaveDemoAccount = () => {
+    void (async () => {
+      await exitDemoMode();
+      navigate("/dashboard", { replace: true });
+    })();
+  };
 
   const practiceActive =
     location.pathname === "/practice" ||
@@ -301,6 +309,24 @@ export const Header = () => {
         </div>
         </div>
       </div>
+      {isDemoMode && !locked ? (
+        <div className="container px-4 pb-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-primary/20 bg-primary/5 px-3 py-2">
+            <p className="text-sm text-foreground">
+              Demo account mode, this is what demo account users see.
+            </p>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              disabled={demoBusy}
+              onClick={leaveDemoAccount}
+            >
+              Exit demo
+            </Button>
+          </div>
+        </div>
+      ) : null}
     </header>
     </>
   );

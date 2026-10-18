@@ -1,4 +1,5 @@
 import { CgtBlock } from "@/components/question/CgtBlock";
+import { MathText } from "@/lib/mathText";
 import { isIndyCheckboxMultiSubtype } from "@/lib/indyAta";
 import { buildWorksheetPrintBlocks } from "@/lib/worksheetPrint";
 import type { Passage, Question } from "@/types";
@@ -16,7 +17,7 @@ function PrintParagraphs({ text, className }: { text: string; className?: string
     <div className={className}>
       {paragraphs.map((paragraph, index) => (
         <p key={index} className="mb-3 whitespace-pre-wrap last:mb-0">
-          {paragraph}
+          <MathText text={paragraph} />
         </p>
       ))}
     </div>
@@ -45,7 +46,7 @@ function PrintChoices({ question }: { question: Question }) {
         <div key={choice.id} className="flex items-start gap-2.5 break-inside-avoid">
           <ChoiceMark square={multi} />
           <p className="min-w-0 whitespace-pre-wrap leading-snug">
-            <span className="font-medium">{choice.label}.</span> {choice.text}
+            <span className="font-medium">{choice.label}.</span> <MathText text={choice.text} />
           </p>
         </div>
       ))}
@@ -74,10 +75,18 @@ function PrintQuestionBody({ question }: { question: Question }) {
         {question.ic.instruction ? (
           <p className="mb-2 italic text-[0.95em]">{question.ic.instruction}</p>
         ) : null}
-        <p className="whitespace-pre-wrap">{sentence}</p>
+        <p className="whitespace-pre-wrap">
+          <MathText text={sentence} />
+        </p>
         {question.ic.slots.map((slot, index) => (
           <p key={slot.slotId} className="mt-2 text-[0.95em]">
-            Blank {index + 1} options: {slot.options.map((option) => option.text).join("; ")}
+            Blank {index + 1} options:{" "}
+            {slot.options.map((option, optionIndex) => (
+              <span key={option.id}>
+                {optionIndex > 0 ? "; " : null}
+                <MathText text={option.text} />
+              </span>
+            ))}
           </p>
         ))}
       </>
@@ -91,7 +100,13 @@ function PrintQuestionBody({ question }: { question: Question }) {
           <p className="mb-2 italic text-[0.95em]">{question.dnd.instruction}</p>
         ) : null}
         <p className="mb-2">
-          Word bank: {question.dnd.pool.map((item) => item.text).join(" · ")}
+          Word bank:{" "}
+          {question.dnd.pool.map((item, itemIndex) => (
+            <span key={item.id}>
+              {itemIndex > 0 ? " · " : null}
+              <MathText text={item.text} />
+            </span>
+          ))}
         </p>
         <ol className="list-decimal space-y-1 pl-5">
           {question.dnd.zones.map((zone) => {

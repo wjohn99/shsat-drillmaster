@@ -71,6 +71,8 @@ export interface WorkspaceBoard {
   diagnosticExtendedTime?: boolean;
   /** Tutor must turn this on before the student can start a new diagnostic sitting. */
   diagnosticAssigned?: boolean;
+  /** Board created for a tutor testing student/demo account mode. Hidden from tutor rosters. */
+  demoAccount?: boolean;
   roadmap: StudentRoadmap;
   /** Used to refuse stale roadmap saves from another tab. */
   roadmapUpdatedAt?: Timestamp | null;

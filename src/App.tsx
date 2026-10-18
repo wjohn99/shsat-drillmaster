@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { QuestionBookmarksProvider } from "@/contexts/QuestionBookmarksContext";
+import { QuestionReviewProvider } from "@/contexts/QuestionReviewContext";
 import { QuestionsProvider } from "@/contexts/QuestionsContext";
 import { ExamLockProvider } from "@/contexts/ExamLockContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
@@ -50,6 +51,7 @@ function RequireAuth({
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
+      <QuestionReviewProvider>
       <QuestionBookmarksProvider>
       <QuestionsProvider>
       <ExamLockProvider>
@@ -213,6 +215,7 @@ const App = () => (
       </ExamLockProvider>
       </QuestionsProvider>
       </QuestionBookmarksProvider>
+      </QuestionReviewProvider>
     </AuthProvider>
   </QueryClientProvider>
 );

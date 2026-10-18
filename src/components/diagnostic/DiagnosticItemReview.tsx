@@ -23,6 +23,7 @@ import { QuestionResponseFields } from "@/components/question/QuestionResponseFi
 import { QuestionSolutionPanel } from "@/components/question/QuestionSolutionPanel";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
 import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
+import { MathText } from "@/lib/mathText";
 import { answersFromDiagnosticEvents, formatDiagnosticItemTime } from "@/lib/diagnosticReport";
 import { moduleLabel } from "@/lib/questionModule";
 import { getSelectedChoiceIds } from "@/lib/questionExplanation";
@@ -323,7 +324,9 @@ export function DiagnosticItemReview({ exam, events }: DiagnosticItemReviewProps
                       variant="stem"
                     />
                   ) : (
-                    <p className="text-base leading-relaxed whitespace-pre-wrap">{selected.stem}</p>
+                    <p className="text-base leading-relaxed whitespace-pre-wrap">
+                      <MathText text={selected.stem} />
+                    </p>
                   )}
                   <QuestionResponseFields
                     question={selected}

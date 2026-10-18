@@ -211,7 +211,7 @@ export interface Choice {
   explanation?: string;
 }
 
-/** Second-review gate. Missing status is treated as final (legacy Jed Approved items). */
+/** Second-review gate. Missing status is final, those items were already reviewed. */
 export type ReviewStatus = "provisional" | "final";
 
 /** Which copy of an ID a record belongs to. Bank and diagnostic versions of the same ID are separate content. */
@@ -294,6 +294,8 @@ export interface Form {
   timeLimit?: number; // in minutes
 }
 
+export type ReviewQueueFilter = "provisional" | "needs_jed";
+
 export interface FilterOptions {
   subjects: Subject[];
   modules: QuestionModule[];
@@ -304,4 +306,6 @@ export interface FilterOptions {
   passageOnly: boolean;
   searchQuery: string;
   userStatus: ('attempted' | 'correct' | 'bookmarked')[];
+  /** Tutor-only. `provisional` is unreviewed; `needs_jed` is reviewed and waiting on Jed. */
+  reviewQueue: ReviewQueueFilter[];
 }
