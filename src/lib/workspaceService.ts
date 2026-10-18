@@ -263,6 +263,25 @@ export function resolvedAssignedTutorUid(board: {
   return board.assignedTutorUid || board.createdByUid;
 }
 
+/** Students whose workspace board is assigned to this tutor (or created by them if unset). */
+export function studentUidsAssignedToTutor(
+  boards: Array<{
+    studentUid: string;
+    assignedTutorUid?: string;
+    createdByUid: string;
+  }>,
+  tutorUid: string | undefined,
+): Set<string> {
+  const uids = new Set<string>();
+  if (!tutorUid) return uids;
+  for (const board of boards) {
+    if (resolvedAssignedTutorUid(board) === tutorUid) {
+      uids.add(board.studentUid);
+    }
+  }
+  return uids;
+}
+
 export async function updateWorkspaceBoardAssignedTutor(
   boardId: string,
   tutor: { uid: string; displayName: string; email: string },

@@ -112,7 +112,7 @@ export function EditBoardDetailsDialog({
                     "h-8 w-8 rounded-full border-2 transition-transform hover:scale-105",
                     color === swatch.hex
                       ? "border-foreground ring-2 ring-offset-2 ring-foreground/30"
-                      : "border-transparent",
+                      : "border-black/20",
                   )}
                   style={{ backgroundColor: swatch.hex }}
                 />

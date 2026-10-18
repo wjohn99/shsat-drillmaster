@@ -3,8 +3,8 @@
  * Rendering checks for response fields that the audit flagged: numeric entry carried by a
  * table question, exact-count multi-select instructions, and inline-choice/drag-drop payloads.
  */
-import { afterEach, describe, expect, it } from "vitest";
-import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { QuestionResponseFields } from "@/components/question/QuestionResponseFields";
 import { loadDiagnosticQuestionCatalog, loadRevisedBank } from "@/data/questionCatalog";
 import type { Question } from "@/types";
@@ -58,4 +58,51 @@ describe("QuestionResponseFields", () => {
       expect(controls.length).toBe(q.ic!.slots.length);
     },
   );
+
+  it("hides Eliminate unless onToggleEliminate is provided", () => {
+    const question = bank.find((q) => q.subtype === "MC4_A-D" && q.choices?.length)!;
+    renderFields(question);
+    expect(screen.queryByRole("button", { name: "Eliminate" })).toBeNull();
+  });
+
+  it("strikes through a choice when Eliminate is clicked", () => {
+    const question = bank.find((q) => q.subtype === "MC4_A-D" && q.choices?.length)!;
+    const eliminated: string[] = [];
+    const onToggleEliminate = vi.fn((choiceId: string) => {
+      const i = eliminated.indexOf(choiceId);
+      if (i >= 0) eliminated.splice(i, 1);
+      else eliminated.push(choiceId);
+    });
+    const { rerender } = render(
+      <QuestionResponseFields
+        question={question}
+        raw={undefined}
+        disabled={false}
+        showSolution={false}
+        onChange={() => {}}
+        onToggleAta={() => {}}
+        eliminatedChoiceIds={eliminated}
+        onToggleEliminate={onToggleEliminate}
+      />,
+    );
+    const first = screen.getAllByRole("button", { name: "Eliminate" })[0];
+    fireEvent.click(first);
+    expect(onToggleEliminate).toHaveBeenCalledWith(question.choices![0].id);
+    rerender(
+      <QuestionResponseFields
+        question={question}
+        raw={undefined}
+        disabled={false}
+        showSolution={false}
+        onChange={() => {}}
+        onToggleAta={() => {}}
+        eliminatedChoiceIds={[...eliminated]}
+        onToggleEliminate={onToggleEliminate}
+      />,
+    );
+    expect(screen.getByRole("button", { name: "Undo" })).toBeTruthy();
+    expect(screen.getByText(`${question.choices![0].label}.`).closest("label")?.className).toMatch(
+      /line-through/,
+    );
+  });
 });

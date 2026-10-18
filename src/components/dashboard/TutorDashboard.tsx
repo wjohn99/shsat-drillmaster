@@ -32,7 +32,11 @@ import {
 import { fetchPracticeSessionsForTutor } from "@/lib/practiceSessionService";
 import { fetchDiagnosticProgressForTutor } from "@/lib/diagnosticProgressService";
 import { buildTutorDashboardAnalytics, DIAGNOSTIC_STATUS_LABEL } from "@/lib/dashboardAnalytics";
-import { fetchAllWorkspaceBoards, isDemoAccountBoard } from "@/lib/workspaceService";
+import {
+  fetchAllWorkspaceBoards,
+  isDemoAccountBoard,
+  studentUidsAssignedToTutor,
+} from "@/lib/workspaceService";
 import {
   countCompletedThisWeek,
   countOpenAssignments,
@@ -46,7 +50,19 @@ import { StudentQuickActions } from "@/components/workspace/StudentQuickActions"
 import { WorksheetEmptyState } from "@/components/worksheets/WorksheetEmptyState";
 import { assignToStudentNavState, type WorksheetsLocationState } from "@/types/worksheetsNavigation";
 import { Button } from "@/components/ui/button";
+
 const RECENT_LIMIT = 10;
+
+function studentOptionFromBoard(
+  board: { studentUid: string; studentName: string; studentEmail: string } | undefined,
+  uid: string,
+): StudentOption {
+  return {
+    uid,
+    displayName: board?.studentName || "Student",
+    email: board?.studentEmail || "",
+  };
+}
 
 export function TutorDashboard() {
   const navigate = useNavigate();
@@ -92,21 +108,28 @@ export function TutorDashboard() {
             .filter((board) => isDemoAccountBoard(board, profile?.uid))
             .map((board) => board.studentUid),
         );
-        const nameByUid = new Map(studentList.map((s) => [s.uid, s.displayName]));
+        const visibleBoards = boards.filter((board) => !hiddenDemoUids.has(board.studentUid));
+        const assignedStudentUids = studentUidsAssignedToTutor(visibleBoards, profile?.uid);
+        const studentByUid = new Map(studentList.map((s) => [s.uid, s]));
+        const boardByStudent = new Map(visibleBoards.map((board) => [board.studentUid, board]));
+        const assignedStudents: StudentOption[] = [...assignedStudentUids]
+          .map((uid) => studentByUid.get(uid) ?? studentOptionFromBoard(boardByStudent.get(uid), uid))
+          .sort((a, b) => a.displayName.localeCompare(b.displayName));
+        const nameByUid = new Map(assignedStudents.map((s) => [s.uid, s.displayName]));
         const rows: TutorAssignmentRow[] = assignments
-          .filter((a) => !hiddenDemoUids.has(a.assignedToStudentUid))
+          .filter((a) => assignedStudentUids.has(a.assignedToStudentUid))
           .map((a) => ({
             ...a,
             studentName: nameByUid.get(a.assignedToStudentUid) ?? "Student",
           }));
 
-        setStudents(studentList.filter((student) => !hiddenDemoUids.has(student.uid)));
+        setStudents(assignedStudents);
         setAllAssignments(rows);
-        setSessions(sessionRows.filter((session) => !hiddenDemoUids.has(session.userId)));
-        setDiagnosticInProgressUids(inProgressUids.filter((uid) => !hiddenDemoUids.has(uid)));
+        setSessions(sessionRows.filter((session) => assignedStudentUids.has(session.userId)));
+        setDiagnosticInProgressUids(inProgressUids.filter((uid) => assignedStudentUids.has(uid)));
         setDiagnosticAssignedUids(
-          boards
-            .filter((board) => board.diagnosticAssigned && !hiddenDemoUids.has(board.studentUid))
+          visibleBoards
+            .filter((board) => board.diagnosticAssigned && assignedStudentUids.has(board.studentUid))
             .map((board) => board.studentUid),
         );
       } catch (err) {
@@ -249,7 +272,8 @@ export function TutorDashboard() {
           <CardContent className="overflow-x-auto">
             {analytics.studentRows.length === 0 ? (
               <p className="text-sm text-muted-foreground py-4 text-center">
-                No students yet. Ask learners to sign in with Google first.
+                No students assigned to you yet. Add a student from Workspace, or ask another tutor
+                to assign you their board.
               </p>
             ) : (
               <Table>

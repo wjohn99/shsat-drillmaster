@@ -56,6 +56,7 @@ export function SessionQuestionRunner({
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [flaggedQuestions, setFlaggedQuestions] = useState<Set<string>>(new Set());
+  const [eliminated, setEliminated] = useState<Record<string, string[]>>({});
   const [feedback, setFeedback] = useState<null | { correct: boolean }>(null);
   const [reviewingAnswer, setReviewingAnswer] = useState(false);
   const [lockedQuestionIds, setLockedQuestionIds] = useState<Set<string>>(new Set());
@@ -85,6 +86,14 @@ export function SessionQuestionRunner({
     const prev = parseAtaAnswer(answers[questionId]);
     const next = prev.includes(choiceId) ? prev.filter((id) => id !== choiceId) : [...prev, choiceId];
     handleAnswerChange(questionId, serializeAtaAnswer(next));
+  };
+
+  const toggleEliminate = (questionId: string, choiceId: string) => {
+    setEliminated((prev) => {
+      const cur = prev[questionId] ?? [];
+      const next = cur.includes(choiceId) ? cur.filter((id) => id !== choiceId) : [...cur, choiceId];
+      return { ...prev, [questionId]: next };
+    });
   };
 
   const toggleFlag = (questionId: string) => {
@@ -331,6 +340,8 @@ export function SessionQuestionRunner({
                   showSolution={showSolution}
                   onChange={(value) => handleAnswerChange(currentQuestion.id, value)}
                   onToggleAta={(choiceId) => toggleAtaAnswer(currentQuestion.id, choiceId)}
+                  eliminatedChoiceIds={eliminated[currentQuestion.id]}
+                  onToggleEliminate={(choiceId) => toggleEliminate(currentQuestion.id, choiceId)}
                 />
 
                 {showSolution && feedback && (
