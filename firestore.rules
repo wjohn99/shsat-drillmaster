@@ -559,5 +559,49 @@ service cloud.firestore {
         allow delete: if false;
       }
     }
+
+    match /question_reports/{reportId} {
+      function isValidReportWrite() {
+        let data = request.resource.data;
+        return data.questionId is string
+          && data.questionId.size() > 0
+          && data.questionId.size() <= 80
+          && data.reporterUid == request.auth.uid
+          && data.reporterName is string
+          && data.reporterName.size() <= 200
+          && data.reporterEmail is string
+          && data.reporterEmail.size() <= 320
+          && data.reporterRole in ['student', 'tutor', 'demo']
+          && data.reason in ['wrong_answer', 'typo', 'display', 'other']
+          && data.comment is string
+          && data.comment.size() > 0
+          && data.comment.size() <= 2000
+          && data.source is string
+          && data.source.size() > 0
+          && data.source.size() <= 40
+          && data.status == 'open'
+          && data.createdAtMs is number
+          && data.updatedAtMs is number;
+      }
+
+      allow read: if isTutor();
+      allow read: if isSignedIn() && resource.data.reporterUid == request.auth.uid;
+
+      allow create: if isSignedIn() && isValidReportWrite();
+
+      allow update: if isSignedIn()
+        && resource.data.reporterUid == request.auth.uid
+        && request.resource.data.questionId == resource.data.questionId
+        && isValidReportWrite();
+
+      allow update: if isTutor()
+        && request.resource.data.questionId == resource.data.questionId
+        && request.resource.data.reporterUid == resource.data.reporterUid
+        && request.resource.data.status in ['open', 'resolved']
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['status', 'resolvedAtMs', 'resolvedByUid', 'resolvedByName', 'updatedAtMs']);
+
+      allow delete: if false;
+    }
   }
 }

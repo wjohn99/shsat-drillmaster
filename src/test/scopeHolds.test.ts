@@ -71,6 +71,13 @@ describe("current pools exclude held versions", () => {
     }
   });
 
+  it("serves MATH-ALG-114 without function notation", () => {
+    const served = full.questions.find((q) => q.id === "MATH-ALG-114");
+    expect(served?.contentVersion).toBe(2);
+    expect(served?.stem).toMatch(/3x − 5/);
+    expect(served?.stem).not.toMatch(/f\s*\(/);
+  });
+
   it("keeps every held original in the archive with its hold attached", () => {
     const archive = loadHeldAdvancedArchive();
     expect(archive).toHaveLength(19);

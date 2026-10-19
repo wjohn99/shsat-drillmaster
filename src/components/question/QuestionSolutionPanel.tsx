@@ -20,15 +20,19 @@ type QuestionSolutionPanelProps = {
   selectedChoiceIds?: string[];
   /** Tutor-only. The panel itself is already shown after an answer is checked. */
   showSkillToImprove?: boolean;
+  chosenAnswerLead?: string;
+  selectedChoiceLabel?: string;
   className?: string;
 };
 
 function ChoiceBreakdownCard({
   choice,
   selected,
+  selectedChoiceLabel,
 }: {
   choice: Choice;
   selected: boolean;
+  selectedChoiceLabel: string;
 }) {
   const explanation = choice.explanation?.trim();
   const correct = choice.isCorrect;
@@ -63,7 +67,7 @@ function ChoiceBreakdownCard({
           </Badge>
         ) : selected ? (
           <Badge variant="outline" className="border-destructive/40 text-destructive">
-            Your answer
+            {selectedChoiceLabel}
           </Badge>
         ) : null}
       </div>
@@ -86,6 +90,8 @@ export function QuestionSolutionPanel({
   showHeader = true,
   selectedChoiceIds = [],
   showSkillToImprove = false,
+  chosenAnswerLead = "You chose",
+  selectedChoiceLabel = "Your answer",
   className = "",
 }: QuestionSolutionPanelProps) {
   const solutionText = getQuestionSolutionExplanation(question);
@@ -123,7 +129,7 @@ export function QuestionSolutionPanel({
           </h4>
           {choices.length > 0 && (selectedLabels || correctLabels) ? (
             <p className="text-sm text-muted-foreground">
-              {selectedLabels ? <>You chose {selectedLabels}. </> : null}
+              {selectedLabels ? <>{chosenAnswerLead} {selectedLabels}. </> : null}
               {correctLabels ? <>Correct answer: {correctLabels}</> : null}
             </p>
           ) : null}
@@ -155,6 +161,7 @@ export function QuestionSolutionPanel({
                 key={choice.id}
                 choice={choice}
                 selected={selectedSet.has(choice.id)}
+                selectedChoiceLabel={selectedChoiceLabel}
               />
             ))}
           </div>
@@ -170,6 +177,7 @@ export function QuestionSolutionPanel({
                 key={choice.id}
                 choice={choice}
                 selected={selectedSet.has(choice.id)}
+                selectedChoiceLabel={selectedChoiceLabel}
               />
             ))}
           </div>

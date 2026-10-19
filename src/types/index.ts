@@ -294,7 +294,7 @@ export interface Form {
   timeLimit?: number; // in minutes
 }
 
-export type ReviewQueueFilter = "provisional" | "needs_jed";
+export type ReviewQueueFilter = "provisional" | "needs_jed" | "reported";
 
 export interface FilterOptions {
   subjects: Subject[];
@@ -306,6 +306,6 @@ export interface FilterOptions {
   passageOnly: boolean;
   searchQuery: string;
   userStatus: ('attempted' | 'correct' | 'bookmarked')[];
-  /** Tutor-only. `provisional` is unreviewed; `needs_jed` is reviewed and waiting on Jed. */
+  /** Tutor-only. `provisional` is unreviewed; `needs_jed` waits on Jed; `reported` has an open error report. */
   reviewQueue: ReviewQueueFilter[];
 }

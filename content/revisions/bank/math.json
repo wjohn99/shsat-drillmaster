@@ -1,6 +1,6 @@
 {
   "track": "bank",
-  "description": "Math practice-bank revisions from the 2026-10-17 content audit: feedback fixes, two Grade 8 scope rewrites (MATH-ALG-006, MATH-GEO-001), the GEO-108 area route, ALG-SYS retags and the DAT-003/DAT-107 near-duplicate variant. Bank track only; diagnostic copies are separate.",
+  "description": "Math practice-bank revisions from the 2026-10-17 content audit: feedback fixes, Grade 8 scope rewrites (MATH-ALG-006, MATH-ALG-114, MATH-GEO-001), the GEO-108 area route, ALG-SYS retags and the DAT-003/DAT-107 near-duplicate variant. Bank track only; diagnostic copies are separate.",
   "questions": [
     {
       "id": "MATH-ALG-002",
@@ -1004,6 +1004,63 @@
       "auditFindings": [
         "MATH:bank:MATH-NUM-106:1",
         "MATH:bank:MATH-NUM-106:2"
+      ]
+    },
+    {
+      "id": "MATH-ALG-114",
+      "subject": "MATH",
+      "module": "2",
+      "subtype": "MC4_A-D",
+      "tags": [
+        "ALG-LIN"
+      ],
+      "stem": "The value of 3x − 5 is 16 when x = a. What is the value of 3x − 5 when x = 2a?",
+      "choices": [
+        {
+          "id": "MATH-ALG-114-v2-a",
+          "label": "A",
+          "text": "14",
+          "isCorrect": false,
+          "explanation": "This is the value of 2a. The question asks for 3x − 5 when x is 2a, so 14 still has to be substituted into 3x − 5."
+        },
+        {
+          "id": "MATH-ALG-114-v2-b",
+          "label": "B",
+          "text": "17",
+          "isCorrect": false,
+          "explanation": "This comes from subtracting 5 instead of adding 5 when solving 3a − 5 = 16. That gives 3a = 11, so 2a = 22/3 and 3(22/3) − 5 = 17."
+        },
+        {
+          "id": "MATH-ALG-114-v2-c",
+          "label": "C",
+          "text": "32",
+          "isCorrect": false,
+          "explanation": "This doubles 16. Doubling x does not double 3x − 5, because the 5 is not doubled."
+        },
+        {
+          "id": "MATH-ALG-114-v2-d",
+          "label": "D",
+          "text": "37",
+          "isCorrect": true,
+          "explanation": "Correct. 3a − 5 = 16 gives a = 7, so 2a = 14 and 3(14) − 5 = 37."
+        }
+      ],
+      "solutionExplanation": "When x = a, 3a − 5 = 16. Add 5 to both sides: 3a = 21, so a = 7. Then 2a = 14. When x = 14, 3(14) − 5 = 42 − 5 = 37.",
+      "commonTrap": "Students assume that doubling x doubles the value of 3x − 5 and answer 2 × 16 = 32. Because of the − 5, 3(2a) − 5 = 6a − 5, which is not the same as 2(3a − 5) = 6a − 10.",
+      "reviewStatus": "provisional",
+      "originalAuthor": "Jed Levine",
+      "revisedBy": [
+        "Jed Levine",
+        "Claude",
+        "John"
+      ],
+      "revisionNotes": "Grade 8 scope rewrite. Version 1 used function notation f(x), f(a), and f(2a), which is outside the current Grade 8 product. Version 2 keeps the same numbers and key (D = 37) as a linear expression: 3x − 5 is 16 when x = a, find 3x − 5 when x = 2a. Tag ALG-FUN dropped; ALG-LIN remains. New choice IDs -v2-a to -v2-d. Module stays 2. Clears the bank hold at clearedByContentVersion 2. Version 1 stays in its source batch.",
+      "createdAt": "2026-10-11T12:00:00Z",
+      "contentVersion": 2,
+      "changeType": "scope-rewrite",
+      "auditFindings": [
+        "MATH:bank:MATH-ALG-114:1",
+        "SCOPE:bank:MATH-ALG-114"
       ]
     }
   ]

@@ -12,6 +12,7 @@ import { FilterOptions, QuestionModule, ReviewQueueFilter, Subject } from "@/typ
 import { QUESTION_FORMAT_TAGS, TAG_CATEGORIES } from "@/data/taggingScheme";
 import { moduleBadgeColor, moduleLabel, QUESTION_MODULES } from "@/lib/questionModule";
 import { useAuth } from "@/contexts/AuthContext";
+import { useQuestionReports } from "@/contexts/QuestionReportsContext";
 import { useQuestionReviews } from "@/contexts/QuestionReviewContext";
 import { useQuestions } from "@/contexts/QuestionsContext";
 import { canReviewQuestions } from "@/lib/questionReviewService";
@@ -42,6 +43,7 @@ export const FilterPanel = ({
   const { profile } = useAuth();
   const { questions } = useQuestions();
   const { states: reviewStates } = useQuestionReviews();
+  const { openQuestionIds } = useQuestionReports();
   const showReviewFilters = canReviewQuestions(profile?.role);
 
   const subjects: Subject[] = ['MATH', 'ELA'];
@@ -53,6 +55,7 @@ export const FilterPanel = ({
   const reviewQueueOptions: { value: ReviewQueueFilter; label: string }[] = [
     { value: "provisional", label: "Provisional" },
     { value: "needs_jed", label: "Reviewed" },
+    { value: "reported", label: "Reported" },
   ];
   const reviewCounts = {
     provisional: questions.filter((question) =>
@@ -61,6 +64,7 @@ export const FilterPanel = ({
     needs_jed: questions.filter((question) =>
       needsJedApproval(question, reviewStates.get(question.id)),
     ).length,
+    reported: questions.filter((question) => openQuestionIds.has(question.id)).length,
   };
 
   const onFiltersChangeRef = useRef(onFiltersChange);

@@ -2,6 +2,8 @@ import { useMemo } from "react";
 import { ArrowLeft, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useQuestions } from "@/contexts/QuestionsContext";
+import { SessionItemReview } from "@/components/session/SessionItemReview";
 import { SessionResultsDashboard } from "@/components/session/SessionResultsDashboard";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 
@@ -27,6 +29,12 @@ export function WorksheetSessionReview({
   onBack,
 }: WorksheetSessionReviewProps) {
   const completedLabel = formatCompletedAt(session);
+  const { getQuestionsByIds, getPassagesForQuestions, loading: questionsLoading } = useQuestions();
+  const questions = useMemo(
+    () => getQuestionsByIds(session.questionIds),
+    [getQuestionsByIds, session.questionIds],
+  );
+  const passages = useMemo(() => getPassagesForQuestions(questions), [getPassagesForQuestions, questions]);
 
   const summaryMetrics = useMemo(
     () => [
@@ -55,6 +63,18 @@ export function WorksheetSessionReview({
           </p>
         ) : null}
       </div>
+
+      {questionsLoading ? (
+        <p className="text-sm text-muted-foreground">Loading questions…</p>
+      ) : (
+        <SessionItemReview
+          questions={questions}
+          questionIds={session.questionIds}
+          passages={passages}
+          events={session.events}
+          viewerRole={viewerRole}
+        />
+      )}
 
       <SessionResultsDashboard
         title="Session results"

@@ -1,11 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useQuestionReports } from "@/contexts/QuestionReportsContext";
+import { questionReportReasonLabel } from "@/types/questionReport";
 import { toast } from "@/hooks/use-toast";
 import {
   AlertTriangle,
   CheckCircle2,
   Circle,
+  CircleAlert,
   ClipboardList,
   Eye,
   Loader2,
@@ -67,6 +70,7 @@ function studentOptionFromBoard(
 export function TutorDashboard() {
   const navigate = useNavigate();
   const { enterDemoMode, demoBusy, profile } = useAuth();
+  const { openReports } = useQuestionReports();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [students, setStudents] = useState<StudentOption[]>([]);
@@ -258,6 +262,47 @@ export function TutorDashboard() {
             hint="Last 7 days"
           />
         </section>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <CircleAlert className="h-5 w-5 text-primary" />
+              Question reports
+            </CardTitle>
+            <CardDescription>
+              Students and tutors can report a question from any practice screen. Open one to
+              read the note.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {openReports.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No open reports right now.</p>
+            ) : (
+              <ul className="divide-y">
+                {openReports.slice(0, 8).map((report) => (
+                  <li
+                    key={report.id}
+                    className="py-3 flex items-start justify-between gap-3 first:pt-0 last:pb-0"
+                  >
+                    <div className="min-w-0">
+                      <p className="font-medium truncate">{report.questionId}</p>
+                      <p className="text-sm text-muted-foreground truncate">
+                        {questionReportReasonLabel(report.reason)} · {report.reporterName}
+                      </p>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => navigate(`/question/${report.questionId}?practice=true`)}
+                    >
+                      Open
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </CardContent>
+        </Card>
 
         <Card>
           <CardHeader>

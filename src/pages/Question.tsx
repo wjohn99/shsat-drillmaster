@@ -25,7 +25,9 @@ import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
 import { useQuestions } from "@/contexts/QuestionsContext";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
 import { ProvisionalBadge } from "@/components/question/ProvisionalBadge";
+import { QuestionReportsPanel } from "@/components/question/QuestionReportsPanel";
 import { QuestionReviewPanel } from "@/components/question/QuestionReviewPanel";
+import { ReportQuestionButton } from "@/components/question/ReportQuestionButton";
 import { QuestionSolutionPanel } from "@/components/question/QuestionSolutionPanel";
 import { getSelectedChoiceIds } from "@/lib/questionExplanation";
 import { MathText } from "@/lib/mathText";
@@ -343,6 +345,8 @@ export default function Question() {
                     <Badge variant="outline">{question.subtype}</Badge>
                   </div>
                   
+                  <div className="flex items-center gap-1">
+                  <ReportQuestionButton question={question} source="question" compact />
                   <Button
                     variant="ghost"
                     size="sm"
@@ -366,6 +370,7 @@ export default function Question() {
                       <Bookmark className="h-4 w-4" />
                     }
                   </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -614,6 +619,7 @@ export default function Question() {
             </Card>
 
             <QuestionReviewPanel question={question} />
+            <QuestionReportsPanel questionId={question.id} />
 
             {/* User Notes */}
             <Card>

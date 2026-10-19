@@ -17,6 +17,7 @@ export function filterQuestions(
   filters: QuestionFilterInput,
   catalog: Question[],
   reviewStates?: Map<string, QuestionReviewState>,
+  reportedQuestionIds?: ReadonlySet<string>,
 ): Question[] {
   return catalog.filter((question) => {
     if (filters.subjects?.length && !filters.subjects.includes(question.subject)) {
@@ -158,6 +159,10 @@ export function filterQuestions(
       const awaitingJed = needsJedApproval(question, state);
       const wantProvisional = filters.reviewQueue.includes("provisional");
       const wantJed = filters.reviewQueue.includes("needs_jed");
+      const wantReported = filters.reviewQueue.includes("reported");
+      if (wantReported && !reportedQuestionIds?.has(question.id)) {
+        return false;
+      }
       if (wantProvisional && wantJed) {
         if (!unreviewed && !awaitingJed) return false;
       } else if (wantJed) {

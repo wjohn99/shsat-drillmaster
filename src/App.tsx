@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { QuestionBookmarksProvider } from "@/contexts/QuestionBookmarksContext";
 import { QuestionReviewProvider } from "@/contexts/QuestionReviewContext";
+import { QuestionReportsProvider } from "@/contexts/QuestionReportsContext";
 import { QuestionsProvider } from "@/contexts/QuestionsContext";
 import { ExamLockProvider } from "@/contexts/ExamLockContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
@@ -51,6 +52,7 @@ function RequireAuth({
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
+      <QuestionReportsProvider>
       <QuestionReviewProvider>
       <QuestionBookmarksProvider>
       <QuestionsProvider>
@@ -216,6 +218,7 @@ const App = () => (
       </QuestionsProvider>
       </QuestionBookmarksProvider>
       </QuestionReviewProvider>
+      </QuestionReportsProvider>
     </AuthProvider>
   </QueryClientProvider>
 );

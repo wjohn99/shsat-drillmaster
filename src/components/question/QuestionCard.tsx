@@ -14,6 +14,7 @@ import { ModuleBadge } from "@/components/question/ModuleBadge";
 import { ProvisionalBadge } from "@/components/question/ProvisionalBadge";
 import { MathText } from "@/lib/mathText";
 import { useAuth } from "@/contexts/AuthContext";
+import { useQuestionReports } from "@/contexts/QuestionReportsContext";
 import { useQuestionReviews } from "@/contexts/QuestionReviewContext";
 import { canReviewQuestions } from "@/lib/questionReviewService";
 
@@ -24,7 +25,9 @@ interface QuestionCardProps {
 export const QuestionCard = ({ question }: QuestionCardProps) => {
   const { profile } = useAuth();
   const { states } = useQuestionReviews();
+  const { openQuestionIds } = useQuestionReports();
   const reviewCount = states.get(question.id)?.reviewerUids.length ?? 0;
+  const isReported = openQuestionIds.has(question.id);
   const subjectVariant = question.subject === 'MATH' ? 'math' : 'ela';
   const contentTags = question.tags.filter((t) => !isFormatTagCode(t.code));
   const formatTag = question.tags.find((t) => isFormatTagCode(t.code));
@@ -66,6 +69,11 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
             </Chip>
             <ModuleBadge module={question.module} className="h-5 px-2 text-[10px]" />
             <ProvisionalBadge question={question} />
+            {isReported ? (
+              <Badge variant="destructive" className="text-[10px]">
+                Reported
+              </Badge>
+            ) : null}
           </div>
         </div>
 

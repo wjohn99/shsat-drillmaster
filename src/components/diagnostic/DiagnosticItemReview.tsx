@@ -22,6 +22,7 @@ import { HighlightableText } from "@/components/exam/HighlightableText";
 import { QuestionResponseFields } from "@/components/question/QuestionResponseFields";
 import { QuestionSolutionPanel } from "@/components/question/QuestionSolutionPanel";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
+import { ReportQuestionButton } from "@/components/question/ReportQuestionButton";
 import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
 import { MathText } from "@/lib/mathText";
 import { answersFromDiagnosticEvents, formatDiagnosticItemTime } from "@/lib/diagnosticReport";
@@ -291,6 +292,7 @@ export function DiagnosticItemReview({ exam, events }: DiagnosticItemReviewProps
                   <Clock className="h-3.5 w-3.5" />
                   {timeLabel}
                 </span>
+                <ReportQuestionButton question={selected} source="review" compact />
               </div>
               <div className="grid gap-4 md:grid-cols-2">
                 {passage ? (

@@ -110,7 +110,7 @@ export function CustomWorksheetBuilder({
   workspacePlacementLocked = false,
   assigning = false,
   onAssign,
-  revealAnswers = true,
+  revealAnswers = false,
   onRevealAnswersChange,
 }: CustomWorksheetBuilderProps) {
   const isTutor = variant === "tutor";
@@ -324,8 +324,8 @@ export function CustomWorksheetBuilder({
                 </Label>
                 <p className="text-xs text-muted-foreground">
                   {revealAnswers
-                    ? "The student sees the correct answer and explanation after each question."
-                    : "Cold diagnostic. The student answers each question without seeing the answer or explanation."}
+                    ? "The student sees the correct answer after they check each question. They cannot change that answer afterward."
+                    : "The student answers without seeing the key. You can still review each question after they submit."}
                 </p>
               </div>
             </div>

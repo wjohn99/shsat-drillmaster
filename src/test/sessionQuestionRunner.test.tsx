@@ -15,6 +15,10 @@ vi.mock("@/components/question/ProvisionalBadge", () => ({
   ProvisionalBadge: () => null,
 }));
 
+vi.mock("@/components/question/ReportQuestionButton", () => ({
+  ReportQuestionButton: () => null,
+}));
+
 vi.mock("@/contexts/AuthContext", () => ({
   useAuth: () => ({ profile: { role: "student" } }),
 }));
@@ -87,5 +91,26 @@ describe("SessionQuestionRunner eliminate-choice", () => {
     fireEvent.click(screen.getByRole("button", { name: /Check answer/ }));
     expect(screen.queryByRole("button", { name: "Eliminate" })).toBeNull();
     expect(screen.queryByRole("button", { name: "Undo" })).toBeNull();
+  });
+});
+
+describe("SessionQuestionRunner answer lock", () => {
+  it("does not let a student change an answer after Check answer, including after leaving the question", () => {
+    renderRunner();
+    fireEvent.click(screen.getByRole("radio", { name: /B\./ }));
+    fireEvent.click(screen.getByRole("button", { name: /Check answer/ }));
+    expect(screen.getByText("Incorrect.")).toBeTruthy();
+    expect(screen.getByRole("radio", { name: /B\./ }).getAttribute("aria-checked")).toBe("true");
+
+    fireEvent.click(screen.getByRole("radio", { name: /A\./ }));
+    expect(screen.getByRole("radio", { name: /A\./ }).getAttribute("aria-checked")).toBe("false");
+    expect(screen.getByRole("radio", { name: /B\./ }).getAttribute("aria-checked")).toBe("true");
+
+    fireEvent.click(screen.getByRole("button", { name: "2" }));
+    fireEvent.click(screen.getByRole("button", { name: "1" }));
+    expect(screen.getByText("Incorrect.")).toBeTruthy();
+    expect(screen.getByRole("radio", { name: /B\./ }).getAttribute("aria-checked")).toBe("true");
+    expect(screen.getByRole("button", { name: "Continue" })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: /Check answer/ })).toBeNull();
   });
 });

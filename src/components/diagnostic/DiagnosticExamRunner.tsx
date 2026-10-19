@@ -17,6 +17,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { HighlightableText } from "@/components/exam/HighlightableText";
 import { QuestionResponseFields } from "@/components/question/QuestionResponseFields";
+import { ReportQuestionButton } from "@/components/question/ReportQuestionButton";
 import { DiagnosticSectionMap, type DiagnosticMapCell } from "@/components/diagnostic/DiagnosticSectionMap";
 import { useExamLock } from "@/contexts/ExamLockContext";
 import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
@@ -618,6 +619,7 @@ export function DiagnosticExamRunner({
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <ReportQuestionButton question={currentQuestion} source="diagnostic" compact />
             {isPassageSet ? (
               <Button
                 variant={flagged.has(currentQuestion.id) ? "default" : "outline"}

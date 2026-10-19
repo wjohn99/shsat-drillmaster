@@ -43,9 +43,9 @@
   },
   {
     "key": "MATH:bank:MATH-ALG-114:1",
-    "disposition": "held",
-    "revision": null,
-    "note": "Scope hold active in content/scope/grade8-holds.json (clearedByContentVersion null). The version 1 original is preserved unchanged and excluded from every current Grade 8 pool. No in-scope rewrite in this pass."
+    "disposition": "fixed",
+    "revision": "bank:MATH-ALG-114@2",
+    "note": "Grade 8 scope rewrite. Version 1 used function notation f(x), f(a), and f(2a) and stays preserved in its source batch. Version 2 keeps the same numbers and key (D = 37) as a linear expression: 3x − 5 is 16 when x = a, find 3x − 5 when x = 2a. Tag ALG-FUN dropped; ALG-LIN remains. New choice IDs -v2-a to -v2-d. Module stays 2. Clears the bank hold at clearedByContentVersion 2."
   },
   {
     "key": "MATH:bank:MATH-APP-001:1",

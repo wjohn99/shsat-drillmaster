@@ -17,6 +17,7 @@ import { getQuestionsForTopic } from "@/data/navigationData";
 import { filterQuestions, type QuestionFilterInput } from "@/lib/questionFilters";
 import { applyJedApprovalsToQuestions } from "@/lib/reviewStatus";
 import { useAuth } from "@/contexts/AuthContext";
+import { useQuestionReports } from "@/contexts/QuestionReportsContext";
 import { useQuestionReviews } from "@/contexts/QuestionReviewContext";
 import type { Form, Passage, Question } from "@/types";
 import type { SubjectNavigation } from "@/types/navigation";
@@ -44,6 +45,7 @@ const QuestionsContext = createContext<QuestionsContextValue | null>(null);
 export function QuestionsProvider({ children }: { children: ReactNode }) {
   const { profile, loading: authLoading } = useAuth();
   const { states: reviewStates } = useQuestionReviews();
+  const { openQuestionIds } = useQuestionReports();
   const [fullCatalog, setFullCatalog] = useState<QuestionCatalog | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -88,9 +90,9 @@ export function QuestionsProvider({ children }: { children: ReactNode }) {
   const getFilteredQuestions = useCallback(
     (filters: QuestionFilterInput, source?: Question[]) => {
       const pool = source ?? catalog?.questions ?? [];
-      return filterQuestions(filters, pool, reviewStates);
+      return filterQuestions(filters, pool, reviewStates, openQuestionIds);
     },
-    [catalog, reviewStates],
+    [catalog, openQuestionIds, reviewStates],
   );
 
   const getQuestionById = useCallback(

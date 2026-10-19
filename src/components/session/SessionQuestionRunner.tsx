@@ -10,6 +10,7 @@ import { useQuestions } from "@/contexts/QuestionsContext";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
 import { ProvisionalBadge } from "@/components/question/ProvisionalBadge";
 import { QuestionReviewPanel } from "@/components/question/QuestionReviewPanel";
+import { ReportQuestionButton } from "@/components/question/ReportQuestionButton";
 import { QuestionResponseFields } from "@/components/question/QuestionResponseFields";
 import { QuestionSolutionPanel } from "@/components/question/QuestionSolutionPanel";
 import { getSelectedChoiceIds } from "@/lib/questionExplanation";
@@ -57,8 +58,6 @@ export function SessionQuestionRunner({
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [flaggedQuestions, setFlaggedQuestions] = useState<Set<string>>(new Set());
   const [eliminated, setEliminated] = useState<Record<string, string[]>>({});
-  const [feedback, setFeedback] = useState<null | { correct: boolean }>(null);
-  const [reviewingAnswer, setReviewingAnswer] = useState(false);
   const [lockedQuestionIds, setLockedQuestionIds] = useState<Set<string>>(new Set());
 
   const questionStartMsRef = useRef(Date.now());
@@ -73,16 +72,17 @@ export function SessionQuestionRunner({
   const progress = questions.length ? (currentQuestionIndex / questions.length) * 100 : 0;
 
   useEffect(() => {
+    if (currentQuestion && lockedQuestionIds.has(currentQuestion.id)) return;
     questionStartMsRef.current = Date.now();
-    setFeedback(null);
-    setReviewingAnswer(false);
-  }, [currentQuestionIndex]);
+  }, [currentQuestionIndex, currentQuestion, lockedQuestionIds]);
 
   const handleAnswerChange = (questionId: string, answer: string) => {
+    if (lockedQuestionIds.has(questionId)) return;
     setAnswers((prev) => ({ ...prev, [questionId]: answer }));
   };
 
   const toggleAtaAnswer = (questionId: string, choiceId: string) => {
+    if (lockedQuestionIds.has(questionId)) return;
     const prev = parseAtaAnswer(answers[questionId]);
     const next = prev.includes(choiceId) ? prev.filter((id) => id !== choiceId) : [...prev, choiceId];
     handleAnswerChange(questionId, serializeAtaAnswer(next));
@@ -124,7 +124,7 @@ export function SessionQuestionRunner({
   const recordCurrentAndAdvance = () => {
     if (!currentQuestion) return;
 
-    if (reviewingAnswer || (!revealAnswers && lockedQuestionIds.has(currentQuestion.id))) {
+    if (lockedQuestionIds.has(currentQuestion.id)) {
       advanceAfterReview();
       return;
     }
@@ -143,21 +143,18 @@ export function SessionQuestionRunner({
       elapsedSeconds,
       tags: currentQuestion.tags.map((t) => t.code),
       contentVersion: currentQuestion.contentVersion ?? 1,
+      ...(raw ? { answer: raw } : {}),
     };
     eventsByQuestionId.current.set(currentQuestion.id, evt);
+    setLockedQuestionIds((prev) => {
+      const next = new Set(prev);
+      next.add(currentQuestion.id);
+      return next;
+    });
 
     if (!revealAnswers) {
-      setLockedQuestionIds((prev) => {
-        const next = new Set(prev);
-        next.add(currentQuestion.id);
-        return next;
-      });
       advanceAfterReview();
-      return;
     }
-
-    setFeedback({ correct });
-    setReviewingAnswer(true);
   };
 
   const prevQuestion = () => {
@@ -190,8 +187,11 @@ export function SessionQuestionRunner({
   }
 
   const raw = answers[currentQuestion.id];
-  const answerLocked = !revealAnswers && lockedQuestionIds.has(currentQuestion.id);
-  const showSolution = revealAnswers && reviewingAnswer;
+  const answerLocked = lockedQuestionIds.has(currentQuestion.id);
+  const storedEvent = eventsByQuestionId.current.get(currentQuestion.id);
+  const showSolution = revealAnswers && answerLocked;
+  const feedback =
+    showSolution && storedEvent ? { correct: storedEvent.correct } : null;
 
   return (
     <div className="min-h-screen">
@@ -235,6 +235,11 @@ export function SessionQuestionRunner({
               <Printer className="mr-2 h-4 w-4" />
               Print / Save PDF
             </Button>
+            <ReportQuestionButton
+              question={currentQuestion}
+              source={storageKeyPrefix.startsWith("assignment") ? "worksheet" : "practice_set"}
+              compact
+            />
             <Button
               variant="outline"
               onClick={() => toggleFlag(currentQuestion.id)}
@@ -341,7 +346,11 @@ export function SessionQuestionRunner({
                   onChange={(value) => handleAnswerChange(currentQuestion.id, value)}
                   onToggleAta={(choiceId) => toggleAtaAnswer(currentQuestion.id, choiceId)}
                   eliminatedChoiceIds={eliminated[currentQuestion.id]}
-                  onToggleEliminate={(choiceId) => toggleEliminate(currentQuestion.id, choiceId)}
+                  onToggleEliminate={
+                    answerLocked
+                      ? undefined
+                      : (choiceId) => toggleEliminate(currentQuestion.id, choiceId)
+                  }
                 />
 
                 {showSolution && feedback && (
@@ -365,13 +374,9 @@ export function SessionQuestionRunner({
 
               <Button
                 onClick={recordCurrentAndAdvance}
-                disabled={
-                  !reviewingAnswer &&
-                  !answerLocked &&
-                  !canSubmitQuestionAnswer(currentQuestion, raw)
-                }
+                disabled={!answerLocked && !canSubmitQuestionAnswer(currentQuestion, raw)}
               >
-                {reviewingAnswer || answerLocked
+                {answerLocked
                   ? currentQuestionIndex === questions.length - 1
                     ? finishLabel
                     : "Continue"

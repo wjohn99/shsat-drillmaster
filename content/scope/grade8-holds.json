@@ -35,7 +35,7 @@
       "track": "bank",
       "reason": "Assumed function notation f(a), f(2a). Valid content, outside the current Grade 8 product scope.",
       "evidence": "content/audit/2026-10-17/official-scope-evidence.md; math-full-review row MATH-ALG-114 (merged-bank)",
-      "clearedByContentVersion": null
+      "clearedByContentVersion": 2
     },
     {
       "id": "MATH-GEO-001",

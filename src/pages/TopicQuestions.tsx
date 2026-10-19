@@ -24,6 +24,7 @@ import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
 import { HighlightableText } from "@/components/exam/HighlightableText";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
 import { ProvisionalBadge } from "@/components/question/ProvisionalBadge";
+import { ReportQuestionButton } from "@/components/question/ReportQuestionButton";
 import { useState } from "react";
 import { MathText } from "@/lib/mathText";
 
@@ -135,8 +136,11 @@ export default function TopicQuestions() {
                     <ModuleBadge module={question.module} />
                     <ProvisionalBadge question={question} />
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    Question #{index + 1}
+                  <div className="flex items-center gap-2">
+                    <ReportQuestionButton question={question} source="topic" compact />
+                    <div className="text-sm text-muted-foreground">
+                      Question #{index + 1}
+                    </div>
                   </div>
                 </div>
               </CardHeader>

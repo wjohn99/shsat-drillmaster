@@ -14,6 +14,7 @@ import type { Question, QuestionModule } from "@/types";
 import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
 import { useQuestions } from "@/contexts/QuestionsContext";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
+import { ReportQuestionButton } from "@/components/question/ReportQuestionButton";
 import { moduleLabel } from "@/lib/questionModule";
 import { Chip } from "@/components/ui/chip";
 import { isIndyCheckboxMultiSubtype, parseAtaAnswer, serializeAtaAnswer } from "@/lib/indyAta";
@@ -593,6 +594,7 @@ export default function BlitzMode() {
                     <Badge variant="outline" className="text-xs">
                       {currentQuestion.subtype}
                     </Badge>
+                    <ReportQuestionButton question={currentQuestion} source="blitz" compact />
                   </div>
                   <div className="text-xs text-muted-foreground">
                     Answered: {answeredCount} • Correct: {correctCount}

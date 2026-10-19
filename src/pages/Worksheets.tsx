@@ -105,7 +105,7 @@ const Worksheets = () => {
   const [assignmentDueDate, setAssignmentDueDate] = useState(defaultAssignmentDueDateInput);
   const minAssignmentDueDate = useMemo(() => toAssignmentDueDateInputValue(new Date()), []);
   const [showOnWorkspace, setShowOnWorkspace] = useState(true);
-  const [revealAnswers, setRevealAnswers] = useState(true);
+  const [revealAnswers, setRevealAnswers] = useState(false);
   const [workspaceBoardExists, setWorkspaceBoardExists] = useState(false);
   const [workspaceLists, setWorkspaceLists] = useState<WorkspaceList[]>([]);
   const [workspaceCards, setWorkspaceCards] = useState<WorkspaceCard[]>([]);
