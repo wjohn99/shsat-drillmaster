@@ -55,7 +55,65 @@ describe("SessionItemReview", () => {
     fireEvent.click(screen.getByRole("button", { name: /Question 1, Incorrect/ }));
     expect(screen.getByText("What is 2 + 2?")).toBeTruthy();
     expect(screen.getByText("Student answer and key for this item.")).toBeTruthy();
-    expect(screen.getByText(/Student chose B/)).toBeTruthy();
+    expect(screen.getAllByText(/Student chose B/).length).toBeGreaterThan(0);
     expect(screen.getByText(/Correct answer: A/)).toBeTruthy();
+    expect(screen.getAllByText("5").length).toBeGreaterThan(0);
+  });
+
+  it("maps a pre-rewrite choice id onto the current wrong choice", () => {
+    const revised: Question = {
+      ...question,
+      id: "MATH-ALG-114",
+      choices: [
+        { id: "MATH-ALG-114-v2-a", label: "A", text: "14", isCorrect: false },
+        { id: "MATH-ALG-114-v2-b", label: "B", text: "17", isCorrect: false },
+        { id: "MATH-ALG-114-v2-c", label: "C", text: "32", isCorrect: false },
+        { id: "MATH-ALG-114-v2-d", label: "D", text: "37", isCorrect: true },
+      ],
+    };
+    render(
+      <SessionItemReview
+        questions={[revised]}
+        events={[
+          {
+            questionId: "MATH-ALG-114",
+            subject: "MATH",
+            module: "2",
+            correct: false,
+            elapsedSeconds: 20,
+            tags: [],
+            answer: "MATH-ALG-114-c",
+          },
+        ]}
+        viewerRole="tutor"
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /Question 1, Incorrect/ }));
+    expect(screen.getAllByText(/Student chose C/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText("32").length).toBeGreaterThan(0);
+    expect(screen.getByText(/Correct answer: D/)).toBeTruthy();
+  });
+
+  it("tells the tutor when a scored item has no stored pick", () => {
+    render(
+      <SessionItemReview
+        questions={[question]}
+        events={[
+          {
+            questionId: "q1",
+            subject: "MATH",
+            module: "1",
+            correct: false,
+            elapsedSeconds: 12,
+            tags: [],
+          },
+        ]}
+        viewerRole="tutor"
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /Question 1, Incorrect/ }));
+    expect(
+      screen.getByText(/did not store which choice the student picked/),
+    ).toBeTruthy();
   });
 });

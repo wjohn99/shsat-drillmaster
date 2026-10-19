@@ -17,8 +17,7 @@ import { QuestionSolutionPanel } from "@/components/question/QuestionSolutionPan
 import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
 import { answersFromDiagnosticEvents, formatDiagnosticItemTime } from "@/lib/diagnosticReport";
 import { MathText } from "@/lib/mathText";
-import { getSelectedChoiceIds } from "@/lib/questionExplanation";
-import { canSubmitQuestionAnswer } from "@/lib/sessionGrading";
+import { formatChoiceLabels, getSelectedChoiceIds } from "@/lib/questionExplanation";
 import { cn } from "@/lib/utils";
 import type { Passage, Question } from "@/types";
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
@@ -30,6 +29,56 @@ type SessionItemReviewProps = {
   events: SessionAnalyticsEvent[];
   viewerRole?: "student" | "tutor";
 };
+
+function SubmittedPickBanner({
+  question,
+  raw,
+  isCorrect,
+  isTutor,
+}: {
+  question: Question;
+  raw: string | undefined;
+  isCorrect?: boolean;
+  isTutor: boolean;
+}) {
+  const selectedIds = getSelectedChoiceIds(question, raw);
+  const labels = formatChoiceLabels(question, selectedIds);
+  const picked = (question.choices ?? []).filter((choice) => selectedIds.includes(choice.id));
+  const who = isTutor ? "Student" : "You";
+
+  if (!raw) {
+    return (
+      <div className="rounded-lg border border-dashed bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
+        {who === "Student"
+          ? "This attempt did not store which choice the student picked. The score is still saved."
+          : "This attempt did not store which choice you picked. The score is still saved."}
+      </div>
+    );
+  }
+
+  const tone =
+    isCorrect === true
+      ? "border-success/40 bg-success/5"
+      : "border-destructive/40 bg-destructive/5";
+
+  return (
+    <div className={cn("rounded-lg border px-4 py-3", tone)}>
+      <p className="text-sm font-medium">
+        {who} chose {labels || raw}
+        {isCorrect === true ? ", correct." : isCorrect === false ? ", incorrect." : "."}
+      </p>
+      {picked.length > 0 ? (
+        <ul className="mt-2 space-y-1 text-sm leading-relaxed">
+          {picked.map((choice) => (
+            <li key={choice.id}>
+              <span className="font-medium">{choice.label}.</span> <MathText text={choice.text} />
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </div>
+  );
+}
 
 function resultLabel(event: SessionAnalyticsEvent | undefined, sittingHasAnswers: boolean): string {
   const hasAnswer = Boolean(event?.answer);
@@ -74,7 +123,7 @@ export function SessionItemReview({
     ? passages.find((item) => item.id === selected.passageId)
     : undefined;
   const showElaHighlighter = selected ? shouldShowElaHighlighter(selected) : false;
-  const answered = selected ? canSubmitQuestionAnswer(selected, raw) : Boolean(selectedEvent);
+  const selectedScored = Boolean(selectedEvent);
   const isTutor = viewerRole === "tutor";
 
   if (orderedIds.length === 0) {
@@ -145,19 +194,16 @@ export function SessionItemReview({
                   Question {selectedIndex + 1}
                   {selectedEvent?.correct
                     ? " · Correct"
-                    : answered
+                    : selectedScored
                       ? " · Incorrect"
                       : " · Blank"}
                 </DialogTitle>
                 <DialogDescription>
-                  {answered
+                  {selectedScored
                     ? isTutor
                       ? "Student answer and key for this item."
                       : "Your answer and key for this item."
                     : "This item was left blank and scored as incorrect."}
-                  {sittingHasAnswers && answered && !selectedEvent?.answer
-                    ? " This sitting did not store the selected choice."
-                    : null}
                 </DialogDescription>
               </DialogHeader>
               {selected ? (
@@ -212,6 +258,14 @@ export function SessionItemReview({
                           <MathText text={selected.stem} />
                         </p>
                       )}
+                      {selectedScored || raw ? (
+                        <SubmittedPickBanner
+                          question={selected}
+                          raw={raw}
+                          isCorrect={selectedEvent?.correct}
+                          isTutor={isTutor}
+                        />
+                      ) : null}
                       <QuestionResponseFields
                         question={selected}
                         raw={raw}
@@ -227,6 +281,9 @@ export function SessionItemReview({
                         showSkillToImprove={isTutor}
                         chosenAnswerLead={isTutor ? "Student chose" : "You chose"}
                         selectedChoiceLabel={isTutor ? "Student answer" : "Your answer"}
+                        unmatchedAnswer={
+                          raw && getSelectedChoiceIds(selected, raw).length === 0 ? raw : undefined
+                        }
                       />
                     </div>
                   </div>

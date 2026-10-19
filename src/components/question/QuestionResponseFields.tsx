@@ -10,9 +10,10 @@ import { GraphFigureBlock } from "@/components/question/GraphFigureBlock";
 import { HotSpotBlock } from "@/components/question/HotSpotBlock";
 import { InlineChoiceBlock } from "@/components/question/InlineChoiceBlock";
 import { WpBlock } from "@/components/question/WpBlock";
-import { isIndyCheckboxMultiSubtype, parseAtaAnswer } from "@/lib/indyAta";
+import { isIndyCheckboxMultiSubtype } from "@/lib/indyAta";
 import { parseDndPlacementsForQuestion, serializeDndPlacements } from "@/lib/indyDnd";
 import { parseIcSelectionsForQuestion, serializeIcSelections } from "@/lib/indyIc";
+import { getSelectedChoiceIds } from "@/lib/questionExplanation";
 import { MathText } from "@/lib/mathText";
 import { cn } from "@/lib/utils";
 import type { Question } from "@/types";
@@ -43,6 +44,8 @@ export function QuestionResponseFields({
   highContrastChoices = false,
 }: QuestionResponseFieldsProps) {
   const eliminated = new Set(eliminatedChoiceIds);
+  const selectedChoiceIds = new Set(getSelectedChoiceIds(question, raw));
+  const selectedMcValue = [...selectedChoiceIds][0] ?? "";
   const choiceControlClass = cn("mt-1", highContrastChoices && "diagnostic-choice-control");
   const showMcChoices =
     Boolean(question.choices) &&
@@ -111,8 +114,7 @@ export function QuestionResponseFields({
               : "Select all that apply."}
           </p>
           {question.choices.map((choice) => {
-            const selected = parseAtaAnswer(raw);
-            const checked = selected.includes(choice.id);
+            const checked = selectedChoiceIds.has(choice.id);
             const showWrongPick = showSolution && checked && !choice.isCorrect;
             const showMissed = showSolution && !checked && choice.isCorrect;
             const isEliminated = eliminated.has(choice.id);
@@ -139,6 +141,11 @@ export function QuestionResponseFields({
                     <span className="font-medium mr-2">{choice.label}.</span>
                     <MathText text={choice.text} />
                   </Label>
+                  {showSolution && showWrongPick ? (
+                    <span className="mt-0.5 shrink-0 rounded-md border border-destructive/40 bg-destructive/10 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-destructive">
+                      Selected
+                    </span>
+                  ) : null}
                   {onToggleEliminate && !showSolution ? (
                     <button
                       type="button"
@@ -161,9 +168,15 @@ export function QuestionResponseFields({
 
       {showMcChoices && question.choices && (
         <div className="space-y-3">
-          <RadioGroup value={raw || ""} onValueChange={onChange} disabled={disabled}>
+          <RadioGroup
+            value={selectedMcValue || raw || ""}
+            onValueChange={onChange}
+            disabled={disabled && !showSolution}
+            className={cn(showSolution && "pointer-events-none")}
+          >
             {question.choices.map((choice) => {
               const isEliminated = eliminated.has(choice.id);
+              const isStudentPick = selectedChoiceIds.has(choice.id);
               return (
                 <div key={choice.id} className="space-y-1.5">
                   <div className="flex items-start space-x-3">
@@ -173,13 +186,18 @@ export function QuestionResponseFields({
                       className={cn(
                         "flex-1 cursor-pointer text-sm leading-relaxed",
                         showSolution && choice.isCorrect && "text-success font-medium",
-                        showSolution && raw === choice.id && !choice.isCorrect && "text-destructive",
+                        showSolution && isStudentPick && !choice.isCorrect && "text-destructive",
                         isEliminated && "line-through text-muted-foreground",
                       )}
                     >
                       <span className="font-medium mr-2">{choice.label}.</span>
                       <MathText text={choice.text} />
                     </Label>
+                    {showSolution && isStudentPick && !choice.isCorrect ? (
+                      <span className="mt-0.5 shrink-0 rounded-md border border-destructive/40 bg-destructive/10 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-destructive">
+                        Selected
+                      </span>
+                    ) : null}
                     {onToggleEliminate && !showSolution ? (
                       <button
                         type="button"
@@ -192,7 +210,7 @@ export function QuestionResponseFields({
                     {showSolution && choice.isCorrect && (
                       <CheckCircle className="h-4 w-4 text-success mt-1" />
                     )}
-                    {showSolution && raw === choice.id && !choice.isCorrect && (
+                    {showSolution && isStudentPick && !choice.isCorrect && (
                       <XCircle className="h-4 w-4 text-destructive mt-1" />
                     )}
                   </div>

@@ -22,6 +22,8 @@ type QuestionSolutionPanelProps = {
   showSkillToImprove?: boolean;
   chosenAnswerLead?: string;
   selectedChoiceLabel?: string;
+  /** Shown when a stored response exists but does not map onto current choices. */
+  unmatchedAnswer?: string;
   className?: string;
 };
 
@@ -92,6 +94,7 @@ export function QuestionSolutionPanel({
   showSkillToImprove = false,
   chosenAnswerLead = "You chose",
   selectedChoiceLabel = "Your answer",
+  unmatchedAnswer,
   className = "",
 }: QuestionSolutionPanelProps) {
   const solutionText = getQuestionSolutionExplanation(question);
@@ -127,9 +130,14 @@ export function QuestionSolutionPanel({
             )}
             {headerLabel}
           </h4>
-          {choices.length > 0 && (selectedLabels || correctLabels) ? (
+          {choices.length > 0 && (selectedLabels || correctLabels || unmatchedAnswer) ? (
             <p className="text-sm text-muted-foreground">
               {selectedLabels ? <>{chosenAnswerLead} {selectedLabels}. </> : null}
+              {!selectedLabels && unmatchedAnswer ? (
+                <>
+                  {chosenAnswerLead} {unmatchedAnswer}.{" "}
+                </>
+              ) : null}
               {correctLabels ? <>Correct answer: {correctLabels}</> : null}
             </p>
           ) : null}
