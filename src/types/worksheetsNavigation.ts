@@ -14,6 +14,18 @@ export type WorksheetsWorkspaceCompletionTarget = {
 };
 
 export const WORKSPACE_HOME_PATH = "/workspace";
+export const WORKSHEETS_PATH = "/worksheets";
+export const WORKSHEET_ATTEMPT_PARAM = "attempt";
+
+export function worksheetAttemptSearch(scopeId: string): string {
+  return `?${WORKSHEET_ATTEMPT_PARAM}=${encodeURIComponent(scopeId)}`;
+}
+
+export function parseWorksheetAttemptParam(search: string): string | null {
+  const params = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
+  const value = params.get(WORKSHEET_ATTEMPT_PARAM)?.trim();
+  return value || null;
+}
 
 export type WorksheetsLocationState = {
   openTutorBuild?: boolean;

@@ -35,6 +35,7 @@ import {
   assignmentRevealsAnswers,
   createAssignment,
   defaultAssignmentDueDateInput,
+  fetchAssignmentById,
   fetchStudents,
   markAssignmentCompleted,
   setAssignmentWorkspaceCard,
@@ -51,6 +52,9 @@ import {
 import type { WorkspaceCard, WorkspaceList } from "@/types/workspace";
 import {
   WORKSPACE_NEW_CARD_ID,
+  WORKSHEETS_PATH,
+  parseWorksheetAttemptParam,
+  worksheetAttemptSearch,
   type WorksheetsAssignToWorkspaceState,
 } from "@/types/worksheetsNavigation";
 import {
@@ -61,11 +65,13 @@ import {
 import {
   clearWorksheetProgress,
   fetchWorksheetProgress,
+  saveWorksheetProgress,
 } from "@/lib/worksheetProgressService";
 import {
   WORKSHEET_SELF_SCOPE_ID,
   clearWorksheetProgressLocal,
   loadWorksheetProgressLocal,
+  persistWorksheetProgressLocal,
   pickNewerWorksheetProgress,
   type WorksheetProgressSave,
 } from "@/lib/worksheetProgressStorage";
@@ -146,20 +152,37 @@ const Worksheets = () => {
   const [runnerInitialProgress, setRunnerInitialProgress] = useState<WorksheetProgressSave | null>(
     null,
   );
+  const [activeScopeId, setActiveScopeId] = useState<string | null>(null);
   const [viewAsSnapshot, setViewAsSnapshot] = useState<Awaited<
     ReturnType<typeof loadTutorVisibleStudentView>
   > | null>(null);
+  const resumeLockRef = useRef<string | null>(null);
+  const ignoreAttemptRestoreRef = useRef(false);
+  const attemptParam = parseWorksheetAttemptParam(location.search);
+
+  const replaceAttemptUrl = (scopeId: string | null) => {
+    const search = scopeId ? worksheetAttemptSearch(scopeId) : "";
+    if (location.pathname === WORKSHEETS_PATH && (location.search || "") === search) return;
+    navigate({ pathname: WORKSHEETS_PATH, search }, { replace: true });
+  };
 
   const leaveWorksheets = (fallback: Mode = "home") => {
     const to = returnToRef.current;
     if (to) {
       returnToRef.current = null;
+      resumeLockRef.current = null;
       navigate(to);
       return;
+    }
+    if (attemptParam) {
+      ignoreAttemptRestoreRef.current = true;
+      resumeLockRef.current = null;
+      replaceAttemptUrl(null);
     }
     if (fallback === "home") {
       setActiveAssignment(null);
     }
+    setActiveScopeId(null);
     setMode(fallback);
   };
 
@@ -407,10 +430,51 @@ const Worksheets = () => {
     startWorksheetRun(picked);
   };
 
+  const seedSelfProgress = (picked: Question[]) => {
+    if (!profile?.uid || viewAs) return;
+    const now = Date.now();
+    const save: WorksheetProgressSave = {
+      userId: profile.uid,
+      scopeId: WORKSHEET_SELF_SCOPE_ID,
+      runSource: "self",
+      assignmentId: null,
+      title: "Your practice worksheet",
+      tagCodes:
+        questionPickMode === "chosen" ? contentSkillCodes(picked) : selectedCodes,
+      questionIds: picked.map((question) => question.id),
+      currentQuestionIndex: 0,
+      answers: {},
+      flagged: [],
+      lockedQuestionIds: [],
+      eliminated: {},
+      events: [],
+      notepad: "",
+      revealAnswers: true,
+      tutorUid: null,
+      startedAt: now,
+      updatedAt: now,
+    };
+    persistWorksheetProgressLocal(save);
+    void saveWorksheetProgress(save).catch(() => undefined);
+  };
+
   const startTutorOrSelfPreview = () => {
+    const picked = pickCurrentQuestions();
     setActiveAssignment(null);
-    setRunSource(buildVariant === "student" ? "self" : "tutor-preview");
-    startWorksheetRun(undefined, undefined, null);
+    if (buildVariant === "student" && profile?.uid && !viewAs) {
+      resumeLockRef.current = WORKSHEET_SELF_SCOPE_ID;
+      setActiveScopeId(WORKSHEET_SELF_SCOPE_ID);
+      replaceAttemptUrl(WORKSHEET_SELF_SCOPE_ID);
+      seedSelfProgress(picked);
+      setRunSource("self");
+      startWorksheetRun(picked, undefined, null);
+      return;
+    }
+    resumeLockRef.current = null;
+    setActiveScopeId(null);
+    replaceAttemptUrl(null);
+    setRunSource("tutor-preview");
+    startWorksheetRun(picked, undefined, null);
   };
 
   const resumeSelfPractice = async () => {
@@ -421,6 +485,9 @@ const Worksheets = () => {
         title: "No saved custom practice",
         description: "Build a worksheet to start a new set.",
       });
+      ignoreAttemptRestoreRef.current = true;
+      resumeLockRef.current = null;
+      replaceAttemptUrl(null);
       return;
     }
     const picked = getQuestionsByIds(save.questionIds);
@@ -430,8 +497,14 @@ const Worksheets = () => {
         description: "None of the saved questions could be loaded.",
         variant: "destructive",
       });
+      ignoreAttemptRestoreRef.current = true;
+      resumeLockRef.current = null;
+      replaceAttemptUrl(null);
       return;
     }
+    resumeLockRef.current = WORKSHEET_SELF_SCOPE_ID;
+    setActiveScopeId(WORKSHEET_SELF_SCOPE_ID);
+    replaceAttemptUrl(WORKSHEET_SELF_SCOPE_ID);
     setActiveAssignment(null);
     setRunSource("self");
     startWorksheetRun(picked, getPassagesForQuestions(picked), save);
@@ -502,7 +575,17 @@ const Worksheets = () => {
         description: "None of the assigned questions could be loaded.",
         variant: "destructive",
       });
+      if (resumeLockRef.current === assignment.id || attemptParam === assignment.id) {
+        ignoreAttemptRestoreRef.current = true;
+        resumeLockRef.current = null;
+        replaceAttemptUrl(null);
+      }
       return;
+    }
+    if (profile?.uid && !viewAs) {
+      resumeLockRef.current = assignment.id;
+      setActiveScopeId(assignment.id);
+      replaceAttemptUrl(assignment.id);
     }
     const initial =
       profile?.uid && !viewAs
@@ -589,8 +672,91 @@ const Worksheets = () => {
       return;
     }
 
-    navigate(location.pathname, { replace: true, state: null });
+    const nextSearch =
+      navState.autoStartAssignment && role === "student"
+        ? worksheetAttemptSearch(navState.autoStartAssignment.id)
+        : location.search;
+    navigate({ pathname: location.pathname, search: nextSearch }, { replace: true, state: null });
+    // Keep search out of deps. Auto-start writes the attempt query itself.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authLoading, profile, role, location.state, location.pathname, navigate]);
+
+  useEffect(() => {
+    if (!attemptParam) {
+      ignoreAttemptRestoreRef.current = false;
+    }
+  }, [attemptParam]);
+
+  useEffect(() => {
+    if (authLoading || !profile || questionsLoading || viewAs) return;
+    if (!attemptParam) return;
+    if (ignoreAttemptRestoreRef.current) return;
+    if (mode === "runner" || mode === "results" || mode === "review") return;
+    if (resumeLockRef.current === attemptParam) return;
+    if (role !== "student") {
+      ignoreAttemptRestoreRef.current = true;
+      replaceAttemptUrl(null);
+      return;
+    }
+
+    let cancelled = false;
+    resumeLockRef.current = attemptParam;
+
+    void (async () => {
+      try {
+        if (attemptParam === WORKSHEET_SELF_SCOPE_ID) {
+          await resumeSelfPractice();
+          return;
+        }
+        const assignment = await fetchAssignmentById(attemptParam).catch(() => null);
+        if (cancelled) return;
+        if (assignment) {
+          if (assignment.status === "completed") {
+            ignoreAttemptRestoreRef.current = true;
+            resumeLockRef.current = null;
+            replaceAttemptUrl(null);
+            return;
+          }
+          await startAssignedWorksheet(assignment);
+          return;
+        }
+        const save = await loadAccountWorksheetProgress(profile.uid, attemptParam);
+        if (cancelled) return;
+        const picked = save ? getQuestionsByIds(save.questionIds) : [];
+        if (!save || picked.length === 0) {
+          ignoreAttemptRestoreRef.current = true;
+          resumeLockRef.current = null;
+          replaceAttemptUrl(null);
+          toast({
+            title: "Could not resume worksheet",
+            description: "Open it again from Worksheets.",
+          });
+          return;
+        }
+        setActiveAssignment(null);
+        setActiveScopeId(save.scopeId);
+        setRunSource(save.runSource);
+        startWorksheetRun(picked, getPassagesForQuestions(picked), save);
+      } catch {
+        if (cancelled) return;
+        ignoreAttemptRestoreRef.current = true;
+        resumeLockRef.current = null;
+        replaceAttemptUrl(null);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+    // Restore from the attempt query after a refresh. Starters set resumeLockRef first.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authLoading, profile, questionsLoading, viewAs, attemptParam, role, mode]);
+
+  useEffect(() => {
+    if (mode !== "runner" || viewAs || !activeScopeId) return;
+    if (attemptParam === activeScopeId) return;
+    replaceAttemptUrl(activeScopeId);
+  }, [mode, viewAs, activeScopeId, attemptParam]);
 
   const handleAssignToStudent = async () => {
     if (!profile || !tutorTools) return;
@@ -797,11 +963,25 @@ const Worksheets = () => {
     );
   }
 
-  if (questionsLoading && mode !== "review") {
+  const resumingAttempt =
+    Boolean(attemptParam) &&
+    role === "student" &&
+    !viewAs &&
+    mode !== "runner" &&
+    mode !== "results" &&
+    mode !== "review";
+
+  if ((questionsLoading && mode !== "review") || resumingAttempt) {
     return (
       <div className="min-h-screen">
         <Header />
-        <QuestionsStatus />
+        {questionsLoading && mode !== "review" ? (
+          <QuestionsStatus />
+        ) : (
+          <div className="flex justify-center py-16">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        )}
       </div>
     );
   }
@@ -851,15 +1031,16 @@ const Worksheets = () => {
             : true
         }
         progressKey={
-          profile?.uid && !viewAs && (runSource === "assignment" || runSource === "self")
+          profile?.uid &&
+          !viewAs &&
+          activeScopeId &&
+          (runSource === "assignment" || runSource === "self")
             ? {
                 userId: profile.uid,
-                scopeId:
-                  runSource === "assignment" && activeAssignment
-                    ? activeAssignment.id
-                    : WORKSHEET_SELF_SCOPE_ID,
+                scopeId: activeScopeId,
                 runSource,
-                assignmentId: activeAssignment?.id ?? null,
+                assignmentId:
+                  runSource === "assignment" ? (activeAssignment?.id ?? activeScopeId) : null,
                 title: sessionTitle,
                 tagCodes:
                   runSource === "assignment"
@@ -909,6 +1090,10 @@ const Worksheets = () => {
               });
             }
           }
+          ignoreAttemptRestoreRef.current = true;
+          resumeLockRef.current = null;
+          setActiveScopeId(null);
+          replaceAttemptUrl(null);
 
           if (
             runSource === "assignment" &&
