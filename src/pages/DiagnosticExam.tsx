@@ -78,8 +78,17 @@ export default function DiagnosticExam() {
   const location = useLocation();
   const { profile } = useAuth();
   const exam = useMemo(() => assembleDiagnosticExam(), []);
-  const reviewFromNav = (location.state as { reviewSession?: PracticeSessionRecord } | null)
-    ?.reviewSession;
+  const reviewNav = location.state as {
+    reviewSession?: PracticeSessionRecord;
+    returnTo?: string;
+  } | null;
+  const reviewFromNav = reviewNav?.reviewSession;
+  const reviewStudentUid =
+    profile?.role === "tutor" &&
+    reviewFromNav?.userId &&
+    reviewFromNav.userId !== profile.uid
+      ? reviewFromNav.userId
+      : undefined;
 
   const initialSave =
     !reviewFromNav && profile ? loadDiagnosticSave(profile.uid) : null;
@@ -690,7 +699,12 @@ export default function DiagnosticExam() {
                   bySubject={moduleBreakdown.bySubject}
                 />
                 <DiagnosticStrandBreakdown ela={strandStats.ela} math={strandStats.math} />
-                <DiagnosticItemReview exam={exam} events={resultsEvents} />
+                <DiagnosticItemReview
+                  exam={exam}
+                  events={resultsEvents}
+                  skillWorksheetStudentUid={reviewStudentUid}
+                  skillWorksheetReturnTo={reviewNav?.returnTo}
+                />
               </div>
             }
             tagTableTitle="Fine-grained tags"

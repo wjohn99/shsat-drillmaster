@@ -190,12 +190,12 @@ export async function fetchPracticeSessionsForTutor(): Promise<PracticeSessionRe
     collection(db, PRACTICE_SESSIONS_COLLECTION),
     where("sessionType", "==", "diagnostic"),
   );
-  const [assignmentSnap, diagnosticSnap] = await Promise.all([
-    getDocs(assignmentQuery),
-    getDocs(diagnosticQuery),
-  ]);
+  const assignmentSnap = await getDocs(assignmentQuery);
+  const diagnosticDocs = await getDocs(diagnosticQuery)
+    .then((snapshot) => snapshot.docs)
+    .catch(() => []);
   const byId = new Map<string, PracticeSessionRecord>();
-  for (const docSnap of [...assignmentSnap.docs, ...diagnosticSnap.docs]) {
+  for (const docSnap of [...assignmentSnap.docs, ...diagnosticDocs]) {
     byId.set(docSnap.id, parsePracticeSession(docSnap));
   }
   return [...byId.values()].sort(

@@ -9,6 +9,7 @@ import {
   runTransaction,
   serverTimestamp,
   updateDoc,
+  where,
   writeBatch,
   Timestamp,
   type DocumentData,
@@ -138,6 +139,18 @@ export async function fetchAllWorkspaceBoards(): Promise<WorkspaceBoard[]> {
     .sort((a, b) => a.studentName.localeCompare(b.studentName));
 }
 
+/** Boards created for one demo account. Query matches the demo security rules. */
+export async function fetchDemoOwnedBoards(ownerUid: string): Promise<WorkspaceBoard[]> {
+  const db = getFirebaseDb();
+  const snapshot = await getDocs(
+    query(collection(db, BOARDS_COLLECTION), where("demoOwnerUid", "==", ownerUid)),
+  );
+  return snapshot.docs
+    .map(parseBoard)
+    .filter((board): board is WorkspaceBoard => board !== null && board.demoAccount)
+    .sort((a, b) => a.studentName.localeCompare(b.studentName));
+}
+
 export async function fetchWorkspaceBoard(boardId: string): Promise<WorkspaceBoard | null> {
   const db = getFirebaseDb();
   const snapshot = await getDoc(doc(db, BOARDS_COLLECTION, boardId));
@@ -145,10 +158,24 @@ export async function fetchWorkspaceBoard(boardId: string): Promise<WorkspaceBoa
   return parseBoard(snapshot);
 }
 
+function normalizeAccountEmail(email: string | null | undefined): string {
+  return (email ?? "").trim().toLowerCase();
+}
+
+/** A current board is any board that is not deleted. Archived boards still count. */
+function boardMatchesStudent(
+  board: Pick<WorkspaceBoard, "id" | "studentUid" | "studentEmail">,
+  student: Pick<StudentOption, "uid" | "email">,
+): boolean {
+  if (board.id === student.uid || board.studentUid === student.uid) return true;
+  const boardEmail = normalizeAccountEmail(board.studentEmail);
+  const studentEmail = normalizeAccountEmail(student.email);
+  return boardEmail.length > 0 && boardEmail === studentEmail;
+}
+
 export async function fetchStudentsWithoutBoard(): Promise<StudentOption[]> {
   const [students, boards] = await Promise.all([fetchStudents(), fetchAllWorkspaceBoards()]);
-  const boardStudentUids = new Set(boards.map((b) => b.studentUid));
-  return students.filter((s) => !boardStudentUids.has(s.uid));
+  return students.filter((student) => !boards.some((board) => boardMatchesStudent(board, student)));
 }
 
 export function isDemoAccountBoard(
@@ -173,7 +200,7 @@ export async function createWorkspaceBoard(
   }
 
   const existingBoards = await fetchAllWorkspaceBoards();
-  if (existingBoards.some((b) => b.studentUid === student.uid)) {
+  if (existingBoards.some((board) => boardMatchesStudent(board, student))) {
     throw new Error(`${student.displayName} already has a workspace board.`);
   }
 

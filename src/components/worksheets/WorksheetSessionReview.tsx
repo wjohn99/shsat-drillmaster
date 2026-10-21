@@ -11,6 +11,9 @@ interface WorksheetSessionReviewProps {
   session: PracticeSessionRecord;
   subtitle?: string;
   viewerRole?: "student" | "tutor";
+  /** Tutor review only. Each skill opens a worksheet for this student. */
+  skillWorksheetStudentUid?: string;
+  skillWorksheetReturnTo?: string;
   onBack: () => void;
 }
 
@@ -26,6 +29,8 @@ export function WorksheetSessionReview({
   session,
   subtitle,
   viewerRole = "student",
+  skillWorksheetStudentUid,
+  skillWorksheetReturnTo,
   onBack,
 }: WorksheetSessionReviewProps) {
   const completedLabel = formatCompletedAt(session);
@@ -73,6 +78,8 @@ export function WorksheetSessionReview({
           passages={passages}
           events={session.events}
           viewerRole={viewerRole}
+          skillWorksheetStudentUid={skillWorksheetStudentUid}
+          skillWorksheetReturnTo={skillWorksheetReturnTo}
         />
       )}
 

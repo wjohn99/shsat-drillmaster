@@ -1,6 +1,9 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { CheckCircle, Lightbulb, Target, XCircle } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import { Badge, badgeVariants } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { CommonTrapCallout } from "@/components/question/CommonTrapCallout";
 import {
   formatChoiceLabels,
@@ -8,8 +11,9 @@ import {
   getSkillTagsToImprove,
   questionHasExplanationContent,
 } from "@/lib/questionExplanation";
-import type { Choice, Question } from "@/types";
+import type { Choice, Question, Tag } from "@/types";
 import { MathText } from "@/lib/mathText";
+import { assignToStudentNavState } from "@/types/worksheetsNavigation";
 import { cn } from "@/lib/utils";
 
 type QuestionSolutionPanelProps = {
@@ -20,12 +24,77 @@ type QuestionSolutionPanelProps = {
   selectedChoiceIds?: string[];
   /** Tutor-only. The panel itself is already shown after an answer is checked. */
   showSkillToImprove?: boolean;
+  /** When set, selected skills open a custom worksheet for this student. */
+  skillWorksheetStudentUid?: string;
+  skillWorksheetReturnTo?: string;
   chosenAnswerLead?: string;
   selectedChoiceLabel?: string;
   /** Shown when a stored response exists but does not map onto current choices. */
   unmatchedAnswer?: string;
   className?: string;
 };
+
+function SkillWorksheetPicker({
+  studentUid,
+  returnTo,
+  skills,
+}: {
+  studentUid: string;
+  returnTo?: string;
+  skills: Tag[];
+}) {
+  const [selectedCodes, setSelectedCodes] = useState<string[]>([]);
+
+  const toggle = (code: string) => {
+    setSelectedCodes((current) =>
+      current.includes(code) ? current.filter((item) => item !== code) : [...current, code],
+    );
+  };
+
+  return (
+    <>
+      <p className="text-sm text-muted-foreground">
+        Select one or more skills, then build a worksheet for this student.
+      </p>
+      <div className="flex flex-wrap gap-2">
+        {skills.map((skill) => {
+          const selected = selectedCodes.includes(skill.code);
+          return (
+            <button
+              key={skill.code}
+              type="button"
+              aria-pressed={selected}
+              onClick={() => toggle(skill.code)}
+              className={cn(
+                badgeVariants({ variant: selected ? "default" : "outline" }),
+                "cursor-pointer",
+              )}
+            >
+              {skill.label}
+            </button>
+          );
+        })}
+      </div>
+      {selectedCodes.length > 0 ? (
+        <Button size="sm" asChild>
+          <Link
+            to="/worksheets"
+            state={assignToStudentNavState(studentUid, {
+              returnTo,
+              suggestedTagCodes: selectedCodes,
+            })}
+          >
+            Build worksheet
+          </Link>
+        </Button>
+      ) : (
+        <Button size="sm" type="button" disabled>
+          Build worksheet
+        </Button>
+      )}
+    </>
+  );
+}
 
 function ChoiceBreakdownCard({
   choice,
@@ -92,6 +161,8 @@ export function QuestionSolutionPanel({
   showHeader = true,
   selectedChoiceIds = [],
   showSkillToImprove = false,
+  skillWorksheetStudentUid,
+  skillWorksheetReturnTo,
   chosenAnswerLead = "You chose",
   selectedChoiceLabel = "Your answer",
   unmatchedAnswer,
@@ -200,13 +271,22 @@ export function QuestionSolutionPanel({
             <Target className="h-4 w-4 text-primary" aria-hidden />
             Skill to improve
           </h5>
-          <div className="flex flex-wrap gap-2">
-            {skills.map((skill) => (
-              <Badge key={skill.code} variant="secondary">
-                {skill.label}
-              </Badge>
-            ))}
-          </div>
+          {skillWorksheetStudentUid ? (
+            <SkillWorksheetPicker
+              key={question.id}
+              studentUid={skillWorksheetStudentUid}
+              returnTo={skillWorksheetReturnTo}
+              skills={skills}
+            />
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {skills.map((skill) => (
+                <Badge key={skill.code} variant="secondary">
+                  {skill.label}
+                </Badge>
+              ))}
+            </div>
+          )}
         </section>
       ) : null}
     </div>

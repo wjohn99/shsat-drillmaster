@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useDemoTutorial } from "@/contexts/DemoTutorialContext";
 import { useQuestionReports } from "@/contexts/QuestionReportsContext";
 import { questionReportReasonLabel } from "@/types/questionReport";
 import { toast } from "@/hooks/use-toast";
@@ -35,6 +36,7 @@ import {
 import { fetchPracticeSessionsForTutor } from "@/lib/practiceSessionService";
 import { fetchDiagnosticProgressForTutor } from "@/lib/diagnosticProgressService";
 import { buildTutorDashboardAnalytics, DIAGNOSTIC_STATUS_LABEL } from "@/lib/dashboardAnalytics";
+import { ensureDemoSandbox } from "@/lib/demoSandbox";
 import {
   fetchAllWorkspaceBoards,
   isDemoAccountBoard,
@@ -69,7 +71,8 @@ function studentOptionFromBoard(
 
 export function TutorDashboard() {
   const navigate = useNavigate();
-  const { enterDemoMode, demoBusy, profile } = useAuth();
+  const { enterDemoMode, demoBusy, profile, accountRole } = useAuth();
+  const { startTutorial } = useDemoTutorial();
   const { openReports } = useQuestionReports();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -86,6 +89,32 @@ export function TutorDashboard() {
       setLoading(true);
       setError(null);
       try {
+        if (profile?.role === "demo" && profile.uid) {
+          const boards = await ensureDemoSandbox(profile.uid);
+          const assignments = await fetchAssignmentsForTutor().catch(() => []);
+          if (cancelled) return;
+          const assignedStudents = boards
+            .map((board) => studentOptionFromBoard(board, board.studentUid))
+            .sort((a, b) => a.displayName.localeCompare(b.displayName));
+          const nameByUid = new Map(assignedStudents.map((student) => [student.uid, student.displayName]));
+          const sandboxUids = new Set(assignedStudents.map((student) => student.uid));
+          setStudents(assignedStudents);
+          setAllAssignments(
+            assignments
+              .filter((assignment) => sandboxUids.has(assignment.assignedToStudentUid))
+              .map((assignment) => ({
+                ...assignment,
+                studentName: nameByUid.get(assignment.assignedToStudentUid) ?? "Student",
+              })),
+          );
+          setSessions([]);
+          setDiagnosticInProgressUids([]);
+          setDiagnosticAssignedUids(
+            boards.filter((board) => board.diagnosticAssigned).map((board) => board.studentUid),
+          );
+          return;
+        }
+
         const [studentList, assignments, boards] = await Promise.all([
           fetchStudents(),
           fetchAssignmentsForTutor(),
@@ -148,7 +177,7 @@ export function TutorDashboard() {
     return () => {
       cancelled = true;
     };
-  }, [profile?.uid]);
+  }, [profile?.role, profile?.uid]);
 
   const analytics = useMemo(
     () =>
@@ -208,12 +237,23 @@ export function TutorDashboard() {
       subtitle="Manage worksheets and track student progress."
     >
       <div className="space-y-8">
+        {accountRole === "demo" ? (
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-muted/40 px-4 py-3">
+            <p className="text-sm text-muted-foreground">
+              How the diagnostic, worksheets, and results connect to the workspace.
+            </p>
+            <Button type="button" variant="outline" onClick={startTutorial}>
+              Review the tutorial
+            </Button>
+          </div>
+        ) : null}
+        {profile?.role === "tutor" ? (
         <Card className="border-primary/20">
           <CardHeader>
             <CardTitle className="text-lg">Demo account mode</CardTitle>
             <CardDescription>
-              Test out the demo account here. No second Google account. Dashboard, practice,
-              worksheets, and workspace match a first-time demo student, and they are interactive.
+              Open the same tutor tools with sample students. Assign worksheets and edit boards
+              without touching your live class.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -238,7 +278,7 @@ export function TutorDashboard() {
               {demoBusy ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Opening student view…
+                  Opening demo…
                 </>
               ) : (
                 "Enter demo account"
@@ -246,6 +286,7 @@ export function TutorDashboard() {
             </Button>
           </CardContent>
         </Card>
+        ) : null}
 
         <section className="grid sm:grid-cols-3 gap-4">
           <StatTile label="Students" value={stats.students} icon={Users} />
@@ -304,7 +345,7 @@ export function TutorDashboard() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card data-tour="student-progress">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
               <Users className="h-5 w-5 text-primary" />
@@ -314,13 +355,83 @@ export function TutorDashboard() {
               Diagnostic status plus assignments and completed practice sessions
             </CardDescription>
           </CardHeader>
-          <CardContent className="overflow-x-auto">
+          <CardContent>
             {analytics.studentRows.length === 0 ? (
               <p className="text-sm text-muted-foreground py-4 text-center">
                 No students assigned to you yet. Add a student from Workspace, or ask another tutor
                 to assign you their board.
               </p>
             ) : (
+              <>
+              <div className="space-y-3 lg:hidden">
+                {analytics.studentRows.map((row) => (
+                  <div key={row.studentUid} className="rounded-lg border p-3 space-y-3">
+                    <div className="min-w-0">
+                      <p className="font-medium">{row.name}</p>
+                      {row.email ? (
+                        <p className="truncate text-xs text-muted-foreground">{row.email}</p>
+                      ) : null}
+                    </div>
+                    <dl className="grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
+                      <div>
+                        <dt className="text-xs text-muted-foreground">Diagnostic</dt>
+                        <dd className="mt-1">
+                          <Badge
+                            variant={
+                              row.diagnosticStatus === "finished"
+                                ? "secondary"
+                                : row.diagnosticStatus === "started"
+                                  ? "default"
+                                  : "outline"
+                            }
+                          >
+                            {DIAGNOSTIC_STATUS_LABEL[row.diagnosticStatus]}
+                          </Badge>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs text-muted-foreground">Open</dt>
+                        <dd className="mt-1 tabular-nums">{row.openAssignments}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs text-muted-foreground">Last active</dt>
+                        <dd className="mt-1">{row.lastActiveLabel}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs text-muted-foreground">Avg accuracy</dt>
+                        <dd className="mt-1 tabular-nums">
+                          {row.avgAccuracy !== null ? `${row.avgAccuracy}%` : "-"}
+                        </dd>
+                      </div>
+                    </dl>
+                    {row.latestDiagnostic ? (
+                      <Button
+                        size="sm"
+                        variant="link"
+                        className="h-auto px-0"
+                        onClick={() =>
+                          navigate("/practice/diagnostic", {
+                            state: { reviewSession: row.latestDiagnostic },
+                          })
+                        }
+                      >
+                        View diagnostic results
+                      </Button>
+                    ) : null}
+                    <StudentQuickActions
+                      stacked
+                      studentUid={row.studentUid}
+                      studentName={row.name}
+                      studentEmail={row.email}
+                      lastSession={row.lastSession}
+                      lastCompletedAssignment={row.lastCompletedAssignment}
+                      firstDiagnostic={row.firstDiagnostic}
+                      latestDiagnostic={row.latestDiagnostic}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="hidden overflow-x-auto lg:block">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -385,6 +496,8 @@ export function TutorDashboard() {
                         <StudentQuickActions
                           className="justify-end"
                           studentUid={row.studentUid}
+                          studentName={row.name}
+                          studentEmail={row.email}
                           lastSession={row.lastSession}
                           lastCompletedAssignment={row.lastCompletedAssignment}
                           firstDiagnostic={row.firstDiagnostic}
@@ -395,6 +508,8 @@ export function TutorDashboard() {
                   ))}
                 </TableBody>
               </Table>
+              </div>
+              </>
             )}
           </CardContent>
         </Card>

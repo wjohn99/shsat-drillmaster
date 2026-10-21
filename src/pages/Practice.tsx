@@ -12,22 +12,23 @@ import { fetchDiagnosticProgress } from "@/lib/diagnosticProgressService";
 import { assembleDiagnosticExam } from "@/lib/shsatDiagnostic";
 import { fetchWorkspaceBoard } from "@/lib/workspaceService";
 import { useAuth } from "@/contexts/AuthContext";
+import { useViewAsStudent } from "@/contexts/ViewAsStudentContext";
+import { loadTutorVisibleStudentView } from "@/lib/studentView";
 import { fetchPracticeSessionsForStudent } from "@/lib/practiceSessionService";
-import { assignToStudentNavState } from "@/types/worksheetsNavigation";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 
 const Practice = () => {
   const { profile } = useAuth();
-  const isTutor = profile?.role === "tutor";
-  const isDemo = profile?.role === "demo";
+  const { viewAs } = useViewAsStudent();
+  const isTutor = (profile?.role === "tutor" || profile?.role === "demo") && !viewAs;
   const diagnostic = useMemo(() => assembleDiagnosticExam(), []);
   const [diagnosticSessions, setDiagnosticSessions] = useState<PracticeSessionRecord[]>([]);
-  const [diagnosticAssigned, setDiagnosticAssigned] = useState(isTutor || isDemo);
+  const [diagnosticAssigned, setDiagnosticAssigned] = useState(isTutor);
   const [diagnosticInProgress, setDiagnosticInProgress] = useState(false);
-  const [diagnosticAccessLoaded, setDiagnosticAccessLoaded] = useState(isTutor || isDemo);
+  const [diagnosticAccessLoaded, setDiagnosticAccessLoaded] = useState(isTutor);
 
   useEffect(() => {
-    if (!profile) return;
+    if (!profile || viewAs) return;
     let cancelled = false;
     void fetchPracticeSessionsForStudent(["diagnostic"])
       .then((rows) => {
@@ -39,10 +40,26 @@ const Practice = () => {
     return () => {
       cancelled = true;
     };
-  }, [profile]);
+  }, [profile, viewAs]);
 
   useEffect(() => {
     if (!profile) return;
+    if (viewAs) {
+      let cancelled = false;
+      setDiagnosticAccessLoaded(false);
+      void loadTutorVisibleStudentView(viewAs.uid).then((visible) => {
+        if (cancelled) return;
+        setDiagnosticAssigned(Boolean(visible.board?.diagnosticAssigned));
+        setDiagnosticInProgress(visible.diagnosticInProgress);
+        setDiagnosticSessions(
+          visible.sessions.filter((session) => session.sessionType === "diagnostic"),
+        );
+        setDiagnosticAccessLoaded(true);
+      });
+      return () => {
+        cancelled = true;
+      };
+    }
     if (profile.role === "tutor" || profile.role === "demo") {
       setDiagnosticAssigned(true);
       setDiagnosticAccessLoaded(true);
@@ -62,9 +79,9 @@ const Practice = () => {
     return () => {
       cancelled = true;
     };
-  }, [profile]);
+  }, [profile, viewAs]);
 
-  const canStartDiagnostic = isTutor || isDemo || diagnosticAssigned;
+  const canStartDiagnostic = isTutor || (!viewAs && diagnosticAssigned);
 
   const practiceTypes = [
     {
@@ -109,25 +126,15 @@ const Practice = () => {
         <PageHeader
           title="Practice"
           description={
-            isTutor
+            viewAs
+              ? `Practice as ${viewAs.displayName} sees it. Submitted diagnostic results stay available. Starting a set is turned off.`
+              : isTutor
               ? "Start with a full SHSAT diagnostic, then drill weaker skills in shorter sessions."
-              : isDemo
-                ? "Open a skill set below, or build your own."
-                : "The SHSAT diagnostic stays listed here. Your tutor assigns it before you can start. Skill practice below is open anytime."
-          }
-          actions={
-            isTutor ? (
-              <Button asChild>
-                <Link to="/worksheets" state={assignToStudentNavState()}>
-                  Assign to student
-                </Link>
-              </Button>
-            ) : null
+              : "The SHSAT diagnostic stays listed here. Your tutor assigns it before you can start. Skill practice below is open anytime."
           }
         />
 
-        {isDemo ? null : (
-        <Card className="mb-10">
+        <Card className="mb-10" data-tour="diagnostic-card">
           <CardHeader className="gap-6 md:flex-row md:items-start md:justify-between">
             <div className="max-w-2xl">
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
@@ -145,14 +152,22 @@ const Practice = () => {
               )}
             </div>
             <div className="flex shrink-0 flex-col gap-2">
-              {canStartDiagnostic ? (
+              {viewAs ? (
+                <p className="max-w-xs text-sm text-muted-foreground">
+                  {diagnosticSessions.length > 0
+                    ? "Open the submitted results below."
+                    : diagnosticAssigned
+                      ? "Results show here after they submit."
+                      : "The diagnostic is not assigned yet."}
+                </p>
+              ) : canStartDiagnostic ? (
                 <Button asChild>
                   <Link to="/practice/diagnostic">
                     Open diagnostic
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
-              ) : diagnosticInProgress ? (
+              ) : !viewAs && diagnosticInProgress ? (
                 <Button asChild>
                   <Link to="/practice/diagnostic">
                     Resume diagnostic
@@ -165,7 +180,7 @@ const Practice = () => {
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               )}
-              {isTutor ? (
+              {viewAs ? null : isTutor ? (
                 <p className="max-w-xs text-sm text-muted-foreground">
                   Students can see this here, and can start it only after you assign it on their
                   workspace board.
@@ -211,15 +226,9 @@ const Practice = () => {
             </div>
           </CardHeader>
         </Card>
-        )}
 
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <h2 className="font-serif text-xl font-semibold">Skill practice</h2>
-          {isDemo ? (
-            <Button asChild>
-              <Link to="/practice/custom">Build your own set</Link>
-            </Button>
-          ) : null}
         </div>
         <div className="grid gap-4 md:grid-cols-2">
           {practiceTypes.map((type) => (
@@ -249,12 +258,18 @@ const Practice = () => {
                       <Clock className="mr-2 h-4 w-4 shrink-0" />
                       Estimated time: {type.estimatedTime}
                     </div>
+                    {viewAs ? (
+                      <Button className="w-full" disabled>
+                        Start practice
+                      </Button>
+                    ) : (
                     <Button className="w-full" asChild>
                       <Link to={`/practice/${type.id}`}>
                         Start practice
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
+                    )}
                   </div>
                 </div>
               </CardContent>

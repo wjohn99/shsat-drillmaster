@@ -16,10 +16,19 @@ import {
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
 import type { WorksheetAssignment } from "@/types/assignment";
 import {
+  WORKSHEET_QUESTION_CAP,
   WORKSHEET_SECTIONS,
   buildWorksheetTagCatalog,
+  contentSkillCodes,
+  contentSkillLabels,
+  listWorksheetPool,
   pickWorksheetQuestions,
+  worksheetQuestionsFromIds,
 } from "@/lib/worksheetTagCatalog";
+import type { WorksheetQuestionPickMode } from "@/components/worksheets/WorksheetQuestionPicker";
+import { fetchDemoStudents } from "@/lib/demoSandbox";
+import { loadTutorVisibleStudentView } from "@/lib/studentView";
+import { useViewAsStudent } from "@/contexts/ViewAsStudentContext";
 import { openWorksheetPrintTab } from "@/lib/worksheetPrint";
 import {
   assignmentDueDateInputToTimestamp,
@@ -81,7 +90,9 @@ const Worksheets = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { profile, loading: authLoading } = useAuth();
+  const { viewAs } = useViewAsStudent();
   const role = profile?.role;
+  const tutorTools = role === "tutor" || role === "demo";
 
   const [mode, setMode] = useState<Mode>("home");
   const [buildVariant, setBuildVariant] = useState<WorksheetBuilderVariant>("tutor");
@@ -89,6 +100,8 @@ const Worksheets = () => {
   const [runKey, setRunKey] = useState(0);
   const [selectedCodes, setSelectedCodes] = useState<string[]>([]);
   const [questionLimit, setQuestionLimit] = useState(10);
+  const [questionPickMode, setQuestionPickMode] = useState<WorksheetQuestionPickMode>("random");
+  const [chosenQuestionIds, setChosenQuestionIds] = useState<string[]>([]);
   const [worksheetQuestions, setWorksheetQuestions] = useState<Question[]>([]);
   const [runnerPassages, setRunnerPassages] = useState<Passage[] | undefined>();
   const [presetTitle, setPresetTitle] = useState<string | null>(null);
@@ -119,6 +132,9 @@ const Worksheets = () => {
   const [assignmentsRefreshKey, setAssignmentsRefreshKey] = useState(0);
   const [reviewSession, setReviewSession] = useState<PracticeSessionRecord | null>(null);
   const [reviewSubtitle, setReviewSubtitle] = useState<string | undefined>();
+  const [viewAsSnapshot, setViewAsSnapshot] = useState<Awaited<
+    ReturnType<typeof loadTutorVisibleStudentView>
+  > | null>(null);
 
   const leaveWorksheets = (fallback: Mode = "home") => {
     const to = returnToRef.current;
@@ -144,14 +160,27 @@ const Worksheets = () => {
 
   const selectedSet = useMemo(() => new Set(selectedCodes), [selectedCodes]);
 
-  const matchingCount = useMemo(() => {
-    if (selectedCodes.length === 0) return 0;
-    const ids = new Set<string>();
-    for (const q of questions) {
-      if (q.tags.some((t) => selectedSet.has(t.code))) ids.add(q.id);
+  const poolQuestions = useMemo(
+    () => listWorksheetPool(questions, selectedSet),
+    [questions, selectedSet],
+  );
+  const matchingCount = poolQuestions.length;
+  const chosenQuestions = useMemo(
+    () => worksheetQuestionsFromIds(questions, chosenQuestionIds),
+    [questions, chosenQuestionIds],
+  );
+
+  const setChosenQuestionIdsCapped = (ids: string[]) => {
+    const unique: string[] = [];
+    const seen = new Set<string>();
+    for (const id of ids) {
+      if (seen.has(id)) continue;
+      seen.add(id);
+      unique.push(id);
+      if (unique.length >= WORKSHEET_QUESTION_CAP) break;
     }
-    return ids.size;
-  }, [selectedCodes, selectedSet, questions]);
+    setChosenQuestionIds(unique);
+  };
 
   const selectedTagLabels = useMemo(() => {
     return selectedCodes.map((code) => {
@@ -164,13 +193,33 @@ const Worksheets = () => {
   }, [selectedCodes, tagCatalog]);
 
   useEffect(() => {
-    if (role !== "tutor" || mode !== "build" || buildVariant !== "tutor") return;
+    if (!viewAs) {
+      setViewAsSnapshot(null);
+      return;
+    }
+    let cancelled = false;
+    void loadTutorVisibleStudentView(viewAs.uid).then((snapshot) => {
+      if (!cancelled) setViewAsSnapshot(snapshot);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [viewAs]);
+
+  useEffect(() => {
+    if (!viewAs) return;
+    if (mode === "build" || mode === "runner") setMode("home");
+  }, [viewAs, mode]);
+
+  useEffect(() => {
+    if (!tutorTools || mode !== "build" || buildVariant !== "tutor") return;
 
     let cancelled = false;
     (async () => {
       setStudentsLoading(true);
       try {
-        const list = await fetchStudents();
+        const list =
+          role === "demo" && profile ? await fetchDemoStudents(profile.uid) : await fetchStudents();
         if (!cancelled) setStudents(list);
       } catch (err) {
         if (!cancelled) {
@@ -188,10 +237,10 @@ const Worksheets = () => {
     return () => {
       cancelled = true;
     };
-  }, [role, mode, buildVariant]);
+  }, [profile, role, mode, buildVariant, tutorTools]);
 
   useEffect(() => {
-    if (role !== "tutor" || !selectedStudentUid) {
+    if (!tutorTools || !selectedStudentUid) {
       setWorkspaceBoardExists(false);
       setWorkspaceLists([]);
       setWorkspaceCards([]);
@@ -267,6 +316,8 @@ const Worksheets = () => {
     setActiveAssignment(null);
     setSelectedCodes(preset.tagCodes);
     setQuestionLimit(preset.questionLimit);
+    setQuestionPickMode("random");
+    setChosenQuestionIds([]);
     setPresetTitle(preset.title);
     setMode("build");
     toast({
@@ -282,7 +333,9 @@ const Worksheets = () => {
   };
 
   const pickCurrentQuestions = () =>
-    pickWorksheetQuestions(questions, selectedSet, questionLimit);
+    questionPickMode === "chosen"
+      ? chosenQuestions
+      : pickWorksheetQuestions(questions, selectedSet, questionLimit);
 
   const startWorksheetRun = (picked?: Question[], extraPassages?: Passage[]) => {
     const next = picked ?? pickCurrentQuestions();
@@ -328,14 +381,23 @@ const Worksheets = () => {
   const handleReviewAssignment = async (assignment: WorksheetAssignment) => {
     try {
       const session =
-        role === "tutor"
+        tutorTools || viewAs
           ? await fetchLatestAssignmentSessionForTutor(assignment.id)
           : await fetchLatestAssignmentSessionForStudent(assignment.id);
+      if (viewAs && session && session.userId !== viewAs.uid) {
+        toast({
+          title: "No saved results yet",
+          description: `${viewAs.displayName} has not submitted this worksheet.`,
+          variant: "destructive",
+        });
+        return;
+      }
       if (!session) {
         toast({
           title: "No saved results yet",
-          description:
-            role === "tutor"
+          description: viewAs
+            ? `${viewAs.displayName} has not submitted this worksheet.`
+            : tutorTools
               ? "The student has not completed this worksheet with saved results."
               : "Complete this worksheet once to save results you can review later.",
           variant: "destructive",
@@ -346,8 +408,9 @@ const Worksheets = () => {
         "studentName" in assignment && typeof assignment.studentName === "string"
           ? assignment.studentName
           : undefined;
-      const subtitle =
-        role === "tutor"
+      const subtitle = viewAs
+        ? "Your saved assignment attempt"
+        : tutorTools
           ? studentName
             ? `${studentName}'s saved attempt`
             : "Student attempt on this assignment"
@@ -416,7 +479,7 @@ const Worksheets = () => {
       returnToRef.current = navState.returnTo;
     }
 
-    if (navState.assignToWorkspace && role === "tutor") {
+    if (navState.assignToWorkspace && tutorTools) {
       const target = navState.assignToWorkspace;
       setPendingAssignToWorkspace(target);
       setSelectedStudentUid(target.boardId);
@@ -430,7 +493,7 @@ const Worksheets = () => {
       openTutorBuild();
     } else if (
       (navState.openTutorBuild || navState.assignToStudentUid) &&
-      role === "tutor"
+      tutorTools
     ) {
       if (navState.assignToStudentUid) {
         setSelectedStudentUid(navState.assignToStudentUid);
@@ -461,7 +524,7 @@ const Worksheets = () => {
   }, [authLoading, profile, role, location.state, location.pathname, navigate]);
 
   const handleAssignToStudent = async () => {
-    if (!profile || role !== "tutor") return;
+    if (!profile || !tutorTools) return;
     if (!selectedStudentUid) {
       toast({
         title: "Select a student",
@@ -475,7 +538,10 @@ const Worksheets = () => {
     if (picked.length === 0) {
       toast({
         title: "Nothing to assign",
-        description: "Select skill tags that match questions in the bank.",
+        description:
+          questionPickMode === "chosen"
+            ? "Add at least one question."
+            : "Select skill tags that match questions in the bank.",
         variant: "destructive",
       });
       return;
@@ -500,10 +566,12 @@ const Worksheets = () => {
 
     setAssigning(true);
     try {
+      const skillLabels =
+        questionPickMode === "chosen" ? contentSkillLabels(picked) : selectedTagLabels;
       const title =
         presetTitle ??
-        (selectedTagLabels.length > 0
-          ? `Worksheet: ${selectedTagLabels.slice(0, 2).join(", ")}${selectedTagLabels.length > 2 ? "…" : ""}`
+        (skillLabels.length > 0
+          ? `Worksheet: ${skillLabels.slice(0, 2).join(", ")}${skillLabels.length > 2 ? "…" : ""}`
           : "Custom worksheet");
 
       const dueAt = assignmentDueDateInputToTimestamp(assignmentDueDate);
@@ -515,7 +583,7 @@ const Worksheets = () => {
         tutorUid: profile.uid,
         assignedToStudentUid: selectedStudentUid,
         title,
-        tagCodes: selectedCodes,
+        tagCodes: questionPickMode === "chosen" ? contentSkillCodes(picked) : selectedCodes,
         dueAt,
         revealAnswers,
         workspace: placeOnWorkspace
@@ -588,12 +656,14 @@ const Worksheets = () => {
   const exportWorksheetPdf = () => {
     const picked = pickCurrentQuestions();
     if (picked.length === 0) return;
+    const skillLabels =
+      questionPickMode === "chosen" ? contentSkillLabels(picked) : selectedTagLabels;
     const skillLine =
-      selectedTagLabels.length === 0
+      skillLabels.length === 0
         ? undefined
-        : selectedTagLabels.length <= 8
-          ? `Skills: ${selectedTagLabels.join(", ")}`
-          : `Skills: ${selectedTagLabels.slice(0, 8).join(", ")}, +${selectedTagLabels.length - 8} more`;
+        : skillLabels.length <= 8
+          ? `Skills: ${skillLabels.join(", ")}`
+          : `Skills: ${skillLabels.slice(0, 8).join(", ")}, +${skillLabels.length - 8} more`;
     try {
       openWorksheetPrintTab({
         title: "SHSAT practice worksheet",
@@ -675,7 +745,17 @@ const Worksheets = () => {
           <WorksheetSessionReview
             session={reviewSession}
             subtitle={reviewSubtitle}
-            viewerRole={role === "tutor" || role === "parent" ? "tutor" : "student"}
+            viewerRole={viewAs ? "student" : tutorTools || role === "parent" ? "tutor" : "student"}
+            skillWorksheetStudentUid={
+              !viewAs && tutorTools && profile && reviewSession.userId !== profile.uid
+                ? reviewSession.userId
+                : undefined
+            }
+            skillWorksheetReturnTo={
+              tutorTools && profile && reviewSession.userId !== profile.uid
+                ? returnToRef.current ?? undefined
+                : undefined
+            }
             onBack={() => {
               setReviewSession(null);
               setReviewSubtitle(undefined);
@@ -712,7 +792,9 @@ const Worksheets = () => {
                 tagCodes:
                   runSource === "assignment"
                     ? (activeAssignment?.tagCodes ?? [])
-                    : selectedCodes,
+                    : questionPickMode === "chosen"
+                      ? contentSkillCodes(worksheetQuestions)
+                      : selectedCodes,
                 questionIds: worksheetQuestions.map((q) => q.id),
                 events,
                 assignmentId: activeAssignment?.id ?? null,
@@ -804,7 +886,7 @@ const Worksheets = () => {
                     : "Statistics use your answers and time on each question in this worksheet."
               }
               footerActions={
-                role === "tutor" ? (
+                tutorTools ? (
                   <>
                     <Button variant="outline" onClick={() => setMode("build")}>
                       Edit tags
@@ -841,7 +923,7 @@ const Worksheets = () => {
           </div>
         )}
 
-        {mode === "build" && (role === "tutor" || role === "student") && (
+        {mode === "build" && (tutorTools || role === "student") && (
           <div className="mb-12 max-w-6xl mx-auto">
             <Button
               variant="ghost"
@@ -862,8 +944,8 @@ const Worksheets = () => {
               </h2>
               <p className="text-muted-foreground max-w-2xl">
                 {buildVariant === "student"
-                  ? "Pick skill tags and start a worksheet whenever you want to practice."
-                  : "Pick skill tags, preview the worksheet, and assign it to a student."}
+                  ? "Pick skills, then start a random set or choose the questions yourself."
+                  : "Pick skills, then use a random set or choose the questions. Preview it, then assign it to a student."}
               </p>
             </div>
 
@@ -873,6 +955,13 @@ const Worksheets = () => {
               questionLimit={questionLimit}
               tagCatalog={tagCatalog}
               matchingCount={matchingCount}
+              questionPickMode={questionPickMode}
+              onQuestionPickModeChange={setQuestionPickMode}
+              poolQuestions={poolQuestions}
+              chosenIds={chosenQuestionIds}
+              chosenQuestions={chosenQuestions}
+              passages={passages}
+              onChosenIdsChange={setChosenQuestionIdsCapped}
               onToggleTag={toggleTag}
               onQuestionLimitChange={setQuestionLimit}
               onClearTags={() => setSelectedCodes([])}
@@ -908,7 +997,11 @@ const Worksheets = () => {
           <>
             <PageHeader
               title="Worksheets"
-              description="Focused SHSAT practice sets, complete them here, or build your own."
+              description={
+                viewAs
+                  ? `${viewAs.displayName}'s worksheets. Open results after they submit.`
+                  : "Focused SHSAT practice sets, complete them here, or build your own."
+              }
             />
 
             {authLoading ? (
@@ -926,7 +1019,27 @@ const Worksheets = () => {
                   </Button>
                 </CardContent>
               </Card>
-            ) : role === "tutor" ? (
+            ) : viewAs ? (
+              viewAsSnapshot ? (
+                <StudentWorksheetsHome
+                  assignmentsRefreshKey={assignmentsRefreshKey}
+                  onStartAssignment={() => undefined}
+                  onReviewAssignment={handleReviewAssignment}
+                  onPrintAssignment={printAssignedWorksheet}
+                  onReviewSession={(session) => openReviewSession(session)}
+                  onCreateCustomPractice={() => undefined}
+                  preview={{
+                    studentName: viewAs.displayName,
+                    assignments: viewAsSnapshot.assignments,
+                    sessions: viewAsSnapshot.sessions,
+                  }}
+                />
+              ) : (
+                <div className="flex justify-center py-16">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                </div>
+              )
+            ) : tutorTools ? (
               <TutorWorksheetsHome
                 assignmentsRefreshKey={assignmentsRefreshKey}
                 presets={worksheetPresets}

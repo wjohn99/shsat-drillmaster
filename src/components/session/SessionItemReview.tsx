@@ -28,6 +28,9 @@ type SessionItemReviewProps = {
   passages?: Passage[];
   events: SessionAnalyticsEvent[];
   viewerRole?: "student" | "tutor";
+  /** Tutor review only. Each skill opens a worksheet for this student. */
+  skillWorksheetStudentUid?: string;
+  skillWorksheetReturnTo?: string;
 };
 
 function SubmittedPickBanner({
@@ -94,6 +97,8 @@ export function SessionItemReview({
   passages = [],
   events,
   viewerRole = "student",
+  skillWorksheetStudentUid,
+  skillWorksheetReturnTo,
 }: SessionItemReviewProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const eventById = useMemo(
@@ -279,6 +284,8 @@ export function SessionItemReview({
                         isCorrect={selectedEvent?.correct}
                         selectedChoiceIds={getSelectedChoiceIds(selected, raw)}
                         showSkillToImprove={isTutor}
+                        skillWorksheetStudentUid={isTutor ? skillWorksheetStudentUid : undefined}
+                        skillWorksheetReturnTo={skillWorksheetReturnTo}
                         chosenAnswerLead={isTutor ? "Student chose" : "You chose"}
                         selectedChoiceLabel={isTutor ? "Student answer" : "Your answer"}
                         unmatchedAnswer={

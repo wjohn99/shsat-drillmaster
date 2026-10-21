@@ -345,7 +345,7 @@ export function BoardListColumn({
   return (
     <>
       <div
-        className="glass-surface flex w-72 max-h-[calc(100vh-10rem)] shrink-0 flex-col overflow-hidden rounded-xl border"
+        className="glass-surface flex w-full max-h-none shrink-0 flex-col overflow-hidden rounded-xl border md:w-72 md:max-h-[calc(100vh-10rem)]"
         onDragOver={(e) => {
           if (readOnly || !draggingCardIdRef.current) return;
           e.preventDefault();

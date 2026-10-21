@@ -13,6 +13,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthLink } from "@/components/auth/AuthLink";
 import { DemoWelcomeDialog } from "@/components/auth/DemoWelcomeDialog";
 import { useAuth } from "@/contexts/AuthContext";
+import { useViewAsStudent } from "@/contexts/ViewAsStudentContext";
+import { useDemoTutorial } from "@/contexts/DemoTutorialContext";
 import { useExamLock } from "@/contexts/ExamLockContext";
 import type { UserRole } from "@/types/auth";
 import logoIcon from "@/assets/logo-icon.png";
@@ -32,10 +34,19 @@ type NavItem = {
   active: boolean;
 };
 
+function tourTargetForPath(to: string): string | undefined {
+  if (to === "/practice") return "nav-practice";
+  if (to === "/worksheets") return "nav-worksheets";
+  if (to === "/workspace" || to.startsWith("/workspace/")) return "nav-workspace";
+  return undefined;
+}
+
 export const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { profile, isDemoMode, demoBusy, exitDemoMode, signOut } = useAuth();
+  const { viewAs, exitViewAsStudent } = useViewAsStudent();
+  const { maybeAutoStart } = useDemoTutorial();
   const { locked, requestLeave } = useExamLock();
 
   const isActive = (path: string) => location.pathname === path;
@@ -49,8 +60,11 @@ export const Header = () => {
       .slice(0, 2)
       .toUpperCase() || "SP";
 
-  const workspacePath =
-    profile?.role === "student" && profile.uid ? `/workspace/${profile.uid}` : "/workspace";
+  const workspacePath = viewAs
+    ? `/workspace/${viewAs.uid}`
+    : profile?.role === "student" && profile.uid
+      ? `/workspace/${profile.uid}`
+      : "/workspace";
 
   const leaveDemoAccount = () => {
     void (async () => {
@@ -59,36 +73,7 @@ export const Header = () => {
     })();
   };
 
-  const practiceActive =
-    location.pathname === "/practice" ||
-    location.pathname.startsWith("/practice-set") ||
-    (location.pathname.startsWith("/practice/") &&
-      !location.pathname.startsWith("/practice/diagnostic"));
-
-  const navItems: NavItem[] = profile?.role === "demo"
-    ? [
-        {
-          to: "/question-bank",
-          label: "Question Bank",
-          shortLabel: "Bank",
-          active:
-            location.pathname.startsWith("/question-bank") ||
-            location.pathname.startsWith("/question/"),
-        },
-        {
-          to: "/practice",
-          label: "Practice",
-          shortLabel: "Practice",
-          active: practiceActive,
-        },
-        {
-          to: "/practice/diagnostic",
-          label: "Diagnostic",
-          shortLabel: "Diagnostic",
-          active: location.pathname.startsWith("/practice/diagnostic"),
-        },
-      ]
-    : profile?.role === "parent"
+  const navItems: NavItem[] = profile?.role === "parent"
     ? [
         {
           to: "/dashboard",
@@ -112,16 +97,16 @@ export const Header = () => {
     },
     { to: "/blitz", label: "Blitz Mode", shortLabel: "Blitz", active: isActive("/blitz") },
     {
-      to: "/worksheets",
-      label: "Worksheets",
-      shortLabel: "Worksheets",
-      active: isActive("/worksheets"),
-    },
-    {
       to: workspacePath,
       label: "Workspace",
       shortLabel: "Workspace",
       active: location.pathname.startsWith("/workspace"),
+    },
+    {
+      to: "/worksheets",
+      label: "Worksheets",
+      shortLabel: "Worksheets",
+      active: isActive("/worksheets"),
     },
     {
       to: "/practice",
@@ -129,7 +114,7 @@ export const Header = () => {
       shortLabel: "Practice",
       active: location.pathname === "/practice" || location.pathname.startsWith("/practice/"),
     },
-    ...(profile?.role === "tutor"
+    ...(profile?.role === "tutor" && !viewAs
       ? [
           {
             to: "/question-submission",
@@ -159,7 +144,9 @@ export const Header = () => {
 
   return (
     <>
-    {profile?.role === "demo" ? <DemoWelcomeDialog /> : null}
+    {profile?.role === "demo" && !isDemoMode ? (
+      <DemoWelcomeDialog onDismiss={maybeAutoStart} />
+    ) : null}
     <header className={cn(locked ? "relative z-50 shrink-0" : "sticky top-0 z-50")}>
       <div className="container px-4 pt-3 pb-2">
         <div className="glass-chrome flex h-14 items-stretch justify-between rounded-[1.35rem] border border-foreground/20 bg-white/95 px-3 text-primary">
@@ -195,9 +182,14 @@ export const Header = () => {
         )}
 
         {!locked ? (
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav data-tour="tutor-nav" className="hidden items-center gap-1 md:flex">
           {navItems.map((item) => (
-            <AuthLink key={item.to} to={item.to} className={navLinkClass(item.active)}>
+            <AuthLink
+              key={item.to}
+              to={item.to}
+              data-tour={tourTargetForPath(item.to)}
+              className={navLinkClass(item.active)}
+            >
               {item.label}
             </AuthLink>
           ))}
@@ -210,7 +202,7 @@ export const Header = () => {
         <div className="flex items-center gap-2.5 self-center">
           {profile ? (
             <>
-              <span className="inline-flex items-center rounded-full border glass-control px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.14em] text-foreground/80">
+              <span className="hidden items-center rounded-full border glass-control px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.14em] text-foreground/80 sm:inline-flex">
                 {roleLabels[profile.role]}
               </span>
               <div className="hidden sm:flex items-center gap-2 text-sm">
@@ -309,21 +301,35 @@ export const Header = () => {
         </div>
         </div>
       </div>
-      {isDemoMode && !locked ? (
+      {viewAs && !locked ? (
+        <div className="container px-4 pb-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-primary/30 bg-background px-3 py-2">
+            <p className="text-sm text-foreground">
+              Viewing as {viewAs.displayName}. This is view only. You can open results, and you cannot start work, comment, or upload for this student.
+            </p>
+            <Button type="button" size="sm" variant="outline" onClick={exitViewAsStudent}>
+              Exit student view
+            </Button>
+          </div>
+        </div>
+      ) : null}
+      {(isDemoMode || (profile?.role === "demo" && location.pathname.startsWith("/workspace"))) && !locked ? (
         <div className="container px-4 pb-2">
           <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-primary/20 bg-primary/5 px-3 py-2">
-            <p className="text-sm text-foreground">
-              Demo account mode, this is what demo account users see.
-            </p>
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              disabled={demoBusy}
-              onClick={leaveDemoAccount}
-            >
-              Exit demo
-            </Button>
+            {location.pathname.startsWith("/workspace") ? (
+              <p className="text-sm text-foreground">Workspace shows sample students only.</p>
+            ) : null}
+            {isDemoMode ? (
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                disabled={demoBusy}
+                onClick={leaveDemoAccount}
+              >
+                Exit demo
+              </Button>
+            ) : null}
           </div>
         </div>
       ) : null}

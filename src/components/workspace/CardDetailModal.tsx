@@ -42,6 +42,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
+import { useViewAsStudent } from "@/contexts/ViewAsStudentContext";
 import {
   assignmentDueDateInputToTimestamp,
   defaultAssignmentDueDateInput,
@@ -212,6 +213,8 @@ export function CardDetailModal({
   onUpdated,
 }: CardDetailModalProps) {
   const { profile } = useAuth();
+  const { viewAs } = useViewAsStudent();
+  const viewOnly = Boolean(viewAs);
   const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
@@ -290,9 +293,9 @@ export function CardDetailModal({
     return () => window.clearTimeout(timer);
   }, [open, focusNotes, readOnly, card?.id]);
 
-  const isStudentView = profile?.role === "student";
-  const isTutorView = !readOnly;
-  const canAddAttachments = Boolean(profile);
+  const isStudentView = profile?.role === "student" && !viewOnly;
+  const isTutorView = !readOnly && !viewOnly;
+  const canAddAttachments = Boolean(profile) && !viewOnly;
   const minLinkDueDate = defaultAssignmentDueDateInput();
 
   const attachmentCounts = useMemo(() => {
@@ -585,6 +588,7 @@ export function CardDetailModal({
 
   const handleRemoveAttachment = async (attachment: WorkspaceCardAttachment) => {
     if (!card) return;
+    if (viewOnly) return;
     if (readOnly && attachment.uploadedByUid !== profile?.uid) return;
     try {
       await softDeleteCardAttachment(
@@ -606,7 +610,7 @@ export function CardDetailModal({
   };
 
   const handlePostComment = async () => {
-    if (!card || !commentDraft.trim()) return;
+    if (viewOnly || !card || !commentDraft.trim()) return;
     setPostingComment(true);
     try {
       await createCardComment(boardId, card.id, commentDraft);
@@ -1085,6 +1089,7 @@ export function CardDetailModal({
                         submission={submissionsByAttachmentId[attachment.id] ?? null}
                         isTutorView={isTutorView}
                         isStudentView={isStudentView}
+                        viewOnly={viewOnly}
                         currentUserUid={profile?.uid}
                         onRemove={() => void handleRemoveAttachment(attachment)}
                         onRenamed={(fileName) => {
@@ -1112,6 +1117,11 @@ export function CardDetailModal({
               <span className="text-sm font-semibold">Comments and activity</span>
             </div>
 
+            {viewOnly ? (
+              <p className="px-4 py-3 text-sm text-muted-foreground">
+                Comments are view only while you are looking at this student.
+              </p>
+            ) : (
             <div className="p-3 shrink-0">
               <Textarea
                 placeholder="Write a comment…"
@@ -1136,6 +1146,7 @@ export function CardDetailModal({
                 Comment
               </Button>
             </div>
+            )}
 
             <Separator />
 
@@ -1207,6 +1218,7 @@ function AttachmentRow({
   submission,
   isTutorView,
   isStudentView,
+  viewOnly = false,
   currentUserUid,
   onRemove,
   onRenamed,
@@ -1218,6 +1230,7 @@ function AttachmentRow({
   submission: WorkspaceAttachmentSubmission | null;
   isTutorView: boolean;
   isStudentView: boolean;
+  viewOnly?: boolean;
   currentUserUid?: string;
   onRemove: () => void;
   onRenamed: (fileName: string) => void;
@@ -1287,11 +1300,11 @@ function AttachmentRow({
   const hasSubmission = Boolean(submission);
   const overdue = isAttachmentOverdue(attachment, hasSubmission);
   const isOwnAttachment = Boolean(currentUserUid && attachment.uploadedByUid === currentUserUid);
-  const canRemove = isTutorView || isOwnAttachment;
-  const canRename = isTutorView || isOwnAttachment;
+  const canRemove = !viewOnly && (isTutorView || isOwnAttachment);
+  const canRename = !viewOnly && (isTutorView || isOwnAttachment);
   const canPreviewFile = (isPdf || isImage) && Boolean(downloadUrl);
   const linkHref = isLink ? downloadUrl || attachment.externalUrl || null : null;
-  const showHomeworkSubmit = isStudentView && !isOwnAttachment;
+  const showHomeworkSubmit = isStudentView && !isOwnAttachment && !viewOnly;
 
   const openHref = (url: string) => {
     window.open(url, "_blank", "noopener,noreferrer");

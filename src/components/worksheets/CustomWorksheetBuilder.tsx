@@ -23,14 +23,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  WORKSHEET_QUESTION_CAP,
   WORKSHEET_SECTIONS,
   type WorksheetSectionId,
 } from "@/lib/worksheetTagCatalog";
 import { cn } from "@/lib/utils";
-import type { Tag } from "@/types";
+import type { Passage, Question, Tag } from "@/types";
 import type { StudentOption } from "@/types/assignment";
 import type { WorkspaceCard, WorkspaceList } from "@/types/workspace";
 import { WORKSPACE_NEW_CARD_ID } from "@/types/worksheetsNavigation";
+import {
+  WorksheetQuestionPicker,
+  type WorksheetQuestionPickMode,
+} from "@/components/worksheets/WorksheetQuestionPicker";
 
 export type WorksheetBuilderVariant = "tutor" | "student";
 
@@ -40,6 +45,13 @@ interface CustomWorksheetBuilderProps {
   questionLimit: number;
   tagCatalog: Record<WorksheetSectionId, Tag[]>;
   matchingCount: number;
+  questionPickMode: WorksheetQuestionPickMode;
+  onQuestionPickModeChange: (mode: WorksheetQuestionPickMode) => void;
+  poolQuestions: Question[];
+  chosenIds: string[];
+  chosenQuestions: Question[];
+  passages: Passage[];
+  onChosenIdsChange: (ids: string[]) => void;
   onToggleTag: (code: string) => void;
   onQuestionLimitChange: (limit: number) => void;
   onClearTags: () => void;
@@ -85,6 +97,13 @@ export function CustomWorksheetBuilder({
   questionLimit,
   tagCatalog,
   matchingCount,
+  questionPickMode,
+  onQuestionPickModeChange,
+  poolQuestions,
+  chosenIds,
+  chosenQuestions,
+  passages,
+  onChosenIdsChange,
   onToggleTag,
   onQuestionLimitChange,
   onClearTags,
@@ -114,7 +133,10 @@ export function CustomWorksheetBuilder({
   onRevealAnswersChange,
 }: CustomWorksheetBuilderProps) {
   const isTutor = variant === "tutor";
-  const canStart = selectedCodes.length > 0 && matchingCount > 0;
+  const choosingQuestions = questionPickMode === "chosen";
+  const canStart = choosingQuestions
+    ? chosenQuestions.length > 0
+    : selectedCodes.length > 0 && matchingCount > 0;
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedSections, setExpandedSections] = useState<string[]>(DEFAULT_OPEN_SECTIONS);
 
@@ -169,6 +191,24 @@ export function CustomWorksheetBuilder({
     }
     return counts;
   }, [tagCatalog, selectedCodes]);
+
+  const selectedStudent = students.find((student) => student.uid === selectedStudentUid);
+  const assignDisabled =
+    assigning ||
+    students.length === 0 ||
+    !selectedStudentUid ||
+    !assignmentDueDate ||
+    !canStart ||
+    (showOnWorkspace && workspaceBoardExists && (!workspaceListId || !workspaceCardTarget));
+  const dueLabel = assignmentDueDate
+    ? new Date(`${assignmentDueDate}T12:00:00`).toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+      })
+    : "";
+  const worksheetCountLabel = choosingQuestions
+    ? `${chosenQuestions.length} question${chosenQuestions.length === 1 ? "" : "s"}`
+    : `${questionLimit} question${questionLimit === 1 ? "" : "s"} from ${matchingCount} in the pool`;
 
   return (
     <>
@@ -333,27 +373,6 @@ export function CustomWorksheetBuilder({
             <p className="text-xs text-muted-foreground">
               Overdue assignments appear in your dashboard Needs attention section.
             </p>
-
-            <Button
-              onClick={onAssign}
-              disabled={
-                assigning ||
-                students.length === 0 ||
-                !selectedStudentUid ||
-                !assignmentDueDate ||
-                !canStart ||
-                (showOnWorkspace &&
-                  workspaceBoardExists &&
-                  (!workspaceListId || !workspaceCardTarget))
-              }
-            >
-              {assigning ? (
-                <Loader2 className="h-4 w-4 animate-spin mr-2" />
-              ) : (
-                <Send className="h-4 w-4 mr-2" />
-              )}
-              Assign
-            </Button>
           </CardContent>
         </Card>
       )}
@@ -369,37 +388,11 @@ export function CustomWorksheetBuilder({
 
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle className="text-lg">Worksheet size</CardTitle>
-          <p className="text-sm text-muted-foreground">
-            Maximum number of questions (random from the pool that matches your tags).
-          </p>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between gap-4">
-            <Label htmlFor="ws-limit">Questions</Label>
-            <span className="font-mono text-sm tabular-nums">{questionLimit}</span>
-          </div>
-          <Slider
-            id="ws-limit"
-            min={1}
-            max={50}
-            step={1}
-            value={[questionLimit]}
-            onValueChange={(v) => onQuestionLimitChange(v[0] ?? 10)}
-          />
-          <p className="text-xs text-muted-foreground">
-            Pool size for current tags:{" "}
-            <span className="font-medium text-foreground">{matchingCount}</span>
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-8">
-        <CardHeader>
           <CardTitle className="text-lg">Skills to include</CardTitle>
           <p className="text-sm text-muted-foreground">
-            Pick one or more skills. The worksheet pulls questions that match{" "}
-            <span className="font-medium text-foreground">any</span> skill you select.
+            {choosingQuestions
+              ? "Pick one or more skills to filter the question list. Questions you already added stay on the worksheet."
+              : "Pick one or more skills. A random set uses questions that match any skill you select."}
           </p>
         </CardHeader>
         <CardContent className="space-y-5">
@@ -534,24 +527,129 @@ export function CustomWorksheetBuilder({
         </CardContent>
       </Card>
 
-      <div className="mt-8 flex flex-wrap items-center gap-3">
-        <Button onClick={onStart} disabled={!canStart}>
-          {isTutor ? "Preview worksheet" : "Start practice"}
-          <ArrowRight className="h-4 w-4 ml-2" />
-        </Button>
-        <Button type="button" variant="outline" onClick={onExportPdf} disabled={!canStart}>
-          <Printer className="h-4 w-4 mr-2" />
-          Print / Save PDF
-        </Button>
-        {selectedCodes.length > 0 && (
-          <Button variant="outline" onClick={onClearTags}>
-            Clear skills
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle className="text-lg">Questions on the worksheet</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Use a random set, or check the exact questions you want.
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid gap-2 sm:grid-cols-2">
+            <button
+              type="button"
+              aria-pressed={!choosingQuestions}
+              onClick={() => onQuestionPickModeChange("random")}
+              className={cn(
+                "rounded-lg border px-3 py-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                !choosingQuestions ? "border-primary bg-primary/5" : "border-border hover:bg-muted/50",
+              )}
+            >
+              <span className="block text-sm font-medium">Random set</span>
+              <span className="mt-0.5 block text-xs text-muted-foreground">
+                Pull questions from the skills you selected.
+              </span>
+            </button>
+            <button
+              type="button"
+              aria-pressed={choosingQuestions}
+              onClick={() => onQuestionPickModeChange("chosen")}
+              className={cn(
+                "rounded-lg border px-3 py-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                choosingQuestions ? "border-primary bg-primary/5" : "border-border hover:bg-muted/50",
+              )}
+            >
+              <span className="block text-sm font-medium">Choose questions</span>
+              <span className="mt-0.5 block text-xs text-muted-foreground">
+                Check the exact questions for this worksheet.
+              </span>
+            </button>
+          </div>
+
+          {choosingQuestions ? (
+            <WorksheetQuestionPicker
+              poolQuestions={poolQuestions}
+              chosenIds={chosenIds}
+              chosenQuestions={chosenQuestions}
+              passages={passages}
+              questionLimit={questionLimit}
+              onQuestionLimitChange={onQuestionLimitChange}
+              onChosenIdsChange={onChosenIdsChange}
+            />
+          ) : (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between gap-4">
+                <Label htmlFor="ws-limit">Questions</Label>
+                <span className="font-mono text-sm tabular-nums">{questionLimit}</span>
+              </div>
+              <Slider
+                id="ws-limit"
+                min={1}
+                max={WORKSHEET_QUESTION_CAP}
+                step={1}
+                value={[questionLimit]}
+                onValueChange={(value) => onQuestionLimitChange(value[0] ?? 10)}
+              />
+              <p className="text-xs text-muted-foreground">
+                Pool size for the selected skills:{" "}
+                <span className="font-medium text-foreground">{matchingCount}</span>
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {isTutor ? (
+        <>
+          <div className="h-24" aria-hidden />
+          <div className="fixed inset-x-0 bottom-0 z-30 border-t bg-background/95 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_-16px_rgba(0,0,0,0.45)] backdrop-blur">
+            <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3 px-4 pt-3 sm:px-6">
+              <Button onClick={onAssign} disabled={assignDisabled}>
+                {assigning ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Send className="mr-2 h-4 w-4" />
+                )}
+                Assign
+              </Button>
+              <Button type="button" variant="outline" onClick={onStart} disabled={!canStart}>
+                Preview
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+              <Button type="button" variant="outline" onClick={onExportPdf} disabled={!canStart}>
+                <Printer className="mr-2 h-4 w-4" />
+                Print / Save PDF
+              </Button>
+              <p className="min-w-0 text-sm text-muted-foreground">
+                {selectedStudent
+                  ? `${selectedStudent.displayName}${dueLabel ? `, due ${dueLabel}` : ""}, ${worksheetCountLabel}`
+                  : "Select a student above, then assign."}
+              </p>
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <Button onClick={onStart} disabled={!canStart}>
+            Start practice
+            <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
-        )}
-        <span className="text-sm text-muted-foreground">
-          {matchingCount} matching question{matchingCount === 1 ? "" : "s"} in pool
-        </span>
-      </div>
+          <Button type="button" variant="outline" onClick={onExportPdf} disabled={!canStart}>
+            <Printer className="mr-2 h-4 w-4" />
+            Print / Save PDF
+          </Button>
+          {selectedCodes.length > 0 && (
+            <Button variant="outline" onClick={onClearTags}>
+              Clear skills
+            </Button>
+          )}
+          <span className="text-sm text-muted-foreground">
+            {choosingQuestions
+              ? `${chosenQuestions.length} question${chosenQuestions.length === 1 ? "" : "s"} on this worksheet`
+              : `${matchingCount} matching question${matchingCount === 1 ? "" : "s"} in the pool`}
+          </span>
+        </div>
+      )}
     </>
   );
 }

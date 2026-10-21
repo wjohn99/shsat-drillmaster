@@ -14,6 +14,12 @@ interface StudentWorksheetsHomeProps {
   onPrintAssignment: (assignment: WorksheetAssignment) => void;
   onReviewSession: (session: PracticeSessionRecord) => void;
   onCreateCustomPractice: () => void;
+  /** Tutor is looking at this student's worksheets and submitted results. */
+  preview?: {
+    studentName: string;
+    assignments: WorksheetAssignment[];
+    sessions: PracticeSessionRecord[];
+  };
 }
 
 export function StudentWorksheetsHome({
@@ -23,11 +29,17 @@ export function StudentWorksheetsHome({
   onPrintAssignment,
   onReviewSession,
   onCreateCustomPractice,
+  preview,
 }: StudentWorksheetsHomeProps) {
   const [historySessions, setHistorySessions] = useState<PracticeSessionRecord[]>([]);
   const [historyLoading, setHistoryLoading] = useState(true);
 
   useEffect(() => {
+    if (preview) {
+      setHistorySessions(preview.sessions.filter((session) => session.sessionType === "assignment"));
+      setHistoryLoading(false);
+      return;
+    }
     let cancelled = false;
     (async () => {
       setHistoryLoading(true);
@@ -43,7 +55,7 @@ export function StudentWorksheetsHome({
     return () => {
       cancelled = true;
     };
-  }, [assignmentsRefreshKey]);
+  }, [assignmentsRefreshKey, preview?.sessions]);
 
   return (
     <div className="mx-auto max-w-6xl space-y-12">
@@ -51,7 +63,9 @@ export function StudentWorksheetsHome({
         <div className="mb-4">
           <h2 className="font-serif text-xl font-semibold">Active assignments</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Worksheets from your tutor, complete these when assigned.
+            {preview
+              ? `Worksheets assigned to ${preview.studentName}. Open results after they submit.`
+              : "Worksheets from your tutor, complete these when assigned."}
           </p>
         </div>
         <StudentAssignmentsGrid
@@ -59,6 +73,8 @@ export function StudentWorksheetsHome({
           onStartAssignment={onStartAssignment}
           onReviewAssignment={onReviewAssignment}
           onPrintAssignment={onPrintAssignment}
+          assignments={preview?.assignments}
+          preview={Boolean(preview)}
         />
       </section>
 
@@ -66,7 +82,9 @@ export function StudentWorksheetsHome({
         <div className="mb-4">
           <h2 className="font-serif text-xl font-semibold">Assignment history</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Review your saved results from completed tutor worksheets anytime.
+            {preview
+              ? `Submitted worksheets for ${preview.studentName}.`
+              : "Review your saved results from completed tutor worksheets anytime."}
           </p>
         </div>
         <WorksheetHistoryList
@@ -77,6 +95,7 @@ export function StudentWorksheetsHome({
         />
       </section>
 
+      {preview ? null : (
       <section>
         <div className="mb-4">
           <h2 className="font-serif text-xl font-semibold">Practice on your own</h2>
@@ -99,6 +118,7 @@ export function StudentWorksheetsHome({
           </Button>
         </div>
       </section>
+      )}
     </div>
   );
 }

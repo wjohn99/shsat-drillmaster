@@ -20,6 +20,10 @@ interface StudentAssignmentsGridProps {
   onReviewAssignment?: (assignment: WorksheetAssignment) => void;
   onPrintAssignment?: (assignment: WorksheetAssignment) => void;
   refreshKey?: number;
+  /** When set, show these rows instead of the signed-in student's assignments. */
+  assignments?: WorksheetAssignment[];
+  /** Tutor preview. Results stay available. Starting work is hidden. */
+  preview?: boolean;
 }
 
 export function StudentAssignmentsGrid({
@@ -27,13 +31,20 @@ export function StudentAssignmentsGrid({
   onReviewAssignment,
   onPrintAssignment,
   refreshKey = 0,
+  assignments: providedAssignments,
+  preview = false,
 }: StudentAssignmentsGridProps) {
   const { profile } = useAuth();
-  const [assignments, setAssignments] = useState<WorksheetAssignment[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [assignments, setAssignments] = useState<WorksheetAssignment[]>(providedAssignments ?? []);
+  const [loading, setLoading] = useState(providedAssignments == null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (providedAssignments) {
+      setAssignments(providedAssignments);
+      setLoading(false);
+      return;
+    }
     if (!profile?.uid) {
       setLoading(false);
       return;
@@ -65,7 +76,7 @@ export function StudentAssignmentsGrid({
     return () => {
       cancelled = true;
     };
-  }, [profile?.uid, refreshKey]);
+  }, [profile?.uid, providedAssignments, refreshKey]);
 
   if (loading) {
     return (
@@ -150,6 +161,13 @@ export function StudentAssignmentsGrid({
                     View last results
                   </Button>
                 ) : null}
+                {preview ? (
+                  isCompleted ? null : (
+                    <p className="text-sm text-muted-foreground">
+                      The student starts this worksheet from their account.
+                    </p>
+                  )
+                ) : (
                 <Button
                   className="w-full"
                   size="sm"
@@ -159,6 +177,7 @@ export function StudentAssignmentsGrid({
                   <Play className="h-4 w-4 mr-2" />
                   {isCompleted ? "Practice again" : "Start practice"}
                 </Button>
+                )}
                 {onPrintAssignment ? (
                   <Button
                     className="w-full"

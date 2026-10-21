@@ -65,6 +65,14 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'demo';
     }
 
+    // Sample class for a demo account. Live tutors cannot be blocked from their own boards.
+    function demoOwnsBoard(boardId) {
+      return isDemo()
+        && exists(/databases/$(database)/documents/workspace_boards/$(boardId))
+        && get(/databases/$(database)/documents/workspace_boards/$(boardId)).data.demoAccount == true
+        && get(/databases/$(database)/documents/workspace_boards/$(boardId)).data.demoOwnerUid == request.auth.uid;
+    }
+
     function isStudentAccountForEmail(studentUid, studentEmail) {
       return exists(/databases/$(database)/documents/users/$(studentUid))
         && get(/databases/$(database)/documents/users/$(studentUid)).data.role == 'student'
@@ -162,9 +170,33 @@ service cloud.firestore {
         && (!('revealAnswers' in request.resource.data)
             || request.resource.data.revealAnswers is bool);
 
+      // Demo tutors assign only to their sample students.
+      allow create: if isDemo()
+        && request.resource.data.tutorUid == request.auth.uid
+        && request.resource.data.demoAccount == true
+        && request.resource.data.assignedToStudentUid is string
+        && demoOwnsBoard(request.resource.data.assignedToStudentUid)
+        && request.resource.data.questionIds is list
+        && request.resource.data.questionIds.size() > 0
+        && request.resource.data.status == 'todo'
+        && request.resource.data.dueAt is timestamp
+        && (!('revealAnswers' in request.resource.data)
+            || request.resource.data.revealAnswers is bool);
+
       // Tutor links assignment to a workspace card after create.
       allow update: if isTutor()
         && resource.data.tutorUid == request.auth.uid
+        && request.resource.data.tutorUid == resource.data.tutorUid
+        && request.resource.data.assignedToStudentUid == resource.data.assignedToStudentUid
+        && request.resource.data.questionIds == resource.data.questionIds
+        && request.resource.data.status == resource.data.status
+        && request.resource.data.dueAt == resource.data.dueAt
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['workspaceCardId']);
+
+      allow update: if isDemo()
+        && resource.data.tutorUid == request.auth.uid
+        && resource.data.demoAccount == true
         && request.resource.data.tutorUid == resource.data.tutorUid
         && request.resource.data.assignedToStudentUid == resource.data.assignedToStudentUid
         && request.resource.data.questionIds == resource.data.questionIds
@@ -194,7 +226,8 @@ service cloud.firestore {
 
     function canAccessWorkspaceBoard(boardId) {
       return isTutor()
-        || workspaceBoardIdMatchesStudent(boardId);
+        || workspaceBoardIdMatchesStudent(boardId)
+        || demoOwnsBoard(boardId);
     }
 
     function canReadWorkspaceBoard(boardId) {
@@ -210,6 +243,12 @@ service cloud.firestore {
     match /workspace_boards/{boardId} {
       // Tutors: list all boards, or get a board that does not exist yet (resource == null).
       allow read: if isTutor() && workspaceBoardNotDeleted();
+
+      // Demo accounts: only the sample boards they own.
+      // List queries must filter demoOwnerUid == auth.uid.
+      allow read: if isDemo()
+        && resource.data.demoOwnerUid == request.auth.uid
+        && workspaceBoardNotDeleted();
 
       // Students: only their own existing board.
       allow read: if resource != null
@@ -229,6 +268,17 @@ service cloud.firestore {
         && request.resource.data.assignedTutorUid == request.auth.uid
         && request.resource.data.studentName is string
         && request.resource.data.studentEmail is string
+        && !('deletedAt' in request.resource.data);
+
+      allow create: if isDemo()
+        && request.resource.data.studentUid == boardId
+        && request.resource.data.createdByUid == request.auth.uid
+        && request.resource.data.assignedTutorUid == request.auth.uid
+        && request.resource.data.demoAccount == true
+        && request.resource.data.demoOwnerUid == request.auth.uid
+        && request.resource.data.studentName is string
+        && request.resource.data.studentEmail is string
+        && boardId.matches('demo-[A-Za-z0-9]+-[a-z]+')
         && !('deletedAt' in request.resource.data);
 
       allow update: if isTutor()
@@ -251,11 +301,34 @@ service cloud.firestore {
         && request.resource.data.diff(resource.data).affectedKeys()
           .hasOnly(['assignedTutorUid', 'assignedTutorName', 'assignedTutorEmail', 'updatedAt']);
 
+      // Demo tutors edit only their sample boards, and cannot turn them into live boards.
+      allow update: if isDemo()
+        && resource.data.demoAccount == true
+        && resource.data.demoOwnerUid == request.auth.uid
+        && request.resource.data.demoAccount == true
+        && request.resource.data.demoOwnerUid == request.auth.uid
+        && request.resource.data.studentUid == resource.data.studentUid
+        && request.resource.data.createdByUid == resource.data.createdByUid
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.roadmap is map
+        && (!('deletedAt' in request.resource.data)
+          || request.resource.data.deletedAt == resource.data.deletedAt)
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['studentName', 'studentEmail', 'color', 'archivedAt', 'roadmap', 'roadmapUpdatedAt', 'updatedAt', 'diagnosticExtendedTime', 'diagnosticAssigned', 'demoAccount', 'demoOwnerUid', 'assignedTutorUid', 'assignedTutorName', 'assignedTutorEmail']);
+
+      allow update: if isDemo()
+        && resource.data.demoAccount == true
+        && resource.data.demoOwnerUid == request.auth.uid
+        && request.resource.data.demoAccount == true
+        && request.resource.data.demoOwnerUid == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['diagnosticExtendedTime', 'diagnosticAssigned', 'demoAccount', 'updatedAt']);
+
       allow delete: if false;
 
       match /roadmap_revisions/{revId} {
         allow read: if canReadWorkspaceBoard(boardId);
-        allow create: if isTutor()
+        allow create: if (isTutor() || demoOwnsBoard(boardId))
           && request.resource.data.savedByUid == request.auth.uid
           && request.resource.data.roadmap is map;
         allow update, delete: if false;
@@ -263,7 +336,7 @@ service cloud.firestore {
 
       match /lists/{listId} {
         allow read: if canReadWorkspaceBoard(boardId);
-        allow create: if isTutor()
+        allow create: if isTutor() || demoOwnsBoard(boardId)
           || (
             workspaceBoardIdMatchesStudent(boardId)
             && request.resource.data.title is string
@@ -273,13 +346,13 @@ service cloud.firestore {
             && (request.resource.data.position is int || request.resource.data.position is float)
             && !('deletedAt' in request.resource.data)
           );
-        allow update: if isTutor();
+        allow update: if isTutor() || demoOwnsBoard(boardId);
         allow delete: if false;
       }
 
       match /cards/{cardId} {
         allow read: if canReadWorkspaceBoard(boardId);
-        allow create: if isTutor()
+        allow create: if isTutor() || demoOwnsBoard(boardId)
           || (
             workspaceBoardIdMatchesStudent(boardId)
             && request.resource.data.listId is string
@@ -291,7 +364,7 @@ service cloud.firestore {
             && !('deletedAt' in request.resource.data)
             && !('assignmentId' in request.resource.data)
           );
-        allow update: if isTutor()
+        allow update: if isTutor() || demoOwnsBoard(boardId)
           || (
             canAccessWorkspaceBoard(boardId)
             && request.resource.data.diff(resource.data).affectedKeys()
@@ -324,7 +397,7 @@ service cloud.firestore {
             && !('deletedAt' in request.resource.data)
             && (
               !('dueAt' in request.resource.data)
-              || (isTutor() && request.resource.data.dueAt is timestamp)
+              || ((isTutor() || demoOwnsBoard(boardId)) && request.resource.data.dueAt is timestamp)
             )
             && (
               (request.resource.data.kind == 'link'
@@ -349,6 +422,7 @@ service cloud.firestore {
 
           allow update: if (
               isTutor()
+              || demoOwnsBoard(boardId)
               || (
                 workspaceBoardIdMatchesStudent(boardId)
                 && resource.data.uploadedByUid == request.auth.uid
@@ -389,7 +463,7 @@ service cloud.firestore {
             && request.resource.data.body.size() > 0
             && !('deletedAt' in request.resource.data);
 
-          allow update: if isTutor()
+          allow update: if (isTutor() || demoOwnsBoard(boardId))
             && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['deletedAt']);
 
           allow delete: if false;
@@ -408,10 +482,21 @@ service cloud.firestore {
           allow create: if request.resource.data.savedByUid == request.auth.uid
             && (
               isTutor()
+              || demoOwnsBoard(boardId)
               || workspaceBoardIdMatchesStudent(boardId)
             );
           allow update, delete: if false;
         }
+      }
+
+      // Internal notes, accommodations, and answer keys. Students and parents cannot read these.
+      match /tutor_private/{docId} {
+        allow read: if isTutor();
+        allow create, update: if isTutor()
+          && request.resource.data.body is string
+          && request.resource.data.body.size() > 0
+          && request.resource.data.body.size() <= 100000;
+        allow delete: if false;
       }
     }
 
@@ -436,6 +521,11 @@ service cloud.firestore {
         && resource.data.tutorUid == request.auth.uid
         && resource.data.sessionType == 'assignment'
         && isTutor();
+
+      allow read: if isSignedIn()
+        && resource.data.tutorUid == request.auth.uid
+        && resource.data.sessionType == 'assignment'
+        && isDemo();
 
       // Tutors: diagnostic reports for any student (query must use sessionType == diagnostic).
       allow read: if isSignedIn()

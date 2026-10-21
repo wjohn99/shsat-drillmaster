@@ -37,7 +37,9 @@ import { BoardListColumn } from "./BoardListColumn";
 import { CardDetailModal } from "./CardDetailModal";
 import { EditBoardDetailsDialog } from "./EditBoardDetailsDialog";
 import { StudentQuickActions } from "./StudentQuickActions";
+import { useViewAsStudent } from "@/contexts/ViewAsStudentContext";
 import { StudentRoadmapPanel } from "./StudentRoadmapPanel";
+import { TutorPrivatePanel } from "./TutorPrivatePanel";
 
 interface WorkspaceBoardProps {
   boardId: string;
@@ -53,6 +55,8 @@ export function WorkspaceBoard({
   canCreateListsAndCards = !readOnly,
   showBackLink = false,
 }: WorkspaceBoardProps) {
+  const { viewAs } = useViewAsStudent();
+  const previewThisBoard = viewAs?.uid === boardId;
   const [board, setBoard] = useState<WorkspaceBoardType | null>(null);
   const [lists, setLists] = useState<WorkspaceList[]>([]);
   const [cards, setCards] = useState<WorkspaceCard[]>([]);
@@ -91,13 +95,13 @@ export function WorkspaceBoard({
         fetchWorkspaceBoard(boardId),
         fetchWorkspaceLists(boardId),
         fetchWorkspaceCards(boardId),
-        readOnly
+        readOnly && !previewThisBoard
           ? fetchAssignmentsForStudent().catch(() => [] as WorksheetAssignment[])
           : fetchAssignmentsForTutor().catch(() => [] as WorksheetAssignment[]),
-        readOnly
+        readOnly && !previewThisBoard
           ? fetchPracticeSessionsForStudent().catch(() => [] as PracticeSessionRecord[])
           : fetchPracticeSessionsForTutor().catch(() => [] as PracticeSessionRecord[]),
-        readOnly
+        readOnly && !previewThisBoard
           ? fetchDiagnosticProgress(boardId)
               .then((row) => Boolean(row))
               .catch(() => false)
@@ -109,9 +113,10 @@ export function WorkspaceBoard({
         setError("Workspace board not found.");
         return;
       }
-      const studentAssignments = readOnly
-        ? assignmentRows
-        : assignmentRows.filter((a) => a.assignedToStudentUid === boardRow.studentUid);
+      const studentAssignments =
+        readOnly && !previewThisBoard
+          ? assignmentRows
+          : assignmentRows.filter((a) => a.assignedToStudentUid === boardRow.studentUid);
       const map = new Map(studentAssignments.map((a) => [a.id, a]));
       setBoard(boardRow);
       roadmapUpdatedAtMsRef.current = boardRow.roadmapUpdatedAt?.toMillis?.() ?? 0;
@@ -152,7 +157,7 @@ export function WorkspaceBoard({
     } finally {
       if (!silent) setLoading(false);
     }
-  }, [boardId, readOnly]);
+  }, [boardId, previewThisBoard, readOnly]);
 
   useEffect(() => {
     void loadBoard();
@@ -289,7 +294,7 @@ export function WorkspaceBoard({
 
   return (
     <>
-      <div className="mb-4 overflow-hidden rounded-xl border glass-surface">
+      <div data-tour="student-board" className="mb-4 overflow-hidden rounded-xl border glass-surface">
         <div className="flex min-w-0">
           <div className="w-1.5 shrink-0" style={{ backgroundColor: boardAccent }} aria-hidden />
           <div className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-4 px-5 py-4">
@@ -342,8 +347,12 @@ export function WorkspaceBoard({
             </div>
             {!readOnly ? (
               <StudentQuickActions
-                className="shrink-0 justify-end"
+                tourId="board-actions"
+                stacked
+                className="w-full sm:flex sm:w-auto sm:shrink-0 sm:justify-end"
                 studentUid={board.studentUid}
+                studentName={board.studentName}
+                studentEmail={board.studentEmail}
                 lastSession={lastSession}
                 lastCompletedAssignment={lastCompletedAssignment}
                 firstDiagnostic={firstDiagnostic}
@@ -393,12 +402,17 @@ export function WorkspaceBoard({
         />
       ) : null}
 
+      {!readOnly ? <TutorPrivatePanel boardId={boardId} /> : null}
+
       <p className="mb-2 px-1 text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
         Session notes and homework
       </p>
-      <div className="flex gap-4 overflow-x-auto pb-6 min-h-[calc(100vh-12rem)] items-start">
+      <div
+        data-tour="board-lists"
+        className="flex flex-col items-stretch gap-4 pb-6 md:min-h-[calc(100vh-12rem)] md:flex-row md:items-start md:overflow-x-auto"
+      >
         {lists.length === 0 ? (
-          <div className="w-72 shrink-0 rounded-xl border border-dashed border-border bg-muted/40 px-4 py-6">
+          <div className="w-full rounded-xl border border-dashed border-border bg-muted/40 px-4 py-6 md:w-72 md:shrink-0">
             <p className="text-sm text-muted-foreground">
               {canCreateListsAndCards
                 ? readOnly
@@ -435,7 +449,7 @@ export function WorkspaceBoard({
         ))}
 
         {canCreateListsAndCards && (
-          <div className="w-72 shrink-0">
+          <div className="w-full md:w-72 md:shrink-0">
             {addingList ? (
               <div className="space-y-2 rounded-xl border glass-surface p-3">
                 <Input

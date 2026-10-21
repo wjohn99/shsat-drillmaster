@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { useViewAsStudent } from "@/contexts/ViewAsStudentContext";
 import { TutorWorkspaceHome } from "@/components/workspace/TutorWorkspaceHome";
 import { WorkspaceBoard } from "@/components/workspace/WorkspaceBoard";
 import { fetchParentLink } from "@/lib/parentLinkService";
@@ -16,7 +17,9 @@ export default function Workspace() {
   const { boardId } = useParams<{ boardId?: string }>();
   const navigate = useNavigate();
   const { profile, loading: authLoading } = useAuth();
-  const isTutor = profile?.role === "tutor";
+  const { viewAs } = useViewAsStudent();
+  const isTutor = profile?.role === "tutor" || profile?.role === "demo";
+  const viewingAsStudent = Boolean(viewAs) && isTutor;
   const isParent = profile?.role === "parent";
   const isStudent = profile?.role === "student";
 
@@ -145,20 +148,24 @@ export default function Workspace() {
       );
     }
 
+    if (viewingAsStudent && viewAs && boardId !== viewAs.uid) {
+      return <Navigate to={`/workspace/${viewAs.uid}`} replace />;
+    }
+
     if (boardId) {
       return (
         <BoardCrashGuard>
           <WorkspaceBoard
             boardId={boardId}
-            readOnly={isStudent || isParent}
-            canCreateListsAndCards={!isParent}
-            showBackLink={isTutor}
+            readOnly={isStudent || isParent || viewingAsStudent}
+            canCreateListsAndCards={!isParent && !viewingAsStudent}
+            showBackLink={isTutor && !viewingAsStudent}
           />
         </BoardCrashGuard>
       );
     }
 
-    if (isTutor) {
+    if (isTutor && !viewingAsStudent) {
       return <TutorWorkspaceHome />;
     }
 

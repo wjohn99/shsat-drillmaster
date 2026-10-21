@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
@@ -33,6 +33,8 @@ import type { StudentAttentionStatus, StudentRoadmap } from "@/types/workspace";
 import { ATTENTION_STATUS_LABEL, ATTENTION_STATUS_ORDER } from "@/types/workspace";
 import { assignToStudentNavState } from "@/types/worksheetsNavigation";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
+import { useDemoTutorial } from "@/contexts/DemoTutorialContext";
+import { DEMO_TUTORIAL_STEPS } from "@/lib/demoTutorial";
 import { AttentionStatusLabel, AttentionStatusSwatch } from "./AttentionStatusLabel";
 
 function RoadmapHeading({
@@ -96,6 +98,11 @@ export function StudentRoadmapPanel({
   /** Tutor controls shown inside the expanded roadmap, hidden while it is collapsed. */
   settings?: ReactNode;
 }) {
+  const detailsRef = useRef<HTMLDetailsElement>(null);
+  const tutorialOpenedRef = useRef(false);
+  const { active: tutorialActive, stepIndex: tutorialStepIndex } = useDemoTutorial();
+  const tutorialOpensRoadmap =
+    tutorialActive && DEMO_TUTORIAL_STEPS[tutorialStepIndex]?.target === "student-roadmap";
   const [draft, setDraft] = useState<StudentRoadmap>(snapshot.roadmap);
   const [followUpDraft, setFollowUpDraft] = useState("");
   const [dirty, setDirty] = useState(false);
@@ -110,6 +117,20 @@ export function StudentRoadmapPanel({
     if (dirtyRef.current) return;
     setDraft(snapshot.roadmap);
   }, [snapshot.roadmap]);
+
+  useLayoutEffect(() => {
+    const el = detailsRef.current;
+    if (!el) return;
+    if (tutorialOpensRoadmap) {
+      el.open = true;
+      tutorialOpenedRef.current = true;
+      return;
+    }
+    if (tutorialOpenedRef.current) {
+      el.open = false;
+      tutorialOpenedRef.current = false;
+    }
+  }, [tutorialOpensRoadmap]);
 
   const school = shsatSchoolById(draft.targetSchool);
   const returnTo = `/workspace/${snapshot.board.studentUid}`;
@@ -220,7 +241,7 @@ export function StudentRoadmapPanel({
       : `Public School Day ${formatIsoDateLabel(SHSAT_2026_PLAN.schoolDayDate)}`;
 
   return (
-    <details className="group rounded-xl border glass-surface mb-3">
+    <details ref={detailsRef} data-tour="student-roadmap" className="group rounded-xl border glass-surface mb-3">
       <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 px-4 py-2.5 sm:px-5 [&::-webkit-details-marker]:hidden">
         <h2 className="text-sm font-semibold tracking-tight">Roadmap</h2>
         <div className="flex items-center gap-2 shrink-0">
@@ -342,7 +363,7 @@ export function StudentRoadmapPanel({
           <RoadmapHeading>
             <p className="text-sm font-medium">Areas for growth</p>
           </RoadmapHeading>
-          {snapshot.growthAreas.length > 0 ? (
+          {!readOnly && snapshot.growthAreas.length > 0 ? (
             <div className="flex flex-wrap gap-1.5">
               {snapshot.growthAreas.map((row) => (
                 <Badge key={row.tagCode} variant="outline">
@@ -350,11 +371,11 @@ export function StudentRoadmapPanel({
                 </Badge>
               ))}
             </div>
-          ) : (
+          ) : !readOnly ? (
             <p className="text-sm text-muted-foreground">
               Growth tags come from the same sittings. Assign the next worksheet from these.
             </p>
-          )}
+          ) : null}
           {readOnly ? (
             draft.growthNotes ? (
               <p className="text-sm whitespace-pre-wrap">{draft.growthNotes}</p>
@@ -657,7 +678,10 @@ export function StudentRoadmapPanel({
             <Button variant="outline" asChild>
               <Link
                 to="/practice/diagnostic"
-                state={{ reviewSession: snapshot.latestDiagnostic ?? snapshot.baseline }}
+                state={{
+                  reviewSession: snapshot.latestDiagnostic ?? snapshot.baseline,
+                  returnTo,
+                }}
               >
                 View diagnostic results
               </Link>
@@ -666,7 +690,7 @@ export function StudentRoadmapPanel({
             snapshot.latestDiagnostic &&
             snapshot.baseline.id !== snapshot.latestDiagnostic.id ? (
               <Button variant="outline" asChild>
-                <Link to="/practice/diagnostic" state={{ reviewSession: snapshot.baseline }}>
+                <Link to="/practice/diagnostic" state={{ reviewSession: snapshot.baseline, returnTo }}>
                   First diagnostic
                 </Link>
               </Button>

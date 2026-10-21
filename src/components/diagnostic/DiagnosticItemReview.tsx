@@ -41,6 +41,9 @@ import { cn } from "@/lib/utils";
 interface DiagnosticItemReviewProps {
   exam: AssembledDiagnosticExam;
   events: SessionAnalyticsEvent[];
+  /** Tutor review of a student sitting. Each skill opens a worksheet for this student. */
+  skillWorksheetStudentUid?: string;
+  skillWorksheetReturnTo?: string;
 }
 
 type ReviewItem = {
@@ -113,7 +116,12 @@ function itemsForModule(items: ReviewItem[], module: QuestionModule): ReviewItem
   return items.filter((item) => item.question.module === module);
 }
 
-export function DiagnosticItemReview({ exam, events }: DiagnosticItemReviewProps) {
+export function DiagnosticItemReview({
+  exam,
+  events,
+  skillWorksheetStudentUid,
+  skillWorksheetReturnTo,
+}: DiagnosticItemReviewProps) {
   const { profile } = useAuth();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const eventById = useMemo(
@@ -343,6 +351,10 @@ export function DiagnosticItemReview({ exam, events }: DiagnosticItemReviewProps
                     isCorrect={selectedEvent?.correct}
                     selectedChoiceIds={getSelectedChoiceIds(selected, raw)}
                     showSkillToImprove={profile?.role === "tutor" || profile?.role === "parent"}
+                    skillWorksheetStudentUid={
+                      profile?.role === "tutor" ? skillWorksheetStudentUid : undefined
+                    }
+                    skillWorksheetReturnTo={skillWorksheetReturnTo}
                   />
                 </div>
               </div>

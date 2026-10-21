@@ -3,6 +3,8 @@ import { CheckCircle2, Circle, Eye, Loader2, Printer } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { fetchDemoStudents } from "@/lib/demoSandbox";
+import { useAuth } from "@/contexts/AuthContext";
 import { fetchAssignmentsForTutor, fetchStudents } from "@/lib/assignmentService";
 import {
   formatAssignmentDueDate,
@@ -26,6 +28,7 @@ export function TutorAssignmentsGrid({
   onPrintAssignment,
   onCreate,
 }: TutorAssignmentsGridProps) {
+  const { profile } = useAuth();
   const [assignments, setAssignments] = useState<TutorAssignmentRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -37,14 +40,19 @@ export function TutorAssignmentsGrid({
       setLoading(true);
       setError(null);
       try {
-        const [rows, students] = await Promise.all([
-          fetchAssignmentsForTutor(),
-          fetchStudents(),
-        ]);
+        const students =
+          profile?.role === "demo" && profile.uid
+            ? await fetchDemoStudents(profile.uid)
+            : await fetchStudents();
+        const rows = await fetchAssignmentsForTutor();
         if (cancelled) return;
 
         const nameByUid = new Map(students.map((s) => [s.uid, s.displayName]));
-        const enriched: TutorAssignmentRow[] = rows.map((a) => ({
+        const visible =
+          profile?.role === "demo"
+            ? rows.filter((assignment) => nameByUid.has(assignment.assignedToStudentUid))
+            : rows;
+        const enriched: TutorAssignmentRow[] = visible.map((a) => ({
           ...a,
           studentName: nameByUid.get(a.assignedToStudentUid) ?? "Student",
         }));
@@ -61,7 +69,7 @@ export function TutorAssignmentsGrid({
     return () => {
       cancelled = true;
     };
-  }, [refreshKey]);
+  }, [profile?.role, profile?.uid, refreshKey]);
 
   const { openAssignments, completedAssignments } = useMemo(() => {
     const open = assignments.filter((a) => a.status === "todo");

@@ -14,6 +14,7 @@ import {
   isDemoAccountBoard,
   resolvedAssignedTutorUid,
 } from "@/lib/workspaceService";
+import { ensureDemoSandbox } from "@/lib/demoSandbox";
 import { useAuth } from "@/contexts/AuthContext";
 import type { TutorOption, WorksheetAssignment } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
@@ -32,6 +33,7 @@ interface TutorWorkspaceHomeProps {
 
 export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWorkspaceHomeProps) {
   const { profile } = useAuth();
+  const isDemo = profile?.role === "demo";
   const [boards, setBoards] = useState<WorkspaceBoard[]>([]);
   const [sessions, setSessions] = useState<PracticeSessionRecord[]>([]);
   const [assignments, setAssignments] = useState<WorksheetAssignment[]>([]);
@@ -45,6 +47,20 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
     setLoading(true);
     setError(null);
     try {
+      if (isDemo && profile?.uid) {
+        const boardRows = await ensureDemoSandbox(profile.uid);
+        const assignmentRows = await fetchAssignmentsForTutor().catch(
+          () => [] as WorksheetAssignment[],
+        );
+        const sandboxUids = new Set(boardRows.map((board) => board.studentUid));
+        setBoards(boardRows);
+        setSessions([]);
+        setAssignments(
+          assignmentRows.filter((assignment) => sandboxUids.has(assignment.assignedToStudentUid)),
+        );
+        setTutors([]);
+        return;
+      }
       const [boardRows, sessionRows, assignmentRows, tutorRows] = await Promise.all([
         fetchAllWorkspaceBoards(),
         readOnly
@@ -64,7 +80,7 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
     } finally {
       setLoading(false);
     }
-  }, [profile?.uid, readOnly]);
+  }, [isDemo, profile?.uid, readOnly]);
 
   useEffect(() => {
     void loadBoards();
@@ -123,8 +139,8 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
         title="Workspace"
         actions={
           readOnly ? undefined : (
-          <>
-            <Button variant="outline" asChild>
+          <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto">
+            <Button variant="outline" className="w-full sm:w-auto" asChild>
               <Link
                 to="/worksheets"
                 state={assignToStudentNavState(undefined, { returnTo: WORKSPACE_HOME_PATH })}
@@ -132,11 +148,13 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
                 Assign worksheet
               </Link>
             </Button>
-            <Button onClick={() => setAddOpen(true)}>
+            {isDemo ? null : (
+            <Button className="w-full sm:w-auto" onClick={() => setAddOpen(true)}>
               <UserPlus className="h-4 w-4 mr-2" />
               Add student
             </Button>
-          </>
+            )}
+          </div>
           )
         }
       />
@@ -158,7 +176,7 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
                 ? "No student workspaces yet."
                 : "Add a student who has signed in to create their workspace."}
             </p>
-            {readOnly ? null : (
+            {readOnly || isDemo ? null : (
             <Button onClick={() => setAddOpen(true)}>
               <UserPlus className="h-4 w-4 mr-2" />
               Add student
@@ -176,81 +194,78 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
                   {group.boards.length} {group.boards.length === 1 ? "board" : "boards"}
                 </p>
               </div>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {group.boards.map((board) => {
+              <div data-tour="sample-boards" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {group.boards.map((board, boardIndex) => {
+                  const isTourBoard = group === boardsByTutor[0] && boardIndex === 0;
                   const accent = workspaceBoardAccentColor(board.color);
                   const diagnostic = firstAndLatestDiagnostic(sessions, board.studentUid);
                   const lastSession = lastSessionByStudent.get(board.studentUid);
                   return (
                     <Card
                       key={board.id}
-                      className="group relative flex h-52 overflow-hidden transition-[transform,box-shadow] duration-300 ease-out motion-safe:hover:-translate-y-1 hover:shadow-[0_18px_36px_-16px_hsl(220_40%_16%/0.28),inset_0_1px_0_hsl(0_0%_100%/0.72)]"
+                      className="group flex min-h-[9.5rem] overflow-hidden transition-[transform,box-shadow] duration-300 ease-out motion-safe:sm:hover:-translate-y-1 hover:shadow-[0_18px_36px_-16px_hsl(220_40%_16%/0.28),inset_0_1px_0_hsl(0_0%_100%/0.72)] sm:min-h-44"
                     >
-                      <Link
-                        to={`/workspace/${board.studentUid}`}
-                        aria-label={`Open ${board.studentName}`}
-                        className="absolute inset-0 z-[1] rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      />
                       <div
-                        className="pointer-events-none w-1.5 shrink-0 transition-shadow duration-300 group-hover:shadow-[8px_0_20px_-8px_var(--board-accent)]"
-                        style={{ backgroundColor: accent, ["--board-accent" as string]: accent }}
+                        className="w-1.5 shrink-0"
+                        style={{ backgroundColor: accent }}
                         aria-hidden
                       />
-                      <div className="pointer-events-none flex min-w-0 flex-1 flex-col">
+                      <div className="flex min-w-0 flex-1 flex-col">
                         <div
-                          className="relative px-5 pb-4 pt-4"
+                          className="relative flex flex-1"
                           style={{
                             backgroundImage: `linear-gradient(180deg, ${accent}24 0%, transparent 100%)`,
                           }}
                         >
-                          <div
-                            className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                            style={{
-                              backgroundImage: `linear-gradient(180deg, ${accent}38 0%, transparent 72%)`,
-                            }}
-                            aria-hidden
+                          <Link
+                            to={`/workspace/${board.studentUid}`}
+                            data-tour={isTourBoard ? "sample-board-link" : undefined}
+                            aria-label={`Open ${board.studentName}`}
+                            className="absolute inset-0 z-[1] rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring"
                           />
-                          <div className="relative flex items-start justify-between gap-3">
-                            <div className="min-w-0 space-y-1">
-                              <div className="flex items-center gap-1 min-w-0">
-                                <CardTitle className="truncate text-xl">{board.studentName}</CardTitle>
-                                {readOnly ? null : (
+                          <div className="pointer-events-none relative z-[2] flex w-full items-start gap-2 px-4 py-5">
+                            <div className="min-w-0 flex-1">
+                              <CardTitle className="truncate text-xl">{board.studentName}</CardTitle>
+                              {board.studentEmail ? (
+                                <p className="mt-1 truncate text-sm text-muted-foreground">
+                                  {board.studentEmail}
+                                </p>
+                              ) : null}
+                            </div>
+                            <div className="flex shrink-0 flex-col items-end gap-2">
+                              <AttentionStatusLabel status={board.roadmap.status} />
+                              {readOnly ? null : (
                                 <Button
                                   type="button"
                                   variant="ghost"
                                   size="icon"
-                                  className="relative z-10 h-7 w-7 shrink-0 pointer-events-auto text-muted-foreground"
+                                  className="pointer-events-auto h-8 w-8 text-muted-foreground"
                                   title="Edit name and color"
                                   onClick={() => setEditingBoard(board)}
                                 >
                                   <Pencil className="h-3.5 w-3.5" />
                                   <span className="sr-only">Edit name and color</span>
                                 </Button>
-                                )}
-                              </div>
-                              {board.studentEmail ? (
-                                <p className="truncate text-sm text-muted-foreground">
-                                  {board.studentEmail}
-                                </p>
-                              ) : null}
+                              )}
                             </div>
-                            <AttentionStatusLabel status={board.roadmap.status} />
                           </div>
                         </div>
                         {readOnly ? null : (
-                        <div className="mt-auto border-t border-border/70 bg-background/50 px-5 py-3 transition-colors duration-300 group-hover:bg-background/75">
-                          <StudentQuickActions
-                            studentUid={board.studentUid}
-                            lastSession={lastSession}
-                            lastCompletedAssignment={lastCompletedByStudent.get(board.studentUid)}
-                            firstDiagnostic={diagnostic.first}
-                            latestDiagnostic={diagnostic.latest}
-                            showOpenBoard={false}
-                            showFirstDiagnostic={false}
-                            returnTo={WORKSPACE_HOME_PATH}
-                            className="relative z-10 pointer-events-auto"
-                          />
-                        </div>
+                          <div className="hidden border-t border-border/70 bg-background/50 px-3 py-4 sm:block">
+                            <StudentQuickActions
+                              compact
+                              studentUid={board.studentUid}
+                              studentName={board.studentName}
+                              studentEmail={board.studentEmail}
+                              lastSession={lastSession}
+                              lastCompletedAssignment={lastCompletedByStudent.get(board.studentUid)}
+                              firstDiagnostic={diagnostic.first}
+                              latestDiagnostic={diagnostic.latest}
+                              showOpenBoard={false}
+                              showFirstDiagnostic={false}
+                              returnTo={WORKSPACE_HOME_PATH}
+                            />
+                          </div>
                         )}
                       </div>
                     </Card>

@@ -290,6 +290,9 @@ export async function createAssignment(
     workspaceListId: input.workspace?.listId ?? null,
     workspaceCardId: null,
     ...(readerUids.length > 0 ? { readerUids } : {}),
+    ...(input.assignedToStudentUid.startsWith(`demo-${input.tutorUid}-`)
+      ? { demoAccount: true }
+      : {}),
   });
   return docRef.id;
 }

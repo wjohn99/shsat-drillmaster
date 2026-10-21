@@ -1,0 +1,16 @@
+---
+description: Keep the demo account on the same workflow as the live tutor site
+alwaysApply: true
+---
+
+# Demo matches the live site
+
+Demo accounts use the same tutor screens, navigation, and workflow as the live site. Sample students, boards, and assignments stand in for real class data. A tutor who joins later should already know the product.
+
+When you change the live tutor experience, make the same change for demo in the same pass. That includes dashboard, worksheets, workspace, practice, question bank, diagnostic, and shared components those pages use.
+
+Do not add a demo-only screen, hide a live tutor feature from demo, or fork a flow for demo unless the user asks.
+
+Keep demo data on sample boards (`demoAccount`, `demoOwnerUid`). Do not show or edit real students from a demo account.
+
+Question Submission stays on live tutor accounts only, because it writes the real question bank.

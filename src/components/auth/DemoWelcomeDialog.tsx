@@ -11,14 +11,15 @@ import {
 import { dismissDemoWelcome, isDemoWelcomePending } from "@/lib/authService";
 
 const WELCOME_TEXT =
-  "Welcome, and thank you for helping us test this beta. You're one of our first founding tutors. We've spent a long time building this resource for tutors, and our questions are written and reviewed by tutors. Start with the diagnostic or try a practice set. Questions are split into Module 1 and Module 2 for now. Before you share anything with a student, please test it yourself first.";
+  "Welcome to DrillMaster, and thanks for being a founding tutor. Find targeted SHSAT practice with questions and explanations written and reviewed by tutors. Start with a diagnostic or practice set. Modules 1 and 2 are our beta structure; we'll refine it as we learn from the adaptive test and your feedback. Try it yourself before using it with students, and tell us what would make it more useful.";
 
-export function DemoWelcomeDialog() {
+export function DemoWelcomeDialog({ onDismiss }: { onDismiss?: () => void }) {
   const [open, setOpen] = useState(isDemoWelcomePending);
 
   const close = () => {
     dismissDemoWelcome();
     setOpen(false);
+    onDismiss?.();
   };
 
   return (

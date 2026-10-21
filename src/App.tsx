@@ -4,6 +4,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ViewAsStudentProvider } from "@/contexts/ViewAsStudentContext";
+import { DemoTutorialProvider } from "@/contexts/DemoTutorialContext";
+import { DemoTutorialCoach } from "@/components/demo/DemoTutorialCoach";
 import { QuestionBookmarksProvider } from "@/contexts/QuestionBookmarksContext";
 import { QuestionReviewProvider } from "@/contexts/QuestionReviewContext";
 import { QuestionReportsProvider } from "@/contexts/QuestionReportsContext";
@@ -36,22 +39,17 @@ const queryClient = new QueryClient();
 function RequireAuth({
   children,
   allowParent = false,
-  blockDemo = false,
 }: {
   children: React.ReactNode;
   allowParent?: boolean;
-  blockDemo?: boolean;
 }) {
-  return (
-    <ProtectedRoute allowParent={allowParent} blockDemo={blockDemo}>
-      {children}
-    </ProtectedRoute>
-  );
+  return <ProtectedRoute allowParent={allowParent}>{children}</ProtectedRoute>;
 }
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
+      <ViewAsStudentProvider>
       <QuestionReportsProvider>
       <QuestionReviewProvider>
       <QuestionBookmarksProvider>
@@ -61,6 +59,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter basename={import.meta.env.BASE_URL}>
+          <DemoTutorialProvider>
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Index />} />
@@ -83,7 +82,7 @@ const App = () => (
             <Route
               path="/worksheets"
               element={
-                <RequireAuth allowParent blockDemo>
+                <RequireAuth allowParent>
                   <Worksheets />
                 </RequireAuth>
               }
@@ -91,7 +90,7 @@ const App = () => (
             <Route
               path="/worksheets/print"
               element={
-                <RequireAuth blockDemo>
+                <RequireAuth>
                   <WorksheetPrint />
                 </RequireAuth>
               }
@@ -179,7 +178,7 @@ const App = () => (
             <Route
               path="/workspace"
               element={
-                <RequireAuth allowParent blockDemo>
+                <RequireAuth allowParent>
                   <Workspace />
                 </RequireAuth>
               }
@@ -187,7 +186,7 @@ const App = () => (
             <Route
               path="/workspace/:boardId"
               element={
-                <RequireAuth allowParent blockDemo>
+                <RequireAuth allowParent>
                   <Workspace />
                 </RequireAuth>
               }
@@ -212,6 +211,8 @@ const App = () => (
               }
             />
           </Routes>
+          <DemoTutorialCoach />
+          </DemoTutorialProvider>
         </BrowserRouter>
       </TooltipProvider>
       </ExamLockProvider>
@@ -219,6 +220,7 @@ const App = () => (
       </QuestionBookmarksProvider>
       </QuestionReviewProvider>
       </QuestionReportsProvider>
+      </ViewAsStudentProvider>
     </AuthProvider>
   </QueryClientProvider>
 );

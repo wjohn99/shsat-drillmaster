@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useViewAsStudent } from "@/contexts/ViewAsStudentContext";
 import type { WorksheetAssignment } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 import {
@@ -10,11 +11,18 @@ import { cn } from "@/lib/utils";
 
 interface StudentQuickActionsProps {
   studentUid: string;
+  studentName?: string;
+  studentEmail?: string;
   lastSession?: PracticeSessionRecord | null;
   lastCompletedAssignment?: WorksheetAssignment | null;
   firstDiagnostic?: PracticeSessionRecord | null;
   latestDiagnostic?: PracticeSessionRecord | null;
   className?: string;
+  /** Full-width buttons that wrap on a narrow screen. */
+  stacked?: boolean;
+  /** Smaller buttons that stay on one row when the card is wide enough. */
+  compact?: boolean;
+  tourId?: string;
   showOpenBoard?: boolean;
   showFirstDiagnostic?: boolean;
   showLastResults?: boolean;
@@ -24,57 +32,96 @@ interface StudentQuickActionsProps {
 
 export function StudentQuickActions({
   studentUid,
+  studentName,
+  studentEmail,
   lastSession,
   lastCompletedAssignment,
   firstDiagnostic,
   latestDiagnostic,
   className,
+  stacked = false,
+  compact = false,
+  tourId,
   showOpenBoard = true,
   showFirstDiagnostic = true,
   showLastResults = true,
   returnTo,
 }: StudentQuickActionsProps) {
+  const navigate = useNavigate();
+  const { enterViewAsStudent } = useViewAsStudent();
   const resultsState = viewLastResultsNavState(lastSession, lastCompletedAssignment, {
     returnTo,
   });
   const showLatestDiagnostic =
     latestDiagnostic && latestDiagnostic.id !== firstDiagnostic?.id;
+  const buttonClass = compact ? "h-8 px-2 text-xs" : undefined;
 
   return (
-    <div className={cn("flex flex-wrap gap-2", className)}>
+    <div
+      data-tour={tourId}
+      className={cn(
+        compact
+          ? "flex flex-wrap gap-1.5"
+          : stacked
+            ? "grid grid-cols-2 gap-2"
+            : "flex flex-wrap gap-2",
+        className,
+      )}
+    >
       {showOpenBoard ? (
-        <Button variant="outline" size="sm" asChild>
+        <Button variant="outline" size="sm" className={buttonClass} asChild>
           <Link to={`/workspace/${studentUid}`}>Open board</Link>
         </Button>
       ) : null}
-      <Button variant="outline" size="sm" asChild>
+      <Button variant="outline" size="sm" className={buttonClass} asChild>
         <Link to="/worksheets" state={assignToStudentNavState(studentUid, { returnTo })}>
           Assign worksheet
         </Link>
       </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        className={buttonClass}
+        onClick={() => {
+          enterViewAsStudent({
+            uid: studentUid,
+            displayName: studentName?.trim() || "Student",
+            email: studentEmail?.trim() || "",
+          });
+          navigate("/dashboard");
+        }}
+      >
+        View as student
+      </Button>
       {showFirstDiagnostic && firstDiagnostic ? (
-        <Button size="sm" variant="outline" asChild>
-          <Link to="/practice/diagnostic" state={{ reviewSession: firstDiagnostic }}>
+        <Button size="sm" variant="outline" className={buttonClass} asChild>
+          <Link
+            to="/practice/diagnostic"
+            state={{ reviewSession: firstDiagnostic, ...(returnTo ? { returnTo } : {}) }}
+          >
             First diagnostic
           </Link>
         </Button>
       ) : null}
       {showLatestDiagnostic ? (
-        <Button size="sm" variant="outline" asChild>
-          <Link to="/practice/diagnostic" state={{ reviewSession: latestDiagnostic }}>
+        <Button size="sm" variant="outline" className={buttonClass} asChild>
+          <Link
+            to="/practice/diagnostic"
+            state={{ reviewSession: latestDiagnostic, ...(returnTo ? { returnTo } : {}) }}
+          >
             Latest diagnostic
           </Link>
         </Button>
       ) : null}
       {showLastResults ? (
         resultsState ? (
-          <Button size="sm" asChild>
+          <Button size="sm" className={buttonClass} asChild>
             <Link to="/worksheets" state={resultsState}>
               View last results
             </Link>
           </Button>
         ) : (
-          <Button size="sm" disabled title="No results yet">
+          <Button size="sm" className={buttonClass} disabled title="No results yet">
             View last results
           </Button>
         )

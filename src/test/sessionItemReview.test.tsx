@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import { SessionItemReview } from "@/components/session/SessionItemReview";
 import type { Question } from "@/types";
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
@@ -115,5 +116,61 @@ describe("SessionItemReview", () => {
     expect(
       screen.getByText(/did not store which choice the student picked/),
     ).toBeTruthy();
+  });
+
+  it("builds a worksheet from the skills selected in the footer", () => {
+    function WorksheetLanding() {
+      const location = useLocation();
+      return <pre>{JSON.stringify(location.state)}</pre>;
+    }
+
+    render(
+      <MemoryRouter initialEntries={["/review"]}>
+        <Routes>
+          <Route
+            path="/review"
+            element={
+              <SessionItemReview
+                questions={[
+                  {
+                    ...question,
+                    tags: [
+                      {
+                        id: "alg",
+                        domain: "MATH",
+                        code: "ALG-LIN",
+                        label: "Linear equations",
+                      },
+                      {
+                        id: "word",
+                        domain: "MATH",
+                        code: "ALG-WP",
+                        label: "Word problems",
+                      },
+                    ],
+                  },
+                ]}
+                events={events}
+                viewerRole="tutor"
+                skillWorksheetStudentUid="student-1"
+                skillWorksheetReturnTo="/workspace/student-1"
+              />
+            }
+          />
+          <Route path="/worksheets" element={<WorksheetLanding />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /Question 1, Incorrect/ }));
+    expect(
+      screen.getByText("Select one or more skills, then build a worksheet for this student."),
+    ).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Build worksheet" })).toHaveProperty("disabled", true);
+    fireEvent.click(screen.getByRole("button", { name: "Linear equations" }));
+    fireEvent.click(screen.getByRole("button", { name: "Word problems" }));
+    fireEvent.click(screen.getByRole("link", { name: "Build worksheet" }));
+    expect(screen.getByText(/"assignToStudentUid":"student-1"/)).toBeTruthy();
+    expect(screen.getByText(/"suggestedTagCodes":\["ALG-LIN","ALG-WP"\]/)).toBeTruthy();
+    expect(screen.getByText(/"returnTo":"\/workspace\/student-1"/)).toBeTruthy();
   });
 });

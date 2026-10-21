@@ -22,6 +22,8 @@ import { fetchAssignmentsForStudent } from "@/lib/assignmentService";
 import { DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE } from "@/lib/diagnosticAccess";
 import { fetchDiagnosticProgress } from "@/lib/diagnosticProgressService";
 import { fetchPracticeSessionsForStudent } from "@/lib/practiceSessionService";
+import { loadTutorVisibleStudentView } from "@/lib/studentView";
+import type { ViewAsStudent } from "@/lib/viewAsStudent";
 import { fetchWorkspaceBoard } from "@/lib/workspaceService";
 import {
   buildStudentDashboardAnalytics,
@@ -39,9 +41,10 @@ import { WorksheetEmptyState } from "@/components/worksheets/WorksheetEmptyState
 
 const PREVIEW_LIMIT = 3;
 
-export function StudentDashboard() {
+export function StudentDashboard({ viewAs = null }: { viewAs?: ViewAsStudent | null }) {
   const navigate = useNavigate();
   const { profile } = useAuth();
+  const preview = Boolean(viewAs);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [assignments, setAssignments] = useState<WorksheetAssignment[]>([]);
@@ -59,6 +62,18 @@ export function StudentDashboard() {
       setLoading(true);
       setError(null);
       try {
+        if (viewAs) {
+          const visible = await loadTutorVisibleStudentView(viewAs.uid);
+          if (cancelled) return;
+          setAssignments(visible.assignments);
+          setSelfSessions([]);
+          setAssignmentSessions(visible.sessions.filter((s) => s.sessionType === "assignment"));
+          setDiagnosticSessions(visible.sessions.filter((s) => s.sessionType === "diagnostic"));
+          setDiagnosticAssigned(Boolean(visible.board?.diagnosticAssigned));
+          setDiagnosticInProgress(visible.diagnosticInProgress);
+          return;
+        }
+
         const [assignmentRows, allSessions, board, progress] = await Promise.all([
           fetchAssignmentsForStudent(),
           fetchPracticeSessionsForStudent(),
@@ -85,7 +100,7 @@ export function StudentDashboard() {
     return () => {
       cancelled = true;
     };
-  }, [profile]);
+  }, [profile, viewAs]);
 
   const analytics = useMemo(
     () =>
@@ -108,15 +123,28 @@ export function StudentDashboard() {
   );
 
   const startAssignment = (assignment: WorksheetAssignment) => {
+    if (preview) return;
     const state: WorksheetsLocationState = { autoStartAssignment: assignment };
+    navigate("/worksheets", { state });
+  };
+
+  const openAssignmentResults = (assignment: WorksheetAssignment) => {
+    const session = assignmentSessions.find((row) => row.assignmentId === assignment.id);
+    const state: WorksheetsLocationState = session
+      ? { reviewSession: session, returnTo: "/dashboard" }
+      : { reviewAssignment: assignment, returnTo: "/dashboard" };
     navigate("/worksheets", { state });
   };
 
   if (loading) {
     return (
       <DashboardShell
-        title="Dashboard"
-        subtitle="Your assigned practice and performance at a glance."
+        title={viewAs ? viewAs.displayName : "Dashboard"}
+        subtitle={
+          viewAs
+            ? "Student view. Submitted work opens the same results the student sees."
+            : "Your assigned practice and performance at a glance."
+        }
       >
         <div className="flex justify-center py-20">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -129,7 +157,11 @@ export function StudentDashboard() {
     return (
       <DashboardShell
         title="Dashboard"
-        subtitle="Your assigned practice and performance at a glance."
+        subtitle={
+          viewAs
+            ? "Student view. Submitted work opens the same results the student sees."
+            : "Your assigned practice and performance at a glance."
+        }
       >
         <Card className="border-destructive/30">
           <CardContent className="py-8 text-center text-muted-foreground">{error}</CardContent>
@@ -140,8 +172,12 @@ export function StudentDashboard() {
 
   return (
     <DashboardShell
-      title="Dashboard"
-      subtitle="Your assigned practice and performance at a glance."
+      title={viewAs ? viewAs.displayName : "Dashboard"}
+      subtitle={
+        viewAs
+          ? "Student view. Submitted work opens the same results the student sees."
+          : "Your assigned practice and performance at a glance."
+      }
     >
       <div className="space-y-8">
         {nextAssignment ? (
@@ -159,10 +195,16 @@ export function StudentDashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button onClick={() => startAssignment(nextAssignment)}>
-                <Play className="h-5 w-5 mr-2" />
-                Start assignment
-              </Button>
+              {preview ? (
+                <p className="text-sm text-muted-foreground">
+                  {viewAs?.displayName} starts this worksheet from their account.
+                </p>
+              ) : (
+                <Button onClick={() => startAssignment(nextAssignment)}>
+                  <Play className="h-5 w-5 mr-2" />
+                  Start assignment
+                </Button>
+              )}
             </CardContent>
           </Card>
         ) : null}
@@ -179,7 +221,7 @@ export function StudentDashboard() {
           </CardHeader>
           <CardContent className="flex flex-col items-start gap-3">
             <div className="flex flex-wrap gap-2">
-            {diagnosticAssigned ? (
+            {preview ? null : diagnosticAssigned ? (
               <Button size="lg" asChild>
                 <Link to="/practice/diagnostic">
                   <Play className="h-5 w-5 mr-2" />
@@ -234,7 +276,13 @@ export function StudentDashboard() {
               </>
             ) : null}
             </div>
-            {!diagnosticAssigned ? (
+            {preview ? (
+              <p className="text-sm text-muted-foreground">
+                {diagnosticAssigned
+                  ? "The diagnostic is assigned. Results show here after they submit."
+                  : "The diagnostic is not assigned yet."}
+              </p>
+            ) : !diagnosticAssigned ? (
               <p className="text-sm text-muted-foreground">
                 {diagnosticInProgress
                   ? "You can resume this sitting. Your tutor has to assign the diagnostic before you can start a new one."
@@ -261,6 +309,16 @@ export function StudentDashboard() {
           />
         </section>
 
+        {preview ? (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Personal practice</CardTitle>
+              <CardDescription>
+                Self-practice stays on the student account and is not included in this view.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        ) : (
         <section>
           <h2 className="text-lg font-semibold mb-1">Personal practice</h2>
           <p className="text-sm text-muted-foreground mb-4">
@@ -322,6 +380,7 @@ export function StudentDashboard() {
             </Card>
           </div>
         </section>
+        )}
 
         <Card>
           <CardHeader>
@@ -333,7 +392,9 @@ export function StudentDashboard() {
               <div className="py-2 text-center space-y-1">
                 <p className="font-medium">No results yet</p>
                 <p className="text-sm text-muted-foreground">
-                  Finish a worksheet to see them here.
+                  {preview
+                    ? "Results show here after they submit a worksheet or diagnostic."
+                    : "Finish a worksheet to see them here."}
                 </p>
               </div>
             ) : (
@@ -407,11 +468,16 @@ export function StudentDashboard() {
                       <Badge variant={row.status === "completed" ? "secondary" : "default"}>
                         {row.status === "completed" ? "Done" : "Assigned"}
                       </Badge>
-                      {row.status === "todo" && (
+                      {row.status === "completed" ? (
+                        <Button size="sm" variant="outline" onClick={() => openAssignmentResults(row)}>
+                          View results
+                        </Button>
+                      ) : null}
+                      {row.status === "todo" && !preview ? (
                         <Button size="sm" variant="outline" onClick={() => startAssignment(row)}>
                           Start
                         </Button>
-                      )}
+                      ) : null}
                     </div>
                   </li>
                 ))}

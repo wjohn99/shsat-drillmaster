@@ -6,6 +6,7 @@ import {
   type TagCategoryId,
   tagCategoryForCode,
   getTagLabel,
+  isFormatTagCode,
 } from '@/data/taggingScheme';
 
 export type WorksheetSectionId = TagCategoryId;
@@ -70,8 +71,66 @@ export function shuffleArray<T>(items: T[]): T[] {
   return a;
 }
 
+/** Same cap as the worksheet size slider. */
+export const WORKSHEET_QUESTION_CAP = 50;
+
 function practicePool(questions: Question[]): Question[] {
   return questions.filter((q) => !DIAGNOSTIC_RESERVED_QUESTION_IDS.has(q.id));
+}
+
+/** Practice questions that match any selected skill, in catalog order, without duplicates. */
+export function listWorksheetPool(
+  questions: Question[],
+  selectedTagCodes: Set<string>,
+): Question[] {
+  if (selectedTagCodes.size === 0) return [];
+  const byId = new Map<string, Question>();
+  for (const question of practicePool(questions)) {
+    if (!question.tags.some((tag) => selectedTagCodes.has(tag.code))) continue;
+    if (!byId.has(question.id)) byId.set(question.id, question);
+  }
+  return [...byId.values()];
+}
+
+/** Hand-picked ids, skipping anything outside the practice pool, grouped by passage. */
+export function worksheetQuestionsFromIds(questions: Question[], ids: string[]): Question[] {
+  const byId = new Map(questions.map((question) => [question.id, question]));
+  const picked: Question[] = [];
+  const seen = new Set<string>();
+  for (const id of ids) {
+    if (seen.has(id)) continue;
+    const question = byId.get(id);
+    if (!question || DIAGNOSTIC_RESERVED_QUESTION_IDS.has(question.id)) continue;
+    seen.add(id);
+    picked.push(question);
+  }
+  return clusterQuestionsByPassage(picked);
+}
+
+export function contentSkillCodes(questions: Question[]): string[] {
+  const codes: string[] = [];
+  const seen = new Set<string>();
+  for (const question of questions) {
+    for (const tag of question.tags) {
+      if (isFormatTagCode(tag.code) || seen.has(tag.code)) continue;
+      seen.add(tag.code);
+      codes.push(tag.code);
+    }
+  }
+  return codes;
+}
+
+export function contentSkillLabels(questions: Question[]): string[] {
+  const labels: string[] = [];
+  const seen = new Set<string>();
+  for (const question of questions) {
+    for (const tag of question.tags) {
+      if (isFormatTagCode(tag.code) || seen.has(tag.code)) continue;
+      seen.add(tag.code);
+      labels.push(tag.label?.trim() || getTagLabel(tag.code));
+    }
+  }
+  return labels;
 }
 
 /** Random questions for a single subject (self-practice quick drills). */
@@ -92,14 +151,8 @@ export function pickWorksheetQuestions(
   limit: number,
 ): Question[] {
   if (selectedTagCodes.size === 0 || limit <= 0) return [];
-  const matched = practicePool(questions).filter((q) =>
-    q.tags.some((t) => selectedTagCodes.has(t.code)),
-  );
-  const byId = new Map<string, Question>();
-  for (const q of matched) {
-    if (!byId.has(q.id)) byId.set(q.id, q);
-  }
-  return clusterQuestionsByPassage(shuffleArray([...byId.values()]).slice(0, limit));
+  const matched = listWorksheetPool(questions, selectedTagCodes);
+  return clusterQuestionsByPassage(shuffleArray(matched).slice(0, Math.min(limit, matched.length)));
 }
 
 /** Keep every question that shares a passage together, in first-seen order. */

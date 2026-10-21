@@ -20,11 +20,23 @@ service firebase.storage {
         && firestore.get(linkPath).data.studentUid == boardId;
     }
 
+    function isDemo() {
+      return isSignedIn()
+        && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'demo';
+    }
+
+    function isDemoSandboxOwner(boardId) {
+      let board = firestore.get(/databases/(default)/documents/workspace_boards/$(boardId));
+      return isDemo()
+        && board.data.demoAccount == true
+        && board.data.demoOwnerUid == request.auth.uid;
+    }
+
     function canAccessWorkspaceBoard(boardId) {
       let board = firestore.get(/databases/(default)/documents/workspace_boards/$(boardId));
       return isSignedIn()
         && board != null
-        && (board.data.studentUid == request.auth.uid || isTutor());
+        && (board.data.studentUid == request.auth.uid || isTutor() || isDemoSandboxOwner(boardId));
     }
 
     function canReadWorkspaceFile(boardId) {
@@ -48,6 +60,12 @@ service firebase.storage {
         && fileName.matches('.*\\.(pdf|png|jpg|jpeg)$');
 
       allow delete: if false;
+    }
+
+    // Original source files that include tutor-only notes. Not readable by students or parents.
+    match /workspace-tutor/{boardId}/source/{fileName} {
+      allow read: if isTutor();
+      allow write: if false;
     }
 
     match /{allPaths=**} {

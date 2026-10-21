@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { TutorAssignmentsGrid } from "./TutorAssignmentsGrid";
 import { WorksheetHistoryList } from "./WorksheetHistoryList";
+import { fetchDemoStudents } from "@/lib/demoSandbox";
+import { useAuth } from "@/contexts/AuthContext";
 import { fetchPracticeSessionsForTutor } from "@/lib/practiceSessionService";
 import { fetchStudents } from "@/lib/assignmentService";
 import type { TutorAssignmentRow } from "@/types/assignment";
@@ -32,6 +34,7 @@ export function TutorWorksheetsHome({
   onPrintAssignment,
   onReviewSession,
 }: TutorWorksheetsHomeProps) {
+  const { profile } = useAuth();
   const presetsRef = useRef<HTMLElement>(null);
   const [historySessions, setHistorySessions] = useState<PracticeSessionRecord[]>([]);
   const [historyLoading, setHistoryLoading] = useState(true);
@@ -43,8 +46,10 @@ export function TutorWorksheetsHome({
       setHistoryLoading(true);
       try {
         const [rows, students] = await Promise.all([
-          fetchPracticeSessionsForTutor(),
-          fetchStudents(),
+          fetchPracticeSessionsForTutor().catch(() => [] as PracticeSessionRecord[]),
+          profile?.role === "demo" && profile.uid
+            ? fetchDemoStudents(profile.uid)
+            : fetchStudents(),
         ]);
         if (cancelled) return;
         setHistorySessions(rows);
@@ -61,7 +66,7 @@ export function TutorWorksheetsHome({
     return () => {
       cancelled = true;
     };
-  }, [assignmentsRefreshKey]);
+  }, [assignmentsRefreshKey, profile?.role, profile?.uid]);
 
   const sessionStudentDetail = useMemo(
     () => (session: PracticeSessionRecord) => {
@@ -86,7 +91,7 @@ export function TutorWorksheetsHome({
             Browse pre-sets
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
-          <Button onClick={onCreateCustom}>
+          <Button data-tour="assign-worksheet" onClick={onCreateCustom}>
             Assign to student
             <Plus className="ml-2 h-4 w-4" />
           </Button>
