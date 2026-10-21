@@ -157,6 +157,7 @@ function savedProgress(overrides: Partial<WorksheetProgressSave> = {}): Workshee
         answer: "q2-B",
       },
     ],
+    notepad: "",
     revealAnswers: true,
     tutorUid: "tutor-1",
     startedAt: 1,
@@ -204,5 +205,50 @@ describe("SessionQuestionRunner account progress", () => {
     expect(save?.answers.q1).toBe("q1-A");
     expect(save?.lockedQuestionIds).toContain("q1");
     expect(save?.scopeId).toBe("assign-1");
+  });
+});
+
+describe("SessionQuestionRunner notes", () => {
+  it("opens an inline notepad without covering the question, and restores saved notes", () => {
+    render(
+      <SessionQuestionRunner
+        questions={questions}
+        sessionTitle="Practice set"
+        storageKeyPrefix="test"
+        onExit={() => {}}
+        onComplete={() => {}}
+        progressKey={progressKey}
+        initialProgress={savedProgress({ notepad: "Mark the trap in choice C" })}
+      />,
+    );
+    expect(screen.getByText("Second stem")).toBeTruthy();
+    expect(screen.queryByLabelText("Worksheet notes")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /^Notes$/ }));
+    const notes = screen.getByLabelText("Worksheet notes") as HTMLTextAreaElement;
+    expect(notes.value).toBe("Mark the trap in choice C");
+    expect(screen.getByText("Second stem")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Hide notes" })).toBeTruthy();
+  });
+
+  it("saves notes to the account on exit", async () => {
+    vi.mocked(saveWorksheetProgress).mockClear();
+    render(
+      <SessionQuestionRunner
+        questions={questions}
+        sessionTitle="Practice set"
+        storageKeyPrefix="test"
+        onExit={() => {}}
+        onComplete={() => {}}
+        progressKey={progressKey}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /^Notes$/ }));
+    fireEvent.change(screen.getByLabelText("Worksheet notes"), {
+      target: { value: "Come back to ratios" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /^Exit$/ }));
+    await waitFor(() => expect(saveWorksheetProgress).toHaveBeenCalled());
+    const save = vi.mocked(saveWorksheetProgress).mock.calls.at(-1)?.[0];
+    expect(save?.notepad).toBe("Come back to ratios");
   });
 });

@@ -36,6 +36,7 @@ function toFirestorePayload(save: WorksheetProgressSave) {
     lockedQuestionIds: save.lockedQuestionIds,
     eliminated: save.eliminated,
     events: save.events,
+    notepad: save.notepad,
     revealAnswers: save.revealAnswers,
     tutorUid: save.tutorUid,
     startedAt: save.startedAt,

@@ -29,7 +29,7 @@ export const DEMO_TUTORIAL_STEPS: DemoTutorialStep[] = [
     route: FIRST_SAMPLE_BOARD,
     target: "student-roadmap",
     title: "The roadmap is the student's plan",
-    body: "Scores, the target school, the next session, and follow-ups are in this roadmap. The diagnostic is assigned from this board, and a finished sitting feeds the plan.",
+    body: "Scores, the target school, the next session, and follow-ups are in this roadmap. Private lesson plans go in Tutor notes, just below. Students and families do not see that section.",
   },
   {
     id: "diagnostic-form",
@@ -57,7 +57,7 @@ export const DEMO_TUTORIAL_STEPS: DemoTutorialStep[] = [
     route: FIRST_SAMPLE_BOARD,
     target: "board-lists",
     title: "Notes and homework stay on the board",
-    body: "Session summaries, homework, and score reports are lists on the board. An assigned worksheet can sit here with those notes.",
+    body: "Session summaries, homework, and score reports are lists on the board. Students and families see these. Keep lesson plans in Tutor notes instead.",
   },
   {
     id: "dashboard",

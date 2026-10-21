@@ -41,6 +41,16 @@ export function buildWorkspaceAttachmentStoragePath(
   return `workspace/${boardId}/cards/${cardId}/${attachmentId}_${sanitizeStorageFileName(fileName, contentType)}`;
 }
 
+export function buildTutorPrivateNoteStoragePath(
+  boardId: string,
+  noteId: string,
+  fileId: string,
+  fileName: string,
+  contentType: WorkspaceFileContentType = "application/pdf",
+): string {
+  return `workspace-tutor/${boardId}/notes/${noteId}_${fileId}_${sanitizeStorageFileName(fileName, contentType)}`;
+}
+
 export async function uploadWorkspaceFile(
   storagePath: string,
   file: File,

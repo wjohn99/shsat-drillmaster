@@ -404,9 +404,16 @@ export function WorkspaceBoard({
 
       {!readOnly ? <TutorPrivatePanel boardId={boardId} /> : null}
 
-      <p className="mb-2 px-1 text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
-        Session notes and homework
-      </p>
+      <div className="mb-2 px-1">
+        <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+          Session notes and homework
+        </p>
+        {!readOnly ? (
+          <p className="text-xs text-muted-foreground">
+            Students and families see these lists. Keep lesson plans in Tutor notes above.
+          </p>
+        ) : null}
+      </div>
       <div
         data-tour="board-lists"
         className="flex flex-col items-stretch gap-4 pb-6 md:min-h-[calc(100vh-12rem)] md:flex-row md:items-start md:overflow-x-auto"

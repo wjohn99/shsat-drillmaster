@@ -31,6 +31,23 @@ describe("worksheet progress storage", () => {
     expect(worksheetProgressIsStarted(save)).toBe(false);
   });
 
+  it("treats notes-only progress as started", () => {
+    const save = normalizeWorksheetProgressSave({
+      userId: "uid1",
+      scopeId: "assign-9",
+      questionIds: ["q1"],
+      currentQuestionIndex: 0,
+      answers: {},
+      flagged: [],
+      lockedQuestionIds: [],
+      eliminated: {},
+      events: [],
+      notepad: "Review the figure",
+    });
+    expect(worksheetProgressIsStarted(save)).toBe(true);
+    expect(save?.notepad).toBe("Review the figure");
+  });
+
   it("treats a locked or answered save as started", () => {
     const save = normalizeWorksheetProgressSave({
       userId: "uid1",

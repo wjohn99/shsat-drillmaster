@@ -64,8 +64,21 @@ service firebase.storage {
 
     // Original source files that include tutor-only notes. Not readable by students or parents.
     match /workspace-tutor/{boardId}/source/{fileName} {
-      allow read: if isTutor();
+      allow read: if isTutor() || isDemoSandboxOwner(boardId);
       allow write: if false;
+    }
+
+    // Tutor-only lesson plans and note PDFs. Students and parents cannot read these.
+    match /workspace-tutor/{boardId}/notes/{fileName} {
+      allow read: if isTutor() || isDemoSandboxOwner(boardId);
+
+      allow write: if (isTutor() || isDemoSandboxOwner(boardId))
+        && request.resource.size > 0
+        && request.resource.size <= 25 * 1024 * 1024
+        && request.resource.contentType in ['application/pdf', 'image/jpeg', 'image/png']
+        && fileName.matches('.*\\.(pdf|png|jpg|jpeg)$');
+
+      allow delete: if false;
     }
 
     match /{allPaths=**} {

@@ -30,6 +30,13 @@ interface DemoListSeed {
   cards: DemoCardSeed[];
 }
 
+interface DemoTutorNoteSeed {
+  kind: "lesson_plan" | "session_notes" | "observation" | "next_session";
+  title: string;
+  sessionDate: string;
+  body: string;
+}
+
 interface DemoStudentSeed {
   slug: string;
   displayName: string;
@@ -38,6 +45,7 @@ interface DemoStudentSeed {
   diagnosticAssigned: boolean;
   roadmap: StudentRoadmap;
   lists: DemoListSeed[];
+  tutorNotes?: DemoTutorNoteSeed[];
 }
 
 function sampleRoadmap(partial: Partial<StudentRoadmap>): StudentRoadmap {
@@ -133,6 +141,14 @@ const DEMO_STUDENTS: DemoStudentSeed[] = [
             description: "Date: Oct 2\nMath: 28/50\nELA: 14/50\nThis is filler, not a real score report.",
           },
         ],
+      },
+    ],
+    tutorNotes: [
+      {
+        kind: "lesson_plan",
+        title: "Oct 21 sample lesson plan",
+        sessionDate: "2026-10-21",
+        body: "Private to tutors. Warm-up on linear equations, then one reading passage. Homework stays on the family-facing list below.",
       },
     ],
   },
@@ -292,6 +308,39 @@ async function boardHasLists(boardId: string): Promise<boolean> {
   return snapshot.docs.some((listDoc) => !listDoc.data().deletedAt);
 }
 
+async function boardHasTutorNotes(boardId: string): Promise<boolean> {
+  const snapshot = await getDocs(
+    collection(getFirebaseDb(), BOARDS_COLLECTION, boardId, "tutor_private"),
+  );
+  return snapshot.docs.some((noteDoc) => !noteDoc.data().deletedAt);
+}
+
+async function writeTutorNotes(
+  ownerUid: string,
+  boardId: string,
+  notes: DemoTutorNoteSeed[],
+): Promise<void> {
+  if (notes.length === 0) return;
+  const db = getFirebaseDb();
+  const batch = writeBatch(db);
+  const now = Timestamp.now();
+  notes.forEach((note) => {
+    const noteRef = doc(collection(db, BOARDS_COLLECTION, boardId, "tutor_private"));
+    batch.set(noteRef, {
+      kind: note.kind,
+      title: note.title,
+      sessionDate: note.sessionDate,
+      body: note.body,
+      files: [],
+      createdByUid: ownerUid,
+      createdByName: "Demo tutor",
+      createdAt: now,
+      updatedAt: now,
+    });
+  });
+  await batch.commit();
+}
+
 async function writeBoardContents(ownerUid: string, seed: DemoStudentSeed): Promise<void> {
   const db = getFirebaseDb();
   const boardId = demoSandboxBoardId(ownerUid, seed.slug);
@@ -372,6 +421,9 @@ export async function ensureDemoSandbox(ownerUid: string): Promise<WorkspaceBoar
     }
     if (!(await boardHasLists(boardId))) {
       await writeBoardContents(ownerUid, seed);
+    }
+    if (seed.tutorNotes?.length && !(await boardHasTutorNotes(boardId))) {
+      await writeTutorNotes(ownerUid, boardId, seed.tutorNotes);
     }
   }
 

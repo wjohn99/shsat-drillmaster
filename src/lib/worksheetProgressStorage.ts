@@ -19,6 +19,7 @@ export type WorksheetProgressSave = {
   lockedQuestionIds: string[];
   eliminated: Record<string, string[]>;
   events: SessionAnalyticsEvent[];
+  notepad: string;
   revealAnswers: boolean;
   tutorUid: string | null;
   startedAt: number;
@@ -88,6 +89,7 @@ export function normalizeWorksheetProgressSave(raw: unknown): WorksheetProgressS
     lockedQuestionIds: Array.isArray(parsed.lockedQuestionIds) ? parsed.lockedQuestionIds.map(String) : [],
     eliminated,
     events: parseWorksheetProgressEvents(parsed.events),
+    notepad: typeof parsed.notepad === "string" ? parsed.notepad : "",
     revealAnswers: parsed.revealAnswers === true,
     tutorUid: typeof parsed.tutorUid === "string" ? parsed.tutorUid : null,
     startedAt: Number(parsed.startedAt) || Date.now(),
@@ -101,7 +103,8 @@ export function worksheetProgressIsStarted(save: WorksheetProgressSave | null | 
     save.currentQuestionIndex > 0 ||
     Object.keys(save.answers).length > 0 ||
     save.lockedQuestionIds.length > 0 ||
-    save.events.length > 0
+    save.events.length > 0 ||
+    save.notepad.trim().length > 0
   );
 }
 

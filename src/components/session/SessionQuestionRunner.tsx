@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, ArrowRight, BookOpen, Flag, Loader2, Printer } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { ArrowLeft, ArrowRight, BookOpen, Flag, Loader2, Printer, StickyNote } from "lucide-react";
 import { useQuestions } from "@/contexts/QuestionsContext";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
 import { ProvisionalBadge } from "@/components/question/ProvisionalBadge";
@@ -93,6 +94,9 @@ export function SessionQuestionRunner({
     () => new Set(initialProgress?.lockedQuestionIds ?? []),
   );
   const [savingExit, setSavingExit] = useState(false);
+  const [notepad, setNotepad] = useState(initialProgress?.notepad ?? "");
+  const [notesOpen, setNotesOpen] = useState(false);
+  const notesRef = useRef<HTMLTextAreaElement>(null);
 
   const questionStartMsRef = useRef(Date.now());
   const eventsByQuestionId = useRef<Map<string, SessionAnalyticsEvent>>(
@@ -116,6 +120,11 @@ export function SessionQuestionRunner({
     if (currentQuestion && lockedQuestionIds.has(currentQuestion.id)) return;
     questionStartMsRef.current = Date.now();
   }, [currentQuestionIndex, currentQuestion, lockedQuestionIds]);
+
+  useEffect(() => {
+    if (!notesOpen) return;
+    notesRef.current?.focus();
+  }, [notesOpen]);
 
   const handleAnswerChange = (questionId: string, answer: string) => {
     if (lockedQuestionIds.has(questionId)) return;
@@ -167,6 +176,7 @@ export function SessionQuestionRunner({
       lockedQuestionIds: [...lockedQuestionIds],
       eliminated,
       events: [...eventsByQuestionId.current.values()],
+      notepad,
       revealAnswers,
       tutorUid: progressKey.tutorUid,
       startedAt: startedAtRef.current,
@@ -178,6 +188,7 @@ export function SessionQuestionRunner({
     eliminated,
     flaggedQuestions,
     lockedQuestionIds,
+    notepad,
     progressKey,
     questions,
     revealAnswers,
@@ -364,10 +375,10 @@ export function SessionQuestionRunner({
     showSolution && storedEvent ? { correct: storedEvent.correct } : null;
 
   return (
-    <div className="min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <Header />
 
-      <div className="container py-6">
+      <div className="container flex-1 py-6">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-4">
             <Button variant="ghost" onClick={() => void handleExit()} disabled={savingExit}>
@@ -539,29 +550,6 @@ export function SessionQuestionRunner({
             </Card>
 
             <QuestionReviewPanel question={currentQuestion} className="mt-6" />
-
-            <div className="flex justify-between mt-6">
-              <Button variant="outline" onClick={prevQuestion} disabled={currentQuestionIndex === 0}>
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Previous
-              </Button>
-
-              <Button
-                onClick={recordCurrentAndAdvance}
-                disabled={!answerLocked && !canSubmitQuestionAnswer(currentQuestion, raw)}
-              >
-                {answerLocked
-                  ? currentQuestionIndex === questions.length - 1
-                    ? finishLabel
-                    : "Continue"
-                  : revealAnswers
-                    ? "Check answer"
-                    : currentQuestionIndex === questions.length - 1
-                      ? finishLabel
-                      : "Next"}
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
-            </div>
           </div>
 
           <div className="lg:col-span-1">
@@ -607,6 +595,58 @@ export function SessionQuestionRunner({
                 </div>
               </CardContent>
             </Card>
+          </div>
+        </div>
+      </div>
+
+      <div className="sticky bottom-0 z-20 shrink-0 border-t bg-background/95 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+        {notesOpen ? (
+          <div id="worksheet-notepad" className="container space-y-2 pt-2">
+            <p className="text-sm font-medium">Notes</p>
+            <Textarea
+              ref={notesRef}
+              value={notepad}
+              onChange={(e) => setNotepad(e.target.value)}
+              placeholder={
+                progressKey
+                  ? "Scratch notes for this worksheet (saved to your account)."
+                  : "Scratch notes for this worksheet."
+              }
+              className="h-28 resize-none text-sm sm:h-32"
+              aria-label="Worksheet notes"
+            />
+          </div>
+        ) : null}
+        <div className="container flex items-center justify-between gap-2 pt-2">
+          <Button
+            variant={notesOpen ? "default" : "outline"}
+            aria-expanded={notesOpen}
+            aria-controls={notesOpen ? "worksheet-notepad" : undefined}
+            onClick={() => setNotesOpen((open) => !open)}
+          >
+            <StickyNote className="h-4 w-4 mr-2" />
+            {notesOpen ? "Hide notes" : "Notes"}
+          </Button>
+          <div className="flex min-w-0 items-center justify-end gap-2">
+            <Button variant="outline" onClick={prevQuestion} disabled={currentQuestionIndex === 0}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Previous
+            </Button>
+            <Button
+              onClick={recordCurrentAndAdvance}
+              disabled={!answerLocked && !canSubmitQuestionAnswer(currentQuestion, raw)}
+            >
+              {answerLocked
+                ? currentQuestionIndex === questions.length - 1
+                  ? finishLabel
+                  : "Continue"
+                : revealAnswers
+                  ? "Check answer"
+                  : currentQuestionIndex === questions.length - 1
+                    ? finishLabel
+                    : "Next"}
+              <ArrowRight className="h-4 w-4 ml-2" />
+            </Button>
           </div>
         </div>
       </div>

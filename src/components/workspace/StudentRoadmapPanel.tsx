@@ -528,7 +528,7 @@ export function StudentRoadmapPanel({
               <Textarea
                 value={draft.nextSessionNotes}
                 onChange={(e) => update("nextSessionNotes", e.target.value)}
-                placeholder="Lesson plan for that sitting"
+                placeholder="What the family can see for that sitting"
                 className="min-h-[72px]"
               />
             </>

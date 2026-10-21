@@ -52,6 +52,46 @@ export interface StudentRoadmap {
   statusManual: boolean;
 }
 
+/** Tutor-only notes on a student board. Students and families cannot read these. */
+export const TUTOR_PRIVATE_NOTE_KINDS = [
+  "lesson_plan",
+  "session_notes",
+  "observation",
+  "next_session",
+] as const;
+
+export type TutorPrivateNoteKind = (typeof TUTOR_PRIVATE_NOTE_KINDS)[number];
+
+export const TUTOR_PRIVATE_NOTE_KIND_LABEL: Record<TutorPrivateNoteKind, string> = {
+  lesson_plan: "Lesson plan",
+  session_notes: "Session notes",
+  observation: "Observation",
+  next_session: "Next session",
+};
+
+export interface TutorPrivateNoteFile {
+  kind: WorkspaceAttachmentKind;
+  fileName: string;
+  externalUrl?: string | null;
+  storagePath?: string | null;
+  contentType: string;
+  sizeBytes: number;
+}
+
+export interface TutorPrivateNote {
+  id: string;
+  boardId: string;
+  kind: TutorPrivateNoteKind;
+  title: string;
+  sessionDate: string;
+  body: string;
+  files: TutorPrivateNoteFile[];
+  createdByUid: string;
+  createdByName: string;
+  createdAtMs: number;
+  updatedAtMs: number;
+}
+
 export interface WorkspaceBoard {
   id: string;
   studentUid: string;

@@ -489,13 +489,38 @@ service cloud.firestore {
         }
       }
 
-      // Internal notes, accommodations, and answer keys. Students and parents cannot read these.
+      // Internal notes, lesson plans, and observations. Students and parents cannot read these.
       match /tutor_private/{docId} {
-        allow read: if isTutor();
-        allow create, update: if isTutor()
+        allow read: if isTutor() || demoOwnsBoard(boardId);
+
+        allow create: if (isTutor() || demoOwnsBoard(boardId))
           && request.resource.data.body is string
-          && request.resource.data.body.size() > 0
-          && request.resource.data.body.size() <= 100000;
+          && request.resource.data.body.size() <= 100000
+          && request.resource.data.title is string
+          && request.resource.data.title.size() > 0
+          && request.resource.data.title.size() <= 200
+          && request.resource.data.kind in ['lesson_plan', 'session_notes', 'observation', 'next_session']
+          && request.resource.data.createdByUid == request.auth.uid
+          && (!('sessionDate' in request.resource.data)
+            || (request.resource.data.sessionDate is string
+              && request.resource.data.sessionDate.size() <= 32))
+          && (!('files' in request.resource.data) || request.resource.data.files is list)
+          && !('deletedAt' in request.resource.data);
+
+        allow update: if (isTutor() || demoOwnsBoard(boardId))
+          && request.resource.data.body is string
+          && request.resource.data.body.size() <= 100000
+          && (!('title' in request.resource.data)
+            || (request.resource.data.title is string
+              && request.resource.data.title.size() <= 200))
+          && (!('kind' in request.resource.data)
+            || request.resource.data.kind in ['lesson_plan', 'session_notes', 'observation', 'next_session'])
+          && (!('sessionDate' in request.resource.data)
+            || (request.resource.data.sessionDate is string
+              && request.resource.data.sessionDate.size() <= 32))
+          && (!('files' in request.resource.data) || request.resource.data.files is list)
+          && (!('deletedAt' in request.resource.data) || request.resource.data.deletedAt is timestamp);
+
         allow delete: if false;
       }
     }
