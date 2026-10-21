@@ -48,6 +48,8 @@ import {
   defaultAssignmentDueDateInput,
   fetchAssignmentById,
 } from "@/lib/assignmentService";
+import { fetchWorksheetProgress } from "@/lib/worksheetProgressService";
+import { worksheetProgressIsStarted } from "@/lib/worksheetProgressStorage";
 import {
   formatAssignmentDueDate,
   formatAttachmentDueDate,
@@ -255,6 +257,7 @@ export function CardDetailModal({
   const [postingComment, setPostingComment] = useState(false);
   const [linkedAssignment, setLinkedAssignment] = useState<WorksheetAssignment | null>(null);
   const [linkedAssignmentLoading, setLinkedAssignmentLoading] = useState(false);
+  const [linkedWorksheetInProgress, setLinkedWorksheetInProgress] = useState(false);
   const [deleteCardOpen, setDeleteCardOpen] = useState(false);
   const [deletingCard, setDeletingCard] = useState(false);
 
@@ -345,14 +348,22 @@ export function CardDetailModal({
   useEffect(() => {
     if (!open || !card?.assignmentId) {
       setLinkedAssignment(null);
+      setLinkedWorksheetInProgress(false);
       return;
     }
 
     let cancelled = false;
     setLinkedAssignmentLoading(true);
     void fetchAssignmentById(card.assignmentId)
-      .then((row) => {
-        if (!cancelled) setLinkedAssignment(row);
+      .then(async (row) => {
+        if (cancelled) return;
+        setLinkedAssignment(row);
+        if (row && profile?.role === "student" && profile.uid && row.status === "todo") {
+          const save = await fetchWorksheetProgress(profile.uid, row.id).catch(() => null);
+          if (!cancelled) setLinkedWorksheetInProgress(worksheetProgressIsStarted(save));
+        } else if (!cancelled) {
+          setLinkedWorksheetInProgress(false);
+        }
       })
       .finally(() => {
         if (!cancelled) setLinkedAssignmentLoading(false);
@@ -361,7 +372,7 @@ export function CardDetailModal({
     return () => {
       cancelled = true;
     };
-  }, [open, card?.assignmentId]);
+  }, [open, card?.assignmentId, profile?.role, profile?.uid]);
 
   const handleOpenWorksheetAssign = () => {
     if (!card || readOnly) return;
@@ -857,7 +868,7 @@ export function CardDetailModal({
                       <div className="flex flex-wrap gap-2">
                         {profile?.role === "student" && linkedAssignment.status === "todo" ? (
                           <Button size="sm" onClick={handleStartLinkedWorksheet}>
-                            Start worksheet
+                            {linkedWorksheetInProgress ? "Resume worksheet" : "Start worksheet"}
                           </Button>
                         ) : null}
                         {linkedAssignment.status === "completed" ? (

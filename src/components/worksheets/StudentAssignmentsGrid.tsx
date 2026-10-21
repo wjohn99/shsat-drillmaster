@@ -24,6 +24,7 @@ interface StudentAssignmentsGridProps {
   assignments?: WorksheetAssignment[];
   /** Tutor preview. Results stay available. Starting work is hidden. */
   preview?: boolean;
+  inProgressAssignmentIds?: Set<string>;
 }
 
 export function StudentAssignmentsGrid({
@@ -33,6 +34,7 @@ export function StudentAssignmentsGrid({
   refreshKey = 0,
   assignments: providedAssignments,
   preview = false,
+  inProgressAssignmentIds,
 }: StudentAssignmentsGridProps) {
   const { profile } = useAuth();
   const [assignments, setAssignments] = useState<WorksheetAssignment[]>(providedAssignments ?? []);
@@ -104,6 +106,7 @@ export function StudentAssignmentsGrid({
         const isCompleted = assignment.status === "completed";
         const overdue = isAssignmentOverdue(assignment);
         const progress = worksheetProgressStatus(assignment);
+        const inProgress = !isCompleted && Boolean(inProgressAssignmentIds?.has(assignment.id));
         const dueLabel = formatAssignmentDueDate(assignment);
         const createdLabel = assignment.createdAt?.toDate
           ? assignment.createdAt.toDate().toLocaleDateString()
@@ -123,7 +126,7 @@ export function StudentAssignmentsGrid({
                     ) : progress === "assigned" ? (
                       <Circle className="h-3 w-3" />
                     ) : null}
-                    {WORKSHEET_PROGRESS_LABEL[progress]}
+                    {inProgress ? "In progress" : WORKSHEET_PROGRESS_LABEL[progress]}
                   </Badge>
                   {dueLabel && !isCompleted ? (
                     <span className={cn("text-xs", overdue ? "text-destructive font-medium" : "text-muted-foreground")}>
@@ -175,7 +178,7 @@ export function StudentAssignmentsGrid({
                   onClick={() => onStartAssignment(assignment)}
                 >
                   <Play className="h-4 w-4 mr-2" />
-                  {isCompleted ? "Practice again" : "Start practice"}
+                  {isCompleted ? "Practice again" : inProgress ? "Resume" : "Start practice"}
                 </Button>
                 )}
                 {onPrintAssignment ? (

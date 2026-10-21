@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Header } from "@/components/layout/Header";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, ArrowRight, BookOpen, Flag, Printer } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Flag, Loader2, Printer } from "lucide-react";
 import { useQuestions } from "@/contexts/QuestionsContext";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
 import { ProvisionalBadge } from "@/components/question/ProvisionalBadge";
@@ -22,7 +22,23 @@ import { HighlightableText } from "@/components/exam/HighlightableText";
 import { MathText } from "@/lib/mathText";
 import { canSubmitQuestionAnswer, isQuestionAnswerCorrect } from "@/lib/sessionGrading";
 import { openWorksheetPrintTab } from "@/lib/worksheetPrint";
+import { saveWorksheetProgress } from "@/lib/worksheetProgressService";
+import {
+  loadWorksheetProgressLocal,
+  persistWorksheetProgressLocal,
+  type WorksheetProgressSave,
+} from "@/lib/worksheetProgressStorage";
 import { toast } from "@/hooks/use-toast";
+
+export type WorksheetRunnerProgressKey = {
+  userId: string;
+  scopeId: string;
+  runSource: "assignment" | "self";
+  assignmentId: string | null;
+  title: string;
+  tagCodes: string[];
+  tutorUid: string | null;
+};
 
 export interface SessionQuestionRunnerProps {
   questions: Question[];
@@ -39,6 +55,9 @@ export interface SessionQuestionRunnerProps {
   /** Optional passage list for assigned items that are not in the viewer catalog. */
   passageCatalog?: Passage[];
   finishLabel?: string;
+  /** When set, progress is saved to this device and the signed-in account. */
+  progressKey?: WorksheetRunnerProgressKey;
+  initialProgress?: WorksheetProgressSave | null;
 }
 
 export function SessionQuestionRunner({
@@ -50,18 +69,40 @@ export function SessionQuestionRunner({
   revealAnswers = true,
   passageCatalog,
   finishLabel = "Finish worksheet",
+  progressKey,
+  initialProgress,
 }: SessionQuestionRunnerProps) {
   const { passages: catalogPassages } = useQuestions();
   const passages = passageCatalog ?? catalogPassages;
   const { profile } = useAuth();
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [flaggedQuestions, setFlaggedQuestions] = useState<Set<string>>(new Set());
-  const [eliminated, setEliminated] = useState<Record<string, string[]>>({});
-  const [lockedQuestionIds, setLockedQuestionIds] = useState<Set<string>>(new Set());
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(() => {
+    const index = initialProgress?.currentQuestionIndex ?? 0;
+    if (questions.length === 0) return 0;
+    return Math.min(Math.max(0, index), questions.length - 1);
+  });
+  const [answers, setAnswers] = useState<Record<string, string>>(
+    () => initialProgress?.answers ?? {},
+  );
+  const [flaggedQuestions, setFlaggedQuestions] = useState<Set<string>>(
+    () => new Set(initialProgress?.flagged ?? []),
+  );
+  const [eliminated, setEliminated] = useState<Record<string, string[]>>(
+    () => initialProgress?.eliminated ?? {},
+  );
+  const [lockedQuestionIds, setLockedQuestionIds] = useState<Set<string>>(
+    () => new Set(initialProgress?.lockedQuestionIds ?? []),
+  );
+  const [savingExit, setSavingExit] = useState(false);
 
   const questionStartMsRef = useRef(Date.now());
-  const eventsByQuestionId = useRef<Map<string, SessionAnalyticsEvent>>(new Map());
+  const eventsByQuestionId = useRef<Map<string, SessionAnalyticsEvent>>(
+    new Map((initialProgress?.events ?? []).map((event) => [event.questionId, event])),
+  );
+  const startedAtRef = useRef(initialProgress?.startedAt ?? Date.now());
+  const finishedRef = useRef(false);
+  const leavingRef = useRef(false);
+  const remoteSaveTimerRef = useRef<number | null>(null);
+  const remoteSaveChainRef = useRef<Promise<unknown>>(Promise.resolve());
 
   const currentQuestion = questions[currentQuestionIndex];
   const passage = currentQuestion?.passageId
@@ -109,9 +150,138 @@ export function SessionQuestionRunner({
     setCurrentQuestionIndex(index);
   };
 
+  const buildProgressSave = useCallback((): WorksheetProgressSave | null => {
+    if (!progressKey || finishedRef.current) return null;
+    const now = Date.now();
+    return {
+      userId: progressKey.userId,
+      scopeId: progressKey.scopeId,
+      runSource: progressKey.runSource,
+      assignmentId: progressKey.assignmentId,
+      title: progressKey.title,
+      tagCodes: progressKey.tagCodes,
+      questionIds: questions.map((question) => question.id),
+      currentQuestionIndex,
+      answers,
+      flagged: [...flaggedQuestions],
+      lockedQuestionIds: [...lockedQuestionIds],
+      eliminated,
+      events: [...eventsByQuestionId.current.values()],
+      revealAnswers,
+      tutorUid: progressKey.tutorUid,
+      startedAt: startedAtRef.current,
+      updatedAt: now,
+    };
+  }, [
+    answers,
+    currentQuestionIndex,
+    eliminated,
+    flaggedQuestions,
+    lockedQuestionIds,
+    progressKey,
+    questions,
+    revealAnswers,
+  ]);
+
+  const persistProgress = useCallback((): WorksheetProgressSave | null => {
+    const save = buildProgressSave();
+    if (!save) return null;
+    persistWorksheetProgressLocal(save);
+    return save;
+  }, [buildProgressSave]);
+
+  const persistProgressRef = useRef(persistProgress);
+  persistProgressRef.current = persistProgress;
+
+  const queueRemoteSave = useCallback((save: WorksheetProgressSave) => {
+    if (remoteSaveTimerRef.current) {
+      window.clearTimeout(remoteSaveTimerRef.current);
+      remoteSaveTimerRef.current = null;
+    }
+    const enqueue = () => {
+      if (finishedRef.current || leavingRef.current) return;
+      const task = remoteSaveChainRef.current
+        .catch(() => undefined)
+        .then(async () => {
+          if (finishedRef.current || leavingRef.current) return;
+          const latest = loadWorksheetProgressLocal(save.userId, save.scopeId);
+          const payload =
+            latest && latest.updatedAt >= save.updatedAt ? latest : save;
+          await saveWorksheetProgress(payload);
+        })
+        .catch(() => undefined);
+      remoteSaveChainRef.current = task;
+    };
+    remoteSaveTimerRef.current = window.setTimeout(enqueue, 800);
+  }, []);
+
+  useEffect(() => {
+    if (!progressKey || finishedRef.current || leavingRef.current) return;
+    const save = persistProgress();
+    if (save) queueRemoteSave(save);
+  }, [persistProgress, progressKey, queueRemoteSave]);
+
+  useEffect(() => {
+    if (!progressKey) return;
+    const flush = () => {
+      if (finishedRef.current || leavingRef.current) return;
+      const save = persistProgressRef.current();
+      if (save) void saveWorksheetProgress(save).catch(() => undefined);
+    };
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden") flush();
+    };
+    window.addEventListener("pagehide", flush);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      window.removeEventListener("pagehide", flush);
+      document.removeEventListener("visibilitychange", onVisibility);
+      if (remoteSaveTimerRef.current) {
+        window.clearTimeout(remoteSaveTimerRef.current);
+      }
+      if (finishedRef.current || leavingRef.current) return;
+      const save = persistProgressRef.current();
+      if (save) void saveWorksheetProgress(save).catch(() => undefined);
+    };
+  }, [progressKey]);
+
+  const handleExit = async () => {
+    if (leavingRef.current || savingExit) return;
+    if (!progressKey) {
+      onExit();
+      return;
+    }
+    leavingRef.current = true;
+    setSavingExit(true);
+    if (remoteSaveTimerRef.current) {
+      window.clearTimeout(remoteSaveTimerRef.current);
+      remoteSaveTimerRef.current = null;
+    }
+    const save = persistProgress();
+    try {
+      await remoteSaveChainRef.current.catch(() => undefined);
+      if (save) await saveWorksheetProgress(save);
+      onExit();
+    } catch (err) {
+      leavingRef.current = false;
+      persistProgress();
+      toast({
+        title: "Could not save to your account",
+        description:
+          err instanceof Error
+            ? err.message
+            : "Stay on this worksheet and try Exit again. Progress is only on this device until that succeeds.",
+        variant: "destructive",
+      });
+    } finally {
+      setSavingExit(false);
+    }
+  };
+
   const advanceAfterReview = () => {
     const isLast = currentQuestionIndex >= questions.length - 1;
     if (isLast) {
+      finishedRef.current = true;
       const ordered = questions
         .map((q) => eventsByQuestionId.current.get(q.id))
         .filter((e): e is SessionAnalyticsEvent => Boolean(e));
@@ -200,9 +370,13 @@ export function SessionQuestionRunner({
       <div className="container py-6">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" onClick={onExit}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Exit
+            <Button variant="ghost" onClick={() => void handleExit()} disabled={savingExit}>
+              {savingExit ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <ArrowLeft className="h-4 w-4 mr-2" />
+              )}
+              {savingExit ? "Saving..." : "Exit"}
             </Button>
             <div>
               <h1 className="text-2xl font-bold">{sessionTitle}</h1>

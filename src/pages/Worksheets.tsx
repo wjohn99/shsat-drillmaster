@@ -58,6 +58,17 @@ import {
   fetchLatestAssignmentSessionForTutor,
   savePracticeSession,
 } from "@/lib/practiceSessionService";
+import {
+  clearWorksheetProgress,
+  fetchWorksheetProgress,
+} from "@/lib/worksheetProgressService";
+import {
+  WORKSHEET_SELF_SCOPE_ID,
+  clearWorksheetProgressLocal,
+  loadWorksheetProgressLocal,
+  pickNewerWorksheetProgress,
+  type WorksheetProgressSave,
+} from "@/lib/worksheetProgressStorage";
 import { WorksheetSessionReview } from "@/components/worksheets/WorksheetSessionReview";
 import { SessionQuestionRunner } from "@/components/session/SessionQuestionRunner";
 import { SessionResultsDashboard } from "@/components/session/SessionResultsDashboard";
@@ -132,6 +143,9 @@ const Worksheets = () => {
   const [assignmentsRefreshKey, setAssignmentsRefreshKey] = useState(0);
   const [reviewSession, setReviewSession] = useState<PracticeSessionRecord | null>(null);
   const [reviewSubtitle, setReviewSubtitle] = useState<string | undefined>();
+  const [runnerInitialProgress, setRunnerInitialProgress] = useState<WorksheetProgressSave | null>(
+    null,
+  );
   const [viewAsSnapshot, setViewAsSnapshot] = useState<Awaited<
     ReturnType<typeof loadTutorVisibleStudentView>
   > | null>(null);
@@ -337,13 +351,40 @@ const Worksheets = () => {
       ? chosenQuestions
       : pickWorksheetQuestions(questions, selectedSet, questionLimit);
 
-  const startWorksheetRun = (picked?: Question[], extraPassages?: Passage[]) => {
+  const startWorksheetRun = (
+    picked?: Question[],
+    extraPassages?: Passage[],
+    initialProgress?: WorksheetProgressSave | null,
+  ) => {
     const next = picked ?? pickCurrentQuestions();
+    setRunnerInitialProgress(initialProgress ?? null);
     setWorksheetQuestions(next);
     setRunnerPassages(extraPassages);
     setRunKey((k) => k + 1);
     setSessionEvents([]);
     setMode("runner");
+  };
+
+  const loadAccountWorksheetProgress = async (
+    userId: string,
+    scopeId: string,
+  ): Promise<WorksheetProgressSave | null> => {
+    const local = loadWorksheetProgressLocal(userId, scopeId);
+    try {
+      const remote = await fetchWorksheetProgress(userId, scopeId);
+      return pickNewerWorksheetProgress(local, remote);
+    } catch {
+      return local;
+    }
+  };
+
+  const clearAccountWorksheetProgress = async (userId: string, scopeId: string) => {
+    clearWorksheetProgressLocal(userId, scopeId);
+    try {
+      await clearWorksheetProgress(userId, scopeId);
+    } catch {
+      // Local progress is already cleared. Account cleanup can retry next complete.
+    }
   };
 
   const previewPreset = (preset: WorksheetPreset) => {
@@ -369,7 +410,31 @@ const Worksheets = () => {
   const startTutorOrSelfPreview = () => {
     setActiveAssignment(null);
     setRunSource(buildVariant === "student" ? "self" : "tutor-preview");
-    startWorksheetRun();
+    startWorksheetRun(undefined, undefined, null);
+  };
+
+  const resumeSelfPractice = async () => {
+    if (!profile?.uid) return;
+    const save = await loadAccountWorksheetProgress(profile.uid, WORKSHEET_SELF_SCOPE_ID);
+    if (!save) {
+      toast({
+        title: "No saved custom practice",
+        description: "Build a worksheet to start a new set.",
+      });
+      return;
+    }
+    const picked = getQuestionsByIds(save.questionIds);
+    if (picked.length === 0) {
+      toast({
+        title: "Worksheet unavailable",
+        description: "None of the saved questions could be loaded.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setActiveAssignment(null);
+    setRunSource("self");
+    startWorksheetRun(picked, getPassagesForQuestions(picked), save);
   };
 
   const openReviewSession = (session: PracticeSessionRecord, subtitle?: string) => {
@@ -425,7 +490,7 @@ const Worksheets = () => {
     }
   };
 
-  const startAssignedWorksheet = (
+  const startAssignedWorksheet = async (
     assignment: WorksheetAssignment,
     workspaceTarget?: WorksheetsWorkspaceCompletionTarget,
   ) => {
@@ -439,9 +504,13 @@ const Worksheets = () => {
       });
       return;
     }
+    const initial =
+      profile?.uid && !viewAs
+        ? await loadAccountWorksheetProgress(profile.uid, assignment.id)
+        : null;
     setActiveAssignment(assignment);
     setRunSource("assignment");
-    startWorksheetRun(picked, getPassagesForQuestions(picked));
+    startWorksheetRun(picked, getPassagesForQuestions(picked), initial);
   };
 
   const printAssignedWorksheet = (assignment: { title: string; questionIds: string[] }) => {
@@ -781,6 +850,29 @@ const Worksheets = () => {
             ? assignmentRevealsAnswers(activeAssignment)
             : true
         }
+        progressKey={
+          profile?.uid && !viewAs && (runSource === "assignment" || runSource === "self")
+            ? {
+                userId: profile.uid,
+                scopeId:
+                  runSource === "assignment" && activeAssignment
+                    ? activeAssignment.id
+                    : WORKSHEET_SELF_SCOPE_ID,
+                runSource,
+                assignmentId: activeAssignment?.id ?? null,
+                title: sessionTitle,
+                tagCodes:
+                  runSource === "assignment"
+                    ? (activeAssignment?.tagCodes ?? [])
+                    : questionPickMode === "chosen"
+                      ? contentSkillCodes(worksheetQuestions)
+                      : selectedCodes,
+                tutorUid:
+                  runSource === "assignment" ? (activeAssignment?.tutorUid ?? null) : null,
+              }
+            : undefined
+        }
+        initialProgress={runnerInitialProgress}
         onComplete={async (events) => {
           setSessionEvents(events);
 
@@ -801,6 +893,14 @@ const Worksheets = () => {
                 tutorUid:
                   runSource === "assignment" ? (activeAssignment?.tutorUid ?? null) : null,
               });
+              if (profile?.uid) {
+                await clearAccountWorksheetProgress(
+                  profile.uid,
+                  runSource === "assignment" && activeAssignment
+                    ? activeAssignment.id
+                    : WORKSHEET_SELF_SCOPE_ID,
+                );
+              }
             } catch (err) {
               toast({
                 title: "Could not save practice results",
@@ -1055,11 +1155,12 @@ const Worksheets = () => {
             ) : (
               <StudentWorksheetsHome
                 assignmentsRefreshKey={assignmentsRefreshKey}
-                onStartAssignment={startAssignedWorksheet}
+                onStartAssignment={(assignment) => void startAssignedWorksheet(assignment)}
                 onReviewAssignment={handleReviewAssignment}
                 onPrintAssignment={printAssignedWorksheet}
                 onReviewSession={(session) => openReviewSession(session)}
                 onCreateCustomPractice={openStudentBuild}
+                onResumeSelfPractice={() => void resumeSelfPractice()}
               />
             )}
           </>

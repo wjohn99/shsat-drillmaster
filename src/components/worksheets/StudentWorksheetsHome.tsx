@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StudentAssignmentsGrid } from "./StudentAssignmentsGrid";
 import { WorksheetHistoryList } from "./WorksheetHistoryList";
 import { fetchPracticeSessionsForStudent } from "@/lib/practiceSessionService";
+import { fetchWorksheetProgressForUser } from "@/lib/worksheetProgressService";
+import {
+  WORKSHEET_SELF_SCOPE_ID,
+  worksheetProgressIsStarted,
+} from "@/lib/worksheetProgressStorage";
+import { useAuth } from "@/contexts/AuthContext";
 import type { WorksheetAssignment } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 
@@ -14,6 +20,7 @@ interface StudentWorksheetsHomeProps {
   onPrintAssignment: (assignment: WorksheetAssignment) => void;
   onReviewSession: (session: PracticeSessionRecord) => void;
   onCreateCustomPractice: () => void;
+  onResumeSelfPractice?: () => void;
   /** Tutor is looking at this student's worksheets and submitted results. */
   preview?: {
     studentName: string;
@@ -29,25 +36,53 @@ export function StudentWorksheetsHome({
   onPrintAssignment,
   onReviewSession,
   onCreateCustomPractice,
+  onResumeSelfPractice,
   preview,
 }: StudentWorksheetsHomeProps) {
+  const { profile } = useAuth();
   const [historySessions, setHistorySessions] = useState<PracticeSessionRecord[]>([]);
   const [historyLoading, setHistoryLoading] = useState(true);
+  const [inProgressAssignmentIds, setInProgressAssignmentIds] = useState<Set<string>>(new Set());
+  const [selfPracticeStarted, setSelfPracticeStarted] = useState(false);
 
   useEffect(() => {
     if (preview) {
       setHistorySessions(preview.sessions.filter((session) => session.sessionType === "assignment"));
       setHistoryLoading(false);
+      setInProgressAssignmentIds(new Set());
+      setSelfPracticeStarted(false);
       return;
     }
     let cancelled = false;
     (async () => {
       setHistoryLoading(true);
       try {
-        const rows = await fetchPracticeSessionsForStudent(["assignment"]);
-        if (!cancelled) setHistorySessions(rows);
+        const [rows, progressRows] = await Promise.all([
+          fetchPracticeSessionsForStudent(["assignment"]),
+          profile?.uid
+            ? fetchWorksheetProgressForUser(profile.uid).catch(() => [])
+            : Promise.resolve([]),
+        ]);
+        if (cancelled) return;
+        setHistorySessions(rows);
+        setInProgressAssignmentIds(
+          new Set(
+            progressRows
+              .filter((save) => save.runSource === "assignment" && worksheetProgressIsStarted(save))
+              .map((save) => save.scopeId),
+          ),
+        );
+        setSelfPracticeStarted(
+          progressRows.some(
+            (save) => save.scopeId === WORKSHEET_SELF_SCOPE_ID && worksheetProgressIsStarted(save),
+          ),
+        );
       } catch {
-        if (!cancelled) setHistorySessions([]);
+        if (!cancelled) {
+          setHistorySessions([]);
+          setInProgressAssignmentIds(new Set());
+          setSelfPracticeStarted(false);
+        }
       } finally {
         if (!cancelled) setHistoryLoading(false);
       }
@@ -55,7 +90,7 @@ export function StudentWorksheetsHome({
     return () => {
       cancelled = true;
     };
-  }, [assignmentsRefreshKey, preview?.sessions]);
+  }, [assignmentsRefreshKey, preview?.sessions, profile?.uid]);
 
   return (
     <div className="mx-auto max-w-6xl space-y-12">
@@ -75,6 +110,7 @@ export function StudentWorksheetsHome({
           onPrintAssignment={onPrintAssignment}
           assignments={preview?.assignments}
           preview={Boolean(preview)}
+          inProgressAssignmentIds={inProgressAssignmentIds}
         />
       </section>
 
@@ -112,10 +148,18 @@ export function StudentWorksheetsHome({
               Pick skill tags from all four SHSAT sections and practice at your own pace.
             </p>
           </div>
-          <Button className="shrink-0" onClick={onCreateCustomPractice}>
-            Build worksheet
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+          <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
+            {selfPracticeStarted && onResumeSelfPractice ? (
+              <Button variant="outline" onClick={onResumeSelfPractice}>
+                <Play className="mr-2 h-4 w-4" />
+                Resume custom practice
+              </Button>
+            ) : null}
+            <Button onClick={onCreateCustomPractice}>
+              Build worksheet
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </section>
       )}

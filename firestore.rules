@@ -563,6 +563,30 @@ service cloud.firestore {
       allow read: if isApprovedParentOf(progressUserId);
     }
 
+    // In-progress worksheets. One document per student + assignment (or custom practice).
+    match /worksheet_progress/{progressId} {
+      allow read, delete: if isSignedIn()
+        && resource.data.userId == request.auth.uid;
+
+      allow create: if isSignedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.scopeId is string
+        && progressId == request.auth.uid + '__' + request.resource.data.scopeId
+        && request.resource.data.questionIds is list
+        && request.resource.data.currentQuestionIndex is number
+        && request.resource.data.answers is map
+        && request.resource.data.updatedAt is number;
+
+      allow update: if isSignedIn()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == resource.data.userId
+        && request.resource.data.scopeId == resource.data.scopeId
+        && request.resource.data.questionIds is list
+        && request.resource.data.currentQuestionIndex is number
+        && request.resource.data.answers is map
+        && request.resource.data.updatedAt is number;
+    }
+
     match /student_parent_readers/{studentUid} {
       allow read: if isTutor() || isOwner(studentUid);
 

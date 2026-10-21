@@ -22,6 +22,8 @@ import { fetchAssignmentsForStudent } from "@/lib/assignmentService";
 import { DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE } from "@/lib/diagnosticAccess";
 import { fetchDiagnosticProgress } from "@/lib/diagnosticProgressService";
 import { fetchPracticeSessionsForStudent } from "@/lib/practiceSessionService";
+import { fetchWorksheetProgressForUser } from "@/lib/worksheetProgressService";
+import { worksheetProgressIsStarted } from "@/lib/worksheetProgressStorage";
 import { loadTutorVisibleStudentView } from "@/lib/studentView";
 import type { ViewAsStudent } from "@/lib/viewAsStudent";
 import { fetchWorkspaceBoard } from "@/lib/workspaceService";
@@ -53,6 +55,7 @@ export function StudentDashboard({ viewAs = null }: { viewAs?: ViewAsStudent | n
   const [diagnosticSessions, setDiagnosticSessions] = useState<PracticeSessionRecord[]>([]);
   const [diagnosticAssigned, setDiagnosticAssigned] = useState(false);
   const [diagnosticInProgress, setDiagnosticInProgress] = useState(false);
+  const [inProgressAssignmentIds, setInProgressAssignmentIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (!profile) return;
@@ -71,14 +74,16 @@ export function StudentDashboard({ viewAs = null }: { viewAs?: ViewAsStudent | n
           setDiagnosticSessions(visible.sessions.filter((s) => s.sessionType === "diagnostic"));
           setDiagnosticAssigned(Boolean(visible.board?.diagnosticAssigned));
           setDiagnosticInProgress(visible.diagnosticInProgress);
+          setInProgressAssignmentIds(new Set());
           return;
         }
 
-        const [assignmentRows, allSessions, board, progress] = await Promise.all([
+        const [assignmentRows, allSessions, board, progress, worksheetProgress] = await Promise.all([
           fetchAssignmentsForStudent(),
           fetchPracticeSessionsForStudent(),
           fetchWorkspaceBoard(profile.uid).catch(() => null),
           fetchDiagnosticProgress(profile.uid).catch(() => null),
+          fetchWorksheetProgressForUser(profile.uid).catch(() => []),
         ]);
         if (cancelled) return;
 
@@ -88,6 +93,13 @@ export function StudentDashboard({ viewAs = null }: { viewAs?: ViewAsStudent | n
         setDiagnosticSessions(allSessions.filter((s) => s.sessionType === "diagnostic"));
         setDiagnosticAssigned(Boolean(board?.diagnosticAssigned));
         setDiagnosticInProgress(Boolean(progress));
+        setInProgressAssignmentIds(
+          new Set(
+            worksheetProgress
+              .filter((save) => save.runSource === "assignment" && worksheetProgressIsStarted(save))
+              .map((save) => save.scopeId),
+          ),
+        );
       } catch (err) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : "Could not load dashboard.");
@@ -202,7 +214,7 @@ export function StudentDashboard({ viewAs = null }: { viewAs?: ViewAsStudent | n
               ) : (
                 <Button onClick={() => startAssignment(nextAssignment)}>
                   <Play className="h-5 w-5 mr-2" />
-                  Start assignment
+                  {inProgressAssignmentIds.has(nextAssignment.id) ? "Resume assignment" : "Start assignment"}
                 </Button>
               )}
             </CardContent>
@@ -475,7 +487,7 @@ export function StudentDashboard({ viewAs = null }: { viewAs?: ViewAsStudent | n
                       ) : null}
                       {row.status === "todo" && !preview ? (
                         <Button size="sm" variant="outline" onClick={() => startAssignment(row)}>
-                          Start
+                          {inProgressAssignmentIds.has(row.id) ? "Resume" : "Start"}
                         </Button>
                       ) : null}
                     </div>
