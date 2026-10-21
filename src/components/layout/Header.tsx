@@ -144,7 +144,7 @@ export const Header = () => {
 
   return (
     <>
-    {profile?.role === "demo" && !isDemoMode ? (
+    {profile?.role === "demo" ? (
       <DemoWelcomeDialog onDismiss={maybeAutoStart} />
     ) : null}
     <header className={cn(locked ? "relative z-50 shrink-0" : "sticky top-0 z-50")}>

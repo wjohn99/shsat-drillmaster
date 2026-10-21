@@ -71,7 +71,7 @@ function studentOptionFromBoard(
 
 export function TutorDashboard() {
   const navigate = useNavigate();
-  const { enterDemoMode, demoBusy, profile, accountRole } = useAuth();
+  const { enterDemoMode, demoBusy, profile } = useAuth();
   const { startTutorial } = useDemoTutorial();
   const { openReports } = useQuestionReports();
   const [loading, setLoading] = useState(true);
@@ -237,7 +237,7 @@ export function TutorDashboard() {
       subtitle="Manage worksheets and track student progress."
     >
       <div className="space-y-8">
-        {accountRole === "demo" ? (
+        {profile?.role === "demo" ? (
           <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-muted/40 px-4 py-3">
             <p className="text-sm text-muted-foreground">
               How the diagnostic, worksheets, and results connect to the workspace.

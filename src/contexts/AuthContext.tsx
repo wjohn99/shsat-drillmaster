@@ -13,6 +13,7 @@ import { isFirebaseConfigured } from "@/lib/firebase";
 import {
   authErrorMessage,
   completeGoogleRedirect,
+  ensureDemoWelcomePending,
   markDemoWelcomePending,
   signInWithGoogle as authSignInWithGoogle,
   signOut as authSignOut,
@@ -53,9 +54,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAccountProfile(next);
     if (!next || next.role !== "tutor") {
       setIsDemoMode(false);
+      if (next?.role === "demo") ensureDemoWelcomePending();
       return;
     }
-    setIsDemoMode(readStoredDemoMode(next.uid) ?? next.demoMode === true);
+    const demoOn = readStoredDemoMode(next.uid) ?? next.demoMode === true;
+    setIsDemoMode(demoOn);
+    if (demoOn) ensureDemoWelcomePending();
   }, []);
 
   const profile = useMemo<AppUserProfile | null>(() => {

@@ -79,6 +79,17 @@ export function markDemoWelcomePending(): void {
   sessionStorage.setItem(DEMO_WELCOME_KEY, "pending");
 }
 
+/** Shows the welcome on a new visit, and leaves a dismissed box dismissed for this tab. */
+export function ensureDemoWelcomePending(): void {
+  try {
+    if (sessionStorage.getItem(DEMO_WELCOME_KEY) == null) {
+      sessionStorage.setItem(DEMO_WELCOME_KEY, "pending");
+    }
+  } catch {
+    // Private mode can block storage. The box can still open on an explicit sign-in.
+  }
+}
+
 export function isDemoWelcomePending(): boolean {
   return sessionStorage.getItem(DEMO_WELCOME_KEY) === "pending";
 }

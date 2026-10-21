@@ -2,6 +2,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -25,39 +26,47 @@ interface DemoTutorialContextValue {
 const DemoTutorialContext = createContext<DemoTutorialContextValue | undefined>(undefined);
 
 export function DemoTutorialProvider({ children }: { children: ReactNode }) {
-  const { accountRole, profile } = useAuth();
+  const { accountRole, isDemoMode, profile } = useAuth();
   const { exitViewAsStudent } = useViewAsStudent();
   const [active, setActive] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
   const activeRef = useRef(false);
+  const inDemo = accountRole === "demo" || isDemoMode;
 
   const finish = useCallback(() => {
-    if (profile?.uid && accountRole === "demo") {
+    if (profile?.uid && inDemo) {
       markDemoTutorialComplete(profile.uid);
     }
     activeRef.current = false;
     setActive(false);
     setStepIndex(0);
-  }, [accountRole, profile?.uid]);
+  }, [inDemo, profile?.uid]);
 
   const startTutorial = useCallback(() => {
-    if (accountRole !== "demo") return;
+    if (!inDemo) return;
     exitViewAsStudent();
     activeRef.current = true;
     setStepIndex(0);
     setActive(true);
-  }, [accountRole, exitViewAsStudent]);
+  }, [exitViewAsStudent, inDemo]);
 
   const maybeAutoStart = useCallback(() => {
     if (activeRef.current) return;
-    if (accountRole !== "demo" || !profile?.uid) return;
+    if (!inDemo || !profile?.uid) return;
     if (isDemoWelcomePending()) return;
     if (isDemoTutorialComplete(profile.uid)) return;
     exitViewAsStudent();
     activeRef.current = true;
     setStepIndex(0);
     setActive(true);
-  }, [accountRole, exitViewAsStudent, profile?.uid]);
+  }, [exitViewAsStudent, inDemo, profile?.uid]);
+
+  useEffect(() => {
+    if (inDemo || !activeRef.current) return;
+    activeRef.current = false;
+    setActive(false);
+    setStepIndex(0);
+  }, [inDemo]);
 
   const nextStep = useCallback(() => {
     setStepIndex((current) => current + 1);
