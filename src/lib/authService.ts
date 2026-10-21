@@ -159,12 +159,26 @@ function parseUserProfile(snapshot: DocumentSnapshot): AppUserProfile {
   };
 }
 
-export async function syncUserProfile(firebaseUser: User): Promise<AppUserProfile> {
-  return withTimeout(
+const profileSyncs = new Map<string, Promise<AppUserProfile>>();
+
+export function syncUserProfile(firebaseUser: User): Promise<AppUserProfile> {
+  const current = profileSyncs.get(firebaseUser.uid);
+  if (current) return current;
+
+  // Popup sign-in notifies the auth listener and also returns the user.
+  // Both used to write the new profile. The second write changed createdAt and
+  // Firestore rejected it, so a red error flashed as the first write logged them in.
+  const promise = withTimeout(
     writeUserProfile(firebaseUser),
     15000,
     new Error("Signed in, but loading your profile timed out. Refresh and try again."),
-  );
+  ).finally(() => {
+    if (profileSyncs.get(firebaseUser.uid) === promise) {
+      profileSyncs.delete(firebaseUser.uid);
+    }
+  });
+  profileSyncs.set(firebaseUser.uid, promise);
+  return promise;
 }
 
 async function writeUserProfile(firebaseUser: User): Promise<AppUserProfile> {

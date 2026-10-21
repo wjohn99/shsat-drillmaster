@@ -135,6 +135,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const userProfile = await authSignInWithGoogle(intent);
         if (userProfile.role === "demo") markDemoWelcomePending();
+        setError(null);
         applyAccountProfile(userProfile);
       } catch (err) {
         setError(authErrorMessage(err));

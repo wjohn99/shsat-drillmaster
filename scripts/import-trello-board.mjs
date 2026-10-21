@@ -140,10 +140,13 @@ function kindForTrelloList(name) {
   return "custom";
 }
 
-function isPdfAttachment(att) {
+function attachmentContentType(att) {
   const name = String(att?.name || att?.fileName || "").toLowerCase();
   const mime = String(att?.mimeType || "").toLowerCase();
-  return name.endsWith(".pdf") || mime.includes("pdf");
+  if (name.endsWith(".pdf") || mime.includes("pdf")) return "application/pdf";
+  if (name.endsWith(".png") || mime.includes("png")) return "image/png";
+  if (name.endsWith(".jpg") || name.endsWith(".jpeg") || mime.includes("jpeg")) return "image/jpeg";
+  return null;
 }
 
 function cleanText(value) {
@@ -155,10 +158,12 @@ function cleanText(value) {
     .trim();
 }
 
-function sanitizeStorageFileName(name) {
-  const trimmed = name.trim() || "document.pdf";
-  const safe = trimmed.replace(/[^a-zA-Z0-9._-]/g, "_");
-  return safe.toLowerCase().endsWith(".pdf") ? safe : `${safe}.pdf`;
+function sanitizeStorageFileName(name, contentType) {
+  const trimmed = name.trim() || "file";
+  const safe = trimmed.replace(/[^a-zA-Z0-9._-]/g, "_").toLowerCase();
+  if (contentType === "image/png") return safe.endsWith(".png") ? safe : `${safe}.png`;
+  if (contentType === "image/jpeg") return /\.jpe?g$/.test(safe) ? safe : `${safe}.jpg`;
+  return safe.endsWith(".pdf") ? safe : `${safe}.pdf`;
 }
 
 function parseSessionMeta(desc) {
@@ -400,7 +405,7 @@ function buildImportPlan(board) {
               ? parseSessionMeta(card.desc || "")
               : { sessionMeta: undefined, description: cleanText(card.desc || "") };
           const attachments = [...(card.attachments || [])]
-            .filter((att) => att.isUpload && isPdfAttachment(att))
+            .filter((att) => att.isUpload && attachmentContentType(att))
             .sort((a, b) => (a.pos || 0) - (b.pos || 0));
           return {
             trelloId: card.id,
@@ -447,12 +452,27 @@ function trelloAuthHeader(key, token) {
   return `OAuth oauth_consumer_key="${key}", oauth_token="${token}"`;
 }
 
-async function downloadTrelloPdf(att, cardId, key, token) {
-  const fileName = encodeURIComponent(att.fileName || att.name || "file.pdf");
-  const candidates = [
+function fileLooksRight(bytes, contentType) {
+  if (bytes.length < 8) return false;
+  if (contentType === "application/pdf") return bytes.subarray(0, 4).toString() === "%PDF";
+  if (contentType === "image/png") return bytes.subarray(0, 4).toString() === "\x89PNG";
+  if (contentType === "image/jpeg") return bytes[0] === 0xff && bytes[1] === 0xd8;
+  return false;
+}
+
+async function downloadTrelloFile(att, cardId, key, token) {
+  const contentType = attachmentContentType(att);
+  const fileName = encodeURIComponent(att.fileName || att.name || "file");
+  const api = new URL(
     `https://api.trello.com/1/cards/${cardId}/attachments/${att.id}/download/${fileName}`,
-    att.url,
-  ].filter(Boolean);
+  );
+  if (key && token) {
+    api.searchParams.set("key", key);
+    api.searchParams.set("token", token);
+  }
+  // The stored Trello link already authorizes the file. Adding the key to it
+  // makes Trello return a page instead of the image.
+  const candidates = [att.url, api.toString()].filter(Boolean);
 
   let lastError = "no URL";
   for (const url of candidates) {
@@ -464,8 +484,8 @@ async function downloadTrelloPdf(att, cardId, key, token) {
       continue;
     }
     const buf = Buffer.from(await res.arrayBuffer());
-    if (buf.length < 5 || buf.subarray(0, 4).toString() !== "%PDF") {
-      lastError = "response was not a PDF";
+    if (!fileLooksRight(buf, contentType)) {
+      lastError = "response was not the expected file";
       continue;
     }
     return buf;
@@ -473,13 +493,13 @@ async function downloadTrelloPdf(att, cardId, key, token) {
   throw new Error(lastError);
 }
 
-async function uploadPdf(accessToken, storagePath, bytes) {
+async function uploadWorkspaceFile(accessToken, storagePath, bytes, contentType) {
   const url = `https://storage.googleapis.com/upload/storage/v1/b/${STORAGE_BUCKET}/o?uploadType=media&name=${encodeURIComponent(storagePath)}`;
   const res = await fetch(url, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/pdf",
+      "Content-Type": contentType,
     },
     body: bytes,
   });
@@ -516,7 +536,7 @@ async function main() {
     const pdfs = list.cards.reduce((n, card) => n + card.attachments.length, 0);
     const comments = list.cards.reduce((n, card) => n + card.comments.length, 0);
     const from = list.trelloTitle && titleForTrelloList(list.trelloTitle) !== list.title ? ` ← ${list.trelloTitle}` : "";
-    console.log(`  - ${list.title}${from} (${list.kind}): ${list.cards.length} cards, ${comments} comments, ${pdfs} PDFs`);
+    console.log(`  - ${list.title}${from} (${list.kind}): ${list.cards.length} cards, ${comments} comments, ${pdfs} files`);
   }
 
   const { accessToken, email: operatorEmail } = await refreshFirebaseAccessToken();
@@ -707,11 +727,12 @@ async function main() {
 
       for (const att of card.attachments) {
         const attachmentId = trelloDocId(att.id);
-        const fileName = sanitizeStorageFileName(att.name || att.fileName || "document.pdf");
+        const contentType = attachmentContentType(att);
+        const fileName = sanitizeStorageFileName(att.name || att.fileName || "file", contentType);
         const storagePath = `workspace/${boardId}/cards/${cardId}/${attachmentId}_${fileName}`;
         try {
-          const bytes = await downloadTrelloPdf(att, card.trelloId, trelloKey, trelloToken);
-          await uploadPdf(accessToken, storagePath, bytes);
+          const bytes = await downloadTrelloFile(att, card.trelloId, trelloKey, trelloToken);
+          await uploadWorkspaceFile(accessToken, storagePath, bytes, contentType);
           await upsertDocument(
             accessToken,
             `/workspace_boards/${boardId}/cards/${cardId}/attachments/${attachmentId}`,
@@ -719,7 +740,7 @@ async function main() {
               kind: "file",
               fileName: att.name || att.fileName || fileName,
               storagePath,
-              contentType: "application/pdf",
+              contentType,
               sizeBytes: bytes.length,
               uploadedByUid: createdByUid || "trello-import",
               uploadedByName: memberName(trello, att.idMember, "Trello import"),
@@ -751,12 +772,12 @@ async function main() {
   console.log(`  cards created: ${cardsCreated}`);
   console.log(`  cards updated: ${cardsUpdated}`);
   console.log(`  comments: ${commentsWritten}`);
-  console.log(`  PDFs uploaded: ${pdfsUploaded}`);
+  console.log(`  files uploaded: ${pdfsUploaded}`);
   if (!trelloKey || !trelloToken) {
     const pending = plan.lists.reduce((n, list) => n + list.cards.reduce((m, card) => m + card.attachments.length, 0), 0);
-    console.log(`  PDFs skipped (set TRELLO_API_KEY and TRELLO_TOKEN, then re-run): ${pending}`);
+    console.log(`  files skipped (set TRELLO_API_KEY and TRELLO_TOKEN, then re-run): ${pending}`);
   } else if (pdfsFailed) {
-    console.log(`  PDFs failed: ${pdfsFailed}`);
+    console.log(`  files failed: ${pdfsFailed}`);
     for (const line of pdfErrors.slice(0, 12)) console.log(`    ${line}`);
     if (pdfErrors.length > 12) console.log(`    … ${pdfErrors.length - 12} more`);
   }

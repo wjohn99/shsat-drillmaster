@@ -3,8 +3,8 @@
  * Import a Google Drive folder dump (zip or directory) into one student workspace.
  *
  * Folders become lists. Each file becomes a card:
- *   - PDFs upload as attachments (the board previews PDFs, not Word/HTML)
- *   - .docx / .html text lands in the card description
+ *   - PDFs, PNG, and JPEG upload as attachments
+ *   - .docx / .html / .xlsx text lands in the card description
  * Same-named files (pdf + docx, or " (1)" copies) merge onto one card.
  *
  * Usage:
@@ -68,7 +68,7 @@ function cleanText(value) {
 
 function titleFromFileName(name) {
   return String(name || "Untitled")
-    .replace(/\.(pdf|docx|html?)$/i, "")
+    .replace(/\.(pdf|docx|html?|png|jpe?g|xlsx)$/i, "")
     .replace(/_s\b/g, "'s")
     .replace(/_/g, " ")
     .replace(/\s+/g, " ")
@@ -242,13 +242,13 @@ async function upsertDocument(accessToken, relativePath, fields) {
   });
 }
 
-async function uploadPdf(accessToken, storagePath, bytes) {
+async function uploadFile(accessToken, storagePath, bytes, contentType) {
   const url = `https://storage.googleapis.com/upload/storage/v1/b/${STORAGE_BUCKET}/o?uploadType=media&name=${encodeURIComponent(storagePath)}`;
   const res = await fetch(url, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/pdf",
+      "Content-Type": contentType,
     },
     body: bytes,
   });
@@ -280,6 +280,67 @@ function extractDocxText(filePath) {
   }
 }
 
+function decodeXmlText(value) {
+  return String(value || "")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+}
+
+function extractXlsxText(filePath) {
+  try {
+    const listing = execFileSync("unzip", ["-l", filePath], {
+      encoding: "utf8",
+      maxBuffer: 2 * 1024 * 1024,
+    });
+    const sheets = [...listing.matchAll(/xl\/worksheets\/sheet\d+\.xml/g)].map((match) => match[0]);
+    let shared = [];
+    try {
+      const sharedXml = execFileSync("unzip", ["-p", filePath, "xl/sharedStrings.xml"], {
+        encoding: "utf8",
+        maxBuffer: 20 * 1024 * 1024,
+      });
+      shared = [...sharedXml.matchAll(/<si\b[^>]*>([\s\S]*?)<\/si>/g)].map((match) =>
+        decodeXmlText(
+          [...match[1].matchAll(/<t[^>]*>([\s\S]*?)<\/t>/g)].map((part) => part[1]).join(""),
+        ),
+      );
+    } catch {
+      shared = [];
+    }
+    const lines = [];
+    for (const sheet of sheets) {
+      const xml = execFileSync("unzip", ["-p", filePath, sheet], {
+        encoding: "utf8",
+        maxBuffer: 20 * 1024 * 1024,
+      });
+      for (const row of xml.matchAll(/<row\b[^>]*>([\s\S]*?)<\/row>/g)) {
+        const values = [...row[1].matchAll(/<c\b([^>]*)>(?:[\s\S]*?<v>([\s\S]*?)<\/v>)?/g)].map(
+          (cell) => {
+            const attrs = cell[1] || "";
+            const raw = cell[2] || "";
+            if (/\bt="s"/.test(attrs)) return shared[Number(raw)] || "";
+            if (/\bt="inlineStr"/.test(attrs)) {
+              const inline = row[1].slice(row[1].indexOf(attrs));
+              return decodeXmlText(
+                [...inline.matchAll(/<t[^>]*>([\s\S]*?)<\/t>/g)].map((part) => part[1]).join(""),
+              );
+            }
+            return decodeXmlText(raw);
+          },
+        );
+        const line = values.map((value) => value.trim()).filter(Boolean).join("\t");
+        if (line) lines.push(line);
+      }
+    }
+    return cleanText(lines.join("\n"));
+  } catch {
+    return "";
+  }
+}
+
 function extractHtmlText(filePath) {
   const raw = fs.readFileSync(filePath, "utf8");
   return cleanText(
@@ -302,9 +363,26 @@ function isPdf(name) {
   return name.toLowerCase().endsWith(".pdf");
 }
 
+function isImage(name) {
+  const lower = name.toLowerCase();
+  return lower.endsWith(".png") || lower.endsWith(".jpg") || lower.endsWith(".jpeg");
+}
+
 function isNoteFile(name) {
   const lower = name.toLowerCase();
-  return lower.endsWith(".docx") || lower.endsWith(".html") || lower.endsWith(".htm");
+  return (
+    lower.endsWith(".docx") ||
+    lower.endsWith(".html") ||
+    lower.endsWith(".htm") ||
+    lower.endsWith(".xlsx")
+  );
+}
+
+function contentTypeForFile(name) {
+  const lower = name.toLowerCase();
+  if (lower.endsWith(".png")) return "image/png";
+  if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return "image/jpeg";
+  return "application/pdf";
 }
 
 function walkFiles(rootDir) {
@@ -342,7 +420,7 @@ function resolveDumpRoot(dir) {
 function buildPlan(files) {
   const lists = new Map();
   for (const file of files) {
-    if (!isPdf(file.name) && !isNoteFile(file.name)) continue;
+    if (!isPdf(file.name) && !isImage(file.name) && !isNoteFile(file.name)) continue;
     const listTitle = file.listTitle;
     if (!lists.has(listTitle)) {
       lists.set(listTitle, {
@@ -369,7 +447,7 @@ function buildPlan(files) {
     }
     const card = list.cards.get(key);
     if (file.mtime < card.createdAt) card.createdAt = file.mtime;
-    if (isPdf(file.name)) {
+    if (isPdf(file.name) || isImage(file.name)) {
       card.pdfs.push(file);
     } else {
       card.notes.push(file);
@@ -390,7 +468,12 @@ function buildPlan(files) {
       const cards = [...list.cards.values()]
         .map((card) => {
           const noteTexts = card.notes
-            .map((note) => (note.name.toLowerCase().endsWith(".docx") ? extractDocxText(note.abs) : extractHtmlText(note.abs)))
+            .map((note) => {
+              const lower = note.name.toLowerCase();
+              if (lower.endsWith(".docx")) return extractDocxText(note.abs);
+              if (lower.endsWith(".xlsx")) return extractXlsxText(note.abs);
+              return extractHtmlText(note.abs);
+            })
             .filter(Boolean)
             .sort((a, b) => b.length - a.length);
           let description = noteTexts[0] || "";
@@ -501,10 +584,12 @@ async function findOrCreateBoard(accessToken, email, operatorEmail) {
   }
 }
 
-function sanitizeStorageName(name) {
-  const trimmed = name.trim() || "document.pdf";
-  const safe = trimmed.replace(/[^a-zA-Z0-9._-]/g, "_");
-  return safe.toLowerCase().endsWith(".pdf") ? safe : `${safe}.pdf`;
+function sanitizeStorageName(name, contentType) {
+  const trimmed = name.trim() || "file";
+  const safe = trimmed.replace(/[^a-zA-Z0-9._-]/g, "_").toLowerCase();
+  if (contentType === "image/png") return safe.endsWith(".png") ? safe : `${safe}.png`;
+  if (contentType === "image/jpeg") return /\.jpe?g$/.test(safe) ? safe : `${safe}.jpg`;
+  return safe.endsWith(".pdf") ? safe : `${safe}.pdf`;
 }
 
 async function main() {
@@ -522,7 +607,27 @@ async function main() {
   if (args.zip) {
     if (!fs.existsSync(args.zip)) throw new Error(`Zip not found: ${args.zip}`);
     workDir = fs.mkdtempSync(path.join(os.tmpdir(), "drive-import-"));
-    execFileSync("unzip", ["-q", "-o", args.zip, "-d", workDir]);
+    execFileSync("python3", [
+      "-c",
+      `
+import os, sys, zipfile
+dest = sys.argv[2]
+with zipfile.ZipFile(sys.argv[1]) as archive:
+    for info in archive.infolist():
+        name = info.filename.replace("\\\\", "/").lstrip("/")
+        if not name or name.endswith("/"):
+            continue
+        parts = [part for part in name.split("/") if part not in ("", ".")]
+        if any(part == ".." for part in parts):
+            continue
+        out = os.path.join(dest, *parts)
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        with archive.open(info) as src, open(out, "wb") as dst:
+            dst.write(src.read())
+`,
+      args.zip,
+      workDir,
+    ]);
   }
   if (!workDir || !fs.existsSync(workDir)) {
     throw new Error(`Folder not found: ${workDir}`);
@@ -608,14 +713,15 @@ async function main() {
 
       for (const pdf of card.pdfs) {
         const attachmentId = driveId(`att:${pdf.abs}`);
-        const fileName = sanitizeStorageName(pdf.name);
+        const contentType = contentTypeForFile(pdf.name);
+        const fileName = sanitizeStorageName(pdf.name, contentType);
         const storagePath = `workspace/${boardId}/cards/${cardId}/${attachmentId}_${fileName}`;
         try {
           const bytes = fs.readFileSync(pdf.abs);
-          if (bytes.length < 5 || bytes.subarray(0, 4).toString() !== "%PDF") {
+          if (contentType === "application/pdf" && (bytes.length < 5 || bytes.subarray(0, 4).toString() !== "%PDF")) {
             throw new Error("not a PDF");
           }
-          await uploadPdf(accessToken, storagePath, bytes);
+          await uploadFile(accessToken, storagePath, bytes, contentType);
           await upsertDocument(
             accessToken,
             `/workspace_boards/${boardId}/cards/${cardId}/attachments/${attachmentId}`,
@@ -623,7 +729,7 @@ async function main() {
               kind: "file",
               fileName: pdf.name,
               storagePath,
-              contentType: "application/pdf",
+              contentType,
               sizeBytes: bytes.length,
               uploadedByUid: createdByUid || "drive-import",
               uploadedByName: "Drive import",

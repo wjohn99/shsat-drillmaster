@@ -4,16 +4,6 @@ import { Header } from "@/components/layout/Header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { HighlightableText } from "@/components/exam/HighlightableText";
 import { QuestionResponseFields } from "@/components/question/QuestionResponseFields";
@@ -600,6 +590,42 @@ export function DiagnosticExamRunner({
     </div>
   );
 
+  if (confirmExit) {
+    return (
+      <div
+        className="fixed inset-0 z-[80] flex items-center justify-center bg-background px-6"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="diagnostic-pause-title"
+      >
+        <div className="w-full max-w-lg space-y-4">
+          <h2 id="diagnostic-pause-title" className="text-lg font-semibold">
+            Pause and save this diagnostic?
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            The timer stops after this sitting is stored in your account. You can resume on this
+            device or another computer.
+          </p>
+          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <Button variant="outline" disabled={pausing} onClick={() => setConfirmExit(false)}>
+              Keep working
+            </Button>
+            <Button disabled={pausing} onClick={() => void pauseAndLeave()}>
+              {pausing ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Saving to your account…
+                </>
+              ) : (
+                "Pause and save"
+              )}
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-dvh max-h-dvh flex-col overflow-hidden">
       <Header />
@@ -782,43 +808,6 @@ export function DiagnosticExamRunner({
           </div>
         </div>
       ) : null}
-
-      <AlertDialog
-        open={confirmExit}
-        onOpenChange={(open) => {
-          if (pausing) return;
-          setConfirmExit(open);
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Pause and save this diagnostic?</AlertDialogTitle>
-            <AlertDialogDescription>
-              The timer stops after this sitting is stored in your account. You can resume on this
-              device or another computer.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={pausing}>Keep working</AlertDialogCancel>
-            <AlertDialogAction
-              disabled={pausing}
-              onClick={(event) => {
-                event.preventDefault();
-                void pauseAndLeave();
-              }}
-            >
-              {pausing ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Saving to your account…
-                </>
-              ) : (
-                "Pause and save"
-              )}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 }
