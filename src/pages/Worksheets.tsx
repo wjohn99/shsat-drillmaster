@@ -35,6 +35,7 @@ import {
   assignmentRevealsAnswers,
   createAssignment,
   defaultAssignmentDueDateInput,
+  fetchAssignedQuestionIdsForStudent,
   fetchAssignmentById,
   fetchStudents,
   markAssignmentCompleted,
@@ -42,6 +43,11 @@ import {
   toAssignmentDueDateInputValue,
 } from "@/lib/assignmentService";
 import { logWorksheetAssignedToCard } from "@/lib/workspaceCardContentService";
+import {
+  forgetActiveWorksheet,
+  markWorksheetResumeAfterReload,
+  rememberActiveWorksheet,
+} from "@/lib/worksheetResume";
 import {
   fetchWorkspaceBoard,
   fetchWorkspaceCards,
@@ -146,6 +152,10 @@ const Worksheets = () => {
   const [pendingAssignToWorkspace, setPendingAssignToWorkspace] =
     useState<WorksheetsAssignToWorkspaceState | null>(null);
   const [assigning, setAssigning] = useState(false);
+  const [excludedQuestionIds, setExcludedQuestionIds] = useState<Set<string>>(() => new Set());
+  const [excludedAssignedLoading, setExcludedAssignedLoading] = useState(false);
+  const excludedQuestionIdsRef = useRef<Set<string>>(new Set());
+  const excludedReadyRef = useRef(true);
   const [assignmentsRefreshKey, setAssignmentsRefreshKey] = useState(0);
   const [reviewSession, setReviewSession] = useState<PracticeSessionRecord | null>(null);
   const [reviewSubtitle, setReviewSubtitle] = useState<string | undefined>();
@@ -197,14 +207,16 @@ const Worksheets = () => {
 
   const selectedSet = useMemo(() => new Set(selectedCodes), [selectedCodes]);
 
+  const assignedExclusion =
+    buildVariant === "tutor" && selectedStudentUid ? excludedQuestionIds : undefined;
   const poolQuestions = useMemo(
-    () => listWorksheetPool(questions, selectedSet),
-    [questions, selectedSet],
+    () => listWorksheetPool(questions, selectedSet, assignedExclusion),
+    [questions, selectedSet, assignedExclusion],
   );
   const matchingCount = poolQuestions.length;
   const chosenQuestions = useMemo(
-    () => worksheetQuestionsFromIds(questions, chosenQuestionIds),
-    [questions, chosenQuestionIds],
+    () => worksheetQuestionsFromIds(questions, chosenQuestionIds, assignedExclusion),
+    [questions, chosenQuestionIds, assignedExclusion],
   );
 
   const setChosenQuestionIdsCapped = (ids: string[]) => {
@@ -275,6 +287,51 @@ const Worksheets = () => {
       cancelled = true;
     };
   }, [profile, role, mode, buildVariant, tutorTools]);
+
+  useEffect(() => {
+    if (!tutorTools || buildVariant !== "tutor" || !selectedStudentUid) {
+      const empty = new Set<string>();
+      setExcludedQuestionIds(empty);
+      excludedQuestionIdsRef.current = empty;
+      excludedReadyRef.current = true;
+      setExcludedAssignedLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    const empty = new Set<string>();
+    setExcludedQuestionIds(empty);
+    excludedQuestionIdsRef.current = empty;
+    excludedReadyRef.current = false;
+    setExcludedAssignedLoading(true);
+    void fetchAssignedQuestionIdsForStudent(selectedStudentUid, role === "tutor")
+      .then((ids) => {
+        if (cancelled) return;
+        setExcludedQuestionIds(ids);
+        excludedQuestionIdsRef.current = ids;
+        excludedReadyRef.current = true;
+        setChosenQuestionIds((prev) => {
+          const next = prev.filter((id) => !ids.has(id));
+          return next.length === prev.length ? prev : next;
+        });
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        excludedReadyRef.current = false;
+        toast({
+          title: "Could not check earlier worksheets",
+          description: err instanceof Error ? err.message : "Select the student again.",
+          variant: "destructive",
+        });
+      })
+      .finally(() => {
+        if (!cancelled) setExcludedAssignedLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [tutorTools, buildVariant, role, selectedStudentUid]);
 
   useEffect(() => {
     if (!tutorTools || !selectedStudentUid) {
@@ -372,7 +429,7 @@ const Worksheets = () => {
   const pickCurrentQuestions = () =>
     questionPickMode === "chosen"
       ? chosenQuestions
-      : pickWorksheetQuestions(questions, selectedSet, questionLimit);
+      : pickWorksheetQuestions(questions, selectedSet, questionLimit, assignedExclusion);
 
   const startWorksheetRun = (
     picked?: Question[],
@@ -459,7 +516,16 @@ const Worksheets = () => {
   };
 
   const startTutorOrSelfPreview = () => {
-    const picked = pickCurrentQuestions();
+    if (buildVariant === "tutor" && selectedStudentUid && !excludedReadyRef.current) {
+      toast({
+        title: "Still checking earlier worksheets",
+        description: "Wait until questions already assigned to this student are left out.",
+      });
+      return;
+    }
+    const picked = pickCurrentQuestions().filter(
+      (question) => buildVariant !== "tutor" || !excludedQuestionIdsRef.current.has(question.id),
+    );
     setActiveAssignment(null);
     if (buildVariant === "student" && profile?.uid && !viewAs) {
       resumeLockRef.current = WORKSHEET_SELF_SCOPE_ID;
@@ -747,6 +813,7 @@ const Worksheets = () => {
 
     return () => {
       cancelled = true;
+      if (resumeLockRef.current === attemptParam) resumeLockRef.current = null;
     };
     // Restore from the attempt query after a refresh. Starters set resumeLockRef first.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -757,6 +824,23 @@ const Worksheets = () => {
     if (attemptParam === activeScopeId) return;
     replaceAttemptUrl(activeScopeId);
   }, [mode, viewAs, activeScopeId, attemptParam]);
+
+  useEffect(() => {
+    if (role !== "student" || viewAs || mode !== "runner" || !profile?.uid || !activeScopeId) return;
+    if (runSource !== "assignment" && runSource !== "self") return;
+    const uid = profile.uid;
+    const scopeId = activeScopeId;
+    rememberActiveWorksheet(uid, scopeId);
+    const onHide = () => {
+      markWorksheetResumeAfterReload(uid, scopeId);
+      const next = `${WORKSHEETS_PATH}${worksheetAttemptSearch(scopeId)}`;
+      if (`${window.location.pathname}${window.location.search}` !== next) {
+        window.history.replaceState(window.history.state, "", next);
+      }
+    };
+    window.addEventListener("pagehide", onHide);
+    return () => window.removeEventListener("pagehide", onHide);
+  }, [role, viewAs, mode, profile?.uid, activeScopeId, runSource]);
 
   const handleAssignToStudent = async () => {
     if (!profile || !tutorTools) return;
@@ -769,7 +853,17 @@ const Worksheets = () => {
       return;
     }
 
-    const picked = pickCurrentQuestions();
+    if (!excludedReadyRef.current) {
+      toast({
+        title: "Still checking earlier worksheets",
+        description: "Wait until questions already assigned to this student are left out.",
+      });
+      return;
+    }
+
+    const picked = pickCurrentQuestions().filter(
+      (question) => !excludedQuestionIdsRef.current.has(question.id),
+    );
     if (picked.length === 0) {
       toast({
         title: "Nothing to assign",
@@ -889,7 +983,16 @@ const Worksheets = () => {
   };
 
   const exportWorksheetPdf = () => {
-    const picked = pickCurrentQuestions();
+    if (buildVariant === "tutor" && selectedStudentUid && !excludedReadyRef.current) {
+      toast({
+        title: "Still checking earlier worksheets",
+        description: "Wait until questions already assigned to this student are left out.",
+      });
+      return;
+    }
+    const picked = pickCurrentQuestions().filter(
+      (question) => buildVariant !== "tutor" || !excludedQuestionIdsRef.current.has(question.id),
+    );
     if (picked.length === 0) return;
     const skillLabels =
       questionPickMode === "chosen" ? contentSkillLabels(picked) : selectedTagLabels;
@@ -935,6 +1038,7 @@ const Worksheets = () => {
         : "worksheet";
 
   const exitRunner = () => {
+    forgetActiveWorksheet();
     if (runSource === "assignment") {
       leaveWorksheets("home");
     } else {
@@ -1090,6 +1194,7 @@ const Worksheets = () => {
               });
             }
           }
+          forgetActiveWorksheet();
           ignoreAttemptRestoreRef.current = true;
           resumeLockRef.current = null;
           setActiveScopeId(null);
@@ -1230,7 +1335,7 @@ const Worksheets = () => {
               <p className="text-muted-foreground max-w-2xl">
                 {buildVariant === "student"
                   ? "Pick skills, then start a random set or choose the questions yourself."
-                  : "Pick skills, then use a random set or choose the questions. Preview it, then assign it to a student."}
+                  : "Pick skills, then use a random set or choose the questions. Preview it, then assign it to a student. Questions already on that student's worksheets are left out."}
               </p>
             </div>
 
@@ -1271,6 +1376,8 @@ const Worksheets = () => {
               onWorkspaceCardTargetChange={setWorkspaceCardTarget}
               workspacePlacementLocked={workspacePlacementLocked}
               assigning={assigning}
+              excludedAssignedCount={assignedExclusion?.size ?? 0}
+              excludedAssignedLoading={excludedAssignedLoading}
               onAssign={handleAssignToStudent}
               revealAnswers={revealAnswers}
               onRevealAnswersChange={setRevealAnswers}

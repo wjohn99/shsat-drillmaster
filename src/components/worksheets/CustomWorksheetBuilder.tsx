@@ -76,6 +76,8 @@ interface CustomWorksheetBuilderProps {
   onWorkspaceCardTargetChange?: (target: string) => void;
   workspacePlacementLocked?: boolean;
   assigning?: boolean;
+  excludedAssignedCount?: number;
+  excludedAssignedLoading?: boolean;
   onAssign?: () => void;
   revealAnswers?: boolean;
   onRevealAnswersChange?: (value: boolean) => void;
@@ -128,6 +130,8 @@ export function CustomWorksheetBuilder({
   onWorkspaceCardTargetChange,
   workspacePlacementLocked = false,
   assigning = false,
+  excludedAssignedCount = 0,
+  excludedAssignedLoading = false,
   onAssign,
   revealAnswers = false,
   onRevealAnswersChange,
@@ -195,6 +199,7 @@ export function CustomWorksheetBuilder({
   const selectedStudent = students.find((student) => student.uid === selectedStudentUid);
   const assignDisabled =
     assigning ||
+    excludedAssignedLoading ||
     students.length === 0 ||
     !selectedStudentUid ||
     !assignmentDueDate ||
@@ -206,9 +211,12 @@ export function CustomWorksheetBuilder({
         day: "numeric",
       })
     : "";
-  const worksheetCountLabel = choosingQuestions
-    ? `${chosenQuestions.length} question${chosenQuestions.length === 1 ? "" : "s"}`
-    : `${questionLimit} question${questionLimit === 1 ? "" : "s"} from ${matchingCount} in the pool`;
+  const waitingOnExclusions = excludedAssignedLoading && Boolean(selectedStudentUid);
+  const worksheetCountLabel = waitingOnExclusions
+    ? "Checking earlier worksheets"
+    : choosingQuestions
+      ? `${chosenQuestions.length} question${chosenQuestions.length === 1 ? "" : "s"}`
+      : `${questionLimit} question${questionLimit === 1 ? "" : "s"} from ${matchingCount} in the pool`;
 
   return (
     <>
@@ -218,7 +226,7 @@ export function CustomWorksheetBuilder({
             <CardTitle className="text-lg">Assign to student</CardTitle>
             <p className="text-sm text-muted-foreground">
               Students must have signed in at least once so their profile exists in the
-              system.
+              system. Questions already assigned to the student you pick are left out.
             </p>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -265,6 +273,19 @@ export function CustomWorksheetBuilder({
                 />
               </div>
             </div>
+
+            {selectedStudentUid && excludedAssignedLoading ? (
+              <p className="text-sm text-muted-foreground">
+                Checking questions already assigned to {selectedStudent?.displayName ?? "this student"}…
+              </p>
+            ) : null}
+            {selectedStudentUid && !excludedAssignedLoading && excludedAssignedCount > 0 ? (
+              <p className="text-sm text-muted-foreground">
+                {excludedAssignedCount} question{excludedAssignedCount === 1 ? "" : "s"} already
+                assigned to {selectedStudent?.displayName ?? "this student"}{" "}
+                {excludedAssignedCount === 1 ? "is" : "are"} left out.
+              </p>
+            ) : null}
 
             {selectedStudentUid ? (
               <div className="rounded-lg border bg-muted/30 p-3 space-y-3">
@@ -575,6 +596,11 @@ export function CustomWorksheetBuilder({
               questionLimit={questionLimit}
               onQuestionLimitChange={onQuestionLimitChange}
               onChosenIdsChange={onChosenIdsChange}
+              emptyPoolMessage={
+                selectedCodes.length > 0 && excludedAssignedCount > 0
+                  ? "Every question for these skills was already assigned to this student."
+                  : undefined
+              }
             />
           ) : (
             <div className="space-y-4">
@@ -593,6 +619,9 @@ export function CustomWorksheetBuilder({
               <p className="text-xs text-muted-foreground">
                 Pool size for the selected skills:{" "}
                 <span className="font-medium text-foreground">{matchingCount}</span>
+                {excludedAssignedCount > 0
+                  ? ". Questions already assigned to this student are left out."
+                  : ""}
               </p>
             </div>
           )}
@@ -612,11 +641,21 @@ export function CustomWorksheetBuilder({
                 )}
                 Assign
               </Button>
-              <Button type="button" variant="outline" onClick={onStart} disabled={!canStart}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onStart}
+                disabled={!canStart || waitingOnExclusions}
+              >
                 Preview
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-              <Button type="button" variant="outline" onClick={onExportPdf} disabled={!canStart}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onExportPdf}
+                disabled={!canStart || waitingOnExclusions}
+              >
                 <Printer className="mr-2 h-4 w-4" />
                 Print / Save PDF
               </Button>

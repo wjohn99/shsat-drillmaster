@@ -207,6 +207,36 @@ export async function fetchAssignmentsForParent(
     .sort((a, b) => (b.createdAt?.toMillis?.() ?? 0) - (a.createdAt?.toMillis?.() ?? 0));
 }
 
+/**
+ * Question ids already on worksheets assigned to this student.
+ * Live tutors include every tutor's worksheets for that student.
+ * Demo accounts use their own sample-student worksheets.
+ */
+export async function fetchAssignedQuestionIdsForStudent(
+  studentUid: string,
+  includeEveryTutor: boolean,
+): Promise<Set<string>> {
+  const ids = new Set<string>();
+  const add = (rows: WorksheetAssignment[]) => {
+    for (const row of rows) {
+      if (row.assignedToStudentUid !== studentUid) continue;
+      for (const id of row.questionIds) ids.add(id);
+    }
+  };
+
+  if (includeEveryTutor) {
+    try {
+      add(await fetchAssignmentsForStudentUid(studentUid));
+      return ids;
+    } catch {
+      // Older assignment rules only allow a tutor to read worksheets they created.
+    }
+  }
+
+  add(await fetchAssignmentsForTutor());
+  return ids;
+}
+
 export async function fetchAssignmentsForStudentUid(
   studentUid: string,
 ): Promise<WorksheetAssignment[]> {

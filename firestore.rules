@@ -160,6 +160,10 @@ service cloud.firestore {
       allow read: if isSignedIn()
         && resource.data.readerUids.hasAny([request.auth.uid]);
 
+      // Any tutor can read assignments, so a new worksheet can skip questions
+      // already assigned to that student by another tutor.
+      allow read: if isTutor();
+
       allow create: if isTutor()
         && request.resource.data.tutorUid == request.auth.uid
         && request.resource.data.assignedToStudentUid is string

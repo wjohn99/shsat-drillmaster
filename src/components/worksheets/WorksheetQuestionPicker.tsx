@@ -22,6 +22,7 @@ interface WorksheetQuestionPickerProps {
   questionLimit: number;
   onQuestionLimitChange: (limit: number) => void;
   onChosenIdsChange: (ids: string[]) => void;
+  emptyPoolMessage?: string;
 }
 
 function skillLine(question: Question): string {
@@ -52,6 +53,7 @@ export function WorksheetQuestionPicker({
   questionLimit,
   onQuestionLimitChange,
   onChosenIdsChange,
+  emptyPoolMessage = "Select at least one skill to browse questions.",
 }: WorksheetQuestionPickerProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const chosenSet = useMemo(() => new Set(chosenIds), [chosenIds]);
@@ -230,7 +232,7 @@ export function WorksheetQuestionPicker({
 
       {poolQuestions.length === 0 ? (
         <p className="py-6 text-center text-sm text-muted-foreground">
-          Select at least one skill to browse questions.
+          {emptyPoolMessage}
         </p>
       ) : visiblePool.length === 0 ? (
         <p className="py-6 text-center text-sm text-muted-foreground">

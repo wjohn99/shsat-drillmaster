@@ -33,6 +33,7 @@ import BlitzMode from "./pages/BlitzMode";
 import Workspace from "./pages/Workspace";
 import QuestionSubmission from "./pages/QuestionSubmission";
 import { TutorRoute } from "@/components/auth/TutorRoute";
+import { WorksheetResumeGate } from "@/components/worksheets/WorksheetResumeGate";
 
 const queryClient = new QueryClient();
 
@@ -60,6 +61,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter basename={import.meta.env.BASE_URL}>
           <DemoTutorialProvider>
+          <WorksheetResumeGate>
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Index />} />
@@ -211,6 +213,7 @@ const App = () => (
               }
             />
           </Routes>
+          </WorksheetResumeGate>
           <DemoTutorialCoach />
           </DemoTutorialProvider>
         </BrowserRouter>
