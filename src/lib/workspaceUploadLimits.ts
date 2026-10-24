@@ -10,8 +10,8 @@ export const MAX_PDFS_PER_CARD = 10;
 /** Max total attachments (PDFs + links) on one card. */
 export const MAX_ATTACHMENTS_PER_CARD = 20;
 
-/** Max stored PDF bytes per student workspace board (~500 MB). */
-export const MAX_BOARD_PDF_BYTES = 500 * 1024 * 1024;
+/** Max stored PDF bytes per student workspace board (~2 GB). */
+export const MAX_BOARD_PDF_BYTES = 2 * 1024 * 1024 * 1024;
 
 /** Max PDF file count per student workspace board. */
 export const MAX_BOARD_PDF_COUNT = 250;
@@ -105,10 +105,14 @@ export function validatePdfUpload(
   }
 
   if (boardUsage.pdfBytes + file.size > MAX_BOARD_PDF_BYTES) {
-    const capMb = Math.round(MAX_BOARD_PDF_BYTES / (1024 * 1024));
+    const capGb = MAX_BOARD_PDF_BYTES / (1024 * 1024 * 1024);
+    const capLabel =
+      capGb >= 1
+        ? `${capGb} GB`
+        : `${Math.round(MAX_BOARD_PDF_BYTES / (1024 * 1024))} MB`;
     return {
       ok: false,
-      message: `Upload would exceed the ${capMb} MB file limit for this student's workspace.`,
+      message: `Upload would exceed the ${capLabel} file limit for this student's workspace. Remove old files from cards, or add a Drive link instead.`,
     };
   }
 
