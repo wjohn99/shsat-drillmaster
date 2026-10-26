@@ -24,18 +24,18 @@ const questions = [
 ];
 
 describe("worksheet assignment exclusion", () => {
-  it("leaves out questions already assigned to this student", () => {
+  it("leaves out questions this student already submitted when the tutor blocks repeats", () => {
     const excluded = new Set(["q-used"]);
     const pool = listWorksheetPool(questions, new Set(["ALG-1"]), excluded);
     expect(pool.map((item) => item.id)).toEqual(["q-keep"]);
   });
 
-  it("keeps a question that was assigned to someone else off this exclusion set", () => {
+  it("keeps previously submitted questions in the pool when repeats are allowed", () => {
     const pool = listWorksheetPool(questions, new Set(["ALG-1"]), new Set());
     expect(pool.map((item) => item.id)).toEqual(["q-keep", "q-used"]);
   });
 
-  it("does not put an already assigned question on a hand-picked worksheet", () => {
+  it("does not put a submitted question on a hand-picked worksheet when repeats are blocked", () => {
     const picked = worksheetQuestionsFromIds(questions, ["q-keep", "q-used"], new Set(["q-used"]));
     expect(picked.map((item) => item.id)).toEqual(["q-keep"]);
   });

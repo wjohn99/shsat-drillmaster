@@ -29,6 +29,19 @@ export interface RoadmapFollowUp {
   createdAtMs: number;
 }
 
+/** Shared, dated check-in families can read. Distinct from tutor-only private notes. */
+export interface RoadmapProgressUpdate {
+  id: string;
+  date: string;
+  changed: string;
+  next: string;
+  cardId?: string | null;
+  cardTitle?: string | null;
+  createdByUid: string;
+  createdByName: string;
+  createdAtMs: number;
+}
+
 /** Tutor-owned plan fields on the student board. Live scores/sessions are joined at read time. */
 export interface StudentRoadmap {
   /** Tutor override; empty falls back to first diagnostic accuracy. */
@@ -46,6 +59,8 @@ export interface StudentRoadmap {
   nextSessionTime: string;
   nextSessionNotes: string;
   followUps: RoadmapFollowUp[];
+  /** Dated family-facing updates. Newest first. */
+  progressUpdates: RoadmapProgressUpdate[];
   /** Tutor-chosen status. Shown as a colored label on the workspace homepage. */
   status: StudentAttentionStatus | null;
   /** Legacy. Status is always tutor-chosen now. */

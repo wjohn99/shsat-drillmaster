@@ -27,6 +27,7 @@ import {
 } from "@/lib/worksheetTagCatalog";
 import type { WorksheetQuestionPickMode } from "@/components/worksheets/WorksheetQuestionPicker";
 import { fetchDemoStudents } from "@/lib/demoSandbox";
+import { ensureDemoTutorialAssignmentOnSessionCard } from "@/lib/demoTutorialAssignment";
 import { loadTutorVisibleStudentView } from "@/lib/studentView";
 import { useViewAsStudent } from "@/contexts/ViewAsStudentContext";
 import { openWorksheetPrintTab } from "@/lib/worksheetPrint";
@@ -35,7 +36,7 @@ import {
   assignmentRevealsAnswers,
   createAssignment,
   defaultAssignmentDueDateInput,
-  fetchAssignedQuestionIdsForStudent,
+  fetchSubmittedWorksheetQuestionIdsForStudent,
   fetchAssignmentById,
   fetchStudents,
   markAssignmentCompleted,
@@ -91,6 +92,14 @@ import {
 import { TutorWorksheetsHome } from "@/components/worksheets/TutorWorksheetsHome";
 import { StudentWorksheetsHome } from "@/components/worksheets/StudentWorksheetsHome";
 import { useAuth } from "@/contexts/AuthContext";
+import { useDemoTutorial } from "@/contexts/DemoTutorialContext";
+import {
+  DEMO_TUTORIAL_ALGEBRA_TAGS,
+  DEMO_TUTORIAL_STEPS,
+  isDemoTutorialSessionCardTitle,
+  pickDemoTutorialAlgebraQuestionIds,
+  tutorialPreparesAssignedWorksheet,
+} from "@/lib/demoTutorial";
 import { toast } from "@/hooks/use-toast";
 import type { StudentOption } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
@@ -114,6 +123,8 @@ const Worksheets = () => {
   const navigate = useNavigate();
   const { profile, loading: authLoading } = useAuth();
   const { viewAs } = useViewAsStudent();
+  const { active: tutorialActive, stepIndex: tutorialStepIndex } = useDemoTutorial();
+  const tutorialStep = DEMO_TUTORIAL_STEPS[tutorialStepIndex];
   const role = profile?.role;
   const tutorTools = role === "tutor" || role === "demo";
 
@@ -152,10 +163,15 @@ const Worksheets = () => {
   const [pendingAssignToWorkspace, setPendingAssignToWorkspace] =
     useState<WorksheetsAssignToWorkspaceState | null>(null);
   const [assigning, setAssigning] = useState(false);
+  const [blockRepeatQuestions, setBlockRepeatQuestions] = useState(false);
   const [excludedQuestionIds, setExcludedQuestionIds] = useState<Set<string>>(() => new Set());
-  const [excludedAssignedLoading, setExcludedAssignedLoading] = useState(false);
+  const [submittedHistoryLoading, setSubmittedHistoryLoading] = useState(false);
+  const [submittedHistoryReady, setSubmittedHistoryReady] = useState(true);
+  const [historyRetryKey, setHistoryRetryKey] = useState(0);
   const excludedQuestionIdsRef = useRef<Set<string>>(new Set());
   const excludedReadyRef = useRef(true);
+  const blockRepeatQuestionsRef = useRef(blockRepeatQuestions);
+  blockRepeatQuestionsRef.current = blockRepeatQuestions;
   const [assignmentsRefreshKey, setAssignmentsRefreshKey] = useState(0);
   const [reviewSession, setReviewSession] = useState<PracticeSessionRecord | null>(null);
   const [reviewSubtitle, setReviewSubtitle] = useState<string | undefined>();
@@ -207,8 +223,11 @@ const Worksheets = () => {
 
   const selectedSet = useMemo(() => new Set(selectedCodes), [selectedCodes]);
 
-  const assignedExclusion =
-    buildVariant === "tutor" && selectedStudentUid ? excludedQuestionIds : undefined;
+  const blockRepeatsForStudent =
+    buildVariant === "tutor" && Boolean(selectedStudentUid) && blockRepeatQuestions;
+  const assignedExclusion = blockRepeatsForStudent ? excludedQuestionIds : undefined;
+  const submittedHistoryPending =
+    blockRepeatsForStudent && (submittedHistoryLoading || !submittedHistoryReady);
   const poolQuestions = useMemo(
     () => listWorksheetPool(questions, selectedSet, assignedExclusion),
     [questions, selectedSet, assignedExclusion],
@@ -294,7 +313,8 @@ const Worksheets = () => {
       setExcludedQuestionIds(empty);
       excludedQuestionIdsRef.current = empty;
       excludedReadyRef.current = true;
-      setExcludedAssignedLoading(false);
+      setSubmittedHistoryReady(true);
+      setSubmittedHistoryLoading(false);
       return;
     }
 
@@ -303,35 +323,49 @@ const Worksheets = () => {
     setExcludedQuestionIds(empty);
     excludedQuestionIdsRef.current = empty;
     excludedReadyRef.current = false;
-    setExcludedAssignedLoading(true);
-    void fetchAssignedQuestionIdsForStudent(selectedStudentUid, role === "tutor")
+    setSubmittedHistoryReady(false);
+    setSubmittedHistoryLoading(true);
+    void fetchSubmittedWorksheetQuestionIdsForStudent(selectedStudentUid, role === "tutor")
       .then((ids) => {
         if (cancelled) return;
         setExcludedQuestionIds(ids);
         excludedQuestionIdsRef.current = ids;
         excludedReadyRef.current = true;
-        setChosenQuestionIds((prev) => {
-          const next = prev.filter((id) => !ids.has(id));
-          return next.length === prev.length ? prev : next;
-        });
+        setSubmittedHistoryReady(true);
       })
       .catch((err) => {
         if (cancelled) return;
         excludedReadyRef.current = false;
+        setSubmittedHistoryReady(false);
+        if (!blockRepeatQuestionsRef.current) return;
         toast({
-          title: "Could not check earlier worksheets",
+          title: "Could not load submitted questions",
           description: err instanceof Error ? err.message : "Select the student again.",
           variant: "destructive",
         });
       })
       .finally(() => {
-        if (!cancelled) setExcludedAssignedLoading(false);
+        if (!cancelled) setSubmittedHistoryLoading(false);
       });
 
     return () => {
       cancelled = true;
     };
-  }, [tutorTools, buildVariant, role, selectedStudentUid]);
+  }, [tutorTools, buildVariant, role, selectedStudentUid, historyRetryKey]);
+
+  useEffect(() => {
+    if (!blockRepeatsForStudent) return;
+    if (excludedReadyRef.current) return;
+    setHistoryRetryKey((key) => key + 1);
+  }, [blockRepeatsForStudent]);
+
+  useEffect(() => {
+    if (!blockRepeatsForStudent) return;
+    setChosenQuestionIds((prev) => {
+      const next = prev.filter((id) => !excludedQuestionIds.has(id));
+      return next.length === prev.length ? prev : next;
+    });
+  }, [blockRepeatsForStudent, excludedQuestionIds]);
 
   useEffect(() => {
     if (!tutorTools || !selectedStudentUid) {
@@ -393,10 +427,22 @@ const Worksheets = () => {
   useEffect(() => {
     if (pendingAssignToWorkspace?.cardId) {
       setWorkspaceCardTarget(pendingAssignToWorkspace.cardId);
-    } else if (!workspacePlacementLocked) {
+    } else if (!workspacePlacementLocked && !tutorialStep?.worksheetsBuild) {
       setWorkspaceCardTarget(WORKSPACE_NEW_CARD_ID);
     }
-  }, [pendingAssignToWorkspace, workspaceListId, workspacePlacementLocked]);
+  }, [pendingAssignToWorkspace, workspaceListId, workspacePlacementLocked, tutorialStep]);
+
+  useEffect(() => {
+    if (!tutorialActive || !tutorialStep?.worksheetsBuild) return;
+    if (workspaceLists.length === 0) return;
+    const sessions =
+      workspaceLists.find((list) => list.kind === "sessions") ?? workspaceLists[0];
+    if (sessions) setWorkspaceListId(sessions.id);
+    const sessionCard =
+      workspaceCards.find((card) => isDemoTutorialSessionCardTitle(card.title)) ??
+      workspaceCards.find((card) => card.listId === sessions?.id);
+    if (sessionCard) setWorkspaceCardTarget(sessionCard.id);
+  }, [tutorialActive, tutorialStep, workspaceLists, workspaceCards]);
 
   const openTutorBuild = () => {
     setBuildVariant("tutor");
@@ -404,6 +450,22 @@ const Worksheets = () => {
     setPresetTitle(null);
     setMode("build");
   };
+
+  useEffect(() => {
+    if (!tutorialActive || !tutorTools || !tutorialStep?.worksheetsBuild) return;
+    if (mode !== "build") openTutorBuild();
+    if (selectedCodes.length === 0) {
+      setSelectedCodes([...DEMO_TUTORIAL_ALGEBRA_TAGS]);
+    }
+  }, [tutorialActive, tutorialStep, tutorTools, mode, selectedCodes.length]);
+
+  useEffect(() => {
+    if (!tutorialActive || !tutorialStep?.worksheetsBuild) return;
+    if (selectedStudentUid || students.length === 0) return;
+    const avery =
+      students.find((student) => /avery/i.test(student.displayName)) ?? students[0];
+    if (avery) setSelectedStudentUid(avery.uid);
+  }, [tutorialActive, tutorialStep, selectedStudentUid, students]);
 
   const openTutorBuildFromPreset = (preset: WorksheetPreset) => {
     setBuildVariant("tutor");
@@ -430,6 +492,44 @@ const Worksheets = () => {
     questionPickMode === "chosen"
       ? chosenQuestions
       : pickWorksheetQuestions(questions, selectedSet, questionLimit, assignedExclusion);
+
+  useEffect(() => {
+    if (!tutorialActive || !profile?.uid) return;
+    if (!tutorialPreparesAssignedWorksheet(tutorialStep)) return;
+    if (!selectedStudentUid || questions.length === 0) return;
+    const sessionCard = workspaceCards.find((card) =>
+      isDemoTutorialSessionCardTitle(card.title),
+    );
+    if (!sessionCard) return;
+    const picked =
+      questionPickMode === "chosen"
+        ? chosenQuestions
+        : pickWorksheetQuestions(questions, selectedSet, questionLimit, assignedExclusion);
+    const questionIds =
+      picked.length > 0
+        ? picked.map((question) => question.id)
+        : pickDemoTutorialAlgebraQuestionIds(questions);
+    if (questionIds.length === 0) return;
+    void ensureDemoTutorialAssignmentOnSessionCard({
+      tutorUid: profile.uid,
+      boardId: selectedStudentUid,
+      studentUid: selectedStudentUid,
+      questionIds,
+    }).catch(() => undefined);
+  }, [
+    tutorialActive,
+    tutorialStep,
+    profile?.uid,
+    selectedStudentUid,
+    questions,
+    workspaceCards,
+    selectedCodes,
+    selectedSet,
+    questionLimit,
+    questionPickMode,
+    chosenQuestions,
+    assignedExclusion,
+  ]);
 
   const startWorksheetRun = (
     picked?: Question[],
@@ -516,15 +616,15 @@ const Worksheets = () => {
   };
 
   const startTutorOrSelfPreview = () => {
-    if (buildVariant === "tutor" && selectedStudentUid && !excludedReadyRef.current) {
+    if (blockRepeatsForStudent && !excludedReadyRef.current) {
       toast({
-        title: "Still checking earlier worksheets",
-        description: "Wait until questions already assigned to this student are left out.",
+        title: "Still checking submitted questions",
+        description: "Wait until this student's submitted worksheet questions are left out.",
       });
       return;
     }
     const picked = pickCurrentQuestions().filter(
-      (question) => buildVariant !== "tutor" || !excludedQuestionIdsRef.current.has(question.id),
+      (question) => !blockRepeatsForStudent || !excludedQuestionIdsRef.current.has(question.id),
     );
     setActiveAssignment(null);
     if (buildVariant === "student" && profile?.uid && !viewAs) {
@@ -853,16 +953,16 @@ const Worksheets = () => {
       return;
     }
 
-    if (!excludedReadyRef.current) {
+    if (blockRepeatsForStudent && !excludedReadyRef.current) {
       toast({
-        title: "Still checking earlier worksheets",
-        description: "Wait until questions already assigned to this student are left out.",
+        title: "Still checking submitted questions",
+        description: "Wait until this student's submitted worksheet questions are left out.",
       });
       return;
     }
 
     const picked = pickCurrentQuestions().filter(
-      (question) => !excludedQuestionIdsRef.current.has(question.id),
+      (question) => !blockRepeatsForStudent || !excludedQuestionIdsRef.current.has(question.id),
     );
     if (picked.length === 0) {
       toast({
@@ -983,15 +1083,15 @@ const Worksheets = () => {
   };
 
   const exportWorksheetPdf = () => {
-    if (buildVariant === "tutor" && selectedStudentUid && !excludedReadyRef.current) {
+    if (blockRepeatsForStudent && !excludedReadyRef.current) {
       toast({
-        title: "Still checking earlier worksheets",
-        description: "Wait until questions already assigned to this student are left out.",
+        title: "Still checking submitted questions",
+        description: "Wait until this student's submitted worksheet questions are left out.",
       });
       return;
     }
     const picked = pickCurrentQuestions().filter(
-      (question) => buildVariant !== "tutor" || !excludedQuestionIdsRef.current.has(question.id),
+      (question) => !blockRepeatsForStudent || !excludedQuestionIdsRef.current.has(question.id),
     );
     if (picked.length === 0) return;
     const skillLabels =
@@ -1376,8 +1476,10 @@ const Worksheets = () => {
               onWorkspaceCardTargetChange={setWorkspaceCardTarget}
               workspacePlacementLocked={workspacePlacementLocked}
               assigning={assigning}
-              excludedAssignedCount={assignedExclusion?.size ?? 0}
-              excludedAssignedLoading={excludedAssignedLoading}
+              blockRepeatQuestions={blockRepeatQuestions}
+              onBlockRepeatQuestionsChange={setBlockRepeatQuestions}
+              excludedSubmittedCount={assignedExclusion?.size ?? 0}
+              excludedSubmittedLoading={submittedHistoryPending}
               onAssign={handleAssignToStudent}
               revealAnswers={revealAnswers}
               onRevealAnswersChange={setRevealAnswers}

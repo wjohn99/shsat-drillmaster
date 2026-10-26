@@ -9,6 +9,7 @@ import type { WorksheetAssignment } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type {
   RoadmapFollowUp,
+  RoadmapProgressUpdate,
   StudentAttentionStatus,
   StudentRoadmap,
   WorkspaceBoard,
@@ -30,10 +31,13 @@ export function emptyStudentRoadmap(): StudentRoadmap {
     nextSessionTime: "",
     nextSessionNotes: "",
     followUps: [],
+    progressUpdates: [],
     status: null,
     statusManual: false,
   };
 }
+
+export const MAX_ROADMAP_PROGRESS_UPDATES = 40;
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" ? (value as Record<string, unknown>) : {};
@@ -51,11 +55,87 @@ function parseFollowUp(raw: unknown): RoadmapFollowUp | null {
   };
 }
 
+function parseProgressUpdate(raw: unknown): RoadmapProgressUpdate | null {
+  const row = asRecord(raw);
+  const changed = typeof row.changed === "string" ? row.changed.trim() : "";
+  const next = typeof row.next === "string" ? row.next.trim() : "";
+  if (!changed) return null;
+  const createdAtMs = Number(row.createdAtMs) || Date.now();
+  const date =
+    typeof row.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(row.date)
+      ? row.date
+      : isoDateFromMs(createdAtMs);
+  return {
+    id: typeof row.id === "string" && row.id ? row.id : `upd-${createdAtMs}`,
+    date,
+    changed,
+    next,
+    cardId: typeof row.cardId === "string" && row.cardId ? row.cardId : null,
+    cardTitle: typeof row.cardTitle === "string" && row.cardTitle ? row.cardTitle : null,
+    createdByUid: typeof row.createdByUid === "string" ? row.createdByUid : "",
+    createdByName: typeof row.createdByName === "string" ? row.createdByName : "",
+    createdAtMs,
+  };
+}
+
+export function isoDateFromMs(ms: number): string {
+  const date = new Date(ms);
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
+export function newRoadmapProgressUpdate(input: {
+  changed: string;
+  next?: string;
+  cardId?: string | null;
+  cardTitle?: string | null;
+  createdByUid: string;
+  createdByName: string;
+  now?: number;
+}): RoadmapProgressUpdate {
+  const now = input.now ?? Date.now();
+  return {
+    id:
+      typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : `upd-${now}-${Math.random().toString(36).slice(2, 8)}`,
+    date: isoDateFromMs(now),
+    changed: input.changed.trim(),
+    next: input.next?.trim() ?? "",
+    cardId: input.cardId?.trim() || null,
+    cardTitle: input.cardTitle?.trim() || null,
+    createdByUid: input.createdByUid,
+    createdByName: input.createdByName,
+    createdAtMs: now,
+  };
+}
+
+export function latestProgressUpdate(
+  updates: RoadmapProgressUpdate[] | undefined,
+): RoadmapProgressUpdate | null {
+  if (!updates?.length) return null;
+  return [...updates].sort((a, b) => b.createdAtMs - a.createdAtMs)[0] ?? null;
+}
+
+export function formatProgressUpdateLine(update: RoadmapProgressUpdate): string {
+  const when = formatIsoDateLabel(update.date) || "Update";
+  const next = update.next.trim();
+  return next ? `${when}: ${update.changed} Next: ${next}` : `${when}: ${update.changed}`;
+}
+
 export function parseStudentRoadmap(raw: unknown): StudentRoadmap {
   const parsed = asRecord(raw);
   const status = parsed.status;
   const followUps = Array.isArray(parsed.followUps)
     ? parsed.followUps.map(parseFollowUp).filter((row): row is RoadmapFollowUp => row != null)
+    : [];
+  const progressUpdates = Array.isArray(parsed.progressUpdates)
+    ? parsed.progressUpdates
+        .map(parseProgressUpdate)
+        .filter((row): row is RoadmapProgressUpdate => row != null)
+        .sort((a, b) => b.createdAtMs - a.createdAtMs)
+        .slice(0, MAX_ROADMAP_PROGRESS_UPDATES)
     : [];
   const target =
     parsed.targetComposite == null || parsed.targetComposite === ""
@@ -76,6 +156,7 @@ export function parseStudentRoadmap(raw: unknown): StudentRoadmap {
     nextSessionTime: typeof parsed.nextSessionTime === "string" ? parsed.nextSessionTime : "",
     nextSessionNotes: typeof parsed.nextSessionNotes === "string" ? parsed.nextSessionNotes : "",
     followUps,
+    progressUpdates,
     status:
       typeof status === "string" &&
       ATTENTION_STATUS_ORDER.includes(status as StudentAttentionStatus)
@@ -103,6 +184,17 @@ export function serializeStudentRoadmap(roadmap: StudentRoadmap): Record<string,
       id: row.id,
       text: row.text,
       open: row.open,
+      createdAtMs: row.createdAtMs,
+    })),
+    progressUpdates: (roadmap.progressUpdates ?? []).map((row) => ({
+      id: row.id,
+      date: row.date,
+      changed: row.changed,
+      next: row.next,
+      cardId: row.cardId ?? null,
+      cardTitle: row.cardTitle ?? null,
+      createdByUid: row.createdByUid,
+      createdByName: row.createdByName,
       createdAtMs: row.createdAtMs,
     })),
     status: roadmap.status,

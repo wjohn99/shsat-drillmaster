@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,13 +23,19 @@ function isEmail(value: string): boolean {
 
 export default function Login() {
   const { profile, error, isConfigured, signInWithGoogle } = useAuth();
+  const location = useLocation();
   const [signingIn, setSigningIn] = useState(false);
   const [audience, setAudience] = useState<SignInAudience>("student");
   const [studentEmail, setStudentEmail] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
 
   if (profile) {
-    return <Navigate to="/dashboard" replace />;
+    const from = (location.state as { from?: { pathname?: string; search?: string } } | null)?.from;
+    const to =
+      from?.pathname && from.pathname !== "/login"
+        ? `${from.pathname}${from.search || ""}`
+        : "/dashboard";
+    return <Navigate to={to} replace />;
   }
 
   const studentEmailBlank = studentEmail.trim().length === 0;

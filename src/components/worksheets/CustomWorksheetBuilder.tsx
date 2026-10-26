@@ -76,8 +76,10 @@ interface CustomWorksheetBuilderProps {
   onWorkspaceCardTargetChange?: (target: string) => void;
   workspacePlacementLocked?: boolean;
   assigning?: boolean;
-  excludedAssignedCount?: number;
-  excludedAssignedLoading?: boolean;
+  blockRepeatQuestions?: boolean;
+  onBlockRepeatQuestionsChange?: (value: boolean) => void;
+  excludedSubmittedCount?: number;
+  excludedSubmittedLoading?: boolean;
   onAssign?: () => void;
   revealAnswers?: boolean;
   onRevealAnswersChange?: (value: boolean) => void;
@@ -130,8 +132,10 @@ export function CustomWorksheetBuilder({
   onWorkspaceCardTargetChange,
   workspacePlacementLocked = false,
   assigning = false,
-  excludedAssignedCount = 0,
-  excludedAssignedLoading = false,
+  blockRepeatQuestions = false,
+  onBlockRepeatQuestionsChange,
+  excludedSubmittedCount = 0,
+  excludedSubmittedLoading = false,
   onAssign,
   revealAnswers = false,
   onRevealAnswersChange,
@@ -199,7 +203,7 @@ export function CustomWorksheetBuilder({
   const selectedStudent = students.find((student) => student.uid === selectedStudentUid);
   const assignDisabled =
     assigning ||
-    excludedAssignedLoading ||
+    excludedSubmittedLoading ||
     students.length === 0 ||
     !selectedStudentUid ||
     !assignmentDueDate ||
@@ -211,9 +215,9 @@ export function CustomWorksheetBuilder({
         day: "numeric",
       })
     : "";
-  const waitingOnExclusions = excludedAssignedLoading && Boolean(selectedStudentUid);
+  const waitingOnExclusions = excludedSubmittedLoading && Boolean(selectedStudentUid);
   const worksheetCountLabel = waitingOnExclusions
-    ? "Checking earlier worksheets"
+    ? "Checking submitted questions"
     : choosingQuestions
       ? `${chosenQuestions.length} question${chosenQuestions.length === 1 ? "" : "s"}`
       : `${questionLimit} question${questionLimit === 1 ? "" : "s"} from ${matchingCount} in the pool`;
@@ -226,7 +230,7 @@ export function CustomWorksheetBuilder({
             <CardTitle className="text-lg">Assign to student</CardTitle>
             <p className="text-sm text-muted-foreground">
               Students must have signed in at least once so their profile exists in the
-              system. Questions already assigned to the student you pick are left out.
+              system.
             </p>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -274,21 +278,11 @@ export function CustomWorksheetBuilder({
               </div>
             </div>
 
-            {selectedStudentUid && excludedAssignedLoading ? (
-              <p className="text-sm text-muted-foreground">
-                Checking questions already assigned to {selectedStudent?.displayName ?? "this student"}…
-              </p>
-            ) : null}
-            {selectedStudentUid && !excludedAssignedLoading && excludedAssignedCount > 0 ? (
-              <p className="text-sm text-muted-foreground">
-                {excludedAssignedCount} question{excludedAssignedCount === 1 ? "" : "s"} already
-                assigned to {selectedStudent?.displayName ?? "this student"}{" "}
-                {excludedAssignedCount === 1 ? "is" : "are"} left out.
-              </p>
-            ) : null}
-
             {selectedStudentUid ? (
-              <div className="rounded-lg border bg-muted/30 p-3 space-y-3">
+              <div
+                data-tour="worksheet-workspace"
+                className="rounded-lg border bg-muted/30 p-3 space-y-3"
+              >
                 <div className="flex items-start gap-2">
                   <Checkbox
                     id="show-on-workspace"
@@ -374,6 +368,45 @@ export function CustomWorksheetBuilder({
 
             <div className="flex items-start gap-3 rounded-lg border bg-muted/30 p-3">
               <Switch
+                id="block-repeat-questions"
+                checked={blockRepeatQuestions}
+                onCheckedChange={(checked) => onBlockRepeatQuestionsChange?.(checked)}
+                disabled={!selectedStudentUid}
+                className="mt-0.5"
+              />
+              <div className="space-y-1">
+                <Label htmlFor="block-repeat-questions" className="font-medium cursor-pointer">
+                  Block repeat questions
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  {!selectedStudentUid
+                    ? "Pick a student first. Repeat blocking uses questions saved on their account from assigned worksheets they finished."
+                    : blockRepeatQuestions
+                      ? "Questions this student already submitted on an assigned worksheet are left out."
+                      : "This student can get questions they already submitted on an assigned worksheet."}
+                </p>
+                {selectedStudentUid && excludedSubmittedLoading ? (
+                  <p className="text-xs text-muted-foreground">
+                    Checking questions saved on {selectedStudent?.displayName ?? "this student"}'s
+                    account…
+                  </p>
+                ) : null}
+                {selectedStudentUid &&
+                blockRepeatQuestions &&
+                !excludedSubmittedLoading &&
+                excludedSubmittedCount > 0 ? (
+                  <p className="text-xs text-muted-foreground">
+                    {excludedSubmittedCount} submitted question
+                    {excludedSubmittedCount === 1 ? "" : "s"}{" "}
+                    {excludedSubmittedCount === 1 ? "is" : "are"} left out for{" "}
+                    {selectedStudent?.displayName ?? "this student"}.
+                  </p>
+                ) : null}
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 rounded-lg border bg-muted/30 p-3">
+              <Switch
                 id="reveal-answers"
                 checked={revealAnswers}
                 onCheckedChange={(checked) => onRevealAnswersChange?.(checked)}
@@ -418,7 +451,10 @@ export function CustomWorksheetBuilder({
         </CardHeader>
         <CardContent className="space-y-5">
           {selectedCodes.length > 0 && (
-            <div className="rounded-lg border bg-muted/40 p-4 space-y-2">
+            <div
+              data-tour="worksheet-skills"
+              className="rounded-lg border bg-muted/40 p-4 space-y-2"
+            >
               <div className="flex items-center justify-between gap-2">
                 <p className="text-sm font-medium">
                   Selected skills ({selectedCodes.length})
@@ -597,13 +633,13 @@ export function CustomWorksheetBuilder({
               onQuestionLimitChange={onQuestionLimitChange}
               onChosenIdsChange={onChosenIdsChange}
               emptyPoolMessage={
-                selectedCodes.length > 0 && excludedAssignedCount > 0
-                  ? "Every question for these skills was already assigned to this student."
+                selectedCodes.length > 0 && excludedSubmittedCount > 0
+                  ? "Every question for these skills was already submitted by this student."
                   : undefined
               }
             />
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-4" data-tour="worksheet-limit">
               <div className="flex items-center justify-between gap-4">
                 <Label htmlFor="ws-limit">Questions</Label>
                 <span className="font-mono text-sm tabular-nums">{questionLimit}</span>
@@ -619,8 +655,8 @@ export function CustomWorksheetBuilder({
               <p className="text-xs text-muted-foreground">
                 Pool size for the selected skills:{" "}
                 <span className="font-medium text-foreground">{matchingCount}</span>
-                {excludedAssignedCount > 0
-                  ? ". Questions already assigned to this student are left out."
+                {excludedSubmittedCount > 0
+                  ? ". Questions this student already submitted are left out."
                   : ""}
               </p>
             </div>

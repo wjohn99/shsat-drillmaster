@@ -248,7 +248,7 @@ export function TutorPrivatePanel({ boardId }: { boardId: string }) {
   return (
     <>
       <details data-tour="tutor-private-notes" className="group rounded-xl border glass-surface mb-3">
-        <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 px-4 py-2.5 sm:px-5 [&::-webkit-details-marker]:hidden">
+        <summary className="flex min-h-11 cursor-pointer list-none flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-5 [&::-webkit-details-marker]:hidden">
           <div className="flex min-w-0 items-center gap-2">
             <h2 className="text-sm font-semibold tracking-tight">Tutor Notes & Lesson Planning</h2>
             <Badge variant="outline">Tutor only</Badge>
@@ -284,9 +284,9 @@ export function TutorPrivatePanel({ boardId }: { boardId: string }) {
         <div className="space-y-3 border-t border-border/60 px-4 pb-4 pt-4 sm:px-5">
           <p className="text-sm text-muted-foreground">
             Lesson plans, session notes, observations, and next-session priorities. Students and
-            families cannot see this. Keep homework and assignments in the lists below.
+            families cannot see this. For families, add a Latest update on the roadmap.
           </p>
-          <Button type="button" size="sm" onClick={openNew}>
+          <Button type="button" size="sm" className="min-h-10" onClick={openNew}>
             <Plus className="mr-1 h-4 w-4" />
             Add note
           </Button>
@@ -303,7 +303,7 @@ export function TutorPrivatePanel({ boardId }: { boardId: string }) {
                     <button
                       type="button"
                       onClick={() => openEdit(note)}
-                      className="w-full rounded-lg border px-3 py-2.5 text-left transition-colors hover:bg-accent/40"
+                      className="min-h-11 w-full rounded-lg border px-3 py-3 text-left transition-colors hover:bg-accent/40"
                     >
                       <div className="flex flex-wrap items-center gap-2">
                         <Badge variant="secondary">{TUTOR_PRIVATE_NOTE_KIND_LABEL[note.kind]}</Badge>
@@ -333,7 +333,7 @@ export function TutorPrivatePanel({ boardId }: { boardId: string }) {
       </details>
 
       <Dialog open={composerOpen} onOpenChange={setComposerOpen}>
-        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+        <DialogContent className="max-h-[min(90dvh,900px)] max-w-2xl overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editing ? "Edit tutor note" : "Add tutor note"}</DialogTitle>
             <DialogDescription>
@@ -425,7 +425,7 @@ export function TutorPrivatePanel({ boardId }: { boardId: string }) {
                       type="button"
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 shrink-0"
+                      className="h-10 w-10 shrink-0"
                       onClick={() =>
                         setDraft((prev) => ({
                           ...prev,
@@ -449,7 +449,7 @@ export function TutorPrivatePanel({ boardId }: { boardId: string }) {
                       type="button"
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 shrink-0"
+                      className="h-10 w-10 shrink-0"
                       onClick={() =>
                         setPendingFiles((prev) => prev.filter((_, i) => i !== index))
                       }

@@ -160,8 +160,8 @@ service cloud.firestore {
       allow read: if isSignedIn()
         && resource.data.readerUids.hasAny([request.auth.uid]);
 
-      // Any tutor can read assignments, so a new worksheet can skip questions
-      // already assigned to that student by another tutor.
+      // Any tutor can read assignments, so submitted-question history can
+      // backfill from worksheets another tutor assigned to that student.
       allow read: if isTutor();
 
       allow create: if isTutor()
@@ -222,6 +222,26 @@ service cloud.firestore {
       allow update: if isTutor()
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['readerUids'])
         && request.resource.data.readerUids is list;
+    }
+
+    match /worksheet_question_history/{studentUid} {
+      allow read: if isTutor()
+        || isOwner(studentUid)
+        || demoOwnsBoard(studentUid);
+
+      function historyWriteOk() {
+        return request.resource.data.studentUid == studentUid
+          && request.resource.data.questionIds is list;
+      }
+
+      allow create: if historyWriteOk()
+        && (isOwner(studentUid) || isTutor() || demoOwnsBoard(studentUid));
+
+      allow update: if historyWriteOk()
+        && request.resource.data.questionIds.hasAll(resource.data.questionIds)
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['questionIds', 'updatedAt', 'studentUid'])
+        && (isOwner(studentUid) || isTutor() || demoOwnsBoard(studentUid));
     }
 
     function workspaceBoardIdMatchesStudent(boardId) {

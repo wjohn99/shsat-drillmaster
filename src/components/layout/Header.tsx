@@ -136,7 +136,7 @@ export const Header = () => {
 
   const sheetLinkClass = (active: boolean) =>
     cn(
-      "rounded-xl px-3 py-2.5 text-sm font-medium",
+      "flex min-h-11 items-center rounded-xl px-3 py-2.5 text-sm font-medium",
       active
         ? "glass-control border text-foreground"
         : "text-muted-foreground hover:text-foreground",
@@ -148,7 +148,7 @@ export const Header = () => {
       <DemoWelcomeDialog onDismiss={maybeAutoStart} />
     ) : null}
     <header className={cn(locked ? "relative z-50 shrink-0" : "sticky top-0 z-50")}>
-      <div className="container px-4 pt-3 pb-2">
+      <div className="container px-4 pb-2 pt-[max(0.75rem,env(safe-area-inset-top))]">
         <div className="glass-chrome flex h-14 items-stretch justify-between rounded-[1.35rem] border border-foreground/20 bg-white/95 px-3 text-primary">
         {locked ? (
           <button
@@ -182,7 +182,7 @@ export const Header = () => {
         )}
 
         {!locked ? (
-        <nav data-tour="tutor-nav" className="hidden items-center gap-1 md:flex">
+        <nav data-tour="tutor-nav" className="hidden items-center gap-1 lg:flex">
           {navItems.map((item) => (
             <AuthLink
               key={item.to}
@@ -215,7 +215,7 @@ export const Header = () => {
                 </span>
               </div>
               {!locked ? (
-                <Button variant="outline" size="sm" onClick={() => signOut()}>
+                <Button variant="outline" size="sm" className="hidden lg:inline-flex" onClick={() => signOut()}>
                   <LogOut className="h-4 w-4 sm:mr-1.5" />
                   <span className="hidden sm:inline">Sign Out</span>
                 </Button>
@@ -236,13 +236,16 @@ export const Header = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-8 w-8 p-0 md:hidden"
+                className="h-10 w-10 p-0 lg:hidden"
                 aria-label="Open menu"
               >
                 <Menu className="h-4 w-4" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[280px] sm:max-w-xs">
+            <SheetContent
+              side="right"
+              className="w-[min(280px,calc(100vw-1.5rem))] overflow-y-auto pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:max-w-xs"
+            >
               <SheetHeader>
                 <SheetTitle>Menu</SheetTitle>
               </SheetHeader>
@@ -303,11 +306,11 @@ export const Header = () => {
       </div>
       {viewAs && !locked ? (
         <div className="container px-4 pb-2">
-          <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-primary/30 bg-background px-3 py-2">
+          <div className="flex flex-col gap-2 rounded-xl border border-primary/30 bg-background px-3 py-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
             <p className="text-sm text-foreground">
               Viewing as {viewAs.displayName}. This is view only. You can open results, and you cannot start work, comment, or upload for this student.
             </p>
-            <Button type="button" size="sm" variant="outline" onClick={exitViewAsStudent}>
+            <Button type="button" size="sm" variant="outline" className="w-full sm:w-auto" onClick={exitViewAsStudent}>
               Exit student view
             </Button>
           </div>
@@ -315,15 +318,19 @@ export const Header = () => {
       ) : null}
       {(isDemoMode || (profile?.role === "demo" && location.pathname.startsWith("/workspace"))) && !locked ? (
         <div className="container px-4 pb-2">
-          <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-primary/20 bg-primary/5 px-3 py-2">
+          <div
+            data-testid="demo-preview-banner"
+            className="flex flex-wrap items-center justify-end gap-2 rounded-xl border border-primary/20 bg-primary/5 px-3 py-2"
+          >
             {location.pathname.startsWith("/workspace") ? (
-              <p className="text-sm text-foreground">Workspace shows sample students only.</p>
+              <p className="mr-auto text-sm text-foreground">Workspace shows sample students only.</p>
             ) : null}
             {isDemoMode ? (
               <Button
                 type="button"
                 size="sm"
                 variant="outline"
+                className="shrink-0"
                 disabled={demoBusy}
                 onClick={leaveDemoAccount}
               >

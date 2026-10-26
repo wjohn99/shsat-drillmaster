@@ -239,7 +239,7 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
                                   type="button"
                                   variant="ghost"
                                   size="icon"
-                                  className="pointer-events-auto h-8 w-8 text-muted-foreground"
+                                  className="pointer-events-auto h-8 w-8 text-muted-foreground max-sm:h-10 max-sm:w-10"
                                   title="Edit name and color"
                                   onClick={() => setEditingBoard(board)}
                                 >
@@ -251,7 +251,7 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
                           </div>
                         </div>
                         {readOnly ? null : (
-                          <div className="hidden border-t border-border/70 bg-background/50 px-3 py-4 sm:block">
+                          <div className="border-t border-border/70 bg-background/50 px-3 py-4">
                             <StudentQuickActions
                               compact
                               studentUid={board.studentUid}

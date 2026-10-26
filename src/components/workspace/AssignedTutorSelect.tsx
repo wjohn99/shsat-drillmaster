@@ -78,7 +78,7 @@ export function AssignedTutorSelect({
   const selectId = `assigned-tutor-${board.id}`;
 
   return (
-    <div className={cn("flex items-center gap-2 min-w-0", !compact && "flex-wrap")}>
+    <div className="flex min-w-0 flex-wrap items-center gap-2">
       <Label
         htmlFor={selectId}
         className="shrink-0 text-xs font-normal text-muted-foreground"
@@ -89,9 +89,9 @@ export function AssignedTutorSelect({
         <SelectTrigger
           id={selectId}
           className={cn(
-            "h-8 w-auto max-w-full gap-1.5 border-border/70 bg-background px-2.5 py-0 text-sm font-medium shadow-none",
-            "justify-start [&>span]:line-clamp-none [&>span]:whitespace-nowrap",
-            compact && "h-7 text-[13px]",
+            "h-10 min-w-0 max-w-full gap-1.5 border-border/70 bg-background px-2.5 py-0 text-sm font-medium shadow-none sm:h-9",
+            "justify-start [&>span]:line-clamp-none [&>span]:truncate sm:[&>span]:whitespace-nowrap",
+            compact && "text-[13px]",
           )}
         >
           <SelectValue placeholder="Select a tutor">{selectedName}</SelectValue>

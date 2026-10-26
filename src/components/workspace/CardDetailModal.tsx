@@ -38,7 +38,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
@@ -103,6 +102,13 @@ interface CardDetailModalProps {
   canRenameAndDeleteCards?: boolean;
   /** Place the cursor in the notes field when this card opens. */
   focusNotes?: boolean;
+  /** Scroll to comments and activity, used from workspace email links. */
+  focusActivity?: boolean;
+  tourId?: string;
+  /** Keep tour Back, Next, and Exit clickable while this card is open. */
+  tourLock?: boolean;
+  /** Drop the dialog focus trap so the tour bar stays usable. */
+  tourActive?: boolean;
   onOpenChange: (open: boolean) => void;
   onUpdated: () => void;
 }
@@ -211,6 +217,10 @@ export function CardDetailModal({
   readOnly = false,
   canRenameAndDeleteCards = !readOnly,
   focusNotes = false,
+  focusActivity = false,
+  tourId,
+  tourLock = false,
+  tourActive = false,
   onOpenChange,
   onUpdated,
 }: CardDetailModalProps) {
@@ -248,6 +258,9 @@ export function CardDetailModal({
   const [uploadingPdf, setUploadingPdf] = useState(false);
   const pdfInputRef = useRef<HTMLInputElement>(null);
   const notesRef = useRef<HTMLTextAreaElement>(null);
+  const activityRef = useRef<HTMLDivElement>(null);
+  const commentInputRef = useRef<HTMLTextAreaElement>(null);
+  const assignedWorksheetRef = useRef<HTMLElement>(null);
   const [submissionsByAttachmentId, setSubmissionsByAttachmentId] = useState<
     Record<string, WorkspaceAttachmentSubmission | null>
   >({});
@@ -295,6 +308,15 @@ export function CardDetailModal({
     const timer = window.setTimeout(() => notesRef.current?.focus(), 0);
     return () => window.clearTimeout(timer);
   }, [open, focusNotes, readOnly, card?.id]);
+
+  useEffect(() => {
+    if (!open || !focusActivity) return;
+    const timer = window.setTimeout(() => {
+      activityRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      if (!viewOnly) commentInputRef.current?.focus();
+    }, 50);
+    return () => window.clearTimeout(timer);
+  }, [open, focusActivity, viewOnly, card?.id]);
 
   const isStudentView = profile?.role === "student" && !viewOnly;
   const isTutorView = !readOnly && !viewOnly;
@@ -373,6 +395,11 @@ export function CardDetailModal({
       cancelled = true;
     };
   }, [open, card?.assignmentId, profile?.role, profile?.uid]);
+
+  useEffect(() => {
+    if (!tourLock || !open || !card?.assignmentId) return;
+    assignedWorksheetRef.current?.scrollIntoView?.({ block: "nearest", inline: "nearest" });
+  }, [tourLock, open, card?.assignmentId, linkedAssignment]);
 
   const handleOpenWorksheetAssign = () => {
     if (!card || readOnly) return;
@@ -455,6 +482,7 @@ export function CardDetailModal({
       concepts !== savedNotes?.concepts);
 
   const handleDialogOpenChange = (next: boolean) => {
+    if (!next && tourLock) return;
     if (next) {
       onOpenChange(true);
       return;
@@ -649,34 +677,51 @@ export function CardDetailModal({
 
   return (
     <>
-    <Dialog open={open} onOpenChange={handleDialogOpenChange}>
+    <Dialog open={open} onOpenChange={handleDialogOpenChange} modal={!tourActive && !tourLock}>
       <DialogContent
-        className="glass-modal max-w-6xl w-[96vw] h-[min(92vh,900px)] p-0 gap-0 flex flex-col overflow-hidden bg-card text-card-foreground [&>button]:z-20"
+        data-tour={tourId}
+        className={cn(
+          "glass-modal flex h-[min(92dvh,900px)] max-h-[min(92dvh,900px)] w-[96vw] max-w-6xl flex-col gap-0 overflow-hidden overflow-y-hidden bg-card p-0 text-card-foreground [&>button]:z-20",
+          tourLock && "[&>button]:hidden",
+        )}
         onOpenAutoFocus={(event) => {
+          if (tourLock) {
+            event.preventDefault();
+            return;
+          }
           if (!focusNotes || readOnly) return;
           event.preventDefault();
           notesRef.current?.focus();
         }}
+        onPointerDownOutside={(event) => {
+          if (tourLock) event.preventDefault();
+        }}
+        onInteractOutside={(event) => {
+          if (tourLock) event.preventDefault();
+        }}
+        onEscapeKeyDown={(event) => {
+          if (tourLock) event.preventDefault();
+        }}
       >
         <DialogTitle className="sr-only">{card.title}</DialogTitle>
 
-        <div className="flex flex-1 min-h-0 flex-col lg:flex-row">
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain pb-[env(safe-area-inset-bottom)] lg:flex-row lg:overflow-hidden lg:pb-0">
           {/* Main column */}
-          <div className="flex-1 min-w-0 flex flex-col min-h-0 border-r border-border">
-            <div className="px-6 pt-5 pb-3 space-y-3 shrink-0">
+          <div className="flex min-w-0 flex-col border-b border-border lg:min-h-0 lg:flex-1 lg:border-b-0 lg:border-r">
+            <div className="space-y-3 px-4 pb-3 pt-4 pr-12 shrink-0 sm:px-6 sm:pt-5">
               {listTitle ? (
                 <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                   {listTitle}
                 </p>
               ) : null}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <button
                   type="button"
                   aria-label={completed ? "Mark incomplete" : "Mark complete"}
                   disabled={readOnly}
                   onClick={() => void handleToggleComplete(!completed)}
                   className={cn(
-                    "h-6 w-6 shrink-0 rounded-full flex items-center justify-center",
+                    "h-8 w-8 shrink-0 rounded-full flex items-center justify-center",
                     "outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0",
                     completed
                       ? "bg-primary"
@@ -701,24 +746,25 @@ export function CardDetailModal({
                   readOnly={!canRenameAndDeleteCards}
                   maxLength={200}
                   aria-label="Card name"
-                  className="h-auto min-w-0 flex-1 rounded-none border-0 bg-transparent px-0 py-1 text-xl font-semibold leading-tight shadow-none hover:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 [background-color:transparent] hover:[background-color:transparent]"
+                  className="h-auto min-w-0 flex-1 rounded-none border-0 bg-transparent px-0 py-1 text-lg font-semibold leading-tight shadow-none hover:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 [background-color:transparent] hover:[background-color:transparent] sm:text-xl"
                 />
                 {canRenameAndDeleteCards ? (
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="shrink-0 text-destructive hover:text-destructive"
+                    className="h-10 shrink-0 px-2 text-destructive hover:text-destructive sm:h-9 sm:px-3"
                     onClick={() => setDeleteCardOpen(true)}
                   >
-                    <Trash2 className="h-4 w-4 mr-1" />
-                    Delete card
+                    <Trash2 className="h-4 w-4 sm:mr-1" />
+                    <span className="hidden sm:inline">Delete card</span>
+                    <span className="sr-only sm:hidden">Delete card</span>
                   </Button>
                 ) : null}
               </div>
             </div>
 
-            <ScrollArea className="flex-1 px-6 pb-6">
+            <div className="px-4 pb-6 sm:px-6 lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
               <section className="mb-8">
                 <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
                   <AlignLeft className="h-4 w-4" />
@@ -844,7 +890,11 @@ export function CardDetailModal({
               </section>
 
               {card.assignmentId ? (
-                <section className="mb-8">
+                <section
+                  ref={assignedWorksheetRef}
+                  className="mb-8"
+                  data-tour="assigned-worksheet"
+                >
                   <div className="flex items-center gap-2 text-sm font-semibold mb-3">
                     <ClipboardList className="h-4 w-4" />
                     Assigned Worksheet
@@ -901,7 +951,7 @@ export function CardDetailModal({
                     Attachments
                   </div>
                   {canAddAttachments ? (
-                    <div className="flex items-center gap-1 flex-wrap justify-end">
+                    <div className="flex flex-wrap items-center justify-end gap-1">
                       {isTutorView && !card.assignmentId ? (
                         <Button variant="ghost" size="sm" onClick={handleOpenWorksheetAssign}>
                           <ClipboardList className="h-4 w-4 mr-1" />
@@ -1118,11 +1168,14 @@ export function CardDetailModal({
                   </div>
                 )}
               </section>
-            </ScrollArea>
+            </div>
           </div>
 
           {/* Comments column */}
-          <div className="w-full lg:w-[340px] shrink-0 flex flex-col min-h-[280px] lg:min-h-0 bg-muted/20">
+          <div
+            ref={activityRef}
+            className="flex w-full flex-col bg-muted/20 lg:h-full lg:w-[340px] lg:min-h-0 lg:shrink-0"
+          >
             <div className="px-4 py-3 border-b border-border flex items-center gap-2 shrink-0">
               <MessageSquare className="h-4 w-4" />
               <span className="text-sm font-semibold">Comments and activity</span>
@@ -1135,6 +1188,7 @@ export function CardDetailModal({
             ) : (
             <div className="p-3 shrink-0">
               <Textarea
+                ref={commentInputRef}
                 placeholder="Write a comment…"
                 value={commentDraft}
                 onChange={(e) => setCommentDraft(e.target.value)}
@@ -1161,7 +1215,7 @@ export function CardDetailModal({
 
             <Separator />
 
-            <ScrollArea className="flex-1 px-3 py-3">
+            <div className="px-3 py-3 lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
               <div className="space-y-4">
                 {feed.length === 0 ? (
                   <p className="text-xs text-muted-foreground text-center py-4">
@@ -1189,7 +1243,7 @@ export function CardDetailModal({
                   )
                 )}
               </div>
-            </ScrollArea>
+            </div>
           </div>
         </div>
       </DialogContent>
@@ -1417,7 +1471,7 @@ function AttachmentRow({
 
   return (
     <div className="rounded-lg border bg-card p-2.5 space-y-2 group">
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-start gap-3 sm:flex-nowrap sm:items-center">
         <div
           className={cn(
             "h-10 w-10 shrink-0 rounded flex items-center justify-center text-xs font-bold",
@@ -1506,12 +1560,12 @@ function AttachmentRow({
             {hasSubmission ? " · Submitted" : ""}
           </p>
         </div>
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex shrink-0 flex-wrap items-center justify-end gap-1">
           {canPreviewFile ? (
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8"
+              className="h-10 w-10 sm:h-8 sm:w-8"
               onClick={() => setPreviewOpen(true)}
               title={isImage ? "Preview image" : "Preview PDF"}
             >
@@ -1522,7 +1576,7 @@ function AttachmentRow({
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8"
+              className="h-10 w-10 sm:h-8 sm:w-8"
               onClick={() => setRenaming(true)}
               title="Rename"
             >
@@ -1535,7 +1589,7 @@ function AttachmentRow({
               target="_blank"
               rel="noopener noreferrer"
               title="Open link"
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground sm:h-8 sm:w-8"
             >
               <ExternalLink className="h-4 w-4" />
               <span className="sr-only">Open link</span>
@@ -1544,7 +1598,7 @@ function AttachmentRow({
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8"
+              className="h-10 w-10 sm:h-8 sm:w-8"
               disabled={urlLoading || (!downloadUrl && attachment.kind === "file")}
               onClick={openAttachment}
               title="Open PDF"
@@ -1556,7 +1610,7 @@ function AttachmentRow({
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+              className="h-10 w-10 text-muted-foreground hover:text-destructive sm:h-8 sm:w-8"
               onClick={onRemove}
             >
               <Trash2 className="h-4 w-4" />

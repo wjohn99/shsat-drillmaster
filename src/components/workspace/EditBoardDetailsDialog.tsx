@@ -109,7 +109,7 @@ export function EditBoardDetailsDialog({
                   aria-pressed={color === swatch.hex}
                   onClick={() => setColor(swatch.hex)}
                   className={cn(
-                    "h-8 w-8 rounded-full border-2 transition-transform hover:scale-105",
+                    "h-10 w-10 rounded-full border-2 transition-transform hover:scale-105",
                     color === swatch.hex
                       ? "border-foreground ring-2 ring-offset-2 ring-foreground/30"
                       : "border-black/20",

@@ -54,16 +54,23 @@ export function StudentQuickActions({
   });
   const showLatestDiagnostic =
     latestDiagnostic && latestDiagnostic.id !== firstDiagnostic?.id;
-  const buttonClass = compact ? "h-8 px-2 text-xs" : undefined;
+  const buttonClass = cn(
+    stacked && "w-full sm:w-auto",
+    compact
+      ? "h-8 px-2 text-xs max-sm:h-11 max-sm:w-full max-sm:text-sm"
+      : stacked
+        ? "max-sm:min-h-11"
+        : undefined,
+  );
 
   return (
     <div
       data-tour={tourId}
       className={cn(
-        compact
-          ? "flex flex-wrap gap-1.5"
-          : stacked
-            ? "grid grid-cols-2 gap-2"
+        stacked
+          ? "grid grid-cols-2 gap-2 sm:flex sm:flex-wrap"
+          : compact
+            ? "flex flex-wrap gap-1.5 max-sm:grid max-sm:grid-cols-2"
             : "flex flex-wrap gap-2",
         className,
       )}
@@ -74,7 +81,11 @@ export function StudentQuickActions({
         </Button>
       ) : null}
       <Button variant="outline" size="sm" className={buttonClass} asChild>
-        <Link to="/worksheets" state={assignToStudentNavState(studentUid, { returnTo })}>
+        <Link
+          to="/worksheets"
+          state={assignToStudentNavState(studentUid, { returnTo })}
+          data-tour="assign-worksheet-board"
+        >
           Assign worksheet
         </Link>
       </Button>
@@ -116,12 +127,18 @@ export function StudentQuickActions({
       {showLastResults ? (
         resultsState ? (
           <Button size="sm" className={buttonClass} asChild>
-            <Link to="/worksheets" state={resultsState}>
+            <Link to="/worksheets" state={resultsState} data-tour="view-last-results">
               View last results
             </Link>
           </Button>
         ) : (
-          <Button size="sm" className={buttonClass} disabled title="No results yet">
+          <Button
+            size="sm"
+            className={buttonClass}
+            disabled
+            title="No results yet"
+            data-tour="view-last-results"
+          >
             View last results
           </Button>
         )

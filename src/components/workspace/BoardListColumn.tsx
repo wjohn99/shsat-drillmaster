@@ -46,6 +46,7 @@ import {
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { LinkifiedText } from "@/components/workspace/LinkifiedText";
+import { isDemoTutorialSessionCardTitle } from "@/lib/demoTutorial";
 
 function formatCardSessionDate(value?: string): string {
   if (!value) return "";
@@ -345,7 +346,12 @@ export function BoardListColumn({
   return (
     <>
       <div
-        className="glass-surface flex w-full max-h-none shrink-0 flex-col overflow-hidden rounded-xl border md:w-72 md:max-h-[calc(100vh-10rem)]"
+        data-tour={
+          list.kind === "sessions" || /session/i.test(list.title)
+            ? "session-summaries"
+            : undefined
+        }
+        className="glass-surface flex w-full max-h-none shrink-0 flex-col overflow-hidden rounded-xl border sm:w-72 sm:max-h-[calc(100dvh-10rem)] sm:snap-start"
         onDragOver={(e) => {
           if (readOnly || !draggingCardIdRef.current) return;
           e.preventDefault();
@@ -371,7 +377,7 @@ export function BoardListColumn({
                 <button
                   type="button"
                   className={cn(
-                    "h-7 w-7 shrink-0 inline-flex items-center justify-center rounded-md",
+                    "h-10 w-10 shrink-0 inline-flex items-center justify-center rounded-md sm:h-8 sm:w-8",
                     "bg-background border border-border shadow-sm",
                     "text-foreground/70 hover:bg-accent hover:text-foreground",
                     "data-[state=open]:bg-accent data-[state=open]:text-foreground",
@@ -411,7 +417,7 @@ export function BoardListColumn({
           <button
             type="button"
             onClick={() => setAdding(true)}
-            className="mx-2 mt-2 shrink-0 flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-accent/60 transition-colors"
+            className="mx-2 mt-2 shrink-0 flex min-h-11 items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:bg-accent/60 transition-colors"
           >
             <Plus className="h-4 w-4" />
             Add a card
@@ -479,6 +485,9 @@ export function BoardListColumn({
               <div key={card.id} className="mb-2 last:mb-0">
                 <div
                   data-workspace-card
+                  data-tour={
+                    isDemoTutorialSessionCardTitle(card.title) ? "session-2-card" : undefined
+                  }
                   className={cn(
                     "group/card rounded-lg",
                     isDraggingThis && "opacity-40 ring-2 ring-primary/40",
@@ -497,7 +506,7 @@ export function BoardListColumn({
                           }, 0);
                         }}
                         className={cn(
-                          "flex items-center px-1.5 shrink-0 touch-none",
+                          "flex items-center px-2.5 shrink-0 touch-none",
                           "cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground",
                         )}
                         aria-label={`Drag to reorder ${card.title}`}
@@ -520,7 +529,7 @@ export function BoardListColumn({
                         onCardClick(card);
                       }}
                       className={cn(
-                        "relative min-w-0 flex-1 cursor-pointer rounded-xl border border-border bg-card px-3.5 py-3 text-left text-sm transition-colors",
+                        "relative min-w-0 flex-1 cursor-pointer rounded-xl border border-border bg-card px-3.5 py-3 pr-11 text-left text-sm transition-colors",
                         "hover:border-foreground/20",
                         card.completed && "opacity-80",
                       )}
@@ -531,7 +540,7 @@ export function BoardListColumn({
                           tabIndex={readOnly ? -1 : 0}
                           aria-label={card.completed ? "Mark incomplete" : "Mark complete"}
                           className={cn(
-                            "h-4 w-4 shrink-0 rounded-full flex items-center justify-center",
+                            "h-5 w-5 shrink-0 rounded-full flex items-center justify-center",
                             "outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0",
                           )}
                           onClick={(e) => {
@@ -555,11 +564,11 @@ export function BoardListColumn({
                           }}
                         >
                           {card.completed ? (
-                            <span className="h-4 w-4 rounded-full bg-primary flex items-center justify-center">
-                              <Check className="h-2.5 w-2.5 text-primary-foreground" strokeWidth={3} />
+                            <span className="h-5 w-5 rounded-full bg-primary flex items-center justify-center">
+                              <Check className="h-3 w-3 text-primary-foreground" strokeWidth={3} />
                             </span>
                           ) : (
-                            <span className="h-4 w-4 rounded-full border border-muted-foreground/50" />
+                            <span className="h-5 w-5 rounded-full border border-muted-foreground/50" />
                           )}
                         </span>
                         <span
@@ -572,7 +581,7 @@ export function BoardListColumn({
                         </span>
                       </div>
                       {sessionWhen ? (
-                        <p className="mt-1 pl-6 text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                        <p className="mt-1 pl-7 text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
                           {sessionWhen}
                         </p>
                       ) : null}
@@ -582,12 +591,12 @@ export function BoardListColumn({
                         />
                       ) : null}
                       {card.description ? (
-                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2 pl-6">
+                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2 pl-7">
                           <LinkifiedText text={card.description} stopClickPropagation />
                         </p>
                       ) : null}
                       {((card.commentCount ?? 0) > 0 || (card.attachmentCount ?? 0) > 0) ? (
-                        <div className="mt-2 pl-6 flex items-center gap-3 text-muted-foreground">
+                        <div className="mt-2 pl-7 flex items-center gap-3 text-muted-foreground">
                           {(card.commentCount ?? 0) > 0 ? (
                             <span
                               className="inline-flex items-center gap-1 text-[11px] tabular-nums"
@@ -614,9 +623,9 @@ export function BoardListColumn({
                           tabIndex={0}
                           aria-label={`Delete ${card.title}`}
                           className={cn(
-                            "absolute top-1.5 right-1.5 h-7 w-7 inline-flex items-center justify-center rounded-md",
+                            "absolute top-1.5 right-1.5 h-9 w-9 inline-flex items-center justify-center rounded-md",
                             "text-muted-foreground hover:text-destructive hover:bg-background/80",
-                            "opacity-0 group-hover/card:opacity-100 focus:opacity-100",
+                            "opacity-100 lg:opacity-0 lg:group-hover/card:opacity-100 focus:opacity-100",
                             "outline-none ring-0 focus:outline-none",
                           )}
                           onClick={(e) => {
@@ -752,7 +761,10 @@ function BoardCardAssignmentStatus({
   const variant = status === "done" ? "secondary" : status === "due" ? "destructive" : "default";
 
   return (
-    <div className="mt-1.5 pl-6 flex flex-wrap items-center gap-1.5">
+    <div
+      data-tour="assigned-worksheet"
+      className="mt-1.5 pl-7 flex flex-wrap items-center gap-1.5"
+    >
       <Badge variant={variant} className="text-[10px] px-1.5 py-0">
         {WORKSHEET_PROGRESS_LABEL[status]}
       </Badge>

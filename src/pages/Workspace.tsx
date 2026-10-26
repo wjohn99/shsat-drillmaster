@@ -177,7 +177,13 @@ export default function Workspace() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className={wideLayout ? "flex-1 px-4 py-6" : "flex-1 container py-8"}>
+      <main
+        className={
+          wideLayout
+            ? "flex-1 px-3 py-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:px-4 sm:py-6"
+            : "flex-1 container py-8"
+        }
+      >
         {boardContent}
       </main>
     </div>

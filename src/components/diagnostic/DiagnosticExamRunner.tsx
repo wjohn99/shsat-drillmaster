@@ -418,7 +418,7 @@ export function DiagnosticExamRunner({
   }, [currentQuestion?.id]);
 
   useEffect(() => {
-    questionPaneRef.current?.scrollTo({ top: 0 });
+    questionPaneRef.current?.scrollTo?.({ top: 0 });
   }, [currentQuestion?.id]);
 
   useEffect(() => {
@@ -593,7 +593,9 @@ export function DiagnosticExamRunner({
   if (confirmExit) {
     return (
       <div
-        className="fixed inset-0 z-[80] flex items-center justify-center bg-background px-6"
+        data-testid="diagnostic-pause-screen"
+        className="fixed inset-0 z-[80] flex items-center justify-center px-6"
+        style={{ backgroundColor: "hsl(var(--background))" }}
         role="dialog"
         aria-modal="true"
         aria-labelledby="diagnostic-pause-title"

@@ -1,14 +1,16 @@
 /**
- * Email the assigned tutor when that student comments or posts a file.
+ * Email workspace activity:
+ *   student posts on their board -> assigned tutor
+ *   tutor posts on a student's board -> that student only
  *
  * Setup:
  *   firebase functions:secrets:set MAILGUN_API_KEY
  *   firebase deploy --only functions
  *
  * Optional functions/.env:
- *   MAILGUN_DOMAIN=stepprephub.com
+ *   MAILGUN_DOMAIN=mg.stepprephub.com
  *   MAILGUN_API_HOST=api.mailgun.net
- *   NOTIFY_FROM=StepPrep Workspace <notifications@stepprephub.com>
+ *   NOTIFY_FROM=StepPrep Workspace <notifications@mg.stepprephub.com>
  *   APP_URL=https://stepprephub.com
  */
 
@@ -18,6 +20,11 @@ const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 const { onCall, HttpsError } = require("firebase-functions/v2/https");
 const { defineSecret } = require("firebase-functions/params");
 const { logger } = require("firebase-functions");
+const {
+  isSendableEmail,
+  workspaceBoardUrl,
+  workspaceNotifyAudience,
+} = require("./workspaceNotify");
 
 initializeApp();
 const db = getFirestore();
@@ -66,7 +73,7 @@ async function loadCard(boardId, cardId) {
 
 async function resolveTutorEmail(board) {
   const stored = String(board.assignedTutorEmail || "").trim();
-  if (stored.includes("@")) return stored;
+  if (isSendableEmail(stored)) return stored;
   const tutorUid = String(board.assignedTutorUid || board.createdByUid || "").trim();
   if (!tutorUid) return "";
   const userSnap = await db.doc(`users/${tutorUid}`).get();
@@ -74,11 +81,21 @@ async function resolveTutorEmail(board) {
   return String(userSnap.data()?.email || "").trim();
 }
 
+async function resolveStudentEmail(board) {
+  const stored = String(board.studentEmail || "").trim();
+  if (isSendableEmail(stored)) return stored;
+  const studentUid = String(board.studentUid || "").trim();
+  if (!studentUid) return "";
+  const userSnap = await db.doc(`users/${studentUid}`).get();
+  if (!userSnap.exists) return "";
+  return String(userSnap.data()?.email || "").trim();
+}
+
 async function sendMailgun({ to, subject, text, html }) {
   const apiKey = mailgunApiKey.value();
-  const domain = env("MAILGUN_DOMAIN", "stepprephub.com");
+  const domain = env("MAILGUN_DOMAIN", "mg.stepprephub.com");
   const host = env("MAILGUN_API_HOST", "api.mailgun.net");
-  const from = env("NOTIFY_FROM", "StepPrep Workspace <notifications@stepprephub.com>");
+  const from = env("NOTIFY_FROM", "StepPrep Workspace <notifications@mg.stepprephub.com>");
   if (!apiKey) {
     throw new Error("MAILGUN_API_KEY is not set.");
   }
@@ -92,36 +109,56 @@ async function sendMailgun({ to, subject, text, html }) {
   });
   if (!res.ok) {
     const detail = await res.text();
-    throw new Error(`Mailgun ${res.status}: ${detail.slice(0, 400)}`);
+    throw new Error(`Mailgun ${res.status} (${host}/v3/${domain}): ${detail.slice(0, 400)}`);
   }
 }
 
-async function notifyAssignedTutor({ boardId, cardId, actorUid, actionLabel, preview }) {
+async function notifyWorkspaceActivity({
+  boardId,
+  cardId,
+  actorUid,
+  actorName,
+  actionLabel,
+  preview,
+}) {
   const board = await loadBoard(boardId);
   if (!board) {
     logger.info("skip notify: board missing", { boardId });
     return;
   }
-  if (String(board.studentUid || "") !== String(actorUid || "")) {
-    logger.info("skip notify: actor is not this board's student", { boardId, actorUid });
+
+  const audience = workspaceNotifyAudience(board, actorUid);
+  if (!audience) {
+    logger.info("skip notify: no audience", { boardId, actorUid });
     return;
   }
 
-  const to = await resolveTutorEmail(board);
-  if (!to || !to.includes("@")) {
-    logger.warn("skip notify: assigned tutor has no email", { boardId });
+  const to =
+    audience === "assigned_tutor"
+      ? await resolveTutorEmail(board)
+      : await resolveStudentEmail(board);
+  if (!isSendableEmail(to)) {
+    logger.warn("skip notify: recipient has no email", { boardId, audience });
     return;
   }
 
   const card = await loadCard(boardId, cardId);
   const cardTitle = String(card?.title || "Untitled card").trim() || "Untitled card";
   const studentName = String(board.studentName || "Student").trim() || "Student";
-  const appUrl = env("APP_URL", "https://stepprephub.com").replace(/\/$/, "");
-  const boardUrl = `${appUrl}/workspace/${boardId}`;
+  const senderName =
+    audience === "assigned_tutor"
+      ? studentName
+      : String(actorName || board.assignedTutorName || "Your tutor").trim() || "Your tutor";
+  const intro =
+    audience === "assigned_tutor"
+      ? `${studentName} ${actionLabel} on their workspace.`
+      : `${senderName} ${actionLabel} on your workspace.`;
+  const appUrl = env("APP_URL", "https://stepprephub.com");
+  const boardUrl = workspaceBoardUrl(appUrl, board, cardId);
   const previewText = clip(preview, 500);
-  const subject = `${studentName} ${actionLabel}: ${clip(cardTitle, 80)}`;
+  const subject = `${senderName} ${actionLabel}: ${clip(cardTitle, 80)}`;
   const text = [
-    `${studentName} ${actionLabel} on their workspace.`,
+    intro,
     `Card: ${cardTitle}`,
     previewText ? `Details: ${previewText}` : null,
     `Open board: ${boardUrl}`,
@@ -129,14 +166,16 @@ async function notifyAssignedTutor({ boardId, cardId, actorUid, actionLabel, pre
     .filter(Boolean)
     .join("\n");
   const html = `
-    <p><strong>${escapeHtml(studentName)}</strong> ${escapeHtml(actionLabel)} on their workspace.</p>
+    <p><strong>${escapeHtml(senderName)}</strong> ${escapeHtml(actionLabel)} on ${
+      audience === "assigned_tutor" ? "their" : "your"
+    } workspace.</p>
     <p>Card: ${escapeHtml(cardTitle)}</p>
     ${previewText ? `<p>${escapeHtml(previewText)}</p>` : ""}
     <p><a href="${escapeHtml(boardUrl)}">Open board</a></p>
   `;
 
   await sendMailgun({ to, subject, text, html });
-  logger.info("tutor notified", { boardId, cardId, to, subject });
+  logger.info("workspace notified", { boardId, cardId, audience, to, subject });
 }
 
 exports.onStudentCardComment = onDocumentCreated(
@@ -146,10 +185,11 @@ exports.onStudentCardComment = onDocumentCreated(
   },
   async (event) => {
     const data = event.data?.data() || {};
-    await notifyAssignedTutor({
+    await notifyWorkspaceActivity({
       boardId: event.params.boardId,
       cardId: event.params.cardId,
       actorUid: data.authorUid,
+      actorName: data.authorName,
       actionLabel: "commented",
       preview: data.body,
     });
@@ -164,10 +204,11 @@ exports.onStudentCardAttachment = onDocumentCreated(
   async (event) => {
     const data = event.data?.data() || {};
     const kind = data.kind === "link" ? "added a link" : "uploaded a PDF";
-    await notifyAssignedTutor({
+    await notifyWorkspaceActivity({
       boardId: event.params.boardId,
       cardId: event.params.cardId,
       actorUid: data.uploadedByUid,
+      actorName: data.uploadedByName,
       actionLabel: kind,
       preview: data.fileName,
     });
@@ -313,10 +354,11 @@ exports.onStudentAttachmentSubmission = onDocumentCreated(
   },
   async (event) => {
     const data = event.data?.data() || {};
-    await notifyAssignedTutor({
+    await notifyWorkspaceActivity({
       boardId: event.params.boardId,
       cardId: event.params.cardId,
       actorUid: data.submittedByUid,
+      actorName: data.submittedByName,
       actionLabel: "submitted completed work",
       preview: data.notes || data.submissionUrl,
     });

@@ -29,13 +29,25 @@ import {
   newRoadmapFollowUp,
   type StudentRoadmapSnapshot,
 } from "@/lib/studentRoadmap";
-import type { StudentAttentionStatus, StudentRoadmap } from "@/types/workspace";
+import type {
+  RoadmapProgressUpdate,
+  StudentAttentionStatus,
+  StudentRoadmap,
+  WorkspaceCard,
+  WorkspaceList,
+} from "@/types/workspace";
 import { ATTENTION_STATUS_LABEL, ATTENTION_STATUS_ORDER } from "@/types/workspace";
 import { assignToStudentNavState } from "@/types/worksheetsNavigation";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
+import { useAuth } from "@/contexts/AuthContext";
 import { useDemoTutorial } from "@/contexts/DemoTutorialContext";
-import { DEMO_TUTORIAL_STEPS } from "@/lib/demoTutorial";
+import { DEMO_TUTORIAL_STEPS, tutorialOpensRoadmap } from "@/lib/demoTutorial";
 import { AttentionStatusLabel, AttentionStatusSwatch } from "./AttentionStatusLabel";
+import {
+  cardOptionsFromBoard,
+  RoadmapLatestLine,
+  RoadmapProgressUpdates,
+} from "./RoadmapProgressUpdates";
 
 function RoadmapHeading({
   children,
@@ -90,6 +102,9 @@ export function StudentRoadmapPanel({
   saving,
   onSave,
   settings,
+  cards = [],
+  lists = [],
+  onOpenCard,
 }: {
   snapshot: StudentRoadmapSnapshot;
   readOnly: boolean;
@@ -97,12 +112,16 @@ export function StudentRoadmapPanel({
   onSave: (roadmap: StudentRoadmap) => Promise<void>;
   /** Tutor controls shown inside the expanded roadmap, hidden while it is collapsed. */
   settings?: ReactNode;
+  cards?: WorkspaceCard[];
+  lists?: WorkspaceList[];
+  onOpenCard?: (cardId: string) => void;
 }) {
+  const { profile } = useAuth();
   const detailsRef = useRef<HTMLDetailsElement>(null);
   const tutorialOpenedRef = useRef(false);
   const { active: tutorialActive, stepIndex: tutorialStepIndex } = useDemoTutorial();
-  const tutorialOpensRoadmap =
-    tutorialActive && DEMO_TUTORIAL_STEPS[tutorialStepIndex]?.target === "student-roadmap";
+  const tutorialShouldOpenRoadmap =
+    tutorialActive && tutorialOpensRoadmap(DEMO_TUTORIAL_STEPS[tutorialStepIndex]);
   const [draft, setDraft] = useState<StudentRoadmap>(snapshot.roadmap);
   const [followUpDraft, setFollowUpDraft] = useState("");
   const [dirty, setDirty] = useState(false);
@@ -121,7 +140,7 @@ export function StudentRoadmapPanel({
   useLayoutEffect(() => {
     const el = detailsRef.current;
     if (!el) return;
-    if (tutorialOpensRoadmap) {
+    if (tutorialShouldOpenRoadmap) {
       el.open = true;
       tutorialOpenedRef.current = true;
       return;
@@ -130,7 +149,7 @@ export function StudentRoadmapPanel({
       el.open = false;
       tutorialOpenedRef.current = false;
     }
-  }, [tutorialOpensRoadmap]);
+  }, [tutorialShouldOpenRoadmap]);
 
   const school = shsatSchoolById(draft.targetSchool);
   const returnTo = `/workspace/${snapshot.board.studentUid}`;
@@ -140,6 +159,20 @@ export function StudentRoadmapPanel({
     setDirty(true);
     setSaveState("idle");
     setDraft((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const applyProgress = (patch: {
+    progressUpdates: RoadmapProgressUpdate[];
+    currentPriority?: string;
+  }) => {
+    dirtyRef.current = true;
+    setDirty(true);
+    setSaveState("idle");
+    setDraft((prev) => ({
+      ...prev,
+      progressUpdates: patch.progressUpdates,
+      ...(patch.currentPriority != null ? { currentPriority: patch.currentPriority } : {}),
+    }));
   };
 
   const handleSave = async (opts?: { silent?: boolean }) => {
@@ -242,8 +275,11 @@ export function StudentRoadmapPanel({
 
   return (
     <details ref={detailsRef} data-tour="student-roadmap" className="group rounded-xl border glass-surface mb-3">
-      <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 px-4 py-2.5 sm:px-5 [&::-webkit-details-marker]:hidden">
-        <h2 className="text-sm font-semibold tracking-tight">Roadmap</h2>
+      <summary className="flex min-h-11 cursor-pointer list-none flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-5 [&::-webkit-details-marker]:hidden">
+        <div className="min-w-0">
+          <h2 className="text-sm font-semibold tracking-tight">Roadmap</h2>
+          <RoadmapLatestLine updates={draft.progressUpdates ?? []} />
+        </div>
         <div className="flex items-center gap-2 shrink-0">
           <AttentionStatusLabel status={draft.status} />
           {!snapshot.board.diagnosticAssigned ? (
@@ -266,6 +302,15 @@ export function StudentRoadmapPanel({
       {settings ? (
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3">{settings}</div>
       ) : null}
+      <RoadmapProgressUpdates
+        updates={draft.progressUpdates ?? []}
+        readOnly={readOnly}
+        cardOptions={cardOptionsFromBoard(cards, lists)}
+        authorUid={profile?.uid ?? ""}
+        authorName={profile?.displayName?.trim() || profile?.email || "Tutor"}
+        onOpenCard={onOpenCard}
+        onChange={applyProgress}
+      />
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
         <ScoreTile label="Starting point" value={startingDisplay} hint={startingHint}>
           {readOnly ? undefined : (
@@ -668,6 +713,7 @@ export function StudentRoadmapPanel({
                 returnTo,
                 suggestedTagCodes: snapshot.suggestedTagCodes,
               })}
+              data-tour="assign-next-worksheet"
             >
               Assign next worksheet
             </Link>
@@ -682,6 +728,7 @@ export function StudentRoadmapPanel({
                   reviewSession: snapshot.latestDiagnostic ?? snapshot.baseline,
                   returnTo,
                 }}
+                data-tour="view-diagnostic"
               >
                 View diagnostic results
               </Link>
@@ -697,15 +744,20 @@ export function StudentRoadmapPanel({
             ) : null}
           </>
         ) : (
-          <p className="text-sm text-muted-foreground">
-            {snapshot.diagnosticInProgress
-              ? "This student has started the diagnostic but has not finished it. Results will appear here after they submit."
-              : !snapshot.board.diagnosticAssigned
-                ? readOnly
-                  ? DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE
-                  : "Turn on Assign diagnostic in the board header before this student can start it."
-                : "This student has not started the diagnostic yet."}
-          </p>
+          <div data-tour="view-diagnostic" className="space-y-2">
+            <Button variant="outline" disabled>
+              View diagnostic results
+            </Button>
+            <p className="text-sm text-muted-foreground">
+              {snapshot.diagnosticInProgress
+                ? "This student has started the diagnostic but has not finished it. Results will appear here after they submit."
+                : !snapshot.board.diagnosticAssigned
+                  ? readOnly
+                    ? DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE
+                    : "Turn on Assign diagnostic in the board header before this student can start it."
+                  : "This student has not started the diagnostic yet."}
+            </p>
+          </div>
         )}
       </div>
       </div>

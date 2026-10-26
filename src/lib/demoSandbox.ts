@@ -63,6 +63,7 @@ function sampleRoadmap(partial: Partial<StudentRoadmap>): StudentRoadmap {
     nextSessionTime: "",
     nextSessionNotes: "",
     followUps: [],
+    progressUpdates: [],
     status: null,
     statusManual: true,
     ...partial,
@@ -95,6 +96,20 @@ const DEMO_STUDENTS: DemoStudentSeed[] = [
           text: "Finish the assigned worksheet before Thursday.",
           open: true,
           createdAtMs: Date.UTC(2026, 9, 18),
+        },
+      ],
+      progressUpdates: [
+        {
+          id: "avery-update-1",
+          date: "2026-10-19",
+          changed:
+            "Avery finished the sample algebra worksheet. Linear items were stronger than the long passage. Next is a short reading set on Session 2 before Thursday.",
+          next: "",
+          cardId: null,
+          cardTitle: null,
+          createdByUid: "demo-tutor",
+          createdByName: "Sample tutor",
+          createdAtMs: Date.UTC(2026, 9, 19, 20, 0),
         },
       ],
       status: "active_work",

@@ -22,6 +22,11 @@ import type {
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase";
 import { parentReaderUidsForStudent } from "@/lib/parentLinkService";
 import { logWorksheetCompletedOnCard } from "@/lib/workspaceCardContentService";
+import {
+  mergeSubmittedQuestionIds,
+  readStoredSubmittedWorksheetQuestionIds,
+  recordSubmittedWorksheetQuestions,
+} from "@/lib/worksheetQuestionHistory";
 
 const ASSIGNMENTS_COLLECTION = "assignments";
 const WORKSPACE_BOARDS_COLLECTION = "workspace_boards";
@@ -208,33 +213,45 @@ export async function fetchAssignmentsForParent(
 }
 
 /**
- * Question ids already on worksheets assigned to this student.
+ * Question ids this student already submitted on assigned worksheets.
+ * Combines the account history doc with completed assignments, then backfills
+ * any ids that were only on older completed worksheets.
  * Live tutors include every tutor's worksheets for that student.
  * Demo accounts use their own sample-student worksheets.
  */
-export async function fetchAssignedQuestionIdsForStudent(
+export async function fetchSubmittedWorksheetQuestionIdsForStudent(
   studentUid: string,
   includeEveryTutor: boolean,
 ): Promise<Set<string>> {
-  const ids = new Set<string>();
-  const add = (rows: WorksheetAssignment[]) => {
-    for (const row of rows) {
-      if (row.assignedToStudentUid !== studentUid) continue;
-      for (const id of row.questionIds) ids.add(id);
-    }
-  };
-
-  if (includeEveryTutor) {
-    try {
-      add(await fetchAssignmentsForStudentUid(studentUid));
-      return ids;
-    } catch {
-      // Older assignment rules only allow a tutor to read worksheets they created.
-    }
+  let stored: string[] = [];
+  try {
+    stored = await readStoredSubmittedWorksheetQuestionIds(studentUid);
+  } catch {
+    stored = [];
   }
 
-  add(await fetchAssignmentsForTutor());
-  return ids;
+  let rows: WorksheetAssignment[] = [];
+  if (includeEveryTutor) {
+    try {
+      rows = await fetchAssignmentsForStudentUid(studentUid);
+    } catch {
+      try {
+        rows = await fetchAssignmentsForTutor();
+      } catch {
+        rows = [];
+      }
+    }
+  } else {
+    rows = await fetchAssignmentsForTutor();
+  }
+
+  const merged = mergeSubmittedQuestionIds(stored, rows, studentUid);
+  const storedSet = new Set(stored);
+  const missing = merged.filter((id) => !storedSet.has(id));
+  if (missing.length > 0) {
+    void recordSubmittedWorksheetQuestions(studentUid, missing).catch(() => undefined);
+  }
+  return new Set(merged);
 }
 
 export async function fetchAssignmentsForStudentUid(
@@ -355,6 +372,15 @@ export async function markAssignmentCompleted(
     completedAt: serverTimestamp(),
   });
   if (!assignment) return;
+
+  try {
+    await recordSubmittedWorksheetQuestions(
+      assignment.assignedToStudentUid,
+      assignment.questionIds,
+    );
+  } catch {
+    // Next tutor fetch backfills from the completed assignment.
+  }
 
   const workspace = await resolveWorkspaceTargetForAssignment(assignment, options?.workspace);
   if (!workspace) return;

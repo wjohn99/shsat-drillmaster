@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Loader2, Pencil, Plus } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,6 +28,7 @@ import {
   updateWorkspaceBoardRoadmap,
 } from "@/lib/workspaceService";
 import { Timestamp } from "firebase/firestore";
+import { parseWorkspaceCardParam, workspaceBoardPath } from "@/lib/workspaceNavigation";
 import { toast } from "@/hooks/use-toast";
 import type { TutorOption, WorksheetAssignment } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
@@ -38,6 +39,15 @@ import { CardDetailModal } from "./CardDetailModal";
 import { EditBoardDetailsDialog } from "./EditBoardDetailsDialog";
 import { StudentQuickActions } from "./StudentQuickActions";
 import { useViewAsStudent } from "@/contexts/ViewAsStudentContext";
+import { useDemoTutorial } from "@/contexts/DemoTutorialContext";
+import { ensureDemoTutorialAssignmentOnSessionCard } from "@/lib/demoTutorialAssignment";
+import {
+  DEMO_TUTORIAL_DISMISS_CARD,
+  DEMO_TUTORIAL_STEPS,
+  isDemoTutorialSessionCardTitle,
+  tutorialOpensSessionCard,
+  tutorialShowsAssignedWorksheet,
+} from "@/lib/demoTutorial";
 import { StudentRoadmapPanel } from "./StudentRoadmapPanel";
 import { TutorPrivatePanel } from "./TutorPrivatePanel";
 
@@ -56,7 +66,17 @@ export function WorkspaceBoard({
   showBackLink = false,
 }: WorkspaceBoardProps) {
   const { viewAs } = useViewAsStudent();
+  const { active: tutorialActive, stepIndex: tutorialStepIndex } = useDemoTutorial();
+  const location = useLocation();
+  const navigate = useNavigate();
   const previewThisBoard = viewAs?.uid === boardId;
+  const cardParam = parseWorkspaceCardParam(location.search);
+  const skipActivityFocusRef = useRef(false);
+  const ignoreCardRestoreRef = useRef(false);
+  const tourOpenedCardRef = useRef(false);
+  const tourDismissHoldRef = useRef(false);
+  const tutorialShouldOpenCardRef = useRef(false);
+  const tutorialAssignmentReadyRef = useRef(false);
   const [board, setBoard] = useState<WorkspaceBoardType | null>(null);
   const [lists, setLists] = useState<WorkspaceList[]>([]);
   const [cards, setCards] = useState<WorkspaceCard[]>([]);
@@ -65,6 +85,7 @@ export function WorkspaceBoard({
   const [selectedCard, setSelectedCard] = useState<WorkspaceCard | null>(null);
   const [cardModalOpen, setCardModalOpen] = useState(false);
   const [focusCardNotes, setFocusCardNotes] = useState(false);
+  const [focusCardActivity, setFocusCardActivity] = useState(false);
   const [selectedListTitle, setSelectedListTitle] = useState<string | undefined>();
   const [addingList, setAddingList] = useState(false);
   const [newListTitle, setNewListTitle] = useState("");
@@ -180,6 +201,130 @@ export function WorkspaceBoard({
       cancelled = true;
     };
   }, [readOnly]);
+
+  const tutorialStep = tutorialActive ? DEMO_TUTORIAL_STEPS[tutorialStepIndex] : null;
+  const tutorialShouldOpenCard = tutorialOpensSessionCard(tutorialStep);
+  const tutorialShouldShowAssignedWorksheet = tutorialShowsAssignedWorksheet(tutorialStep);
+  tutorialShouldOpenCardRef.current = tutorialShouldOpenCard;
+  const tutorialTutorUid = board?.assignedTutorUid || board?.createdByUid;
+  const tutorialStudentUid = board?.studentUid;
+
+  useEffect(() => {
+    if (!tutorialShouldShowAssignedWorksheet) {
+      tutorialAssignmentReadyRef.current = false;
+      return;
+    }
+    if (!tutorialTutorUid || !tutorialStudentUid || tutorialAssignmentReadyRef.current) return;
+
+    let cancelled = false;
+    void ensureDemoTutorialAssignmentOnSessionCard({
+      tutorUid: tutorialTutorUid,
+      boardId,
+      studentUid: tutorialStudentUid,
+    })
+      .then((result) => {
+        if (cancelled || !result.assignmentId) return;
+        tutorialAssignmentReadyRef.current = true;
+        return loadBoard({ silent: true });
+      })
+      .catch(() => undefined);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    tutorialShouldShowAssignedWorksheet,
+    tutorialTutorUid,
+    tutorialStudentUid,
+    boardId,
+    loadBoard,
+  ]);
+
+  const replaceCardUrl = useCallback(
+    (cardId: string | null) => {
+      const next = workspaceBoardPath(boardId, cardId);
+      const current = `${location.pathname}${location.search}`;
+      if (current === next) return;
+      navigate(next, { replace: true });
+    },
+    [boardId, location.pathname, location.search, navigate],
+  );
+
+  useEffect(() => {
+    if (loading) return;
+    if (ignoreCardRestoreRef.current) {
+      if (!cardParam) ignoreCardRestoreRef.current = false;
+      return;
+    }
+    if (!cardParam) {
+      setFocusCardActivity(false);
+      return;
+    }
+    if (selectedCard?.id === cardParam && cardModalOpen) return;
+    const card = cards.find((row) => row.id === cardParam);
+    if (!card) {
+      toast({ title: "That card is no longer on this board." });
+      ignoreCardRestoreRef.current = true;
+      replaceCardUrl(null);
+      return;
+    }
+    const list = lists.find((row) => row.id === card.listId);
+    const fromLink = !skipActivityFocusRef.current;
+    skipActivityFocusRef.current = false;
+    setFocusCardNotes(false);
+    setFocusCardActivity(fromLink);
+    setSelectedCard(card);
+    setSelectedListTitle(list?.title);
+    setCardModalOpen(true);
+  }, [loading, cardParam, cards, lists, cardModalOpen, selectedCard?.id, replaceCardUrl]);
+
+  const closeTourCard = useCallback(() => {
+    if (tutorialShouldOpenCardRef.current) tourDismissHoldRef.current = true;
+    tourOpenedCardRef.current = false;
+    ignoreCardRestoreRef.current = true;
+    setFocusCardNotes(false);
+    setFocusCardActivity(false);
+    setCardModalOpen(false);
+    replaceCardUrl(null);
+  }, [replaceCardUrl]);
+
+  useEffect(() => {
+    if (!tutorialShouldOpenCard) {
+      tourDismissHoldRef.current = false;
+      if (tourOpenedCardRef.current) closeTourCard();
+      return;
+    }
+    if (tourDismissHoldRef.current) return;
+    const card = cards.find((row) => isDemoTutorialSessionCardTitle(row.title));
+    if (!card) return;
+    if (selectedCard?.id === card.id && cardModalOpen) {
+      tourOpenedCardRef.current = true;
+      return;
+    }
+    const list = lists.find((row) => row.id === card.listId);
+    tourOpenedCardRef.current = true;
+    skipActivityFocusRef.current = true;
+    setFocusCardNotes(false);
+    setFocusCardActivity(false);
+    setSelectedCard(card);
+    setSelectedListTitle(list?.title);
+    setCardModalOpen(true);
+    replaceCardUrl(card.id);
+  }, [
+    tutorialShouldOpenCard,
+    cards,
+    lists,
+    cardModalOpen,
+    selectedCard?.id,
+    replaceCardUrl,
+    closeTourCard,
+  ]);
+
+  useEffect(() => {
+    const onDismiss = () => closeTourCard();
+    window.addEventListener(DEMO_TUTORIAL_DISMISS_CARD, onDismiss);
+    return () => window.removeEventListener(DEMO_TUTORIAL_DISMISS_CARD, onDismiss);
+  }, [closeTourCard]);
 
   const handleToggleDiagnosticAssigned = async (assigned: boolean) => {
     if (!board || readOnly || savingDiagnosticAssigned) return;
@@ -297,25 +442,25 @@ export function WorkspaceBoard({
       <div data-tour="student-board" className="mb-4 overflow-hidden rounded-xl border glass-surface">
         <div className="flex min-w-0">
           <div className="w-1.5 shrink-0" style={{ backgroundColor: boardAccent }} aria-hidden />
-          <div className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-4 px-5 py-4">
-            <div className="flex min-w-0 items-center gap-3">
+          <div className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-3 px-3 py-3 sm:gap-4 sm:px-5 sm:py-4">
+            <div className="flex min-w-0 items-center gap-2 sm:gap-3">
               {showBackLink ? (
-                <Button variant="ghost" size="sm" className="shrink-0" asChild>
-                  <Link to="/workspace">
-                    <ArrowLeft className="h-4 w-4 mr-1" />
-                    Workspace
+                <Button variant="ghost" size="sm" className="h-10 w-10 shrink-0 px-0 sm:h-9 sm:w-auto sm:px-3" asChild>
+                  <Link to="/workspace" aria-label="Back to Workspace">
+                    <ArrowLeft className="h-4 w-4 sm:mr-1" />
+                    <span className="hidden sm:inline">Workspace</span>
                   </Link>
                 </Button>
               ) : null}
               <div className="min-w-0">
                 <div className="flex min-w-0 items-center gap-1.5">
-                  <h1 className="truncate text-2xl font-semibold tracking-tight">{board.studentName}</h1>
+                  <h1 className="truncate text-xl font-semibold tracking-tight sm:text-2xl">{board.studentName}</h1>
                   {!readOnly ? (
                     <Button
                       type="button"
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 shrink-0"
+                      className="h-10 w-10 shrink-0 sm:h-8 sm:w-8"
                       title="Edit name and color"
                       onClick={() => setEditDetailsOpen(true)}
                     >
@@ -328,7 +473,7 @@ export function WorkspaceBoard({
                   <p className="truncate text-sm text-muted-foreground">{board.studentEmail}</p>
                 ) : null}
                 {!readOnly ? (
-                  <div className="mt-2 flex items-center gap-2">
+                  <div data-tour="assign-diagnostic" className="mt-2 flex items-center gap-2">
                     <Switch
                       id={`diagnostic-assigned-${board.id}`}
                       checked={Boolean(board.diagnosticAssigned)}
@@ -349,7 +494,7 @@ export function WorkspaceBoard({
               <StudentQuickActions
                 tourId="board-actions"
                 stacked
-                className="w-full sm:flex sm:w-auto sm:shrink-0 sm:justify-end"
+                className="w-full sm:w-auto sm:shrink-0 sm:justify-end"
                 studentUid={board.studentUid}
                 studentName={board.studentName}
                 studentEmail={board.studentEmail}
@@ -371,6 +516,23 @@ export function WorkspaceBoard({
           readOnly={readOnly}
           saving={savingRoadmap}
           onSave={handleSaveRoadmap}
+          cards={cards}
+          lists={lists}
+          onOpenCard={(cardId) => {
+            const card = cards.find((row) => row.id === cardId);
+            if (!card) {
+              toast({ title: "That card is no longer on this board." });
+              return;
+            }
+            const list = lists.find((row) => row.id === card.listId);
+            skipActivityFocusRef.current = true;
+            setFocusCardNotes(false);
+            setFocusCardActivity(false);
+            setSelectedCard(card);
+            setSelectedListTitle(list?.title);
+            setCardModalOpen(true);
+            replaceCardUrl(card.id);
+          }}
           settings={
             readOnly ? undefined : (
               <>
@@ -416,10 +578,10 @@ export function WorkspaceBoard({
       </div>
       <div
         data-tour="board-lists"
-        className="flex flex-col items-stretch gap-4 pb-6 md:min-h-[calc(100vh-12rem)] md:flex-row md:items-start md:overflow-x-auto"
+        className="flex flex-col items-stretch gap-4 pb-6 sm:min-h-[calc(100dvh-12rem)] sm:flex-row sm:items-start sm:overflow-x-auto sm:overscroll-x-contain sm:snap-x sm:snap-proximity sm:-mx-3 sm:px-3 md:-mx-4 md:px-4"
       >
         {lists.length === 0 ? (
-          <div className="w-full rounded-xl border border-dashed border-border bg-muted/40 px-4 py-6 md:w-72 md:shrink-0">
+          <div className="w-full rounded-xl border border-dashed border-border bg-muted/40 px-4 py-6 sm:w-72 sm:shrink-0 sm:snap-start">
             <p className="text-sm text-muted-foreground">
               {canCreateListsAndCards
                 ? readOnly
@@ -440,10 +602,13 @@ export function WorkspaceBoard({
             readOnly={readOnly}
             canCreateListsAndCards={canCreateListsAndCards}
             onCardClick={(card, opts) => {
+              skipActivityFocusRef.current = true;
               setFocusCardNotes(Boolean(opts?.focusNotes));
+              setFocusCardActivity(false);
               setSelectedCard(card);
               setSelectedListTitle(list.title);
               setCardModalOpen(true);
+              replaceCardUrl(card.id);
             }}
             onCardsChanged={() => void loadBoard({ silent: true })}
             onListChanged={() => void loadBoard({ silent: true })}
@@ -456,7 +621,7 @@ export function WorkspaceBoard({
         ))}
 
         {canCreateListsAndCards && (
-          <div className="w-full md:w-72 md:shrink-0">
+          <div className="w-full sm:w-72 sm:shrink-0 sm:snap-start">
             {addingList ? (
               <div className="space-y-2 rounded-xl border glass-surface p-3">
                 <Input
@@ -479,7 +644,7 @@ export function WorkspaceBoard({
               <button
                 type="button"
                 onClick={() => setAddingList(true)}
-                className="flex w-full items-center gap-2 rounded-xl border border-dashed px-4 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent/40"
+                className="flex min-h-11 w-full items-center gap-2 rounded-xl border border-dashed px-4 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent/40"
               >
                 <Plus className="h-4 w-4" />
                 {lists.length === 0 ? "Add a list" : "Add another list"}
@@ -497,9 +662,20 @@ export function WorkspaceBoard({
         readOnly={readOnly}
         canRenameAndDeleteCards={canCreateListsAndCards}
         focusNotes={focusCardNotes}
+        focusActivity={focusCardActivity}
+        tourId={tutorialShouldOpenCard ? "session-card" : undefined}
+        tourLock={tutorialShouldOpenCard}
+        tourActive={tutorialActive}
         onOpenChange={(next) => {
-          setCardModalOpen(next);
-          if (!next) setFocusCardNotes(false);
+          if (!next) {
+            ignoreCardRestoreRef.current = true;
+            setFocusCardNotes(false);
+            setFocusCardActivity(false);
+            setCardModalOpen(false);
+            replaceCardUrl(null);
+            return;
+          }
+          setCardModalOpen(true);
         }}
         onUpdated={() => void loadBoard({ silent: true })}
       />
