@@ -24,15 +24,17 @@ export function DemoWelcomeDialog({ onDismiss }: { onDismiss?: () => void }) {
 
   return (
     <Dialog open={open} onOpenChange={(next) => (next ? setOpen(true) : close())}>
-      <DialogContent className="max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Welcome</DialogTitle>
-          <DialogDescription className="text-left text-sm leading-relaxed text-foreground">
+      <DialogContent className="max-w-3xl gap-6 p-10">
+        <DialogHeader className="space-y-5 pr-10">
+          <DialogTitle className="text-3xl">Welcome</DialogTitle>
+          <DialogDescription className="text-left text-lg leading-8 text-foreground">
             {WELCOME_TEXT}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button onClick={close}>Continue</Button>
+          <Button size="lg" className="h-12 px-8 text-base" onClick={close}>
+            Continue
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
