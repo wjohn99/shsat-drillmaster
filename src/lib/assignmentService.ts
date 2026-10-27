@@ -21,6 +21,7 @@ import type {
 } from "@/types/assignment";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase";
 import { parentReaderUidsForStudent } from "@/lib/parentLinkService";
+import { worksheetIdsOnCard } from "@/lib/cardWorksheets";
 import { logWorksheetCompletedOnCard } from "@/lib/workspaceCardContentService";
 import {
   mergeSubmittedQuestionIds,
@@ -46,7 +47,11 @@ async function findWorkspaceCardIdForAssignment(
   for (const cardDoc of snapshot.docs) {
     const data = cardDoc.data();
     if (data.deletedAt) continue;
-    if (data.assignmentId === assignmentId) return cardDoc.id;
+    const ids = worksheetIdsOnCard({
+      assignmentId: typeof data.assignmentId === "string" ? data.assignmentId : null,
+      assignmentIds: Array.isArray(data.assignmentIds) ? data.assignmentIds : [],
+    });
+    if (ids.includes(assignmentId)) return cardDoc.id;
   }
   return null;
 }

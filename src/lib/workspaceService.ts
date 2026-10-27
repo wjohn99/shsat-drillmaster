@@ -16,6 +16,7 @@ import {
   type QueryDocumentSnapshot,
 } from "firebase/firestore";
 import { fetchStudents } from "@/lib/assignmentService";
+import { worksheetIdsAfterLink, worksheetIdsOnCard } from "@/lib/cardWorksheets";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase";
 import { DEFAULT_WORKSPACE_BOARD_COLOR, workspaceBoardAccentColor } from "@/lib/workspaceBoardColors";
 import {
@@ -121,6 +122,10 @@ function parseCard(boardId: string, snapshot: QueryDocumentSnapshot<DocumentData
     completed: Boolean(data.completed),
     dueAt: data.dueAt ?? null,
     assignmentId: (data.assignmentId as string | undefined) ?? null,
+    assignmentIds: worksheetIdsOnCard({
+      assignmentId: (data.assignmentId as string | undefined) ?? null,
+      assignmentIds: Array.isArray(data.assignmentIds) ? data.assignmentIds : [],
+    }),
     trelloCardId: (data.trelloCardId as string | undefined) ?? undefined,
     commentCount: data.commentCount == null ? undefined : Number(data.commentCount) || 0,
     attachmentCount: data.attachmentCount == null ? undefined : Number(data.attachmentCount) || 0,
@@ -464,7 +469,10 @@ export async function createWorkspaceCard(
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   };
-  if (opts?.assignmentId) payload.assignmentId = opts.assignmentId;
+  if (opts?.assignmentId) {
+    payload.assignmentId = opts.assignmentId;
+    payload.assignmentIds = [opts.assignmentId];
+  }
   if (opts?.dueAt) payload.dueAt = opts.dueAt;
 
   const docRef = await addDoc(collection(db, BOARDS_COLLECTION, boardId, "cards"), payload);
@@ -478,6 +486,7 @@ export interface UpdateWorkspaceCardInput {
   completed?: boolean;
   listId?: string;
   assignmentId?: string | null;
+  assignmentIds?: string[];
   dueAt?: Timestamp | null;
 }
 
@@ -527,6 +536,7 @@ export async function updateWorkspaceCard(
     if (input.completed !== undefined) payload.completed = input.completed;
     if (input.listId !== undefined) payload.listId = input.listId;
     if (input.assignmentId !== undefined) payload.assignmentId = input.assignmentId;
+    if (input.assignmentIds !== undefined) payload.assignmentIds = input.assignmentIds;
     if (input.dueAt !== undefined) payload.dueAt = input.dueAt;
     await updateDoc(cardRef, payload);
     return;
@@ -566,6 +576,7 @@ export async function updateWorkspaceCard(
     if (input.completed !== undefined) payload.completed = input.completed;
     if (input.listId !== undefined) payload.listId = input.listId;
     if (input.assignmentId !== undefined) payload.assignmentId = input.assignmentId;
+    if (input.assignmentIds !== undefined) payload.assignmentIds = input.assignmentIds;
     if (input.dueAt !== undefined) payload.dueAt = input.dueAt;
 
     tx.update(cardRef, payload);
@@ -614,9 +625,20 @@ export async function linkAssignmentToWorkspace(
   const { boardId, listId, assignmentId, dueAt, existingCardId, newCardTitle } = input;
 
   if (existingCardId) {
-    await updateWorkspaceCard(boardId, existingCardId, {
+    const cardRef = doc(getFirebaseDb(), BOARDS_COLLECTION, boardId, "cards", existingCardId);
+    const snap = await getDoc(cardRef);
+    const data = snap.data() ?? {};
+    const assignmentIds = worksheetIdsAfterLink(
+      worksheetIdsOnCard({
+        assignmentId: typeof data.assignmentId === "string" ? data.assignmentId : null,
+        assignmentIds: Array.isArray(data.assignmentIds) ? data.assignmentIds : [],
+      }),
       assignmentId,
-      dueAt,
+    );
+    await updateWorkspaceCard(boardId, existingCardId, {
+      assignmentId: assignmentIds[0] ?? assignmentId,
+      assignmentIds,
+      ...(data.dueAt ? {} : { dueAt }),
     });
     return existingCardId;
   }

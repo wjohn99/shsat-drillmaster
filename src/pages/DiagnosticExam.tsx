@@ -960,7 +960,7 @@ export default function DiagnosticExam() {
                         openAttempt(attempt.events, attempt.endedReason, attempt.label)
                       }
                     >
-                      View {attempt.isBaseline ? "first diagnostic" : "this attempt"}
+                      {attempt.isBaseline ? "Diagnostic results" : "View this attempt"}
                     </Button>
                   </div>
                 ))}

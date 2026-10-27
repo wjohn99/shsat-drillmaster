@@ -160,8 +160,10 @@ export interface WorkspaceCard {
   position: number;
   completed: boolean;
   dueAt?: Timestamp | null;
-  /** Linked DrillMaster worksheet assignment (assigned from Worksheets tab). */
+  /** First linked worksheet. Kept so older cards still open. */
   assignmentId?: string | null;
+  /** Every worksheet on this card, oldest first. */
+  assignmentIds?: string[];
   /** Present on cards imported from a Trello board JSON export. */
   trelloCardId?: string;
   /** Active comments (hidden when 0). */

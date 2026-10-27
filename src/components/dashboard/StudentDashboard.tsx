@@ -274,7 +274,7 @@ export function StudentDashboard({ viewAs = null }: { viewAs?: ViewAsStudent | n
                       )[0],
                     }}
                   >
-                    View first diagnostic
+                    Diagnostic results
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild>

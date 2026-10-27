@@ -56,6 +56,7 @@ import {
   worksheetProgressStatus,
   WORKSHEET_PROGRESS_LABEL,
 } from "@/lib/dashboardStats";
+import { worksheetIdsOnCard } from "@/lib/cardWorksheets";
 import { updateWorkspaceCard, deleteWorkspaceCard } from "@/lib/workspaceService";
 import type { WorksheetAssignment } from "@/types/assignment";
 import {
@@ -268,9 +269,11 @@ export function CardDetailModal({
   const [feed, setFeed] = useState<CardFeedItem[]>([]);
   const [commentDraft, setCommentDraft] = useState("");
   const [postingComment, setPostingComment] = useState(false);
-  const [linkedAssignment, setLinkedAssignment] = useState<WorksheetAssignment | null>(null);
+  const [linkedAssignments, setLinkedAssignments] = useState<WorksheetAssignment[]>([]);
   const [linkedAssignmentLoading, setLinkedAssignmentLoading] = useState(false);
-  const [linkedWorksheetInProgress, setLinkedWorksheetInProgress] = useState(false);
+  const [linkedWorksheetInProgressIds, setLinkedWorksheetInProgressIds] = useState<Set<string>>(
+    () => new Set(),
+  );
   const [deleteCardOpen, setDeleteCardOpen] = useState(false);
   const [deletingCard, setDeletingCard] = useState(false);
 
@@ -367,25 +370,43 @@ export function CardDetailModal({
     };
   }, [open, boardId, card?.id]);
 
+  const linkedWorksheetIds = card ? worksheetIdsOnCard(card) : [];
+  const linkedWorksheetKey = linkedWorksheetIds.join("|");
+
   useEffect(() => {
-    if (!open || !card?.assignmentId) {
-      setLinkedAssignment(null);
-      setLinkedWorksheetInProgress(false);
+    if (!open || linkedWorksheetIds.length === 0) {
+      setLinkedAssignments([]);
+      setLinkedWorksheetInProgressIds(new Set());
       return;
     }
 
     let cancelled = false;
+    const ids = linkedWorksheetIds;
     setLinkedAssignmentLoading(true);
-    void fetchAssignmentById(card.assignmentId)
-      .then(async (row) => {
+    void Promise.all(ids.map((id) => fetchAssignmentById(id).catch(() => null)))
+      .then(async (rows) => {
         if (cancelled) return;
-        setLinkedAssignment(row);
-        if (row && profile?.role === "student" && profile.uid && row.status === "todo") {
-          const save = await fetchWorksheetProgress(profile.uid, row.id).catch(() => null);
-          if (!cancelled) setLinkedWorksheetInProgress(worksheetProgressIsStarted(save));
-        } else if (!cancelled) {
-          setLinkedWorksheetInProgress(false);
+        const byId = new Map(
+          rows
+            .filter((row): row is WorksheetAssignment => row != null)
+            .map((row) => [row.id, row]),
+        );
+        const ordered = ids
+          .map((id) => byId.get(id))
+          .filter((row): row is WorksheetAssignment => row != null);
+        setLinkedAssignments(ordered);
+        const inProgress = new Set<string>();
+        if (profile?.role === "student" && profile.uid) {
+          await Promise.all(
+            ordered
+              .filter((row) => row.status === "todo")
+              .map(async (row) => {
+                const save = await fetchWorksheetProgress(profile.uid, row.id).catch(() => null);
+                if (worksheetProgressIsStarted(save)) inProgress.add(row.id);
+              }),
+          );
         }
+        if (!cancelled) setLinkedWorksheetInProgressIds(inProgress);
       })
       .finally(() => {
         if (!cancelled) setLinkedAssignmentLoading(false);
@@ -394,7 +415,9 @@ export function CardDetailModal({
     return () => {
       cancelled = true;
     };
-  }, [open, card?.assignmentId, profile?.role, profile?.uid]);
+    // linkedWorksheetKey is the stable id list.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, linkedWorksheetKey, profile?.role, profile?.uid]);
 
   useEffect(() => {
     if (!tourLock || !open || !card?.assignmentId) return;
@@ -416,12 +439,12 @@ export function CardDetailModal({
     });
   };
 
-  const handleStartLinkedWorksheet = () => {
-    if (!linkedAssignment || !card) return;
+  const handleStartLinkedWorksheet = (assignment: WorksheetAssignment) => {
+    if (!card) return;
     onOpenChange(false);
     navigate("/worksheets", {
       state: {
-        autoStartAssignment: linkedAssignment,
+        autoStartAssignment: assignment,
         workspaceCompletionTarget: { boardId, cardId: card.id },
         returnTo: WORKSPACE_HOME_PATH,
       },
@@ -889,56 +912,75 @@ export function CardDetailModal({
                 )}
               </section>
 
-              {card.assignmentId ? (
+              {linkedWorksheetIds.length > 0 || isTutorView ? (
                 <section
                   ref={assignedWorksheetRef}
                   className="mb-8"
                   data-tour="assigned-worksheet"
                 >
-                  <div className="flex items-center gap-2 text-sm font-semibold mb-3">
-                    <ClipboardList className="h-4 w-4" />
-                    Assigned Worksheet
+                  <div className="mb-3 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 text-sm font-semibold">
+                      <ClipboardList className="h-4 w-4" />
+                      Worksheets
+                    </div>
+                    {isTutorView ? (
+                      <Button variant="ghost" size="sm" onClick={handleOpenWorksheetAssign}>
+                        <ClipboardList className="h-4 w-4 mr-1" />
+                        {linkedWorksheetIds.length > 0 ? "Add worksheet" : "Assign worksheet"}
+                      </Button>
+                    ) : null}
                   </div>
                   {linkedAssignmentLoading ? (
                     <div className="flex justify-center py-4">
                       <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
                     </div>
-                  ) : linkedAssignment ? (
-                    <div className="rounded-lg border bg-background p-4 space-y-3">
-                      <div>
-                        <p className="font-medium">{linkedAssignment.title}</p>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {linkedAssignment.questionIds.length} questions
-                          {formatAssignmentDueDate(linkedAssignment)
-                            ? ` · Due ${formatAssignmentDueDate(linkedAssignment)}`
-                            : ""}
-                          {` · ${WORKSHEET_PROGRESS_LABEL[worksheetProgressStatus(linkedAssignment)]}`}
-                        </p>
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {profile?.role === "student" && linkedAssignment.status === "todo" ? (
-                          <Button size="sm" onClick={handleStartLinkedWorksheet}>
-                            {linkedWorksheetInProgress ? "Resume worksheet" : "Start worksheet"}
-                          </Button>
-                        ) : null}
-                        {linkedAssignment.status === "completed" ? (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => {
-                              onOpenChange(false);
-                              navigate("/worksheets", {
-                                state: { reviewAssignment: linkedAssignment, returnTo: WORKSPACE_HOME_PATH },
-                              });
-                            }}
-                          >
-                            View last results
-                          </Button>
-                        ) : null}
-                      </div>
+                  ) : linkedAssignments.length > 0 ? (
+                    <div className="space-y-3">
+                      {linkedAssignments.map((assignment) => (
+                        <div key={assignment.id} className="rounded-lg border bg-background p-4 space-y-3">
+                          <div>
+                            <p className="font-medium">{assignment.title}</p>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {assignment.questionIds.length} questions
+                              {formatAssignmentDueDate(assignment)
+                                ? ` · Due ${formatAssignmentDueDate(assignment)}`
+                                : ""}
+                              {` · ${WORKSHEET_PROGRESS_LABEL[worksheetProgressStatus(assignment)]}`}
+                            </p>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {profile?.role === "student" && assignment.status === "todo" ? (
+                              <Button size="sm" onClick={() => handleStartLinkedWorksheet(assignment)}>
+                                {linkedWorksheetInProgressIds.has(assignment.id)
+                                  ? "Resume worksheet"
+                                  : "Start worksheet"}
+                              </Button>
+                            ) : null}
+                            {assignment.status === "completed" ? (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => {
+                                  onOpenChange(false);
+                                  navigate("/worksheets", {
+                                    state: {
+                                      reviewAssignment: assignment,
+                                      returnTo: WORKSPACE_HOME_PATH,
+                                    },
+                                  });
+                                }}
+                              >
+                                View last results
+                              </Button>
+                            ) : null}
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ) : (
+                  ) : linkedWorksheetIds.length > 0 ? (
                     <p className="text-sm text-muted-foreground">Worksheet not found.</p>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">No worksheet on this card yet.</p>
                   )}
                 </section>
               ) : null}
@@ -952,12 +994,6 @@ export function CardDetailModal({
                   </div>
                   {canAddAttachments ? (
                     <div className="flex flex-wrap items-center justify-end gap-1">
-                      {isTutorView && !card.assignmentId ? (
-                        <Button variant="ghost" size="sm" onClick={handleOpenWorksheetAssign}>
-                          <ClipboardList className="h-4 w-4 mr-1" />
-                          Assign worksheet
-                        </Button>
-                      ) : null}
                       <Button
                         variant="ghost"
                         size="sm"

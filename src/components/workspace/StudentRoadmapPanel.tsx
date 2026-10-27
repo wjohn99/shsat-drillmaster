@@ -738,7 +738,7 @@ export function StudentRoadmapPanel({
             snapshot.baseline.id !== snapshot.latestDiagnostic.id ? (
               <Button variant="outline" asChild>
                 <Link to="/practice/diagnostic" state={{ reviewSession: snapshot.baseline, returnTo }}>
-                  First diagnostic
+                  Diagnostic results
                 </Link>
               </Button>
             ) : null}

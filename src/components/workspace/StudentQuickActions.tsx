@@ -55,6 +55,7 @@ export function StudentQuickActions({
   const showLatestDiagnostic =
     latestDiagnostic && latestDiagnostic.id !== firstDiagnostic?.id;
   const buttonClass = cn(
+    "shrink-0",
     stacked && "w-full sm:w-auto",
     compact
       ? "h-8 px-2 text-xs max-sm:h-11 max-sm:w-full max-sm:text-sm"
@@ -110,7 +111,7 @@ export function StudentQuickActions({
             to="/practice/diagnostic"
             state={{ reviewSession: firstDiagnostic, ...(returnTo ? { returnTo } : {}) }}
           >
-            First diagnostic
+            Diagnostic results
           </Link>
         </Button>
       ) : null}

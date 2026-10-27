@@ -47,6 +47,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { LinkifiedText } from "@/components/workspace/LinkifiedText";
 import { isDemoTutorialSessionCardTitle } from "@/lib/demoTutorial";
+import { worksheetIdsOnCard } from "@/lib/cardWorksheets";
 
 function formatCardSessionDate(value?: string): string {
   if (!value) return "";
@@ -585,11 +586,13 @@ export function BoardListColumn({
                           {sessionWhen}
                         </p>
                       ) : null}
-                      {card.assignmentId ? (
+                      {worksheetIdsOnCard(card).map((assignmentId) => (
                         <BoardCardAssignmentStatus
-                          assignment={assignmentById?.get(card.assignmentId) ?? null}
+                          key={assignmentId}
+                          assignment={assignmentById?.get(assignmentId) ?? null}
+                          showTitle={worksheetIdsOnCard(card).length > 1}
                         />
-                      ) : null}
+                      ))}
                       {card.description ? (
                         <p className="text-xs text-muted-foreground mt-1 line-clamp-2 pl-7">
                           <LinkifiedText text={card.description} stopClickPropagation />
@@ -753,18 +756,21 @@ export function BoardListColumn({
 
 function BoardCardAssignmentStatus({
   assignment,
+  showTitle = false,
 }: {
   assignment: WorksheetAssignment | null | undefined;
+  showTitle?: boolean;
 }) {
   const status = assignment ? worksheetProgressStatus(assignment) : "assigned";
   const dueLabel = assignment && status !== "done" ? formatAssignmentDueDate(assignment) : "";
   const variant = status === "done" ? "secondary" : status === "due" ? "destructive" : "default";
 
   return (
-    <div
-      data-tour="assigned-worksheet"
-      className="mt-1.5 pl-7 flex flex-wrap items-center gap-1.5"
-    >
+    <div data-tour="assigned-worksheet" className="mt-1.5 pl-7">
+      {showTitle && assignment?.title ? (
+        <p className="mb-1 line-clamp-1 text-[11px] text-muted-foreground">{assignment.title}</p>
+      ) : null}
+      <div className="flex flex-wrap items-center gap-1.5">
       <Badge variant={variant} className="text-[10px] px-1.5 py-0">
         {WORKSHEET_PROGRESS_LABEL[status]}
       </Badge>
@@ -777,6 +783,7 @@ function BoardCardAssignmentStatus({
           {dueLabel}
         </span>
       ) : null}
+      </div>
     </div>
   );
 }

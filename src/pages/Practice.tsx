@@ -210,7 +210,7 @@ const Practice = () => {
                         )[0],
                       }}
                     >
-                      View first diagnostic
+                      Diagnostic results
                     </Link>
                   </Button>
                   <Button variant="outline" asChild>
