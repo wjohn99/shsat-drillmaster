@@ -106,7 +106,7 @@ describe("CardDetailModal assigned worksheet", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("Assigned Worksheet")).toBeTruthy();
+    expect(screen.getByText("Worksheets")).toBeTruthy();
     await waitFor(() => {
       expect(
         screen.getByText("Worksheet: Linear Equations & Inequalities, Expressions & Manipulations"),
@@ -115,5 +115,21 @@ describe("CardDetailModal assigned worksheet", () => {
     expect(screen.getByText(/10 questions/)).toBeTruthy();
     expect(screen.getByText(/Due Nov 2, 2026/)).toBeTruthy();
     expect(document.querySelector("[data-tour='assigned-worksheet']")).toBeTruthy();
+  });
+
+  it("renders when a board opens with no card selected", () => {
+    expect(() => {
+      render(
+        <MemoryRouter>
+          <CardDetailModal
+            boardId="demo-1-avery"
+            card={null}
+            open={false}
+            onOpenChange={vi.fn()}
+            onUpdated={vi.fn()}
+          />
+        </MemoryRouter>,
+      );
+    }).not.toThrow();
   });
 });

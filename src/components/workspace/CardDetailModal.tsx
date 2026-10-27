@@ -422,7 +422,7 @@ export function CardDetailModal({
   useEffect(() => {
     if (!tourLock || !open || !card?.assignmentId) return;
     assignedWorksheetRef.current?.scrollIntoView?.({ block: "nearest", inline: "nearest" });
-  }, [tourLock, open, card?.assignmentId, linkedAssignment]);
+  }, [tourLock, open, card?.assignmentId, linkedAssignments]);
 
   const handleOpenWorksheetAssign = () => {
     if (!card || readOnly) return;
