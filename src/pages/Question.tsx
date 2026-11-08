@@ -9,7 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { NotesWorkbench } from "@/components/notes/NotesWorkbench";
 import { 
   ArrowLeft, 
   Clock, 
@@ -29,10 +29,11 @@ import { QuestionReportsPanel } from "@/components/question/QuestionReportsPanel
 import { QuestionReviewPanel } from "@/components/question/QuestionReviewPanel";
 import { ReportQuestionButton } from "@/components/question/ReportQuestionButton";
 import { QuestionSolutionPanel } from "@/components/question/QuestionSolutionPanel";
-import { getSelectedChoiceIds } from "@/lib/questionExplanation";
+import { getSelectedChoiceIds, showsSkillToImprove } from "@/lib/questionExplanation";
 import { MathText } from "@/lib/mathText";
 import { useQuestionBookmarks } from "@/contexts/QuestionBookmarksContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useViewAsStudent } from "@/contexts/ViewAsStudentContext";
 import { toast } from "@/hooks/use-toast";
 import { isAtaAnswerCorrect, isIndyCheckboxMultiSubtype, serializeAtaAnswer } from "@/lib/indyAta";
 import { isMsAnswerCorrect } from "@/lib/indyMs";
@@ -62,10 +63,12 @@ import { HighlightableText } from "@/components/exam/HighlightableText";
 import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
 
 const NOTES_STORAGE_KEY = "question-notes";
+const NOTES_SCRATCH_KEY = "question-notes-scratch";
 
 export default function Question() {
   const { questions, passages, getQuestionById, loading } = useQuestions();
   const { profile } = useAuth();
+  const { viewAs } = useViewAsStudent();
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const isPracticeMode = searchParams.get('practice') === 'true';
@@ -81,6 +84,8 @@ export default function Question() {
   const [showSolution, setShowSolution] = useState(!isPracticeMode);
   const { isBookmarked, toggleBookmark } = useQuestionBookmarks();
   const [userNotes, setUserNotes] = useState("");
+  const [scratchPad, setScratchPad] = useState("");
+  const [notesLoadedFor, setNotesLoadedFor] = useState<string | null>(null);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(isPracticeMode);
 
@@ -95,12 +100,23 @@ export default function Question() {
   useEffect(() => {
     if (!id) return;
     try {
-      const stored = localStorage.getItem(`${NOTES_STORAGE_KEY}-${id}`);
-      setUserNotes(stored ?? "");
+      setUserNotes(localStorage.getItem(`${NOTES_STORAGE_KEY}-${id}`) ?? "");
+      setScratchPad(localStorage.getItem(`${NOTES_SCRATCH_KEY}-${id}`) ?? "");
     } catch {
       setUserNotes("");
+      setScratchPad("");
     }
+    setNotesLoadedFor(id);
   }, [id]);
+
+  useEffect(() => {
+    if (!id || notesLoadedFor !== id) return;
+    try {
+      localStorage.setItem(`${NOTES_SCRATCH_KEY}-${id}`, scratchPad);
+    } catch {
+      // The drawing stays on screen. Save Notes can try again.
+    }
+  }, [id, notesLoadedFor, scratchPad]);
 
   // Reset practice state when navigating between questions in practice mode
   useEffect(() => {
@@ -217,6 +233,7 @@ export default function Question() {
     if (!question) return;
     try {
       localStorage.setItem(`${NOTES_STORAGE_KEY}-${question.id}`, userNotes);
+      localStorage.setItem(`${NOTES_SCRATCH_KEY}-${question.id}`, scratchPad);
       toast({
         title: "Notes saved",
         description: "Your notes have been saved for this question.",
@@ -333,7 +350,7 @@ export default function Question() {
             )}
 
             {/* Question */}
-            <Card>
+            <Card data-tour="question-practice">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
@@ -473,7 +490,7 @@ export default function Question() {
                                 checked={checked}
                                 onCheckedChange={() => toggleAtaChoice(choice.id)}
                                 disabled={showSolution}
-                                className="mt-1"
+                                className="mt-1 choice-control"
                               />
                               <Label
                                 htmlFor={choice.id}
@@ -520,7 +537,7 @@ export default function Question() {
                       {question.choices.map((choice) => (
                         <div key={choice.id} className="space-y-1.5">
                           <div className="flex items-start space-x-3">
-                            <RadioGroupItem value={choice.id} id={choice.id} className="mt-1" />
+                            <RadioGroupItem value={choice.id} id={choice.id} className="mt-1 choice-control" />
                             <Label 
                               htmlFor={choice.id} 
                               className={`flex-1 cursor-pointer text-sm leading-relaxed ${
@@ -599,7 +616,7 @@ export default function Question() {
                     question={question}
                     isCorrect={isAnswerCorrect()}
                     selectedChoiceIds={getSelectedChoiceIds(question, getUserAnswer())}
-                    showSkillToImprove={profile?.role === "tutor" && isPracticeMode}
+                    showSkillToImprove={!viewAs && showsSkillToImprove(profile?.role)}
                   />
                 )}
 
@@ -622,16 +639,18 @@ export default function Question() {
             <QuestionReportsPanel questionId={question.id} />
 
             {/* User Notes */}
-            <Card>
+            <Card data-tour="question-notes">
               <CardHeader>
                 <CardTitle className="text-lg">My Notes</CardTitle>
               </CardHeader>
               <CardContent>
-                <Textarea
-                  placeholder="Add your notes about this question..."
-                  value={userNotes}
-                  onChange={(e) => setUserNotes(e.target.value)}
-                  rows={4}
+                <NotesWorkbench
+                  text={userNotes}
+                  onTextChange={setUserNotes}
+                  scratchPad={scratchPad}
+                  onScratchPadChange={setScratchPad}
+                  textPlaceholder="Add your notes about this question..."
+                  textAriaLabel="Question notes"
                 />
                 <Button className="mt-3" size="sm" onClick={handleSaveNotes}>Save Notes</Button>
               </CardContent>

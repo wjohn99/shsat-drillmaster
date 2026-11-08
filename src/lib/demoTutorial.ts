@@ -6,6 +6,11 @@ export interface DemoTutorialStep {
   id: string;
   /** A path, or "first-sample-board" for the first sample student. */
   route: string;
+  /**
+   * When set, the address must use this query. Empty string means no query.
+   * Omit to ignore the query.
+   */
+  search?: string;
   target: string;
   title: string;
   body: string;
@@ -28,114 +33,129 @@ export const DEMO_TUTORIAL_WORKSHEET_QUESTION_COUNT = 10;
 export const DEMO_TUTORIAL_WORKSHEET_TITLE =
   "Worksheet: Linear Equations & Inequalities, Expressions & Manipulations";
 
+/** Demo-visible revising item with a solution, choice notes, a trap, and skill tags. */
+export const DEMO_TUTORIAL_QUESTION_ID = "ELA-REB-002";
+
+const TUTORIAL_QUESTION = `/question/${DEMO_TUTORIAL_QUESTION_ID}`;
+
 export const DEMO_TUTORIAL_STEPS: DemoTutorialStep[] = [
   {
-    id: "workspace-home",
-    route: "/workspace",
-    target: "sample-boards",
-    title: "The workspace is the class",
-    body: "Each card is one student's board. The diagnostic, worksheets, notes, and results all connect back to that board. Avery, Jordan, and Sam are samples.",
+    id: "open-bank",
+    route: "/dashboard",
+    target: "nav-question-bank",
+    title: "Start in the question bank",
+    body: "Question Bank is where DrillMaster starts. You choose a subject, module, and skill there. Workspace keeps the class record, and we will look at it at the end.",
   },
   {
-    id: "open-board",
-    route: FIRST_SAMPLE_BOARD,
-    target: "student-board",
-    via: "sample-board-link",
-    title: "Open a student's board",
-    body: "Click Avery's card. One board is one student. Next we will look at one area at a time.",
+    id: "choose-skill",
+    route: "/question-bank",
+    target: "bank-filters",
+    via: "nav-question-bank",
+    title: "Choose the module and the skill",
+    body: "Filter by subject, module, then skill. That is how you pick practice for the adaptive test. A prebuilt worksheet, or one you build, starts from these same skills.",
   },
   {
-    id: "session-cards",
-    route: FIRST_SAMPLE_BOARD,
-    target: "session-summaries",
-    title: "Session cards track the work",
-    body: "Session summaries, homework, and score reports live in these lists. Students and families can see them. Put a short note on the card after each session.",
+    id: "practice-question",
+    route: TUTORIAL_QUESTION,
+    search: "practice=true",
+    target: "question-practice",
+    title: "A student answers the question",
+    body: "Subject and module sit on the item. Highlight is there for the sentences. The questions are written by tutors, in the style of the test.",
   },
   {
-    id: "session-2",
-    route: FIRST_SAMPLE_BOARD,
-    target: "session-card",
-    via: "session-2-card",
-    reveal: "session-card",
-    title: "A session card holds the assignment",
-    body: "Session 2 is open. When you assign a worksheet, attach it to this card so it is ready for the student to take.",
+    id: "how-to-solve",
+    route: TUTORIAL_QUESTION,
+    search: "",
+    target: "how-to-solve",
+    title: "The correct answer, explained",
+    body: "After they submit, How to solve it walks the item step by step. The correct choice is explained just under that.",
   },
   {
-    id: "roadmap",
-    route: FIRST_SAMPLE_BOARD,
-    target: "student-roadmap",
-    via: "student-roadmap",
-    reveal: "roadmap",
-    title: "Show the roadmap",
-    body: "Click Show roadmap. Scores, the latest family update, and what to do next all live here.",
+    id: "why-wrong",
+    route: TUTORIAL_QUESTION,
+    search: "",
+    target: "why-wrong",
+    title: "Why the other choices are wrong",
+    body: "Each incorrect choice says what a student might have thought, and why that reading does not hold. Their pick is marked.",
   },
   {
-    id: "assign-diagnostic",
-    route: FIRST_SAMPLE_BOARD,
-    target: "assign-diagnostic",
-    title: "Assign the diagnostic",
-    body: "Turn on Assign diagnostic from this board. That opens the full form for this student.",
+    id: "common-trap",
+    route: TUTORIAL_QUESTION,
+    search: "",
+    target: "common-trap",
+    title: "The common trap",
+    body: "The trap names the mistake students make on this skill, so you know what to teach next.",
   },
   {
-    id: "view-diagnostic",
-    route: FIRST_SAMPLE_BOARD,
-    target: "view-diagnostic",
-    reveal: "roadmap",
-    title: "A few days later, review the diagnostic",
-    body: "When they finish, View diagnostic results stays on this same board. You see what they got right and wrong, then plan the next session.",
+    id: "next-topics",
+    route: TUTORIAL_QUESTION,
+    search: "",
+    target: "skill-to-improve",
+    title: "Topics for the next session",
+    body: "Skill to improve is for tutors. It is the topic to practice next. Students do not see it while they are answering.",
   },
   {
-    id: "worksheet-skills",
+    id: "question-notes",
+    route: TUTORIAL_QUESTION,
+    search: "",
+    target: "question-notes",
+    title: "Notes stay on the question",
+    body: "My Notes is for what you want to remember about this item before the next session. Type a note, or draw the work on the scratch pad.",
+  },
+  {
+    id: "prebuilt-or-own",
+    route: "/worksheets",
+    target: "worksheet-presets",
+    via: "nav-worksheets",
+    title: "Send a prebuilt set, or build your own",
+    body: "Worksheets is where practice goes to a student. Browse a pre-set that is ready to assign, or build one from the skills you choose.",
+  },
+  {
+    id: "build-worksheet",
     route: "/worksheets",
     target: "worksheet-skills",
-    via: "nav-worksheets",
-    navFallback: "assign-worksheet-board",
-    worksheetsBuild: true,
-    title: "Build the worksheet from today's topic",
-    body: "After a session on algebra, open Worksheets and pick those skills. Check as many as you covered today.",
+    via: "assign-worksheet",
+    title: "Create your own",
+    body: "Assign to student opens the builder. Pick the skills from the lesson, then set how many questions to send. In the demo the students are samples. With a real class, this is the same screen.",
   },
   {
-    id: "worksheet-limit",
-    route: "/worksheets",
-    target: "worksheet-limit",
-    worksheetsBuild: true,
-    title: "Set the question count",
-    body: "Adjust how many questions to send. A short set is enough for homework after a session.",
-  },
-  {
-    id: "worksheet-workspace",
-    route: "/worksheets",
-    target: "worksheet-workspace",
-    worksheetsBuild: true,
-    title: "Put it on the session card",
-    body: "Show it on their workspace and pick Session 2. The assignment lands on that card.",
-  },
-  {
-    id: "worksheet-ready",
-    route: FIRST_SAMPLE_BOARD,
-    target: "assigned-worksheet",
+    id: "workspace-complement",
+    route: "/workspace",
+    target: "sample-boards",
     via: "nav-workspace",
-    navFallback: "sample-boards",
-    reveal: "session-card",
-    title: "Back on the board, it is ready",
-    body: "Session 2 now has the assigned worksheet. Students see the Assigned badge on the card and start it from here.",
-  },
-  {
-    id: "review-results",
-    route: FIRST_SAMPLE_BOARD,
-    target: "view-last-results",
-    title: "Review what they missed",
-    body: "View last results opens each question, the choice they picked, and the common trap. Green is correct, red is incorrect.",
-  },
-  {
-    id: "next-loop",
-    route: FIRST_SAMPLE_BOARD,
-    target: "assign-next-worksheet",
-    reveal: "roadmap",
-    title: "Then you repeat the loop",
-    body: "Assign next worksheet can use the skills they missed. That is one session cycle. You do the same thing the next time you meet.",
+    title: "Workspace keeps the class record",
+    body: "This part is complementary. Avery, Jordan, and Sam are sample students. An assigned worksheet can show up on a student's board, with notes and results. Start from the question bank and worksheets. The board is where that work is kept.",
   },
 ];
+
+/** Query the step requires, or null when any query is fine. */
+export function tutorialSearch(step: DemoTutorialStep): string | null {
+  if (step.search === undefined) return null;
+  if (step.search === "") return "";
+  return step.search.startsWith("?") ? step.search : `?${step.search}`;
+}
+
+/** Which worksheets screen this step highlights. Null when the step is not on Worksheets. */
+export function tutorialWorksheetSurface(
+  step?: DemoTutorialStep | null,
+): "home" | "build" | null {
+  if (!step || step.route !== "/worksheets") return null;
+  return step.target === "worksheet-skills" ? "build" : "home";
+}
+
+export function isTutorialStepLocation(
+  pathname: string,
+  search: string,
+  step: DemoTutorialStep | undefined,
+  sampleBoardPath: string | null,
+): boolean {
+  if (!step) return false;
+  const route = step.route === FIRST_SAMPLE_BOARD ? sampleBoardPath : step.route;
+  if (!route || pathname !== route) return false;
+  const want = tutorialSearch(step);
+  if (want === null) return true;
+  return search === want;
+}
 
 export function tutorialOpensRoadmap(step?: DemoTutorialStep | null): boolean {
   if (!step) return false;

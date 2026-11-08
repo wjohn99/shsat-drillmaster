@@ -4,7 +4,7 @@ import { Header } from "@/components/layout/Header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
+import { NotesWorkbench } from "@/components/notes/NotesWorkbench";
 import { HighlightableText } from "@/components/exam/HighlightableText";
 import { QuestionResponseFields } from "@/components/question/QuestionResponseFields";
 import { ReportQuestionButton } from "@/components/question/ReportQuestionButton";
@@ -86,6 +86,7 @@ export function DiagnosticExamRunner({
     initialSave?.eliminated ?? {},
   );
   const [notepad, setNotepad] = useState(initialSave?.notepad ?? "");
+  const [scratchPad, setScratchPad] = useState(initialSave?.scratchPad ?? "");
   const [clockHidden, setClockHidden] = useState(initialSave?.clockHidden ?? false);
   const [remainingSeconds, setRemainingSeconds] = useState(() =>
     Math.max(0, Math.ceil((deadlineAt - Date.now()) / 1000)),
@@ -259,6 +260,7 @@ export function DiagnosticExamRunner({
         lockedUnitKeys: [...lockedUnitKeys],
         eliminated,
         notepad,
+        scratchPad,
         clockHidden,
         events: [...eventsByQuestionId.current.values()],
       };
@@ -278,6 +280,7 @@ export function DiagnosticExamRunner({
       initialSave?.startedAt,
       lockedUnitKeys,
       notepad,
+      scratchPad,
       questionIndexInUnit,
       recordTiming,
       sectionIndex,
@@ -569,7 +572,6 @@ export function DiagnosticExamRunner({
         onToggleAta={toggleAta}
         eliminatedChoiceIds={eliminated[currentQuestion.id]}
         onToggleEliminate={toggleEliminate}
-        highContrastChoices
       />
     </>
   );
@@ -769,14 +771,15 @@ export function DiagnosticExamRunner({
         <div className="z-20 shrink-0 border-t bg-background/95 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
           {notesOpen ? (
             <div id="diagnostic-notepad" className="container space-y-2 px-4 pt-2">
-              <p className="text-sm font-medium">Notes</p>
-              <Textarea
-                ref={notesRef}
-                value={notepad}
-                onChange={(e) => setNotepad(e.target.value)}
-                placeholder="Scratch notes for this exam (saved to your account)."
-                className="h-28 resize-none text-sm sm:h-32"
-                aria-label="Exam notes"
+              <NotesWorkbench
+                compact
+                text={notepad}
+                onTextChange={setNotepad}
+                scratchPad={scratchPad}
+                onScratchPadChange={setScratchPad}
+                textRef={notesRef}
+                textPlaceholder="Scratch notes for this exam (saved to your account)."
+                textAriaLabel="Exam notes"
               />
             </div>
           ) : null}

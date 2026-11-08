@@ -129,7 +129,7 @@ export function TutorWorksheetsHome({
         />
       </section>
 
-      <section id="worksheet-presets" ref={presetsRef} className="scroll-mt-24">
+      <section id="worksheet-presets" ref={presetsRef} data-tour="worksheet-presets" className="scroll-mt-24">
         <div className="mb-4">
           <h2 className="font-serif text-xl font-semibold">Pre-set worksheets</h2>
           <p className="mt-1 text-sm text-muted-foreground">

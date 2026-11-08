@@ -171,6 +171,7 @@ export function QuestionSolutionPanel({
   const solutionText = getQuestionSolutionExplanation(question);
   const commonTrap = question.commonTrap?.trim();
   const skills = getSkillTagsToImprove(question);
+  const showSkills = showSkillToImprove && skills.length > 0;
   const choices = question.choices ?? [];
   const correctChoices = choices.filter((choice) => choice.isCorrect);
   const incorrectChoices = choices.filter((choice) => !choice.isCorrect);
@@ -182,7 +183,7 @@ export function QuestionSolutionPanel({
     correctChoices.map((choice) => choice.id),
   );
 
-  if (!questionHasExplanationContent(question) && choices.length === 0) {
+  if (!questionHasExplanationContent(question) && choices.length === 0 && !showSkills) {
     return null;
   }
 
@@ -216,7 +217,7 @@ export function QuestionSolutionPanel({
       )}
 
       {solutionText ? (
-        <section className="space-y-2">
+        <section data-tour="how-to-solve" className="space-y-2">
           <h5 className="flex items-center gap-2 text-sm font-semibold">
             <Lightbulb className="h-4 w-4 text-primary" aria-hidden />
             How to solve it
@@ -248,7 +249,7 @@ export function QuestionSolutionPanel({
       ) : null}
 
       {hasChoiceExplanations && incorrectChoices.length > 0 ? (
-        <section className="space-y-2">
+        <section data-tour="why-wrong" className="space-y-2">
           <h5 className="text-sm font-semibold">Why the other choices are wrong</h5>
           <div className="space-y-2">
             {incorrectChoices.map((choice) => (
@@ -265,8 +266,8 @@ export function QuestionSolutionPanel({
 
       {commonTrap ? <CommonTrapCallout commonTrap={commonTrap} /> : null}
 
-      {showSkillToImprove && skills.length > 0 ? (
-        <section className="space-y-2">
+      {showSkills ? (
+        <section data-tour="skill-to-improve" className="space-y-2">
           <h5 className="flex items-center gap-2 text-sm font-semibold">
             <Target className="h-4 w-4 text-primary" aria-hidden />
             Skill to improve

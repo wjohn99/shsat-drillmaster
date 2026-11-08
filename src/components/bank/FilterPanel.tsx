@@ -127,7 +127,7 @@ export const FilterPanel = ({
 
 
   return (
-    <div className="w-80 border-r bg-card p-6 h-full overflow-y-auto">
+    <div data-tour="bank-filters" className="w-80 border-r bg-card p-6 h-full overflow-y-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">

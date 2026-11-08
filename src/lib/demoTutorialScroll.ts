@@ -199,23 +199,51 @@ function scrollWindowBy(x: number, y: number, behavior: ScrollBehavior): boolean
 
 export function scrollTourTargetIntoView(
   node: HTMLElement,
-  opts?: { behavior?: ScrollBehavior },
+  opts?: {
+    behavior?: ScrollBehavior;
+    /** Window scroll. Defaults to `behavior`. Nested panes always use `behavior`. */
+    windowBehavior?: ScrollBehavior;
+    /** `nested` skips the window. `window` skips overflow panes. */
+    scope?: "all" | "nested" | "window";
+  },
 ): boolean {
   const behavior = opts?.behavior ?? "auto";
+  const windowBehavior = opts?.windowBehavior ?? behavior;
+  const scope = opts?.scope ?? "all";
   const insets = measureTourInsets();
   let scrolled = false;
 
-  for (const scroller of scrollableAncestors(node)) {
-    const delta = deltaToFitRect(node.getBoundingClientRect(), scrollerView(scroller, insets));
-    if (scrollElementBy(scroller, delta.x, delta.y, behavior)) scrolled = true;
+  if (scope !== "window") {
+    for (const scroller of scrollableAncestors(node)) {
+      const delta = deltaToFitRect(node.getBoundingClientRect(), scrollerView(scroller, insets));
+      if (scrollElementBy(scroller, delta.x, delta.y, behavior)) scrolled = true;
+    }
   }
 
-  if (!isInFixedLayer(node)) {
+  if (scope !== "nested" && !isInFixedLayer(node)) {
     const delta = deltaToFitRect(node.getBoundingClientRect(), windowView(insets));
-    if (scrollWindowBy(delta.x, delta.y, behavior)) scrolled = true;
+    if (scrollWindowBy(delta.x, delta.y, windowBehavior)) scrolled = true;
   }
 
   return scrolled;
+}
+
+/** Window scroll position that places `node` in the tour safe area, if it needs to move. */
+export function windowScrollDestination(
+  node: HTMLElement,
+): { top: number; left: number } | null {
+  if (isInFixedLayer(node)) return null;
+  const delta = deltaToFitRect(node.getBoundingClientRect(), windowView(measureTourInsets()));
+  if (Math.abs(delta.x) < 1 && Math.abs(delta.y) < 1) return null;
+  const root = document.scrollingElement ?? document.documentElement;
+  const maxY = Math.max(0, root.scrollHeight - window.innerHeight);
+  const maxX = Math.max(0, root.scrollWidth - window.innerWidth);
+  const currentTop = root.scrollTop || window.scrollY || 0;
+  const currentLeft = root.scrollLeft || window.scrollX || 0;
+  const top = clamp(currentTop + delta.y, 0, maxY);
+  const left = clamp(currentLeft + delta.x, 0, maxX);
+  if (Math.abs(top - currentTop) < 1 && Math.abs(left - currentLeft) < 1) return null;
+  return { top, left };
 }
 
 export function tourTargetNeedsScroll(node: HTMLElement): boolean {

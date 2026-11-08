@@ -1,4 +1,5 @@
 import { moduleFromLegacyAnalytics } from "@/lib/questionModule";
+import { parseScratchPad, serializeScratchPad } from "@/lib/scratchPad";
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
 
 export const WORKSHEET_SELF_SCOPE_ID = "self";
@@ -20,6 +21,7 @@ export type WorksheetProgressSave = {
   eliminated: Record<string, string[]>;
   events: SessionAnalyticsEvent[];
   notepad: string;
+  scratchPad: string;
   revealAnswers: boolean;
   tutorUid: string | null;
   startedAt: number;
@@ -90,6 +92,9 @@ export function normalizeWorksheetProgressSave(raw: unknown): WorksheetProgressS
     eliminated,
     events: parseWorksheetProgressEvents(parsed.events),
     notepad: typeof parsed.notepad === "string" ? parsed.notepad : "",
+    scratchPad: serializeScratchPad(
+      parseScratchPad(typeof parsed.scratchPad === "string" ? parsed.scratchPad : ""),
+    ),
     revealAnswers: parsed.revealAnswers === true,
     tutorUid: typeof parsed.tutorUid === "string" ? parsed.tutorUid : null,
     startedAt: Number(parsed.startedAt) || Date.now(),
@@ -104,7 +109,8 @@ export function worksheetProgressIsStarted(save: WorksheetProgressSave | null | 
     Object.keys(save.answers).length > 0 ||
     save.lockedQuestionIds.length > 0 ||
     save.events.length > 0 ||
-    save.notepad.trim().length > 0
+    save.notepad.trim().length > 0 ||
+    save.scratchPad.trim().length > 0
   );
 }
 

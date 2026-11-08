@@ -240,7 +240,7 @@ export default function TopicQuestions() {
                             id={`${question.id}-${choice.id}`}
                             checked={selected.includes(choice.id)}
                             onCheckedChange={() => toggleAtaAnswer(question.id, choice.id)}
-                            className="mt-1"
+                            className="mt-1 choice-control"
                           />
                           <Label
                             htmlFor={`${question.id}-${choice.id}`}
@@ -275,7 +275,7 @@ export default function TopicQuestions() {
                     >
                       {question.choices.map((choice) => (
                         <div key={choice.id} className="flex items-start space-x-3">
-                          <RadioGroupItem value={choice.id} id={choice.id} className="mt-1" />
+                          <RadioGroupItem value={choice.id} id={choice.id} className="mt-1 choice-control" />
                           <Label 
                             htmlFor={choice.id} 
                             className="flex-1 cursor-pointer text-sm leading-relaxed"

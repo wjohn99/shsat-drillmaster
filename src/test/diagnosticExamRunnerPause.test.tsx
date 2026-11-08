@@ -37,18 +37,18 @@ afterEach(cleanup);
 const SECRET_STEM = "SECRET_DIAGNOSTIC_STEM_SHOULD_HIDE_ON_PAUSE";
 const SECRET_PASSAGE = "SECRET_DIAGNOSTIC_PASSAGE_SHOULD_HIDE_ON_PAUSE";
 
-function mathQuestion(): Question {
+function mathQuestion(id = "pause-q1", stem = SECRET_STEM): Question {
   return {
-    id: "pause-q1",
+    id,
     subject: "MATH",
     module: "1",
     subtype: "MC4_A-D",
-    stem: SECRET_STEM,
+    stem,
     choices: [
-      { id: "A", label: "A", text: "one", isCorrect: true },
-      { id: "B", label: "B", text: "two", isCorrect: false },
-      { id: "C", label: "C", text: "three", isCorrect: false },
-      { id: "D", label: "D", text: "four", isCorrect: false },
+      { id: `${id}-A`, label: "A", text: "one", isCorrect: true },
+      { id: `${id}-B`, label: "B", text: "two", isCorrect: false },
+      { id: `${id}-C`, label: "C", text: "three", isCorrect: false },
+      { id: `${id}-D`, label: "D", text: "four", isCorrect: false },
     ],
     tags: [],
     createdAt: "2026-01-01",
@@ -99,5 +99,49 @@ describe("DiagnosticExamRunner pause privacy", () => {
     expect(screen.queryByText(SECRET_STEM)).toBeNull();
     expect(screen.queryByText(SECRET_PASSAGE)).toBeNull();
     expect(screen.queryByRole("alertdialog")).toBeNull();
+  });
+
+  it("marks an answered question in bold without showing whether it was correct", () => {
+    const first = mathQuestion("map-q1", "First stem");
+    const second = mathQuestion("map-q2", "Second stem");
+    const twoItemExam: AssembledDiagnosticExam = {
+      ...exam,
+      math: {
+        subject: "MATH",
+        questions: [first, second],
+        units: [
+          { kind: "standalone", question: first, elaPart: "other" },
+          { kind: "standalone", question: second, elaPart: "other" },
+        ],
+        missingIds: [],
+        heldIds: [],
+      },
+      mathReady: 2,
+    };
+
+    render(
+      <DiagnosticExamRunner
+        exam={twoItemExam}
+        userId="student-1"
+        firstSection="MATH"
+        deadlineAt={Date.now() + 60 * 60 * 1000}
+        onExit={() => {}}
+        onComplete={() => {}}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("radio", { name: /A\./ }));
+    fireEvent.click(screen.getByRole("button", { name: "Next" }));
+
+    const answered = screen.getByRole("button", { name: "Question 1, answered, locked" });
+    const current = screen.getByRole("button", { name: "Question 2, current" });
+
+    expect(answered.className).toContain("font-bold");
+    expect(answered.className).toContain("border-foreground");
+    expect(answered.className).not.toContain("bg-success");
+    expect(answered.className).not.toContain("bg-destructive");
+    expect(current.className).toContain("bg-primary");
+    expect(current.className).not.toContain("bg-success");
+    expect(screen.getByText("Second stem")).toBeTruthy();
   });
 });

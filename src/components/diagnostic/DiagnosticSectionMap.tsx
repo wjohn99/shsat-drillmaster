@@ -69,7 +69,12 @@ export function DiagnosticSectionMap({
             Current
           </li>
           <li className="flex items-center gap-1.5">
-            <span className="h-3 w-3 rounded bg-success" aria-hidden />
+            <span
+              className="flex h-3.5 w-3.5 items-center justify-center rounded border-2 border-foreground text-[8px] font-bold leading-none"
+              aria-hidden
+            >
+              1
+            </span>
             Answered
           </li>
           <li className="flex items-center gap-1.5">
@@ -94,15 +99,15 @@ export function DiagnosticSectionMap({
               title={cellLabel(cell)}
               onClick={() => onJump(cell.id)}
               className={cn(
-                "flex h-7 w-full items-center justify-center rounded-md text-[10px] font-medium tabular-nums sm:h-8 sm:text-xs",
+                "flex h-7 w-full items-center justify-center rounded-md text-[10px] tabular-nums sm:h-8 sm:text-xs",
+                cell.answered ? "font-bold" : "font-medium",
                 cell.current && "bg-primary text-primary-foreground",
-                !cell.current && cell.answered && "bg-success text-white",
+                !cell.current && cell.answered && "border-2 border-foreground bg-background text-foreground",
                 !cell.current && !cell.answered && cell.locked && "bg-muted text-muted-foreground",
                 !cell.current && !cell.answered && !cell.locked && "border border-border bg-background",
                 cell.flagged && !cell.current && "ring-2 ring-warning",
                 cell.canJump && "hover:ring-2 hover:ring-primary/50",
                 !cell.canJump && "cursor-default",
-                cell.locked && cell.answered && !cell.current && "opacity-75",
               )}
             >
               {cell.number}

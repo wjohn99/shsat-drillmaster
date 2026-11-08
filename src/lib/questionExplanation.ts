@@ -93,3 +93,8 @@ export function formatChoiceLabels(question: Question, choiceIds: string[]): str
 export function getSkillTagsToImprove(question: Question) {
   return question.tags.filter((tag) => !isFormatTagCode(tag.code));
 }
+
+/** Tutor-facing skill list at the end of an answer. Hidden from students and from view-as. */
+export function showsSkillToImprove(role?: string | null): boolean {
+  return role === "tutor" || role === "demo" || role === "parent";
+}

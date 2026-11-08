@@ -65,6 +65,20 @@ describe("QuestionResponseFields", () => {
     expect(screen.queryByRole("button", { name: "Eliminate" })).toBeNull();
   });
 
+  it("gives every answer choice a solid outline", () => {
+    const mc = bank.find((q) => q.subtype === "MC4_A-D" && q.choices?.length)!;
+    const multi = bank.find((q) => q.subtype === "INDY-MS" && !q.scopeHold && q.choices?.length)!;
+    const { unmount } = renderFields(mc);
+    for (const radio of screen.getAllByRole("radio")) {
+      expect(radio.className).toContain("choice-control");
+    }
+    unmount();
+    renderFields(multi);
+    for (const box of screen.getAllByRole("checkbox")) {
+      expect(box.className).toContain("choice-control");
+    }
+  });
+
   it("strikes through a choice when Eliminate is clicked", () => {
     const question = bank.find((q) => q.subtype === "MC4_A-D" && q.choices?.length)!;
     const eliminated: string[] = [];

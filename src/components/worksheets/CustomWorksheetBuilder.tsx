@@ -440,7 +440,7 @@ export function CustomWorksheetBuilder({
         </Card>
       )}
 
-      <Card className="mb-8">
+      <Card data-tour="worksheet-skills" className="mb-8">
         <CardHeader>
           <CardTitle className="text-lg">Skills to include</CardTitle>
           <p className="text-sm text-muted-foreground">
@@ -451,10 +451,7 @@ export function CustomWorksheetBuilder({
         </CardHeader>
         <CardContent className="space-y-5">
           {selectedCodes.length > 0 && (
-            <div
-              data-tour="worksheet-skills"
-              className="rounded-lg border bg-muted/40 p-4 space-y-2"
-            >
+            <div className="rounded-lg border bg-muted/40 p-4 space-y-2">
               <div className="flex items-center justify-between gap-2">
                 <p className="text-sm font-medium">
                   Selected skills ({selectedCodes.length})

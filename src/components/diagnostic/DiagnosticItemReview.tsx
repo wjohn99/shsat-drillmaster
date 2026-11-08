@@ -27,7 +27,7 @@ import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
 import { MathText } from "@/lib/mathText";
 import { answersFromDiagnosticEvents, formatDiagnosticItemTime } from "@/lib/diagnosticReport";
 import { moduleLabel } from "@/lib/questionModule";
-import { getSelectedChoiceIds } from "@/lib/questionExplanation";
+import { getSelectedChoiceIds, showsSkillToImprove } from "@/lib/questionExplanation";
 import { canSubmitQuestionAnswer } from "@/lib/sessionGrading";
 import {
   flattenSectionQuestions,
@@ -350,9 +350,11 @@ export function DiagnosticItemReview({
                     question={selected}
                     isCorrect={selectedEvent?.correct}
                     selectedChoiceIds={getSelectedChoiceIds(selected, raw)}
-                    showSkillToImprove={profile?.role === "tutor" || profile?.role === "parent"}
+                    showSkillToImprove={showsSkillToImprove(profile?.role)}
                     skillWorksheetStudentUid={
-                      profile?.role === "tutor" ? skillWorksheetStudentUid : undefined
+                      profile?.role === "tutor" || profile?.role === "demo"
+                        ? skillWorksheetStudentUid
+                        : undefined
                     }
                     skillWorksheetReturnTo={skillWorksheetReturnTo}
                   />

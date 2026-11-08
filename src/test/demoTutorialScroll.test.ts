@@ -4,6 +4,7 @@ import {
   deltaToFitRect,
   measureTourInsets,
   scrollTourTargetIntoView,
+  windowScrollDestination,
 } from "@/lib/demoTutorialScroll";
 
 function mockRect(
@@ -130,5 +131,31 @@ describe("scrollTourTargetIntoView", () => {
     const moved = scrollTourTargetIntoView(target);
     expect(moved).toBe(true);
     expect(document.documentElement.scrollTop).toBeLessThan(640);
+  });
+
+  it("can scroll a nested pane without moving the window", () => {
+    Object.defineProperty(window, "innerHeight", { value: 800, configurable: true });
+    Object.defineProperty(window, "innerWidth", { value: 1200, configurable: true });
+    document.documentElement.scrollTop = 40;
+    Object.defineProperty(document.documentElement, "scrollHeight", {
+      value: 4000,
+      configurable: true,
+    });
+
+    const pane = document.createElement("div");
+    pane.style.overflowY = "auto";
+    Object.defineProperty(pane, "scrollHeight", { value: 900, configurable: true });
+    Object.defineProperty(pane, "clientHeight", { value: 320, configurable: true });
+    pane.scrollTop = 0;
+    const target = document.createElement("div");
+    pane.append(target);
+    document.body.append(pane);
+    mockRect(pane, { top: 90, left: 40, width: 480, height: 320 });
+    mockRect(target, { top: 1400, left: 56, width: 400, height: 72 });
+
+    scrollTourTargetIntoView(target, { behavior: "auto", scope: "nested" });
+    expect(pane.scrollTop).toBeGreaterThan(100);
+    expect(document.documentElement.scrollTop).toBe(40);
+    expect(windowScrollDestination(target)?.top).toBeGreaterThan(40);
   });
 });

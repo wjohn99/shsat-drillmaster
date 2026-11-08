@@ -158,6 +158,7 @@ function savedProgress(overrides: Partial<WorksheetProgressSave> = {}): Workshee
       },
     ],
     notepad: "",
+    scratchPad: "",
     revealAnswers: true,
     tutorUid: "tutor-1",
     startedAt: 1,
@@ -226,6 +227,8 @@ describe("SessionQuestionRunner notes", () => {
     fireEvent.click(screen.getByRole("button", { name: /^Notes$/ }));
     const notes = screen.getByLabelText("Worksheet notes") as HTMLTextAreaElement;
     expect(notes.value).toBe("Mark the trap in choice C");
+    expect(screen.getByRole("button", { name: "Pen" })).toBeTruthy();
+    expect(screen.getByLabelText("Scratch pad")).toBeTruthy();
     expect(screen.getByText("Second stem")).toBeTruthy();
     expect(screen.getByRole("button", { name: "Hide notes" })).toBeTruthy();
   });

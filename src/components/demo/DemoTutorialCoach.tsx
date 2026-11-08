@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react";
 import { createPortal } from "react-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
@@ -9,23 +9,33 @@ import {
   DEMO_TUTORIAL_DISMISS_CARD,
   DEMO_TUTORIAL_STEPS,
   FIRST_SAMPLE_BOARD,
+  isTutorialStepLocation,
   tutorialOpensSessionCard,
+  tutorialSearch,
   worksheetsStateForTutorial,
   type DemoTutorialStep,
 } from "@/lib/demoTutorial";
 import {
+  approachTourAnchor,
+  easeOutCubic,
+  followTourAnchor,
+  movePointer,
+  placeTourCard,
+  planTourMove,
   pointerPointFromAnchor,
   sameTourAnchor,
+  tourHoleRadius,
   TOUR_CLICK_MS,
-  TOUR_MOVE_MS,
+  TOUR_NAV_CLICK_MS,
+  TOUR_NAV_MS,
   tourMotionMs,
-  tourTransition,
+  type PointerPose,
   type TourAnchor,
 } from "@/lib/demoTutorialMotion";
 import {
   measureTourInsets,
   scrollTourTargetIntoView,
-  tourTargetNeedsScroll,
+  windowScrollDestination,
 } from "@/lib/demoTutorialScroll";
 import { cn } from "@/lib/utils";
 
@@ -50,13 +60,6 @@ function studentUidFromBoardPath(path: string | null): string | null {
   if (!path) return null;
   const match = /^\/workspace\/([^/]+)$/.exec(path);
   return match?.[1] ?? null;
-}
-
-function isOnStep(pathname: string, step: DemoTutorialStep, sampleBoardPath: string | null): boolean {
-  if (step.route === FIRST_SAMPLE_BOARD) {
-    return sampleBoardPath != null && pathname === sampleBoardPath;
-  }
-  return pathname === step.route;
 }
 
 function visibleTarget(name: string): HTMLElement | null {
@@ -111,31 +114,57 @@ export function clickTourTarget(node: HTMLElement): void {
   (inner ?? node).click();
 }
 
+function setWindowScroll(left: number, top: number) {
+  const root = document.scrollingElement ?? document.documentElement;
+  try {
+    window.scrollTo({ left, top, behavior: "instant" as ScrollBehavior });
+  } catch {
+    root.scrollTop = top;
+    root.scrollLeft = left;
+  }
+}
+
+const SPOTLIGHT_BLEED = 8;
+
+function anchorFromNode(node: HTMLElement): TourAnchor {
+  const rect = node.getBoundingClientRect();
+  const pad = 4;
+  return {
+    top: rect.top - pad,
+    left: rect.left - pad,
+    width: rect.width + pad * 2,
+    height: rect.height + pad * 2,
+  };
+}
+
+type WindowScrollAnim = {
+  startTop: number;
+  startLeft: number;
+  destTop: number;
+  destLeft: number;
+  startTime: number;
+  duration: number;
+};
+
 function DemoPointer({
-  x,
-  y,
+  pointerRef,
   clicking,
-  instant,
   hidden,
 }: {
-  x: number;
-  y: number;
+  pointerRef: RefObject<HTMLDivElement | null>;
   clicking: boolean;
-  instant: boolean;
   hidden: boolean;
 }) {
-  if (hidden) return null;
   const reduced = prefersReducedMotion();
   return (
     <div
+      ref={pointerRef}
       aria-hidden
-      className="pointer-events-none fixed z-[203] will-change-transform"
-      style={{
-        top: 0,
-        left: 0,
-        transform: `translate3d(${x}px, ${y}px, 0)`,
-        transition: tourTransition(reduced, instant, ["transform"]),
-      }}
+      className={cn(
+        "pointer-events-none fixed z-[203] will-change-transform",
+        hidden ? "opacity-0" : "opacity-100",
+      )}
+      style={{ top: 0, left: 0 }}
     >
       <span
         className="relative block origin-top-left"
@@ -174,24 +203,49 @@ export function DemoTutorialCoach() {
   const { locked } = useExamLock();
   const location = useLocation();
   const navigate = useNavigate();
-  const [anchor, setAnchor] = useState<TourAnchor | null>(null);
-  const [highlightInstant, setHighlightInstant] = useState(true);
   const [sampleBoardPath, setSampleBoardPath] = useState<string | null>(null);
-  const [pointer, setPointer] = useState({ x: 48, y: 48, clicking: false, instant: true });
-  const [pointerHidden, setPointerHidden] = useState(true);
-  const firstPointerRef = useRef(true);
+  const [pointerClicking, setPointerClicking] = useState(false);
+  const [spotlightOn, setSpotlightOn] = useState(false);
   const movingRef = useRef(false);
-  const scrollingRef = useRef(false);
-  const scrollIdleTimerRef = useRef(0);
-  const anchorRef = useRef<TourAnchor | null>(null);
+  const shownRef = useRef<TourAnchor | null>(null);
+  const pageKeyRef = useRef("");
+  const targetMissingRef = useRef(true);
+  const spotlightOnRef = useRef(false);
+  const pointerRef = useRef<HTMLDivElement>(null);
+  const spotlightRef = useRef<SVGSVGElement>(null);
+  const holeRef = useRef<SVGRectElement>(null);
+  const maskRef = useRef<SVGRectElement>(null);
+  const veilRef = useRef<SVGRectElement>(null);
+  const [pointerReady, setPointerReady] = useState(false);
+  const pointerReadyRef = useRef(false);
+  const pointerPosRef = useRef<PointerPose | null>(null);
+  const pointerAimRef = useRef<PointerPose | null>(null);
+  const pointerTargetRef = useRef<PointerPose | null>(null);
+  const pointerLockRef = useRef<PointerPose | null>(null);
+  const holeAimRef = useRef<TourAnchor | null>(null);
+  const navTravelRef = useRef<{
+    fromHole: TourAnchor;
+    toHole: TourAnchor;
+    fromPointer: PointerPose;
+    toPointer: PointerPose;
+    start: number;
+    duration: number;
+  } | null>(null);
+  const paintedRef = useRef<TourAnchor | null>(null);
+  const cardAnchorRef = useRef<TourAnchor | null>(null);
+  const cardPaintedRef = useRef<TourAnchor | null>(null);
+  const cardBoxRef = useRef({ stepId: "", width: 360, height: 180, top: 96, bottom: 120 });
+  const cardRef = useRef<HTMLDivElement>(null);
+  const arrowRef = useRef<HTMLSpanElement>(null);
   const step = DEMO_TUTORIAL_STEPS[stepIndex];
   const last = stepIndex >= DEMO_TUTORIAL_STEPS.length - 1;
-  const onStepPage = step ? isOnStep(location.pathname, step, sampleBoardPath) : false;
+  const onStepPage = isTutorialStepLocation(
+    location.pathname,
+    location.search,
+    step,
+    sampleBoardPath,
+  );
   const ready = Boolean(active && step && onStepPage);
-
-  useEffect(() => {
-    if (active) firstPointerRef.current = true;
-  }, [active]);
 
   useEffect(() => {
     if (locked) return;
@@ -232,8 +286,8 @@ export function DemoTutorialCoach() {
         return;
       }
 
-      if (location.pathname === step.route) return;
-      if (step.route === "/worksheets") {
+      if (isTutorialStepLocation(location.pathname, location.search, step, boardPath)) return;
+      if (step.route === "/worksheets" && step.worksheetsBuild) {
         const uid = studentUidFromBoardPath(boardPath);
         navigate(
           "/worksheets",
@@ -243,141 +297,381 @@ export function DemoTutorialCoach() {
         );
         return;
       }
-      navigate(step.route);
+      navigate({
+        pathname: step.route,
+        search: tutorialSearch(step) ?? "",
+      });
     };
 
     go();
     if (step.route !== FIRST_SAMPLE_BOARD || sampleBoardPath) return;
     const timer = window.setInterval(go, 300);
     return () => window.clearInterval(timer);
-  }, [active, location.pathname, navigate, sampleBoardPath, skipTutorial, step]);
+  }, [active, location.pathname, location.search, navigate, sampleBoardPath, skipTutorial, step]);
 
-  useLayoutEffect(() => {
-    if (!active) {
-      anchorRef.current = null;
-      setAnchor(null);
-      setHighlightInstant(true);
+  const setSpotlight = (on: boolean) => {
+    if (spotlightOnRef.current === on) return;
+    spotlightOnRef.current = on;
+    setSpotlightOn(on);
+  };
+
+  const settleCard = (anchor: TourAnchor) => {
+    const card = cardRef.current;
+    const arrow = arrowRef.current;
+    if (!card) return;
+    if (cardBoxRef.current.stepId !== (step?.id ?? "")) {
+      const insets = measureTourInsets();
+      cardBoxRef.current = {
+        stepId: step?.id ?? "",
+        width: card.offsetWidth || 360,
+        height: card.offsetHeight || 180,
+        top: insets.top,
+        bottom: insets.bottom,
+      };
+    }
+    const box = cardBoxRef.current;
+    const place = placeTourCard(
+      anchor,
+      { width: box.width, height: box.height },
+      { width: window.innerWidth, height: window.innerHeight },
+      { top: box.top, bottom: box.bottom },
+    );
+    card.style.transform = `translate3d(${place.left}px, ${place.top}px, 0)`;
+    if (arrow) {
+      arrow.hidden = place.arrow == null;
+      arrow.style.left = `${place.arrowLeft}px`;
+      arrow.style.top = place.arrow === "up" ? "-7px" : "auto";
+      arrow.style.bottom = place.arrow === "down" ? "-7px" : "auto";
+      arrow.classList.toggle("border-l", place.arrow === "up");
+      arrow.classList.toggle("border-t", place.arrow === "up");
+      arrow.classList.toggle("border-b", place.arrow === "down");
+      arrow.classList.toggle("border-r", place.arrow === "down");
+    }
+  };
+
+  const paintSpotlight = (shown: TourAnchor | null) => {
+    const hole = holeRef.current;
+    const viewWidth = window.innerWidth;
+    const viewHeight = window.innerHeight;
+    const coverW = viewWidth + SPOTLIGHT_BLEED * 2;
+    const coverH = viewHeight + SPOTLIGHT_BLEED * 2;
+    const spotlight = spotlightRef.current;
+    if (spotlight) {
+      spotlight.style.left = `${-SPOTLIGHT_BLEED}px`;
+      spotlight.style.top = `${-SPOTLIGHT_BLEED}px`;
+      spotlight.style.width = `${coverW}px`;
+      spotlight.style.height = `${coverH}px`;
+      spotlight.setAttribute("width", String(coverW));
+      spotlight.setAttribute("height", String(coverH));
+      spotlight.removeAttribute("viewBox");
+    }
+    maskRef.current?.setAttribute("width", String(coverW));
+    maskRef.current?.setAttribute("height", String(coverH));
+    veilRef.current?.setAttribute("width", String(coverW));
+    veilRef.current?.setAttribute("height", String(coverH));
+    if (!hole) return;
+
+    if (!shown) {
+      hole.dataset.open = "false";
+      hole.setAttribute("width", "0");
+      hole.setAttribute("height", "0");
       return;
     }
-    if (!step) return;
 
-    let frame = 0;
-    let enableFrame = 0;
-    let attempts = 0;
-    let scrolledThisStep = false;
-    const reduced = prefersReducedMotion();
-    const scrollBehavior: ScrollBehavior = reduced ? "auto" : "smooth";
+    const radius = tourHoleRadius(shown);
+    hole.dataset.open = "true";
+    hole.dataset.radius = String(Math.round(radius));
+    hole.setAttribute("x", String(shown.left + SPOTLIGHT_BLEED));
+    hole.setAttribute("y", String(shown.top + SPOTLIGHT_BLEED));
+    hole.setAttribute("width", String(shown.width));
+    hole.setAttribute("height", String(shown.height));
+    hole.setAttribute("rx", String(radius));
+    hole.setAttribute("ry", String(radius));
 
-    const applyAnchor = (next: TourAnchor, instant: boolean) => {
-      if (sameTourAnchor(anchorRef.current, next) && !instant) return;
-      const first = !anchorRef.current;
-      anchorRef.current = next;
-      setAnchor(next);
-      if (reduced) {
-        setHighlightInstant(true);
-        return;
-      }
-      if (first) {
-        setHighlightInstant(true);
-        enableFrame = requestAnimationFrame(() => {
-          enableFrame = requestAnimationFrame(() => setHighlightInstant(false));
-        });
-        return;
-      }
-      setHighlightInstant(instant || scrollingRef.current);
-    };
+    if (!movingRef.current && !pointerLockRef.current) {
+      pointerTargetRef.current = pointerPointFromAnchor(shown);
+    }
+  };
 
-    const measure = (instant = false) => {
-      if (!ready) return;
-      const node = anyTarget(step.target);
-      if (!node) return;
-      const rect = node.getBoundingClientRect();
-      if (rect.width <= 2 && rect.height <= 2) return;
-      const pad = 8;
-      applyAnchor(
-        {
-          top: rect.top - pad,
-          left: rect.left - pad,
-          width: rect.width + pad * 2,
-          height: rect.height + pad * 2,
-        },
-        instant,
-      );
-    };
+  const stepPointer = (scroll: PointerPose, dt: number) => {
+    const target = pointerTargetRef.current;
+    const el = pointerRef.current;
+    if (!target || !el) return;
+    const next = movePointer({
+      pos: pointerPosRef.current,
+      target,
+      previousTarget: pointerAimRef.current,
+      scroll,
+      dt,
+      reduced: prefersReducedMotion(),
+    });
+    pointerPosRef.current = next;
+    pointerAimRef.current = target;
+    el.style.transition = "none";
+    el.style.transform = `translate3d(${next.x}px, ${next.y}px, 0)`;
+    if (!pointerReadyRef.current) {
+      pointerReadyRef.current = true;
+      setPointerReady(true);
+    }
+  };
 
-    const bringIntoView = () => {
-      const node = anyTarget(step.target);
-      if (!node) return;
-      const needsScroll = tourTargetNeedsScroll(node);
-      if (!movingRef.current && needsScroll && (!scrolledThisStep || attempts === 6)) {
-        scrolledThisStep = true;
-        scrollTourTargetIntoView(node, { behavior: scrollBehavior });
-      }
-      measure(scrollingRef.current);
-    };
-
-    bringIntoView();
-    const timer = window.setInterval(() => {
-      attempts += 1;
-      bringIntoView();
-      const found = anyTarget(step.target);
-      if ((found && attempts >= 10) || attempts >= 40) window.clearInterval(timer);
-    }, 180);
-    const onMove = () => {
-      scrollingRef.current = true;
-      setHighlightInstant(true);
-      window.clearTimeout(scrollIdleTimerRef.current);
-      scrollIdleTimerRef.current = window.setTimeout(() => {
-        scrollingRef.current = false;
-        if (!prefersReducedMotion()) setHighlightInstant(false);
-      }, 160);
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => measure(true));
-    };
-    window.addEventListener("resize", onMove);
-    window.addEventListener("scroll", onMove, true);
-    return () => {
-      window.clearInterval(timer);
-      window.clearTimeout(scrollIdleTimerRef.current);
-      cancelAnimationFrame(frame);
-      cancelAnimationFrame(enableFrame);
-      window.removeEventListener("resize", onMove);
-      window.removeEventListener("scroll", onMove, true);
-    };
-  }, [active, ready, step]);
+  useLayoutEffect(() => {
+    const pageKey = `${location.pathname}${location.search}`;
+    if (pageKeyRef.current !== "" && pageKeyRef.current !== pageKey && cardRef.current) {
+      cardRef.current.style.opacity = "0";
+    }
+    const missing = !ready || !step || !visibleTarget(step.target);
+    if (missing) {
+      targetMissingRef.current = true;
+      paintSpotlight(null);
+      return;
+    }
+    targetMissingRef.current = false;
+    if (shownRef.current) paintSpotlight(shownRef.current);
+  });
 
   useEffect(() => {
-    if (!anchor || movingRef.current) return;
-    const point = pointerPointFromAnchor(anchor);
-    const instant = firstPointerRef.current || prefersReducedMotion() || highlightInstant;
-    firstPointerRef.current = false;
-    setPointerHidden(false);
-    setPointer({ x: point.x, y: point.y, clicking: false, instant });
-  }, [anchor, highlightInstant]);
+    if (!active || !step) {
+      shownRef.current = null;
+      targetMissingRef.current = true;
+      setSpotlight(false);
+      return;
+    }
+
+    let raf = 0;
+    let stopped = false;
+    let planned = false;
+    let corrections = 0;
+    let anim: WindowScrollAnim | null = null;
+    let spotlightMove: { from: TourAnchor; to: TourAnchor; start: number; duration: number } | null =
+      null;
+    let lastNow = performance.now();
+    const pageKey = `${location.pathname}${location.search}`;
+    let cardHidden = pageKeyRef.current !== "" && pageKeyRef.current !== pageKey;
+    if (cardHidden && cardRef.current) cardRef.current.style.opacity = "0";
+    let lastScroll = {
+      x: document.scrollingElement?.scrollLeft || window.scrollX || 0,
+      y: document.scrollingElement?.scrollTop || window.scrollY || 0,
+    };
+
+    const currentWindowScroll = () => {
+      const root = document.scrollingElement ?? document.documentElement;
+      return {
+        top: root.scrollTop || window.scrollY || 0,
+        left: root.scrollLeft || window.scrollX || 0,
+      };
+    };
+
+    const beginTransition = (node: HTMLElement, now: number) => {
+      if (movingRef.current) return;
+      scrollTourTargetIntoView(node, { behavior: "auto", scope: "nested" });
+      const measured = anchorFromNode(node);
+      const current = currentWindowScroll();
+      const dest = windowScrollDestination(node);
+      const scrollBy = dest
+        ? { x: dest.left - current.left, y: dest.top - current.top }
+        : { x: 0, y: 0 };
+      const plan = planTourMove({
+        from: shownRef.current,
+        measured,
+        scrollBy,
+        reduced: prefersReducedMotion(),
+      });
+      if (!plan) {
+        if (dest) setWindowScroll(dest.left, dest.top);
+        shownRef.current = anchorFromNode(node);
+        cardAnchorRef.current = shownRef.current;
+        spotlightMove = null;
+        anim = null;
+        return;
+      }
+      cardAnchorRef.current = plan.to;
+      if (cardRef.current && (cardHidden || Math.hypot(scrollBy.x, scrollBy.y) > 160)) {
+        cardRef.current.style.opacity = "0";
+        cardHidden = true;
+      }
+      spotlightMove = { from: plan.from, to: plan.to, start: now, duration: plan.duration };
+      anim = dest
+        ? {
+            startTop: current.top,
+            startLeft: current.left,
+            destTop: dest.top,
+            destLeft: dest.left,
+            startTime: now,
+            duration: plan.duration,
+          }
+        : null;
+      shownRef.current = plan.from;
+    };
+
+    const tick = (now: number) => {
+      if (stopped) return;
+      const dt = Math.min(48, now - lastNow);
+      lastNow = now;
+
+      if (anim) {
+        const t = Math.min(1, (now - anim.startTime) / anim.duration);
+        const eased = easeOutCubic(t);
+        setWindowScroll(
+          anim.startLeft + (anim.destLeft - anim.startLeft) * eased,
+          anim.startTop + (anim.destTop - anim.startTop) * eased,
+        );
+        if (t >= 1) anim = null;
+      }
+
+      const node = ready ? visibleTarget(step.target) : null;
+      const scrollNow = currentWindowScroll();
+      const scroll = { x: scrollNow.left - lastScroll.x, y: scrollNow.top - lastScroll.y };
+      lastScroll = { x: scrollNow.left, y: scrollNow.top };
+      if (!node) {
+        targetMissingRef.current = true;
+        setSpotlight(false);
+        paintSpotlight(null);
+        paintedRef.current = null;
+        cardPaintedRef.current = null;
+        raf = requestAnimationFrame(tick);
+        return;
+      }
+
+      if (!planned) {
+        planned = true;
+        beginTransition(node, now);
+      }
+
+      let shown: TourAnchor;
+      const travel = navTravelRef.current;
+      const aimed = holeAimRef.current;
+      if (travel) {
+        const t = easeOutCubic(Math.min(1, (now - travel.start) / travel.duration));
+        shown = approachTourAnchor(travel.fromHole, travel.toHole, t);
+      } else if (aimed) {
+        shown = followTourAnchor(shownRef.current, aimed, { glue: false, dt, timeConstant: 180 });
+      } else if (spotlightMove) {
+        const t = easeOutCubic(Math.min(1, (now - spotlightMove.start) / spotlightMove.duration));
+        const landed = spotlightMove.to;
+        shown = approachTourAnchor(spotlightMove.from, spotlightMove.to, t);
+        if (t >= 1) {
+          spotlightMove = null;
+          anim = null;
+          const live = anchorFromNode(node);
+          const err = Math.hypot(live.top - landed.top, live.left - landed.left);
+          shownRef.current = landed;
+          if (err > 32 && corrections < 1 && !movingRef.current) {
+            corrections += 1;
+            beginTransition(node, now);
+            shown = shownRef.current ?? landed;
+          } else {
+            shown = live;
+            cardAnchorRef.current = live;
+          }
+        }
+      } else {
+        const measured = anchorFromNode(node);
+        shown = followTourAnchor(shownRef.current, measured, {
+          glue: prefersReducedMotion() || !shownRef.current,
+          dt,
+        });
+      }
+      shownRef.current = shown;
+      targetMissingRef.current = false;
+      pageKeyRef.current = pageKey;
+      setSpotlight(true);
+      const placeAt = cardAnchorRef.current ?? shown;
+      if (!sameTourAnchor(paintedRef.current, shown)) {
+        paintSpotlight(shown);
+        paintedRef.current = shown;
+      }
+      if (!travel && !aimed && !sameTourAnchor(cardPaintedRef.current, placeAt)) {
+        settleCard(placeAt);
+        cardPaintedRef.current = placeAt;
+      }
+      if (cardHidden && !spotlightMove && !travel && !aimed && cardRef.current) {
+        cardHidden = false;
+        cardRef.current.style.opacity = "1";
+      }
+      const point = pointerPointFromAnchor(shown);
+      if (travel) {
+        const t = easeOutCubic(Math.min(1, (now - travel.start) / travel.duration));
+        const pose = {
+          x: travel.fromPointer.x + (travel.toPointer.x - travel.fromPointer.x) * t,
+          y: travel.fromPointer.y + (travel.toPointer.y - travel.fromPointer.y) * t,
+        };
+        pointerPosRef.current = pose;
+        pointerAimRef.current = pose;
+        pointerTargetRef.current = pose;
+        const pointer = pointerRef.current;
+        if (pointer) {
+          pointer.style.transition = "none";
+          pointer.style.transform = `translate3d(${pose.x}px, ${pose.y}px, 0)`;
+        }
+        if (!pointerReadyRef.current) {
+          pointerReadyRef.current = true;
+          setPointerReady(true);
+        }
+      } else if (pointerLockRef.current) {
+        pointerTargetRef.current = pointerLockRef.current;
+        stepPointer(scroll, dt);
+      } else if (spotlightMove || aimed) {
+        pointerPosRef.current = point;
+        pointerAimRef.current = point;
+        pointerTargetRef.current = point;
+        const pointer = pointerRef.current;
+        if (pointer) {
+          pointer.style.transition = "none";
+          pointer.style.transform = `translate3d(${point.x}px, ${point.y}px, 0)`;
+        }
+        if (!pointerReadyRef.current) {
+          pointerReadyRef.current = true;
+          setPointerReady(true);
+        }
+      } else {
+        pointerTargetRef.current = point;
+        stepPointer(scroll, dt);
+      }
+      raf = requestAnimationFrame(tick);
+    };
+
+    raf = requestAnimationFrame(tick);
+    return () => {
+      stopped = true;
+      cancelAnimationFrame(raf);
+    };
+  }, [active, ready, step, location.pathname, location.search]);
 
   const playClickOn = async (name: string): Promise<boolean> => {
     const node = anyTarget(name);
     if (!node) return false;
-    const reduced = prefersReducedMotion();
-    scrollTourTargetIntoView(node, { behavior: reduced ? "auto" : "smooth" });
+    scrollTourTargetIntoView(node, { behavior: "auto", scope: "nested" });
     const liveNode = anyTarget(name) ?? node;
-    const rect = liveNode.getBoundingClientRect();
-    const point = pointerPointFromAnchor({
-      top: rect.top,
-      left: rect.left,
-      width: rect.width,
-      height: rect.height,
-    });
-    setPointerHidden(false);
-    setPointer({ x: point.x, y: point.y, clicking: false, instant: reduced });
-    await sleep(tourMotionMs(reduced, TOUR_MOVE_MS));
-    setPointer((prev) => ({ ...prev, clicking: true, instant: false }));
-    await sleep(tourMotionMs(reduced, TOUR_CLICK_MS + 40));
+    const anchor = anchorFromNode(liveNode);
+    const point = pointerPointFromAnchor(anchor);
+    const fromHole = shownRef.current ?? anchor;
+    const fromPointer = pointerPosRef.current ?? pointerPointFromAnchor(fromHole);
+    holeAimRef.current = anchor;
+    pointerLockRef.current = point;
+    pointerTargetRef.current = point;
+    navTravelRef.current = {
+      fromHole,
+      toHole: anchor,
+      fromPointer,
+      toPointer: point,
+      start: performance.now(),
+      duration: tourMotionMs(prefersReducedMotion(), TOUR_NAV_MS) || 1,
+    };
+    setSpotlight(true);
+    if (!pointerReadyRef.current) {
+      pointerReadyRef.current = true;
+      setPointerReady(true);
+    }
+    await sleep(tourMotionMs(prefersReducedMotion(), TOUR_NAV_MS));
+    setPointerClicking(true);
+    await sleep(tourMotionMs(prefersReducedMotion(), TOUR_NAV_CLICK_MS));
     const live = anyTarget(name) ?? liveNode;
     clickTourTarget(live);
-    await sleep(tourMotionMs(reduced, 120));
-    setPointer((prev) => ({ ...prev, clicking: false }));
-    await sleep(tourMotionMs(reduced, 80));
+    holeAimRef.current = null;
+    pointerLockRef.current = null;
+    navTravelRef.current = null;
+    setPointerClicking(false);
     return true;
   };
 
@@ -435,92 +729,44 @@ export function DemoTutorialCoach() {
   if (!active || !step) return null;
 
   const reducedMotion = prefersReducedMotion();
-  const cardWidth = 360;
-  const cardHeight = 230;
-  const gap = 16;
-  const insets = measureTourInsets();
-  const barReserve = insets.bottom;
-  let cardTop = insets.top;
-  let cardLeft = 24;
-  let arrow: "up" | "down" | null = null;
-  if (anchor) {
-    const spaceBelow = window.innerHeight - (anchor.top + anchor.height) - barReserve;
-    const spaceRight = window.innerWidth - (anchor.left + anchor.width);
-    const maxTop = window.innerHeight - cardHeight - barReserve;
-    const minTop = insets.top;
-    if (spaceRight > cardWidth + gap && anchor.top > insets.top) {
-      cardTop = Math.min(maxTop, Math.max(minTop, anchor.top));
-      cardLeft = Math.min(window.innerWidth - cardWidth - 16, anchor.left + anchor.width + gap);
-      arrow = null;
-    } else {
-      const below = spaceBelow > cardHeight + gap || spaceBelow >= anchor.top - minTop;
-      cardTop = below
-        ? Math.min(maxTop, anchor.top + anchor.height + gap)
-        : Math.max(minTop, anchor.top - cardHeight - gap);
-      cardLeft = Math.min(Math.max(16, anchor.left), window.innerWidth - cardWidth - 16);
-      arrow = below ? "up" : "down";
-    }
-  }
-
-  const arrowLeft = anchor
-    ? Math.min(cardWidth - 28, Math.max(20, anchor.left + anchor.width / 2 - cardLeft - 7))
-    : 24;
-  const geometryTransition = tourTransition(reducedMotion, highlightInstant, [
-    "transform",
-    "width",
-    "height",
-  ]);
 
   return createPortal(
     <div className="fixed inset-0 z-[200]">
-      {anchor ? (
-        <div
-          className="pointer-events-none fixed rounded-2xl ring-2 ring-primary/90 will-change-transform"
-          style={{
-            top: 0,
-            left: 0,
-            width: anchor.width,
-            height: anchor.height,
-            transform: `translate3d(${anchor.left}px, ${anchor.top}px, 0)`,
-            boxShadow: "0 0 0 9999px rgba(15, 23, 42, 0.42)",
-            transition: geometryTransition,
-          }}
-        />
-      ) : (
-        <div className="absolute inset-0 bg-slate-950/35" />
-      )}
+      <svg
+        ref={spotlightRef}
+        data-tour-spotlight=""
+        data-state={spotlightOn ? "on" : "off"}
+        aria-hidden
+        className="pointer-events-none fixed"
+        style={{ left: -SPOTLIGHT_BLEED, top: -SPOTLIGHT_BLEED, width: "calc(100vw + 16px)", height: "calc(100dvh + 16px)" }}
+      >
+        <defs>
+          <mask id="demo-tour-spotlight-mask" maskUnits="userSpaceOnUse">
+            <rect ref={maskRef} x="0" y="0" fill="white" />
+            <rect ref={holeRef} data-tour-hole="" data-open="false" fill="black" x="0" y="0" width="0" height="0" />
+          </mask>
+        </defs>
+        <rect ref={veilRef} x="0" y="0" fill="rgba(15,23,42,0.42)" mask="url(#demo-tour-spotlight-mask)" />
+      </svg>
       <div className="absolute inset-0" />
 
-      <DemoPointer
-        x={pointer.x}
-        y={pointer.y}
-        clicking={pointer.clicking}
-        instant={pointer.instant}
-        hidden={pointerHidden}
-      />
+      <DemoPointer pointerRef={pointerRef} clicking={pointerClicking} hidden={!pointerReady} />
 
       <div
-        className="pointer-events-auto fixed z-[201] w-[min(360px,calc(100vw-2rem))] rounded-xl border bg-background p-4 text-foreground shadow-xl will-change-transform"
+        ref={cardRef}
+        className="pointer-events-auto fixed left-0 top-0 z-[201] w-[min(360px,calc(100vw-2rem))] rounded-xl border bg-background p-4 text-foreground shadow-xl will-change-transform"
         style={{
-          top: 0,
-          left: 0,
-          transform: `translate3d(${cardLeft}px, ${cardTop}px, 0)`,
-          opacity: ready ? 1 : 0.72,
-          transition: `${geometryTransition}, opacity ${tourMotionMs(reducedMotion, 280)}ms ${reducedMotion ? "linear" : "ease"}`,
+          transition: `opacity ${tourMotionMs(reducedMotion, 180)}ms ease-out`,
         }}
         role="dialog"
         aria-labelledby="demo-tutorial-title"
       >
-        {anchor && arrow ? (
-          <span
-            aria-hidden
-            className={cn(
-              "absolute h-3.5 w-3.5 rotate-45 border-border bg-background",
-              arrow === "up" ? "-top-[7px] border-l border-t" : "-bottom-[7px] border-b border-r",
-            )}
-            style={{ left: arrowLeft }}
-          />
-        ) : null}
+        <span
+          ref={arrowRef}
+          aria-hidden
+          hidden
+          className="absolute h-3.5 w-3.5 rotate-45 border-border bg-background"
+        />
         <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
           Step {stepIndex + 1} of {DEMO_TUTORIAL_STEPS.length}
         </p>

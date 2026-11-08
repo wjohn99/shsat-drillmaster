@@ -35,6 +35,7 @@ function toFirestorePayload(userId: string, save: DiagnosticExamSave) {
     lockedUnitKeys: save.lockedUnitKeys,
     eliminated: save.eliminated,
     notepad: save.notepad,
+    scratchPad: save.scratchPad,
     clockHidden: save.clockHidden,
     events: save.events,
   };

@@ -48,6 +48,23 @@ describe("worksheet progress storage", () => {
     expect(save?.notepad).toBe("Review the figure");
   });
 
+  it("treats a scratch pad as started progress", () => {
+    const save = normalizeWorksheetProgressSave({
+      userId: "uid1",
+      scopeId: "assign-9",
+      questionIds: ["q1"],
+      currentQuestionIndex: 0,
+      answers: {},
+      flagged: [],
+      lockedQuestionIds: [],
+      eliminated: {},
+      events: [],
+      scratchPad: JSON.stringify([{ t: "p", z: 2.5, p: [10, 20, 80, 90] }]),
+    });
+    expect(worksheetProgressIsStarted(save)).toBe(true);
+    expect(save?.scratchPad).toContain('"t":"p"');
+  });
+
   it("treats a locked or answered save as started", () => {
     const save = normalizeWorksheetProgressSave({
       userId: "uid1",

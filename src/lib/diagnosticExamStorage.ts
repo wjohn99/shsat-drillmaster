@@ -1,4 +1,5 @@
 import { SHSAT_DIAGNOSTIC_SPEC, type DiagnosticSubject } from "@/data/shsatDiagnosticForm";
+import { parseScratchPad, serializeScratchPad } from "@/lib/scratchPad";
 import type { DiagnosticEndReason } from "@/types/practiceSession";
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
 
@@ -19,6 +20,7 @@ export interface DiagnosticExamSave {
   lockedUnitKeys: string[];
   eliminated: Record<string, string[]>;
   notepad: string;
+  scratchPad: string;
   clockHidden: boolean;
   events: SessionAnalyticsEvent[];
 }
@@ -148,6 +150,9 @@ export function normalizeDiagnosticExamSave(raw: unknown): DiagnosticExamSave | 
     lockedUnitKeys: Array.isArray(parsed.lockedUnitKeys) ? parsed.lockedUnitKeys.map(String) : [],
     eliminated,
     notepad: typeof parsed.notepad === "string" ? parsed.notepad : "",
+    scratchPad: serializeScratchPad(
+      parseScratchPad(typeof parsed.scratchPad === "string" ? parsed.scratchPad : ""),
+    ),
     clockHidden: parsed.clockHidden === true,
     events: Array.isArray(parsed.events) ? (parsed.events as SessionAnalyticsEvent[]) : [],
   };

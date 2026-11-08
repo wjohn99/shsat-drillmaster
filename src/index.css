@@ -231,13 +231,19 @@
     background-color: hsl(var(--glass-control-bg));
   }
 
-  /* Diagnostic exam: glass borders wash out on the paper surface. */
-  .diagnostic-choice-control {
+  /* Glass borders wash out on the paper surface. Answer choices use a solid outline. */
+  .choice-control {
     border-width: 2px !important;
     border-style: solid !important;
     border-color: hsl(var(--foreground) / 0.78) !important;
     background-color: hsl(var(--background)) !important;
     box-shadow: none !important;
+  }
+
+  .choice-control[role="checkbox"][data-state="checked"] {
+    border-color: hsl(var(--primary)) !important;
+    background-color: hsl(var(--primary)) !important;
+    color: hsl(var(--primary-foreground)) !important;
   }
 
   .glass-control:hover:not(:disabled):not([data-disabled="true"]):not([data-state="checked"]) {

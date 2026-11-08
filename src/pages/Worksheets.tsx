@@ -99,6 +99,7 @@ import {
   isDemoTutorialSessionCardTitle,
   pickDemoTutorialAlgebraQuestionIds,
   tutorialPreparesAssignedWorksheet,
+  tutorialWorksheetSurface,
 } from "@/lib/demoTutorial";
 import { toast } from "@/hooks/use-toast";
 import type { StudentOption } from "@/types/assignment";
@@ -128,7 +129,9 @@ const Worksheets = () => {
   const role = profile?.role;
   const tutorTools = role === "tutor" || role === "demo";
 
-  const [mode, setMode] = useState<Mode>("home");
+  const [mode, setMode] = useState<Mode>(() =>
+    tutorialActive && tutorialWorksheetSurface(tutorialStep) === "build" ? "build" : "home",
+  );
   const [buildVariant, setBuildVariant] = useState<WorksheetBuilderVariant>("tutor");
   const [runSource, setRunSource] = useState<RunSource>("tutor-preview");
   const [runKey, setRunKey] = useState(0);
@@ -459,6 +462,18 @@ const Worksheets = () => {
     }
   }, [tutorialActive, tutorialStep, tutorTools, mode, selectedCodes.length]);
 
+  // Back and Next both land here. The builder step's target only exists in build
+  // mode, and the pre-set step's target only exists on the home screen.
+  useEffect(() => {
+    if (!tutorialActive || !tutorTools || !tutorialStep) return;
+    const surface = tutorialWorksheetSurface(tutorialStep);
+    if (surface === "build") {
+      if (mode !== "build") openTutorBuild();
+      return;
+    }
+    if (surface === "home" && mode !== "home") setMode("home");
+  }, [tutorialActive, tutorialStep, tutorTools, mode]);
+
   useEffect(() => {
     if (!tutorialActive || !tutorialStep?.worksheetsBuild) return;
     if (selectedStudentUid || students.length === 0) return;
@@ -606,6 +621,7 @@ const Worksheets = () => {
       eliminated: {},
       events: [],
       notepad: "",
+      scratchPad: "",
       revealAnswers: true,
       tutorUid: null,
       startedAt: now,

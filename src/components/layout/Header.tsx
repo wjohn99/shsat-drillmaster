@@ -35,6 +35,7 @@ type NavItem = {
 };
 
 function tourTargetForPath(to: string): string | undefined {
+  if (to === "/question-bank") return "nav-question-bank";
   if (to === "/practice") return "nav-practice";
   if (to === "/worksheets") return "nav-worksheets";
   if (to === "/workspace" || to.startsWith("/workspace/")) return "nav-workspace";
@@ -254,6 +255,7 @@ export const Header = () => {
                   <SheetClose key={item.to} asChild>
                     <AuthLink
                       to={item.to}
+                      data-tour={tourTargetForPath(item.to)}
                       className={sheetLinkClass(item.active)}
                       aria-label={item.label}
                     >

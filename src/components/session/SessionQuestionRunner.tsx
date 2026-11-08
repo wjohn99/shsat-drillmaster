@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Textarea } from "@/components/ui/textarea";
+import { NotesWorkbench } from "@/components/notes/NotesWorkbench";
 import { ArrowLeft, ArrowRight, BookOpen, Flag, Loader2, Printer, StickyNote } from "lucide-react";
 import { useQuestions } from "@/contexts/QuestionsContext";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
@@ -14,7 +14,7 @@ import { QuestionReviewPanel } from "@/components/question/QuestionReviewPanel";
 import { ReportQuestionButton } from "@/components/question/ReportQuestionButton";
 import { QuestionResponseFields } from "@/components/question/QuestionResponseFields";
 import { QuestionSolutionPanel } from "@/components/question/QuestionSolutionPanel";
-import { getSelectedChoiceIds } from "@/lib/questionExplanation";
+import { getSelectedChoiceIds, showsSkillToImprove } from "@/lib/questionExplanation";
 import type { Passage, Question } from "@/types";
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
 import { parseAtaAnswer, serializeAtaAnswer } from "@/lib/indyAta";
@@ -95,6 +95,7 @@ export function SessionQuestionRunner({
   );
   const [savingExit, setSavingExit] = useState(false);
   const [notepad, setNotepad] = useState(initialProgress?.notepad ?? "");
+  const [scratchPad, setScratchPad] = useState(initialProgress?.scratchPad ?? "");
   const [notesOpen, setNotesOpen] = useState(false);
   const notesRef = useRef<HTMLTextAreaElement>(null);
 
@@ -177,6 +178,7 @@ export function SessionQuestionRunner({
       eliminated,
       events: [...eventsByQuestionId.current.values()],
       notepad,
+      scratchPad,
       revealAnswers,
       tutorUid: progressKey.tutorUid,
       startedAt: startedAtRef.current,
@@ -189,6 +191,7 @@ export function SessionQuestionRunner({
     flaggedQuestions,
     lockedQuestionIds,
     notepad,
+    scratchPad,
     progressKey,
     questions,
     revealAnswers,
@@ -543,7 +546,7 @@ export function SessionQuestionRunner({
                     question={currentQuestion}
                     isCorrect={feedback.correct}
                     selectedChoiceIds={getSelectedChoiceIds(currentQuestion, raw)}
-                    showSkillToImprove={profile?.role === "tutor"}
+                    showSkillToImprove={showsSkillToImprove(profile?.role)}
                   />
                 )}
               </CardContent>
@@ -602,18 +605,19 @@ export function SessionQuestionRunner({
       <div className="sticky bottom-0 z-20 shrink-0 border-t bg-background/95 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
         {notesOpen ? (
           <div id="worksheet-notepad" className="container space-y-2 pt-2">
-            <p className="text-sm font-medium">Notes</p>
-            <Textarea
-              ref={notesRef}
-              value={notepad}
-              onChange={(e) => setNotepad(e.target.value)}
-              placeholder={
+            <NotesWorkbench
+              compact
+              text={notepad}
+              onTextChange={setNotepad}
+              scratchPad={scratchPad}
+              onScratchPadChange={setScratchPad}
+              textRef={notesRef}
+              textPlaceholder={
                 progressKey
                   ? "Scratch notes for this worksheet (saved to your account)."
                   : "Scratch notes for this worksheet."
               }
-              className="h-28 resize-none text-sm sm:h-32"
-              aria-label="Worksheet notes"
+              textAriaLabel="Worksheet notes"
             />
           </div>
         ) : null}

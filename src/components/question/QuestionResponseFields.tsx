@@ -28,8 +28,6 @@ interface QuestionResponseFieldsProps {
   /** Struck-through choice ids (answer eliminator). */
   eliminatedChoiceIds?: string[];
   onToggleEliminate?: (choiceId: string) => void;
-  /** Stronger choice-control outlines (diagnostic exam). */
-  highContrastChoices?: boolean;
 }
 
 export function QuestionResponseFields({
@@ -41,12 +39,11 @@ export function QuestionResponseFields({
   onToggleAta,
   eliminatedChoiceIds = [],
   onToggleEliminate,
-  highContrastChoices = false,
 }: QuestionResponseFieldsProps) {
   const eliminated = new Set(eliminatedChoiceIds);
   const selectedChoiceIds = new Set(getSelectedChoiceIds(question, raw));
   const selectedMcValue = [...selectedChoiceIds][0] ?? "";
-  const choiceControlClass = cn("mt-1", highContrastChoices && "diagnostic-choice-control");
+  const choiceControlClass = "mt-1 choice-control";
   const showMcChoices =
     Boolean(question.choices) &&
     !isIndyCheckboxMultiSubtype(question.subtype) &&

@@ -84,7 +84,7 @@ export default function DiagnosticExam() {
   } | null;
   const reviewFromNav = reviewNav?.reviewSession;
   const reviewStudentUid =
-    profile?.role === "tutor" &&
+    (profile?.role === "tutor" || profile?.role === "demo") &&
     reviewFromNav?.userId &&
     reviewFromNav.userId !== profile.uid
       ? reviewFromNav.userId
@@ -448,6 +448,7 @@ export default function DiagnosticExam() {
         lockedUnitKeys: [],
         eliminated: {},
         notepad: "",
+        scratchPad: "",
         clockHidden: false,
         events: [],
       };

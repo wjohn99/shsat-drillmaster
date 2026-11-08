@@ -381,7 +381,7 @@ export default function BlitzMode() {
                         : [...selected, choice.id];
                       setAnswers((a) => ({ ...a, [q.id]: serializeAtaAnswer(next) }));
                     }}
-                    className="mt-1"
+                    className="mt-1 choice-control"
                   />
                   <Label
                     htmlFor={`${q.id}-${choice.id}`}
@@ -411,7 +411,7 @@ export default function BlitzMode() {
               >
                 {q.choices.map((choice) => (
                   <div key={choice.id} className="flex items-start space-x-3">
-                    <RadioGroupItem value={choice.id} id={choice.id} className="mt-1" />
+                    <RadioGroupItem value={choice.id} id={choice.id} className="mt-1 choice-control" />
                     <Label htmlFor={choice.id} className="flex-1 cursor-pointer text-sm leading-relaxed">
                       <span className="font-medium mr-2">{choice.label}.</span>
                       <MathText text={choice.text} />
