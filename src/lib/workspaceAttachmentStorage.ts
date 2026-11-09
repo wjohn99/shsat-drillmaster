@@ -15,6 +15,7 @@ export { WORKSPACE_PDF_MAX_BYTES } from "@/lib/workspaceUploadLimits";
 function extensionForContentType(contentType: WorkspaceFileContentType): string {
   if (contentType === "image/png") return ".png";
   if (contentType === "image/jpeg") return ".jpg";
+  if (contentType === "text/html") return ".html";
   return ".pdf";
 }
 
@@ -25,7 +26,7 @@ export function sanitizeStorageFileName(
   const trimmed = name.trim() || "file";
   const safe = trimmed.replace(/[^a-zA-Z0-9._-]/g, "_");
   const lower = safe.toLowerCase();
-  if (/\.(pdf|png|jpg|jpeg)$/.test(lower)) {
+  if (/\.(pdf|png|jpg|jpeg|html|htm)$/.test(lower)) {
     return lower;
   }
   return `${lower}${extensionForContentType(contentType)}`;

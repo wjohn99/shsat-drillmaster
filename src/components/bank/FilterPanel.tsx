@@ -153,13 +153,13 @@ export const FilterPanel = ({
       <div className="mb-6">
         <Label htmlFor="search" className="text-sm font-medium mb-2 block">Search</Label>
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="pointer-events-none absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             id="search"
             placeholder="Search questions..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
+            className="border-input bg-background pl-9 focus-visible:ring-offset-0"
           />
         </div>
       </div>

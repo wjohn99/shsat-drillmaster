@@ -438,7 +438,7 @@ service cloud.firestore {
                     'workspace-templates/[a-z0-9_-]+/[A-Za-z0-9._-]+'
                   )
                 )
-                && request.resource.data.contentType in ['application/pdf', 'image/jpeg', 'image/png']
+                && request.resource.data.contentType in ['application/pdf', 'image/jpeg', 'image/png', 'text/html']
                 && request.resource.data.sizeBytes is int
                 && request.resource.data.sizeBytes > 0
                 && request.resource.data.sizeBytes <= 25 * 1024 * 1024)

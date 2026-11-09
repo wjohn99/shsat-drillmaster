@@ -21,6 +21,12 @@ import { DiagnosticModuleBreakdown } from "@/components/diagnostic/DiagnosticMod
 import { DiagnosticStrandBreakdown } from "@/components/diagnostic/DiagnosticStrandBreakdown";
 import { SessionResultsDashboard } from "@/components/session/SessionResultsDashboard";
 import { useAuth } from "@/contexts/AuthContext";
+import { useViewAsStudent } from "@/contexts/ViewAsStudentContext";
+import {
+  missedQuestionIds,
+  practiceMissedQuestionsHref,
+  practiceMissedQuestionsLabel,
+} from "@/lib/diagnosticSubmitCheck";
 import { SHSAT_DIAGNOSTIC_SPEC, type DiagnosticSubject } from "@/data/shsatDiagnosticForm";
 import {
   appendDiagnosticResults,
@@ -77,6 +83,7 @@ export default function DiagnosticExam() {
   const navigate = useNavigate();
   const location = useLocation();
   const { profile } = useAuth();
+  const { viewAs } = useViewAsStudent();
   const exam = useMemo(() => assembleDiagnosticExam(), []);
   const reviewNav = location.state as {
     reviewSession?: PracticeSessionRecord;
@@ -304,6 +311,9 @@ export default function DiagnosticExam() {
     () => (events.length === 0 ? events : mergeDiagnosticEventsWithExam(exam, events)),
     [exam, events],
   );
+  const missedIds = useMemo(() => missedQuestionIds(resultsEvents), [resultsEvents]);
+  const canPracticeMisses =
+    !viewAs && profile?.role !== "parent" && !reviewStudentUid && missedIds.length > 0;
   const strandStats = useMemo(() => computeDiagnosticStrands(resultsEvents), [resultsEvents]);
   const moduleBreakdown = useMemo(
     () => computeDiagnosticModuleBreakdown(resultsEvents),
@@ -754,6 +764,13 @@ export default function DiagnosticExam() {
                   </p>
                 ) : null}
                 <div className="flex flex-wrap gap-2">
+                {canPracticeMisses ? (
+                  <Button asChild>
+                    <Link to={practiceMissedQuestionsHref(missedIds)}>
+                      {practiceMissedQuestionsLabel(missedIds.length)}
+                    </Link>
+                  </Button>
+                ) : null}
                 {!reviewFromNav ? (
                   <Button onClick={requestAnotherSitting} disabled={!canPreview || !canStartNew}>
                     Start a new sitting

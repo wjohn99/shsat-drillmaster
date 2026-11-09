@@ -26,7 +26,9 @@ import {
   summarizeBoardPdfUsage,
   validateLinkAttachment,
   validatePdfUpload,
+  WORKSPACE_FILE_TYPE_ERROR,
   WORKSPACE_PDF_MAX_BYTES,
+  workspaceFileBaseName,
   workspaceFileContentType,
 } from "@/lib/workspaceUploadLimits";
 import { fetchWorkspaceCards } from "@/lib/workspaceService";
@@ -364,12 +366,12 @@ export async function addCardPdfAttachment(
   }
   const contentType = workspaceFileContentType(file);
   if (!contentType) {
-    throw new Error("Only PDF, JPEG, and PNG files are allowed.");
+    throw new Error(WORKSPACE_FILE_TYPE_ERROR);
   }
 
   const fileName = (
     opts?.displayName?.trim() ||
-    file.name.replace(/\.(pdf|png|jpe?g)$/i, "").trim() ||
+    workspaceFileBaseName(file.name) ||
     "Document"
   ).slice(0, 200);
   const attachmentsRef = cardCollection(boardId, cardId, "attachments");
@@ -502,7 +504,7 @@ export async function submitAttachmentPdfWork(
 
   const contentType = workspaceFileContentType(file);
   if (!contentType) {
-    throw new Error("Only PDF, JPEG, and PNG files are allowed.");
+    throw new Error(WORKSPACE_FILE_TYPE_ERROR);
   }
   if (file.size <= 0) {
     throw new Error("The file is empty.");

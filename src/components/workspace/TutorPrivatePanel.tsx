@@ -32,6 +32,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { formatIsoDateLabel } from "@/lib/shsat2026";
+import { WORKSPACE_FILE_ACCEPT } from "@/lib/workspaceUploadLimits";
 import {
   deleteTutorPrivateNote,
   fetchTutorPrivateNotes,
@@ -515,12 +516,12 @@ export function TutorPrivatePanel({ boardId }: { boardId: string }) {
                     onClick={() => fileInputRef.current?.click()}
                   >
                     <Paperclip className="mr-1 h-4 w-4" />
-                    Upload PDF
+                    Upload file
                   </Button>
                   <input
                     ref={fileInputRef}
                     type="file"
-                    accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg"
+                    accept={WORKSPACE_FILE_ACCEPT}
                     className="hidden"
                     onChange={(e) => handlePickFiles(e.target.files)}
                   />

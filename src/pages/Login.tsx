@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, Navigate, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation, useSearchParams } from "react-router-dom";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,6 +7,7 @@ import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { useAuth } from "@/contexts/AuthContext";
 import { normalizeEmail } from "@/lib/authService";
 import { cn } from "@/lib/utils";
+import logoIcon from "@/assets/logo-icon.png";
 
 type SignInAudience = "student" | "parent" | "tutor" | "demo";
 
@@ -24,8 +25,11 @@ function isEmail(value: string): boolean {
 export default function Login() {
   const { profile, error, isConfigured, signInWithGoogle } = useAuth();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const [signingIn, setSigningIn] = useState(false);
-  const [audience, setAudience] = useState<SignInAudience>("student");
+  const [audience, setAudience] = useState<SignInAudience>(
+    searchParams.get("as") === "demo" ? "demo" : "student",
+  );
   const [studentEmail, setStudentEmail] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -73,28 +77,34 @@ export default function Login() {
   };
 
   return (
-    <div className="grid min-h-screen md:grid-cols-2">
-      <div className="hidden flex-col justify-between bg-brand-navy px-12 py-12 text-white md:flex">
-        <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-brand-cream">
-          StepPrep
-        </p>
-        <div className="max-w-sm">
-          <h1 className="font-serif text-4xl font-semibold leading-tight tracking-tight">
+    <div className="grid min-h-screen bg-background md:grid-cols-2">
+      <div className="relative hidden flex-col justify-between overflow-hidden bg-brand-navy px-12 py-10 text-white md:flex lg:px-16">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-16 top-0 h-64 w-64 rounded-full bg-brand-cream/10 blur-3xl"
+        />
+        <Wordmark tone="light" />
+        <div className="relative max-w-md">
+          <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-brand-cream">
+            Built by tutors. For tutors.
+          </p>
+          <h1 className="mt-4 font-serif text-4xl font-semibold leading-[1.15] tracking-tight lg:text-5xl">
             SHSAT Drillmaster
           </h1>
-          <p className="mt-4 text-[15px] leading-relaxed text-white/70">
+          <p className="mt-4 text-base leading-relaxed text-white/75">
             Diagnostics, worksheets, and skill practice for tutors and students.
           </p>
         </div>
-        <p className="text-sm text-white/50">Built by tutors. For tutors.</p>
+        <p className="relative text-sm text-white/55">StepPrep Hub</p>
       </div>
 
-      <div className="flex items-center justify-center px-6 py-16">
-        <div className="glass-surface w-full max-w-sm rounded-3xl border p-8">
-          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground md:hidden">
-            StepPrep
-          </p>
-          <h2 className="mt-3 font-serif text-2xl font-semibold tracking-tight">Sign in</h2>
+      <div className="flex items-center justify-center px-6 py-12 sm:px-10">
+        <div className="w-full max-w-md">
+          <div className="mb-8 md:hidden">
+            <Wordmark tone="dark" />
+          </div>
+          <div className="rounded-2xl border bg-card p-7 shadow-sm sm:p-8">
+          <h2 className="font-serif text-3xl font-semibold tracking-tight">Sign in</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
             Choose Student, Parent, Tutor, or Demo, then continue with Google.
           </p>
@@ -191,16 +201,40 @@ export default function Login() {
               onClick={handleSignIn}
               loading={signingIn}
               disabled={!isConfigured || signingIn || (audience === "parent" && !studentEmailBlank && !studentEmailReady)}
+              className="h-12 bg-background"
             />
 
-            <p className="pt-2 text-sm text-muted-foreground">
+            <p className="pt-1 text-sm text-muted-foreground">
               <Link to="/" className="font-medium text-foreground underline-offset-4 hover:underline">
                 Back to home
               </Link>
             </p>
           </div>
+          </div>
         </div>
       </div>
     </div>
+  );
+}
+
+function Wordmark({ tone }: { tone: "light" | "dark" }) {
+  const light = tone === "light";
+  return (
+    <Link to="/" className={cn("inline-flex items-center gap-2.5", light ? "text-white" : "text-foreground")}>
+      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm">
+        <img src={logoIcon} alt="" className="h-8 w-8 object-contain" />
+      </span>
+      <span className="leading-none">
+        <span className="block font-serif text-[15px] font-semibold tracking-tight">StepPrep</span>
+        <span
+          className={cn(
+            "mt-0.5 block text-[10px] uppercase tracking-[0.16em]",
+            light ? "text-brand-cream" : "text-primary/80",
+          )}
+        >
+          DrillMaster
+        </span>
+      </span>
+    </Link>
   );
 }

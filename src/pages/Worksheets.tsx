@@ -1220,6 +1220,7 @@ const Worksheets = () => {
                 ? reviewSession.userId
                 : undefined
             }
+            offerMissedPractice={!viewAs}
             skillWorksheetReturnTo={
               tutorTools && profile && reviewSession.userId !== profile.uid
                 ? returnToRef.current ?? undefined

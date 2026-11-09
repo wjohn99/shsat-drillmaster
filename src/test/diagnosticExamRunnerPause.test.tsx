@@ -90,6 +90,10 @@ describe("DiagnosticExamRunner pause privacy", () => {
     );
 
     expect(screen.getByText(SECRET_STEM)).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: /^Notes$/ }));
+    expect((screen.getByLabelText("Diagnostic notes") as HTMLTextAreaElement).placeholder).toBe(
+      "Scratch notes for this diagnostic (saved to your account).",
+    );
     fireEvent.click(screen.getByRole("button", { name: "Pause" }));
 
     const pause = screen.getByTestId("diagnostic-pause-screen");
@@ -143,5 +147,48 @@ describe("DiagnosticExamRunner pause privacy", () => {
     expect(current.className).toContain("bg-primary");
     expect(current.className).not.toContain("bg-success");
     expect(screen.getByText("Second stem")).toBeTruthy();
+  });
+});
+
+describe("DiagnosticExamRunner submit check", () => {
+  it("lists unanswered and flagged questions and jumps back to them", () => {
+    const first = mathQuestion("check-q1", "First check stem");
+    const second = mathQuestion("check-q2", "Second check stem");
+    const questions = [first, second];
+    const checkExam: AssembledDiagnosticExam = {
+      ...exam,
+      math: {
+        subject: "MATH",
+        questions,
+        units: [{ kind: "passageSet", passageId: "p1", questions, elaPart: "other" }],
+        missingIds: [],
+        heldIds: [],
+      },
+      mathReady: 2,
+    };
+
+    render(
+      <DiagnosticExamRunner
+        exam={checkExam}
+        userId="student-1"
+        firstSection="MATH"
+        deadlineAt={Date.now() + 60 * 60 * 1000}
+        onExit={() => {}}
+        onComplete={() => {}}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Question 2, jump available" }));
+    fireEvent.click(screen.getByRole("radio", { name: /A\./ }));
+    fireEvent.click(screen.getByRole("button", { name: "Flag" }));
+    fireEvent.click(screen.getByRole("button", { name: "Submit MATH section" }));
+
+    expect(screen.getByText("1 unanswered, 1 flagged.")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Unanswered question 1" }));
+    expect(screen.getByText("First check stem")).toBeTruthy();
+    fireEvent.click(screen.getByRole("radio", { name: /A\./ }));
+    fireEvent.click(screen.getByRole("button", { name: "Back to submit check" }));
+    expect(screen.getByText("No unanswered questions, 1 flagged.")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Flagged question 2" })).toBeTruthy();
   });
 });

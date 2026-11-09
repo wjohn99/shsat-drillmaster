@@ -49,15 +49,15 @@ service firebase.storage {
       allow write: if false;
     }
 
-    // Workspace homework files: PDF, JPEG, and PNG. No uploads anywhere else in the bucket.
+    // Workspace homework files: PDF, JPEG, PNG, and HTML. No uploads anywhere else in the bucket.
     match /workspace/{boardId}/cards/{cardId}/{fileName} {
       allow read: if canReadWorkspaceFile(boardId);
 
       allow write: if canAccessWorkspaceBoard(boardId)
         && request.resource.size > 0
         && request.resource.size <= 25 * 1024 * 1024
-        && request.resource.contentType in ['application/pdf', 'image/jpeg', 'image/png']
-        && fileName.matches('.*\\.(pdf|png|jpg|jpeg)$');
+        && request.resource.contentType in ['application/pdf', 'image/jpeg', 'image/png', 'text/html']
+        && fileName.matches('.*\\.(pdf|png|jpg|jpeg|html|htm)$');
 
       allow delete: if false;
     }
@@ -75,8 +75,8 @@ service firebase.storage {
       allow write: if (isTutor() || isDemoSandboxOwner(boardId))
         && request.resource.size > 0
         && request.resource.size <= 25 * 1024 * 1024
-        && request.resource.contentType in ['application/pdf', 'image/jpeg', 'image/png']
-        && fileName.matches('.*\\.(pdf|png|jpg|jpeg)$');
+        && request.resource.contentType in ['application/pdf', 'image/jpeg', 'image/png', 'text/html']
+        && fileName.matches('.*\\.(pdf|png|jpg|jpeg|html|htm)$');
 
       allow delete: if false;
     }

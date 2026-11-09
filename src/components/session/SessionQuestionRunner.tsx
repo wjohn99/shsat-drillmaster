@@ -56,6 +56,8 @@ export interface SessionQuestionRunnerProps {
   /** Optional passage list for assigned items that are not in the viewer catalog. */
   passageCatalog?: Passage[];
   finishLabel?: string;
+  /** Notes copy. Skill practice must not call the set a worksheet. */
+  notesKind?: "worksheet" | "practice";
   /** When set, progress is saved to this device and the signed-in account. */
   progressKey?: WorksheetRunnerProgressKey;
   initialProgress?: WorksheetProgressSave | null;
@@ -70,6 +72,7 @@ export function SessionQuestionRunner({
   revealAnswers = true,
   passageCatalog,
   finishLabel = "Finish worksheet",
+  notesKind = "worksheet",
   progressKey,
   initialProgress,
 }: SessionQuestionRunnerProps) {
@@ -108,6 +111,13 @@ export function SessionQuestionRunner({
   const leavingRef = useRef(false);
   const remoteSaveTimerRef = useRef<number | null>(null);
   const remoteSaveChainRef = useRef<Promise<unknown>>(Promise.resolve());
+
+  const notesNoun = notesKind === "practice" ? "practice set" : "worksheet";
+  const notesPlaceholder = progressKey
+    ? `Scratch notes for this ${notesNoun} (saved to your account).`
+    : `Scratch notes for this ${notesNoun}.`;
+  const notesAriaLabel = notesKind === "practice" ? "Practice notes" : "Worksheet notes";
+  const notesPanelId = notesKind === "practice" ? "practice-notepad" : "worksheet-notepad";
 
   const currentQuestion = questions[currentQuestionIndex];
   const passage = currentQuestion?.passageId
@@ -284,7 +294,7 @@ export function SessionQuestionRunner({
         description:
           err instanceof Error
             ? err.message
-            : "Stay on this worksheet and try Exit again. Progress is only on this device until that succeeds.",
+            : `Stay on this ${notesNoun} and try Exit again. Progress is only on this device until that succeeds.`,
         variant: "destructive",
       });
     } finally {
@@ -604,7 +614,7 @@ export function SessionQuestionRunner({
 
       <div className="sticky bottom-0 z-20 shrink-0 border-t bg-background/95 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
         {notesOpen ? (
-          <div id="worksheet-notepad" className="container space-y-2 pt-2">
+          <div id={notesPanelId} className="container space-y-2 pt-2">
             <NotesWorkbench
               compact
               text={notepad}
@@ -612,12 +622,8 @@ export function SessionQuestionRunner({
               scratchPad={scratchPad}
               onScratchPadChange={setScratchPad}
               textRef={notesRef}
-              textPlaceholder={
-                progressKey
-                  ? "Scratch notes for this worksheet (saved to your account)."
-                  : "Scratch notes for this worksheet."
-              }
-              textAriaLabel="Worksheet notes"
+              textPlaceholder={notesPlaceholder}
+              textAriaLabel={notesAriaLabel}
             />
           </div>
         ) : null}
@@ -625,7 +631,7 @@ export function SessionQuestionRunner({
           <Button
             variant={notesOpen ? "default" : "outline"}
             aria-expanded={notesOpen}
-            aria-controls={notesOpen ? "worksheet-notepad" : undefined}
+            aria-controls={notesOpen ? notesPanelId : undefined}
             onClick={() => setNotesOpen((open) => !open)}
           >
             <StickyNote className="h-4 w-4 mr-2" />

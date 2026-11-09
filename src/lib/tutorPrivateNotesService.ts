@@ -16,6 +16,7 @@ import {
 } from "@/lib/workspaceAttachmentStorage";
 import {
   WORKSPACE_PDF_MAX_BYTES,
+  WORKSPACE_FILE_TYPE_ERROR,
   workspaceFileContentType,
 } from "@/lib/workspaceUploadLimits";
 import {
@@ -258,7 +259,7 @@ export async function uploadTutorPrivateNoteFile(
   signedInUser();
   const contentType = workspaceFileContentType(file);
   if (!contentType) {
-    throw new Error("Only PDF, JPEG, and PNG files are allowed.");
+    throw new Error(WORKSPACE_FILE_TYPE_ERROR);
   }
   if (file.size <= 0) throw new Error("The file is empty.");
   if (file.size > WORKSPACE_PDF_MAX_BYTES) {

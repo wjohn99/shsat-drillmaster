@@ -14,6 +14,8 @@ import { QuestionsProvider } from "@/contexts/QuestionsContext";
 import { ExamLockProvider } from "@/contexts/ExamLockContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import Index from "./pages/Index";
+import TutorDemo from "./pages/TutorDemo";
+import Privacy from "./pages/Privacy";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import QuestionBank from "./pages/QuestionBank";
@@ -65,6 +67,11 @@ const App = () => (
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Index />} />
+            {/* Ad funnel. Reachable only by URL. Do not add it to site navigation. */}
+            <Route path="/demo-tutor" element={<TutorDemo />} />
+            <Route path="/tutor-demo" element={<TutorDemo />} />
+            {/* Privacy policy for Google review. Reachable only by URL. Do not add it to site navigation. */}
+            <Route path="/privacy" element={<Privacy />} />
             <Route
               path="/dashboard"
               element={

@@ -1,10 +1,16 @@
 import { useMemo } from "react";
+import { Link } from "react-router-dom";
 import { ArrowLeft, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useQuestions } from "@/contexts/QuestionsContext";
 import { SessionItemReview } from "@/components/session/SessionItemReview";
 import { SessionResultsDashboard } from "@/components/session/SessionResultsDashboard";
+import {
+  missedQuestionIds,
+  practiceMissedQuestionsHref,
+  practiceMissedQuestionsLabel,
+} from "@/lib/diagnosticSubmitCheck";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 
 interface WorksheetSessionReviewProps {
@@ -14,6 +20,7 @@ interface WorksheetSessionReviewProps {
   /** Tutor review only. Each skill opens a worksheet for this student. */
   skillWorksheetStudentUid?: string;
   skillWorksheetReturnTo?: string;
+  offerMissedPractice?: boolean;
   onBack: () => void;
 }
 
@@ -31,6 +38,7 @@ export function WorksheetSessionReview({
   viewerRole = "student",
   skillWorksheetStudentUid,
   skillWorksheetReturnTo,
+  offerMissedPractice = true,
   onBack,
 }: WorksheetSessionReviewProps) {
   const completedLabel = formatCompletedAt(session);
@@ -40,6 +48,12 @@ export function WorksheetSessionReview({
     [getQuestionsByIds, session.questionIds],
   );
   const passages = useMemo(() => getPassagesForQuestions(questions), [getPassagesForQuestions, questions]);
+  const missedIds = useMemo(() => missedQuestionIds(session.events), [session.events]);
+  const canPracticeMisses =
+    offerMissedPractice &&
+    viewerRole === "student" &&
+    !skillWorksheetStudentUid &&
+    missedIds.length > 0;
 
   const summaryMetrics = useMemo(
     () => [
@@ -93,9 +107,18 @@ export function WorksheetSessionReview({
             : "This is your saved attempt, question order and answers match what you submitted."
         }
         footerActions={
-          <Badge variant="outline" className="text-xs font-normal">
-            {session.questionIds.length} questions in this worksheet
-          </Badge>
+          <div className="flex flex-wrap items-center gap-2">
+            {canPracticeMisses ? (
+              <Button asChild>
+                <Link to={practiceMissedQuestionsHref(missedIds)}>
+                  {practiceMissedQuestionsLabel(missedIds.length)}
+                </Link>
+              </Button>
+            ) : null}
+            <Badge variant="outline" className="text-xs font-normal">
+              {session.questionIds.length} questions in this worksheet
+            </Badge>
+          </div>
         }
       />
     </div>

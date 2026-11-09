@@ -43,10 +43,18 @@ export function summarizeBoardPdfUsage(
   return { pdfCount, pdfBytes };
 }
 
-export type WorkspaceFileContentType = "application/pdf" | "image/jpeg" | "image/png";
+export type WorkspaceFileContentType = "application/pdf" | "image/jpeg" | "image/png" | "text/html";
+
+export const WORKSPACE_FILE_ACCEPT =
+  ".pdf,.png,.jpg,.jpeg,.html,.htm,application/pdf,image/png,image/jpeg,text/html";
+
+export const WORKSPACE_FILE_TYPE_ERROR = "Only PDF, JPEG, PNG, and HTML files are allowed.";
+
+export const WORKSPACE_FILE_TYPE_LABEL = "PDF, JPEG, PNG, or HTML";
 
 export function workspaceFileContentType(file: File): WorkspaceFileContentType | null {
   const name = file.name.toLowerCase();
+  if (name.endsWith(".html") || name.endsWith(".htm")) return "text/html";
   if (file.type === "application/pdf" || name.endsWith(".pdf")) return "application/pdf";
   if (file.type === "image/png" || name.endsWith(".png")) return "image/png";
   if (
@@ -60,13 +68,17 @@ export function workspaceFileContentType(file: File): WorkspaceFileContentType |
   return null;
 }
 
+export function workspaceFileBaseName(fileName: string): string {
+  return fileName.replace(/\.(pdf|png|jpe?g|html?)$/i, "").trim();
+}
+
 export function validatePdfUpload(
   file: File,
   cardAttachments: WorkspaceCardAttachment[],
   boardUsage: BoardPdfUsage,
 ): UploadValidationResult {
   if (!workspaceFileContentType(file)) {
-    return { ok: false, message: "Only PDF, JPEG, and PNG files are allowed." };
+    return { ok: false, message: WORKSPACE_FILE_TYPE_ERROR };
   }
 
   if (file.size <= 0) {

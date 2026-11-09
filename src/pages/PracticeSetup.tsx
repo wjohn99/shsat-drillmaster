@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useViewAsStudent } from "@/contexts/ViewAsStudentContext";
 import { Header } from "@/components/layout/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,6 +23,9 @@ import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
 import { useQuestions } from "@/contexts/QuestionsContext";
 import { moduleBadgeColor, moduleLabel, QUESTION_MODULES } from "@/lib/questionModule";
 import { TAG_CATEGORIES, getTagLabel } from "@/data/taggingScheme";
+import { isPracticeSetType, practiceSetScopeId } from "@/lib/practiceSetProgress";
+import { clearWorksheetProgress } from "@/lib/worksheetProgressService";
+import { clearWorksheetProgressLocal } from "@/lib/worksheetProgressStorage";
 import { cn } from "@/lib/utils";
 
 type TopicSection = {
@@ -139,8 +144,11 @@ function practiceScope(type: string | undefined): PracticeScope {
 export default function PracticeSetup() {
   const { getFilteredQuestions } = useQuestions();
   const navigate = useNavigate();
+  const { profile } = useAuth();
+  const { viewAs } = useViewAsStudent();
   const { type } = useParams();
   const scope = practiceScope(type);
+  const [starting, setStarting] = useState(false);
 
   const [selectedSubjects, setSelectedSubjects] = useState<Subject[]>([]);
   const [selectedModules, setSelectedModules] = useState<QuestionModule[]>([]);
@@ -196,14 +204,27 @@ export default function PracticeSetup() {
     setQuestionsCount((current) => Math.min(Math.max(current, 1), maxQuestions));
   }, [maxQuestions]);
 
-  const startPractice = () => {
+  const startPractice = async () => {
+    if (starting || viewAs || setSize === 0) return;
+    setStarting(true);
     const params = new URLSearchParams();
     if (activeSubjects.length > 0) params.set("subjects", activeSubjects.join(","));
     if (selectedModules.length > 0) params.set("modules", selectedModules.join(","));
     if (activeTags.length > 0) params.set("tagCodes", activeTags.join(","));
-    params.set('count', String(setSize));
-    params.set('timed', timedMode.toString());
-
+    params.set("count", String(setSize));
+    params.set("timed", timedMode.toString());
+    if (isPracticeSetType(type)) {
+      params.set("type", type);
+      if (profile?.uid) {
+        const scopeId = practiceSetScopeId(type);
+        clearWorksheetProgressLocal(profile.uid, scopeId);
+        try {
+          await clearWorksheetProgress(profile.uid, scopeId);
+        } catch {
+          // The new set overwrites this scope as soon as it saves.
+        }
+      }
+    }
     navigate(`/practice-set?${params.toString()}`);
   };
 
@@ -473,10 +494,10 @@ export default function PracticeSetup() {
 
                   <Separator />
 
-                  <Button 
-                    className="w-full" 
-                    onClick={startPractice}
-                    disabled={availableQuestions.length === 0}
+                  <Button
+                    className="w-full"
+                    onClick={() => void startPractice()}
+                    disabled={availableQuestions.length === 0 || Boolean(viewAs) || starting}
                   >
                     <Play className="h-4 w-4 mr-2" />
                     Start Practice

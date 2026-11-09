@@ -254,4 +254,22 @@ describe("SessionQuestionRunner notes", () => {
     const save = vi.mocked(saveWorksheetProgress).mock.calls.at(-1)?.[0];
     expect(save?.notepad).toBe("Come back to ratios");
   });
+
+  it("calls skill-practice notes a practice set, not a worksheet", () => {
+    render(
+      <SessionQuestionRunner
+        questions={questions}
+        sessionTitle="Practice set"
+        storageKeyPrefix="practice-set"
+        notesKind="practice"
+        onExit={() => {}}
+        onComplete={() => {}}
+        progressKey={progressKey}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /^Notes$/ }));
+    const notes = screen.getByLabelText("Practice notes") as HTMLTextAreaElement;
+    expect(notes.placeholder).toBe("Scratch notes for this practice set (saved to your account).");
+    expect(screen.queryByLabelText("Worksheet notes")).toBeNull();
+  });
 });

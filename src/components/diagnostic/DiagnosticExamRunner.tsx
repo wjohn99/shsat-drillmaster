@@ -13,6 +13,7 @@ import { useExamLock } from "@/contexts/ExamLockContext";
 import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
 import { MathText } from "@/lib/mathText";
 import { parseAtaAnswer, serializeAtaAnswer } from "@/lib/indyAta";
+import { diagnosticSubmitCheckLine } from "@/lib/diagnosticSubmitCheck";
 import { canSubmitQuestionAnswer, isQuestionAnswerCorrect } from "@/lib/sessionGrading";
 import {
   elaPartLabel,
@@ -91,7 +92,8 @@ export function DiagnosticExamRunner({
   const [remainingSeconds, setRemainingSeconds] = useState(() =>
     Math.max(0, Math.ceil((deadlineAt - Date.now()) / 1000)),
   );
-  const [confirmSectionSubmit, setConfirmSectionSubmit] = useState(false);
+  const [submitCheck, setSubmitCheck] = useState<null | "section" | "passageSet">(null);
+  const [reviewingSubmit, setReviewingSubmit] = useState(false);
   const [confirmExit, setConfirmExit] = useState(false);
   const [pausing, setPausing] = useState(false);
   const [notesOpen, setNotesOpen] = useState(false);
@@ -497,31 +499,75 @@ export function DiagnosticExamRunner({
       return;
     }
 
-    if (isPassageSet && isLastInUnit) {
-      const allAnswered = unitQs.every((q) => canSubmitQuestionAnswer(q, answers[q.id]));
-      if (!allAnswered) return;
+    if (isPassageSet && isLastInUnit && !isLastUnit) {
+      const needsCheck = unitQs.some(
+        (question) => !canSubmitQuestionAnswer(question, answers[question.id]) || flagged.has(question.id),
+      );
+      if (needsCheck) {
+        setSubmitCheck("passageSet");
+        setReviewingSubmit(false);
+        return;
+      }
       lockCurrentUnit();
-    } else {
-      lockCurrentUnit();
-    }
-
-    if (!isLastUnit) {
       setUnitIndex((i) => i + 1);
       setQuestionIndexInUnit(0);
       return;
     }
 
-    setConfirmSectionSubmit(true);
+    if (!isLastUnit) {
+      lockCurrentUnit();
+      setUnitIndex((i) => i + 1);
+      setQuestionIndexInUnit(0);
+      return;
+    }
+
+    setSubmitCheck("section");
+    setReviewingSubmit(false);
   };
 
   const submitSection = () => {
-    setConfirmSectionSubmit(false);
+    lockCurrentUnit();
+    setSubmitCheck(null);
+    setReviewingSubmit(false);
     if (isLastSection) {
       finishExam("submit");
       return;
     }
     setSectionIndex((i) => i + 1);
     setUnitIndex(0);
+    setQuestionIndexInUnit(0);
+  };
+
+  const checkQuestions = submitCheck === "passageSet" ? unitQs : sectionQuestions;
+  const unansweredQuestions = checkQuestions.filter(
+    (question) => !canSubmitQuestionAnswer(question, answers[question.id]),
+  );
+  const flaggedQuestions = checkQuestions.filter((question) => flagged.has(question.id));
+  const sectionNumber = (questionId: string) =>
+    sectionQuestions.findIndex((question) => question.id === questionId) + 1;
+  const passageSetReady = unitQs.every((question) => canSubmitQuestionAnswer(question, answers[question.id]));
+
+  const jumpFromSubmitCheck = (questionId: string) => {
+    const loc = locateUnitQuestion(units, questionId);
+    if (!loc) return;
+    if (currentQuestion && currentQuestion.id !== questionId) recordTiming(currentQuestion);
+    setUnitIndex(loc.unitIndex);
+    setQuestionIndexInUnit(loc.questionIndexInUnit);
+    setReviewingSubmit(true);
+  };
+
+  const backToSubmitCheck = () => {
+    if (currentQuestion) recordTiming(currentQuestion);
+    setReviewingSubmit(false);
+  };
+
+  const submitPassageSet = () => {
+    if (!passageSetReady) return;
+    if (currentQuestion) recordTiming(currentQuestion);
+    lockCurrentUnit();
+    setSubmitCheck(null);
+    setReviewingSubmit(false);
+    setUnitIndex((i) => i + 1);
     setQuestionIndexInUnit(0);
   };
 
@@ -675,33 +721,65 @@ export function DiagnosticExamRunner({
           </div>
         </div>
 
-        {confirmSectionSubmit ? (
+        {submitCheck && !reviewingSubmit ? (
           <div className="min-h-0 flex-1 overflow-y-auto py-2">
             <Card className="mx-auto max-w-xl">
               <CardHeader>
-                <CardTitle>Submit {section.subject}?</CardTitle>
+                <CardTitle>
+                  {submitCheck === "passageSet" ? "Submit this passage set?" : `Submit ${section.subject}?`}
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-sm text-muted-foreground">
-                  You cannot return to this section after you submit. Unanswered items will be scored as
-                  incorrect.
+                  {submitCheck === "passageSet"
+                    ? "Jump to an unanswered or flagged question before you leave this passage set."
+                    : "You cannot return to this section after you submit. Unanswered questions are scored as incorrect."}
                 </p>
-                <p className="text-sm">
-                  Answered {answeredInSection} of {sectionQuestions.length} questions.
+                <p className="text-sm font-medium">
+                  {diagnosticSubmitCheckLine(unansweredQuestions.length, flaggedQuestions.length)}
                 </p>
-                <div className="flex gap-2">
-                  <Button variant="outline" onClick={() => setConfirmSectionSubmit(false)}>
+                <SubmitCheckJumps
+                  label="Unanswered"
+                  questions={unansweredQuestions}
+                  numberFor={sectionNumber}
+                  onJump={jumpFromSubmitCheck}
+                />
+                <SubmitCheckJumps
+                  label="Flagged"
+                  questions={flaggedQuestions}
+                  numberFor={sectionNumber}
+                  onJump={jumpFromSubmitCheck}
+                />
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setSubmitCheck(null);
+                      setReviewingSubmit(false);
+                    }}
+                  >
                     Keep working
                   </Button>
-                  <Button onClick={submitSection}>
-                    {isLastSection ? "Submit exam" : `Submit ${section.subject}`}
-                  </Button>
+                  {submitCheck === "passageSet" ? (
+                    <Button onClick={submitPassageSet} disabled={!passageSetReady}>
+                      Submit passage set
+                    </Button>
+                  ) : (
+                    <Button onClick={submitSection}>
+                      {isLastSection ? "Submit exam" : `Submit ${section.subject}`}
+                    </Button>
+                  )}
                 </div>
               </CardContent>
             </Card>
           </div>
         ) : (
           <>
+            {reviewingSubmit ? (
+              <p className="shrink-0 pb-2 text-sm text-muted-foreground">
+                Opened from the submit check. Go back when you are done with this question.
+              </p>
+            ) : null}
             <div className="shrink-0 pb-2">
               <DiagnosticSectionMap
                 subject={section.subject}
@@ -767,7 +845,7 @@ export function DiagnosticExamRunner({
         )}
       </div>
 
-      {!confirmSectionSubmit ? (
+      {!(submitCheck && !reviewingSubmit) ? (
         <div className="z-20 shrink-0 border-t bg-background/95 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
           {notesOpen ? (
             <div id="diagnostic-notepad" className="container space-y-2 px-4 pt-2">
@@ -778,8 +856,8 @@ export function DiagnosticExamRunner({
                 scratchPad={scratchPad}
                 onScratchPadChange={setScratchPad}
                 textRef={notesRef}
-                textPlaceholder="Scratch notes for this exam (saved to your account)."
-                textAriaLabel="Exam notes"
+                textPlaceholder="Scratch notes for this diagnostic (saved to your account)."
+                textAriaLabel="Diagnostic notes"
               />
             </div>
           ) : null}
@@ -805,14 +883,54 @@ export function DiagnosticExamRunner({
                   <span className="sm:hidden">Prev</span>
                 </Button>
               ) : null}
-              <Button onClick={goNext} disabled={!canAdvanceCurrent}>
-                {nextLabel}
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
+              {reviewingSubmit ? (
+                <Button onClick={backToSubmitCheck}>Back to submit check</Button>
+              ) : (
+                <Button onClick={goNext} disabled={!canAdvanceCurrent}>
+                  {nextLabel}
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              )}
             </div>
           </div>
         </div>
       ) : null}
+    </div>
+  );
+}
+
+function SubmitCheckJumps({
+  label,
+  questions,
+  numberFor,
+  onJump,
+}: {
+  label: string;
+  questions: Question[];
+  numberFor: (questionId: string) => number;
+  onJump: (questionId: string) => void;
+}) {
+  if (questions.length === 0) return null;
+  return (
+    <div className="space-y-2">
+      <p className="text-sm font-medium">{label}</p>
+      <div className="flex flex-wrap gap-2">
+        {questions.map((question) => {
+          const number = numberFor(question.id);
+          return (
+            <Button
+              key={`${label}-${question.id}`}
+              type="button"
+              variant="outline"
+              size="sm"
+              aria-label={`${label} question ${number}`}
+              onClick={() => onJump(question.id)}
+            >
+              Question {number}
+            </Button>
+          );
+        })}
+      </div>
     </div>
   );
 }
