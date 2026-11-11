@@ -133,8 +133,8 @@ export function TutorWorksheetsHome({
         <div className="mb-4">
           <h2 className="font-serif text-xl font-semibold">Pre-set worksheets</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Ready-made sets from the current question bank. Assign one to a student, or
-            preview it first.
+            Ready-made sets from the current question bank. Assign one, then choose Module 1,
+            Module 2, or both.
           </p>
         </div>
 

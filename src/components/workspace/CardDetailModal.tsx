@@ -94,7 +94,7 @@ import type {
 } from "@/types/workspace";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
-import { WORKSPACE_HOME_PATH } from "@/types/worksheetsNavigation";
+import { workspaceBoardPath } from "@/lib/workspaceNavigation";
 import { LinkifiedText, NoteLinkList } from "@/components/workspace/LinkifiedText";
 
 interface CardDetailModalProps {
@@ -438,7 +438,7 @@ export function CardDetailModal({
           listId: card.listId,
           cardId: card.id,
         },
-        returnTo: WORKSPACE_HOME_PATH,
+        returnTo: workspaceBoardPath(boardId, card.id, { focusActivity: false }),
       },
     });
   };
@@ -450,7 +450,7 @@ export function CardDetailModal({
       state: {
         autoStartAssignment: assignment,
         workspaceCompletionTarget: { boardId, cardId: card.id },
-        returnTo: WORKSPACE_HOME_PATH,
+        returnTo: workspaceBoardPath(boardId, card.id, { focusActivity: false }),
       },
     });
   };
@@ -965,11 +965,13 @@ export function CardDetailModal({
                                 size="sm"
                                 variant="outline"
                                 onClick={() => {
-                                  onOpenChange(false);
+                                  if (!card) return;
                                   navigate("/worksheets", {
                                     state: {
                                       reviewAssignment: assignment,
-                                      returnTo: WORKSPACE_HOME_PATH,
+                                      returnTo: workspaceBoardPath(boardId, card.id, {
+                                        focusActivity: false,
+                                      }),
                                     },
                                   });
                                 }}

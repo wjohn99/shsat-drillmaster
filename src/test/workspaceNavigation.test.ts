@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { parseWorkspaceCardParam, workspaceBoardPath } from "@/lib/workspaceNavigation";
+import {
+  parseWorkspaceCardParam,
+  workspaceBoardPath,
+  workspaceCardFocusesActivity,
+} from "@/lib/workspaceNavigation";
 
 describe("workspaceBoardPath", () => {
   it("opens a board without a card", () => {
@@ -10,6 +14,14 @@ describe("workspaceBoardPath", () => {
     expect(workspaceBoardPath("student-1", "card-hi")).toBe(
       "/workspace/student-1?card=card-hi",
     );
+  });
+
+  it("returns to the card without jumping to comments", () => {
+    expect(workspaceBoardPath("student-1", "card-hi", { focusActivity: false })).toBe(
+      "/workspace/student-1?card=card-hi&focus=card",
+    );
+    expect(workspaceCardFocusesActivity("?card=card-hi&focus=card")).toBe(false);
+    expect(workspaceCardFocusesActivity("?card=card-hi")).toBe(true);
   });
 });
 

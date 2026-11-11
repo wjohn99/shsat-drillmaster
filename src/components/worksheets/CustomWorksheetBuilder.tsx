@@ -28,7 +28,8 @@ import {
   type WorksheetSectionId,
 } from "@/lib/worksheetTagCatalog";
 import { cn } from "@/lib/utils";
-import type { Passage, Question, Tag } from "@/types";
+import type { Passage, Question, QuestionModule, Tag } from "@/types";
+import { moduleBadgeColor, moduleLabel, QUESTION_MODULES } from "@/lib/questionModule";
 import type { StudentOption } from "@/types/assignment";
 import type { WorkspaceCard, WorkspaceList } from "@/types/workspace";
 import { WORKSPACE_NEW_CARD_ID } from "@/types/worksheetsNavigation";
@@ -42,6 +43,8 @@ export type WorksheetBuilderVariant = "tutor" | "student";
 interface CustomWorksheetBuilderProps {
   variant: WorksheetBuilderVariant;
   selectedCodes: string[];
+  selectedModules?: QuestionModule[];
+  onToggleModule?: (module: QuestionModule) => void;
   questionLimit: number;
   tagCatalog: Record<WorksheetSectionId, Tag[]>;
   matchingCount: number;
@@ -98,6 +101,8 @@ const DEFAULT_OPEN_SECTIONS: WorksheetSectionId[] = [
 export function CustomWorksheetBuilder({
   variant,
   selectedCodes,
+  selectedModules = QUESTION_MODULES,
+  onToggleModule,
   questionLimit,
   tagCatalog,
   matchingCount,
@@ -450,6 +455,36 @@ export function CustomWorksheetBuilder({
           </p>
         </CardHeader>
         <CardContent className="space-y-5">
+          <div className="space-y-2">
+            <p className="text-sm font-medium">Module</p>
+            <div className="flex gap-2">
+              {QUESTION_MODULES.map((module) => {
+                const on = selectedModules.includes(module);
+                return (
+                  <button
+                    key={module}
+                    type="button"
+                    aria-pressed={on}
+                    onClick={() => onToggleModule?.(module)}
+                    className={cn(
+                      "h-10 flex-1 rounded-full text-sm font-semibold text-white transition-opacity",
+                      on ? "ring-2 ring-ring ring-offset-2" : "opacity-40 hover:opacity-70",
+                    )}
+                    style={{ backgroundColor: moduleBadgeColor(module) }}
+                  >
+                    {moduleLabel(module)}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {selectedModules.length === 0
+                ? "Pick Module 1, Module 2, or both."
+                : selectedModules.length === QUESTION_MODULES.length
+                  ? "Both modules are included. Turn one off to use only that module."
+                  : `Only ${moduleLabel(selectedModules[0])} questions are included.`}
+            </p>
+          </div>
           {selectedCodes.length > 0 && (
             <div className="rounded-lg border bg-muted/40 p-4 space-y-2">
               <div className="flex items-center justify-between gap-2">
@@ -630,9 +665,15 @@ export function CustomWorksheetBuilder({
               onQuestionLimitChange={onQuestionLimitChange}
               onChosenIdsChange={onChosenIdsChange}
               emptyPoolMessage={
-                selectedCodes.length > 0 && excludedSubmittedCount > 0
+                selectedCodes.length > 0 && excludedSubmittedCount > 0 && matchingCount === 0
                   ? "Every question for these skills was already submitted by this student."
-                  : undefined
+                  : selectedCodes.length > 0 && selectedModules.length === 0
+                    ? "Pick Module 1, Module 2, or both."
+                    : selectedCodes.length > 0 &&
+                        selectedModules.length === 1 &&
+                        matchingCount === 0
+                      ? `No ${moduleLabel(selectedModules[0])} questions for these skills.`
+                      : undefined
               }
             />
           ) : (
@@ -650,7 +691,8 @@ export function CustomWorksheetBuilder({
                 onValueChange={(value) => onQuestionLimitChange(value[0] ?? 10)}
               />
               <p className="text-xs text-muted-foreground">
-                Pool size for the selected skills:{" "}
+                Pool size for the selected skills
+                {selectedModules.length === 1 ? ` in ${moduleLabel(selectedModules[0])}` : ""}:{" "}
                 <span className="font-medium text-foreground">{matchingCount}</span>
                 {excludedSubmittedCount > 0
                   ? ". Questions this student already submitted are left out."

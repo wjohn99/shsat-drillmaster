@@ -1,4 +1,4 @@
-import type { Question, Tag } from '@/types';
+import type { Question, QuestionModule, Tag } from '@/types';
 import { DIAGNOSTIC_RESERVED_QUESTION_IDS } from '@/data/shsatDiagnosticForm';
 import {
   TAG_CATEGORIES,
@@ -80,15 +80,25 @@ function practicePool(questions: Question[], excludedIds?: ReadonlySet<string>):
   );
 }
 
+function matchesSelectedModules(
+  question: Question,
+  modules?: ReadonlySet<QuestionModule>,
+): boolean {
+  if (!modules) return true;
+  return modules.has(question.module);
+}
+
 /** Practice questions that match any selected skill, in catalog order, without duplicates. */
 export function listWorksheetPool(
   questions: Question[],
   selectedTagCodes: Set<string>,
   excludedIds?: ReadonlySet<string>,
+  modules?: ReadonlySet<QuestionModule>,
 ): Question[] {
   if (selectedTagCodes.size === 0) return [];
   const byId = new Map<string, Question>();
   for (const question of practicePool(questions, excludedIds)) {
+    if (!matchesSelectedModules(question, modules)) continue;
     if (!question.tags.some((tag) => selectedTagCodes.has(tag.code))) continue;
     if (!byId.has(question.id)) byId.set(question.id, question);
   }
@@ -157,9 +167,10 @@ export function pickWorksheetQuestions(
   selectedTagCodes: Set<string>,
   limit: number,
   excludedIds?: ReadonlySet<string>,
+  modules?: ReadonlySet<QuestionModule>,
 ): Question[] {
   if (selectedTagCodes.size === 0 || limit <= 0) return [];
-  const matched = listWorksheetPool(questions, selectedTagCodes, excludedIds);
+  const matched = listWorksheetPool(questions, selectedTagCodes, excludedIds, modules);
   return clusterQuestionsByPassage(shuffleArray(matched).slice(0, Math.min(limit, matched.length)));
 }
 

@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import type { Timestamp } from "firebase/firestore";
 import type { WorksheetAssignment } from "@/types/assignment";
@@ -73,7 +73,15 @@ vi.mock("@/lib/workspaceCardContentService", () => ({
   submitAttachmentWork: vi.fn(),
 }));
 
+const navigate = vi.hoisted(() => vi.fn());
+
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual<typeof import("react-router-dom")>("react-router-dom");
+  return { ...actual, useNavigate: () => navigate };
+});
+
 import { CardDetailModal } from "@/components/workspace/CardDetailModal";
+import { fetchAssignmentById } from "@/lib/assignmentService";
 
 const card: WorkspaceCard = {
   id: "card-session-2",
@@ -115,6 +123,32 @@ describe("CardDetailModal assigned worksheet", () => {
     expect(screen.getByText(/10 questions/)).toBeTruthy();
     expect(screen.getByText(/Due Nov 2, 2026/)).toBeTruthy();
     expect(document.querySelector("[data-tour='assigned-worksheet']")).toBeTruthy();
+  });
+
+  it("sends worksheet results back to the card they were opened from", async () => {
+    vi.mocked(fetchAssignmentById).mockResolvedValue({ ...assignment, status: "completed" });
+    navigate.mockClear();
+
+    render(
+      <MemoryRouter>
+        <CardDetailModal
+          boardId="demo-1-avery"
+          card={card}
+          open
+          onOpenChange={vi.fn()}
+          onUpdated={vi.fn()}
+        />
+      </MemoryRouter>,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "View last results" }));
+
+    expect(navigate).toHaveBeenCalledWith("/worksheets", {
+      state: {
+        reviewAssignment: expect.objectContaining({ id: "assign-1", status: "completed" }),
+        returnTo: "/workspace/demo-1-avery?card=card-session-2&focus=card",
+      },
+    });
   });
 
   it("renders when a board opens with no card selected", () => {

@@ -44,4 +44,20 @@ describe("worksheet assignment exclusion", () => {
     const picked = pickWorksheetQuestions(questions, new Set(["ALG-1"]), 10, new Set(["q-used"]));
     expect(picked.map((item) => item.id)).toEqual(["q-keep"]);
   });
+
+  it("keeps only the module the tutor picked", () => {
+    const mixed = [
+      question("q-mod-1", "ALG-1"),
+      { ...question("q-mod-2", "ALG-1"), module: "2" as const },
+    ];
+    const moduleTwo = listWorksheetPool(mixed, new Set(["ALG-1"]), undefined, new Set(["2"]));
+    expect(moduleTwo.map((item) => item.id)).toEqual(["q-mod-2"]);
+    const both = listWorksheetPool(
+      mixed,
+      new Set(["ALG-1"]),
+      undefined,
+      new Set(["1", "2"]),
+    );
+    expect(both.map((item) => item.id)).toEqual(["q-mod-1", "q-mod-2"]);
+  });
 });

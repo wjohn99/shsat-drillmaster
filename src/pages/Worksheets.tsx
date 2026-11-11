@@ -8,7 +8,8 @@ import { ArrowLeft, Eye, Loader2 } from "lucide-react";
 import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
 import { useQuestions } from "@/contexts/QuestionsContext";
 import { allTags } from "@/data/taggingScheme";
-import type { Passage, Question } from "@/types";
+import type { Passage, Question, QuestionModule } from "@/types";
+import { QUESTION_MODULES } from "@/lib/questionModule";
 import {
   buildWorksheetPresets,
   type WorksheetPreset,
@@ -136,6 +137,7 @@ const Worksheets = () => {
   const [runSource, setRunSource] = useState<RunSource>("tutor-preview");
   const [runKey, setRunKey] = useState(0);
   const [selectedCodes, setSelectedCodes] = useState<string[]>([]);
+  const [selectedModules, setSelectedModules] = useState<QuestionModule[]>([...QUESTION_MODULES]);
   const [questionLimit, setQuestionLimit] = useState(10);
   const [questionPickMode, setQuestionPickMode] = useState<WorksheetQuestionPickMode>("random");
   const [chosenQuestionIds, setChosenQuestionIds] = useState<string[]>([]);
@@ -224,7 +226,14 @@ const Worksheets = () => {
     );
   };
 
+  const toggleModule = (module: QuestionModule) => {
+    setSelectedModules((prev) =>
+      prev.includes(module) ? prev.filter((item) => item !== module) : [...prev, module],
+    );
+  };
+
   const selectedSet = useMemo(() => new Set(selectedCodes), [selectedCodes]);
+  const selectedModuleSet = useMemo(() => new Set(selectedModules), [selectedModules]);
 
   const blockRepeatsForStudent =
     buildVariant === "tutor" && Boolean(selectedStudentUid) && blockRepeatQuestions;
@@ -232,14 +241,26 @@ const Worksheets = () => {
   const submittedHistoryPending =
     blockRepeatsForStudent && (submittedHistoryLoading || !submittedHistoryReady);
   const poolQuestions = useMemo(
-    () => listWorksheetPool(questions, selectedSet, assignedExclusion),
-    [questions, selectedSet, assignedExclusion],
+    () => listWorksheetPool(questions, selectedSet, assignedExclusion, selectedModuleSet),
+    [questions, selectedSet, assignedExclusion, selectedModuleSet],
   );
   const matchingCount = poolQuestions.length;
-  const chosenQuestions = useMemo(
-    () => worksheetQuestionsFromIds(questions, chosenQuestionIds, assignedExclusion),
-    [questions, chosenQuestionIds, assignedExclusion],
-  );
+  const chosenQuestions = useMemo(() => {
+    const picked = worksheetQuestionsFromIds(questions, chosenQuestionIds, assignedExclusion);
+    return picked.filter((question) => selectedModuleSet.has(question.module));
+  }, [questions, chosenQuestionIds, assignedExclusion, selectedModuleSet]);
+
+  useEffect(() => {
+    if (selectedModules.length === QUESTION_MODULES.length) return;
+    setChosenQuestionIds((prev) => {
+      if (prev.length === 0) return prev;
+      const next = prev.filter((id) => {
+        const question = questions.find((item) => item.id === id);
+        return Boolean(question && selectedModuleSet.has(question.module));
+      });
+      return next.length === prev.length ? prev : next;
+    });
+  }, [selectedModules.length, selectedModuleSet, questions]);
 
   const setChosenQuestionIdsCapped = (ids: string[]) => {
     const unique: string[] = [];
@@ -493,7 +514,7 @@ const Worksheets = () => {
     setMode("build");
     toast({
       title: `${preset.title} pre-set loaded`,
-      description: "Pick a student and due date, then assign.",
+      description: "Pick a module, a student, and a due date, then assign.",
     });
   };
 
@@ -506,7 +527,13 @@ const Worksheets = () => {
   const pickCurrentQuestions = () =>
     questionPickMode === "chosen"
       ? chosenQuestions
-      : pickWorksheetQuestions(questions, selectedSet, questionLimit, assignedExclusion);
+      : pickWorksheetQuestions(
+          questions,
+          selectedSet,
+          questionLimit,
+          assignedExclusion,
+          selectedModuleSet,
+        );
 
   useEffect(() => {
     if (!tutorialActive || !profile?.uid) return;
@@ -519,7 +546,13 @@ const Worksheets = () => {
     const picked =
       questionPickMode === "chosen"
         ? chosenQuestions
-        : pickWorksheetQuestions(questions, selectedSet, questionLimit, assignedExclusion);
+        : pickWorksheetQuestions(
+          questions,
+          selectedSet,
+          questionLimit,
+          assignedExclusion,
+          selectedModuleSet,
+        );
     const questionIds =
       picked.length > 0
         ? picked.map((question) => question.id)
@@ -544,6 +577,7 @@ const Worksheets = () => {
     questionPickMode,
     chosenQuestions,
     assignedExclusion,
+    selectedModuleSet,
   ]);
 
   const startWorksheetRun = (
@@ -1451,14 +1485,16 @@ const Worksheets = () => {
               </h2>
               <p className="text-muted-foreground max-w-2xl">
                 {buildVariant === "student"
-                  ? "Pick skills, then start a random set or choose the questions yourself."
-                  : "Pick skills, then use a random set or choose the questions. Preview it, then assign it to a student. Questions already on that student's worksheets are left out."}
+                  ? "Pick skills and a module, then start a random set or choose the questions yourself."
+                  : "Pick skills and a module, then use a random set or choose the questions. Preview it, then assign it to a student. Questions already on that student's worksheets are left out."}
               </p>
             </div>
 
             <CustomWorksheetBuilder
               variant={buildVariant}
               selectedCodes={selectedCodes}
+              selectedModules={selectedModules}
+              onToggleModule={toggleModule}
               questionLimit={questionLimit}
               tagCatalog={tagCatalog}
               matchingCount={matchingCount}

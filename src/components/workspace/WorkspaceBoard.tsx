@@ -28,7 +28,11 @@ import {
   updateWorkspaceBoardRoadmap,
 } from "@/lib/workspaceService";
 import { Timestamp } from "firebase/firestore";
-import { parseWorkspaceCardParam, workspaceBoardPath } from "@/lib/workspaceNavigation";
+import {
+  parseWorkspaceCardParam,
+  workspaceBoardPath,
+  workspaceCardFocusesActivity,
+} from "@/lib/workspaceNavigation";
 import { toast } from "@/hooks/use-toast";
 import type { TutorOption, WorksheetAssignment } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
@@ -269,14 +273,24 @@ export function WorkspaceBoard({
       return;
     }
     const list = lists.find((row) => row.id === card.listId);
-    const fromLink = !skipActivityFocusRef.current;
+    const fromLink =
+      workspaceCardFocusesActivity(location.search) && !skipActivityFocusRef.current;
     skipActivityFocusRef.current = false;
     setFocusCardNotes(false);
     setFocusCardActivity(fromLink);
     setSelectedCard(card);
     setSelectedListTitle(list?.title);
     setCardModalOpen(true);
-  }, [loading, cardParam, cards, lists, cardModalOpen, selectedCard?.id, replaceCardUrl]);
+  }, [
+    loading,
+    cardParam,
+    cards,
+    lists,
+    cardModalOpen,
+    selectedCard?.id,
+    replaceCardUrl,
+    location.search,
+  ]);
 
   const closeTourCard = useCallback(() => {
     if (tutorialShouldOpenCardRef.current) tourDismissHoldRef.current = true;
