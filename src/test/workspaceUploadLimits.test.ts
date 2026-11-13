@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { buildWorkspaceAttachmentStoragePath } from "@/lib/workspaceAttachmentStorage";
+import {
+  buildWorkspaceAttachmentStoragePath,
+  workspaceFileUploadMetadata,
+} from "@/lib/workspaceAttachmentStorage";
 import {
   validatePdfUpload,
   WORKSPACE_FILE_TYPE_ERROR,
@@ -23,6 +26,16 @@ describe("workspace HTML uploads", () => {
     expect(
       validatePdfUpload(file("notes.txt"), [], { pdfCount: 0, pdfBytes: 0 }),
     ).toEqual({ ok: false, message: WORKSPACE_FILE_TYPE_ERROR });
+  });
+
+  it("serves HTML inline so the page can send its form", () => {
+    expect(workspaceFileUploadMetadata("text/html")).toEqual({
+      contentType: "text/html",
+      contentDisposition: "inline",
+    });
+    expect(workspaceFileUploadMetadata("application/pdf")).toEqual({
+      contentType: "application/pdf",
+    });
   });
 
   it("stores an HTML upload with an html extension", () => {

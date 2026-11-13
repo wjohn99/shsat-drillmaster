@@ -12,10 +12,13 @@ import { fetchPracticeSessionsForTutor } from "@/lib/practiceSessionService";
 import {
   fetchAllWorkspaceBoards,
   isDemoAccountBoard,
+  isWorkspaceBoardArchived,
   resolvedAssignedTutorUid,
+  setWorkspaceBoardArchived,
 } from "@/lib/workspaceService";
 import { ensureDemoSandbox } from "@/lib/demoSandbox";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "@/hooks/use-toast";
 import type { TutorOption, WorksheetAssignment } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type { WorkspaceBoard } from "@/types/workspace";
@@ -42,6 +45,8 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
   const [error, setError] = useState<string | null>(null);
   const [addOpen, setAddOpen] = useState(false);
   const [editingBoard, setEditingBoard] = useState<WorkspaceBoard | null>(null);
+  const [archivedPreference, setArchivedPreference] = useState<boolean | null>(null);
+  const [restoringId, setRestoringId] = useState<string | null>(null);
 
   const loadBoards = useCallback(async () => {
     setLoading(true);
@@ -109,6 +114,38 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
     return map;
   }, [assignments]);
 
+  const activeBoards = useMemo(
+    () => boards.filter((board) => !isWorkspaceBoardArchived(board)),
+    [boards],
+  );
+  const archivedBoards = useMemo(
+    () =>
+      boards
+        .filter((board) => isWorkspaceBoardArchived(board))
+        .sort((a, b) => a.studentName.localeCompare(b.studentName)),
+    [boards],
+  );
+  const showArchived = archivedPreference ?? activeBoards.length === 0;
+
+  const restoreBoard = async (board: WorkspaceBoard) => {
+    setRestoringId(board.id);
+    try {
+      await setWorkspaceBoardArchived(board.id, false);
+      setBoards((prev) =>
+        prev.map((row) => (row.id === board.id ? { ...row, archivedAt: null } : row)),
+      );
+      toast({ title: "Board restored" });
+    } catch (err) {
+      toast({
+        title: "Could not restore board",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setRestoringId(null);
+    }
+  };
+
   const boardsByTutor = useMemo(() => {
     const nameFor = (board: WorkspaceBoard) => {
       const uid = resolvedAssignedTutorUid(board);
@@ -116,7 +153,7 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
       return tutor?.displayName || board.assignedTutorName || "Unassigned";
     };
     const groups = new Map<string, { uid: string; name: string; boards: WorkspaceBoard[] }>();
-    for (const board of boards) {
+    for (const board of activeBoards) {
       const uid = resolvedAssignedTutorUid(board) || "unassigned";
       const current = groups.get(uid);
       if (current) {
@@ -131,7 +168,7 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
         boards: [...group.boards].sort((a, b) => a.studentName.localeCompare(b.studentName)),
       }))
       .sort((a, b) => a.name.localeCompare(b.name));
-  }, [boards, tutors]);
+  }, [activeBoards, tutors]);
 
   return (
     <div className="space-y-8">
@@ -167,7 +204,7 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
         <Card className="border-destructive/30">
           <CardContent className="py-8 text-center text-muted-foreground">{error}</CardContent>
         </Card>
-      ) : boards.length === 0 ? (
+      ) : activeBoards.length === 0 && archivedBoards.length === 0 ? (
         <Card className="border-dashed">
           <CardContent className="space-y-3 py-10 text-center">
             <p className="font-medium">No workspaces yet</p>
@@ -186,6 +223,13 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
         </Card>
       ) : (
         <div className="space-y-10">
+          {activeBoards.length === 0 ? (
+            <Card className="border-dashed">
+              <CardContent className="py-8 text-center text-sm text-muted-foreground">
+                No active boards. Archived boards are still saved.
+              </CardContent>
+            </Card>
+          ) : null}
           {boardsByTutor.map((group) => (
             <section key={group.uid} className="space-y-4">
               <div className="flex items-end justify-between gap-3 border-b border-border/70 pb-2">
@@ -274,6 +318,66 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
               </div>
             </section>
           ))}
+          {archivedBoards.length > 0 ? (
+            <section className="space-y-4">
+              <div className="flex items-end justify-between gap-3 border-b border-border/70 pb-2">
+                <h2 className="text-lg font-semibold tracking-tight">Archived</h2>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 text-muted-foreground"
+                  onClick={() => setArchivedPreference(!showArchived)}
+                >
+                  {showArchived ? "Hide" : `Show ${archivedBoards.length}`}
+                </Button>
+              </div>
+              {showArchived ? (
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {archivedBoards.map((board) => {
+                    const accent = workspaceBoardAccentColor(board.color);
+                    return (
+                      <Card key={board.id} className="flex min-h-28 overflow-hidden">
+                        <div className="w-1.5 shrink-0" style={{ backgroundColor: accent }} aria-hidden />
+                        <div className="relative flex min-w-0 flex-1 flex-col justify-between gap-3 px-4 py-4">
+                          <Link
+                            to={`/workspace/${board.studentUid}`}
+                            aria-label={`Open archived board for ${board.studentName}`}
+                            className="absolute inset-0 z-[1] rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          />
+                          <div className="pointer-events-none relative z-[2]">
+                            <CardTitle className="truncate text-lg">{board.studentName}</CardTitle>
+                            {board.studentEmail ? (
+                              <p className="mt-1 truncate text-sm text-muted-foreground">{board.studentEmail}</p>
+                            ) : null}
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              Cards, comments, and files are saved.
+                            </p>
+                          </div>
+                          {readOnly ? null : (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              className="pointer-events-auto relative z-[2] w-fit"
+                              disabled={restoringId === board.id}
+                              onClick={() => void restoreBoard(board)}
+                            >
+                              {restoringId === board.id ? "Restoring" : "Restore board"}
+                            </Button>
+                          )}
+                        </div>
+                      </Card>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  {archivedBoards.length} archived {archivedBoards.length === 1 ? "board" : "boards"}. Nothing was deleted.
+                </p>
+              )}
+            </section>
+          ) : null}
         </div>
       )}
 

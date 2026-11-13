@@ -28,6 +28,7 @@ import { ensureDemoSandbox } from "@/lib/demoSandbox";
 import {
   fetchAllWorkspaceBoards,
   isDemoAccountBoard,
+  isWorkspaceBoardArchived,
   studentUidsAssignedToTutor,
 } from "@/lib/workspaceService";
 import {
@@ -78,7 +79,9 @@ export function TutorDashboard() {
       setError(null);
       try {
         if (profile?.role === "demo" && profile.uid) {
-          const boards = await ensureDemoSandbox(profile.uid);
+          const boards = (await ensureDemoSandbox(profile.uid)).filter(
+            (board) => !isWorkspaceBoardArchived(board),
+          );
           const assignments = await fetchAssignmentsForTutor().catch(() => []);
           if (cancelled) return;
           const assignedStudents = boards
@@ -129,7 +132,9 @@ export function TutorDashboard() {
             .filter((board) => isDemoAccountBoard(board, profile?.uid))
             .map((board) => board.studentUid),
         );
-        const visibleBoards = boards.filter((board) => !hiddenDemoUids.has(board.studentUid));
+        const visibleBoards = boards.filter(
+          (board) => !hiddenDemoUids.has(board.studentUid) && !isWorkspaceBoardArchived(board),
+        );
         const assignedStudentUids = studentUidsAssignedToTutor(visibleBoards, profile?.uid);
         const studentByUid = new Map(studentList.map((s) => [s.uid, s]));
         const boardByStudent = new Map(visibleBoards.map((board) => [board.studentUid, board]));

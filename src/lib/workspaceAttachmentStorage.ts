@@ -52,14 +52,24 @@ export function buildTutorPrivateNoteStoragePath(
   return `workspace-tutor/${boardId}/notes/${noteId}_${fileId}_${sanitizeStorageFileName(fileName, contentType)}`;
 }
 
+export function workspaceFileUploadMetadata(
+  contentType: WorkspaceFileContentType,
+): UploadMetadata {
+  // HTML has to render as a page. An attachment disposition, or a Drive preview
+  // frame, blocks the page's own form from sending.
+  if (contentType === "text/html") {
+    return { contentType, contentDisposition: "inline" };
+  }
+  return { contentType };
+}
+
 export async function uploadWorkspaceFile(
   storagePath: string,
   file: File,
   contentType: WorkspaceFileContentType,
 ): Promise<void> {
   const storage = getFirebaseStorage();
-  const metadata: UploadMetadata = { contentType };
-  await uploadBytes(ref(storage, storagePath), file, metadata);
+  await uploadBytes(ref(storage, storagePath), file, workspaceFileUploadMetadata(contentType));
 }
 
 export async function uploadWorkspaceFileAndGetUrl(

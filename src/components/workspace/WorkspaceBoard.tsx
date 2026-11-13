@@ -1,6 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Loader2, Pencil, Plus } from "lucide-react";
+import { Archive, ArrowLeft, Loader2, Pencil, Plus } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,7 +31,9 @@ import {
   fetchWorkspaceBoard,
   fetchWorkspaceCards,
   fetchWorkspaceLists,
+  isWorkspaceBoardArchived,
   isWorkspaceConflictError,
+  setWorkspaceBoardArchived,
   updateWorkspaceBoardDiagnosticAssigned,
   updateWorkspaceBoardDiagnosticExtendedTime,
   updateWorkspaceBoardRoadmap,
@@ -108,6 +119,8 @@ export function WorkspaceBoard({
   const [studentSessions, setStudentSessions] = useState<PracticeSessionRecord[]>([]);
   const [savingRoadmap, setSavingRoadmap] = useState(false);
   const [editDetailsOpen, setEditDetailsOpen] = useState(false);
+  const [archiveOpen, setArchiveOpen] = useState(false);
+  const [archiving, setArchiving] = useState(false);
   const [tutors, setTutors] = useState<TutorOption[]>([]);
   const roadmapUpdatedAtMsRef = useRef(0);
 
@@ -450,9 +463,64 @@ export function WorkspaceBoard({
   }
 
   const boardAccent = workspaceBoardAccentColor(board.color);
+  const archived = isWorkspaceBoardArchived(board);
+
+  const handleArchive = async () => {
+    setArchiving(true);
+    try {
+      await setWorkspaceBoardArchived(board.id, true);
+      setBoard((prev) => (prev ? { ...prev, archivedAt: Timestamp.now() } : prev));
+      setArchiveOpen(false);
+      toast({
+        title: "Board archived",
+        description: "Cards, comments, and files are still saved.",
+      });
+    } catch (err) {
+      toast({
+        title: "Could not archive board",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setArchiving(false);
+    }
+  };
+
+  const handleRestore = async () => {
+    setArchiving(true);
+    try {
+      await setWorkspaceBoardArchived(board.id, false);
+      setBoard((prev) => (prev ? { ...prev, archivedAt: null } : prev));
+      toast({ title: "Board restored" });
+    } catch (err) {
+      toast({
+        title: "Could not restore board",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setArchiving(false);
+    }
+  };
 
   return (
     <>
+      {!readOnly && archived ? (
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-muted/50 px-4 py-3">
+          <p className="text-sm">
+            This board is archived. Cards, comments, files, and notes are still saved.
+          </p>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={archiving}
+            onClick={() => void handleRestore()}
+          >
+            {archiving ? "Restoring" : "Restore board"}
+          </Button>
+        </div>
+      ) : null}
       <div data-tour="student-board" className="mb-4 overflow-hidden rounded-xl border glass-surface">
         <div className="flex min-w-0">
           <div className="w-1.5 shrink-0" style={{ backgroundColor: boardAccent }} aria-hidden />
@@ -485,6 +553,18 @@ export function WorkspaceBoard({
                 </div>
                 {board.studentEmail ? (
                   <p className="truncate text-sm text-muted-foreground">{board.studentEmail}</p>
+                ) : null}
+                {!readOnly && !archived ? (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="mt-1 h-10 px-2 text-xs text-muted-foreground sm:h-8"
+                    onClick={() => setArchiveOpen(true)}
+                  >
+                    <Archive className="mr-1.5 h-3.5 w-3.5" />
+                    Archive board
+                  </Button>
                 ) : null}
                 {!readOnly ? (
                   <div data-tour="assign-diagnostic" className="mt-2 flex items-center gap-2">
@@ -693,6 +773,25 @@ export function WorkspaceBoard({
         }}
         onUpdated={() => void loadBoard({ silent: true })}
       />
+      {!readOnly ? (
+        <AlertDialog open={archiveOpen} onOpenChange={setArchiveOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Archive this board?</AlertDialogTitle>
+              <AlertDialogDescription>
+                {board.studentName} leaves the active workspace and dashboard. Cards, comments,
+                files, and notes stay saved, so you can restore the board if the student comes back.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={archiving}>Cancel</AlertDialogCancel>
+              <Button type="button" disabled={archiving} onClick={() => void handleArchive()}>
+                {archiving ? "Archiving" : "Archive board"}
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      ) : null}
       {!readOnly ? (
         <EditBoardDetailsDialog
           board={board}

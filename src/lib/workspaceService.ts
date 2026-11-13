@@ -167,6 +167,33 @@ function normalizeAccountEmail(email: string | null | undefined): string {
   return (email ?? "").trim().toLowerCase();
 }
 
+/** True when a tutor has archived the board. Cards, comments, and files stay stored. */
+export function isWorkspaceBoardArchived(board: {
+  archivedAt?: { toMillis?: () => number } | null;
+}): boolean {
+  const archivedAt = board.archivedAt;
+  if (!archivedAt) return false;
+  const ms = archivedAt.toMillis?.();
+  return typeof ms !== "number" || ms > 0;
+}
+
+/**
+ * Marks a board archived or active. Does not delete the board, its cards,
+ * comments, attachments, or files.
+ */
+export async function setWorkspaceBoardArchived(boardId: string, archived: boolean): Promise<void> {
+  const db = getFirebaseDb();
+  const boardRef = doc(db, BOARDS_COLLECTION, boardId);
+  const snap = await getDoc(boardRef);
+  if (!snap.exists() || snap.data()?.deletedAt) {
+    throw new Error("This workspace board is no longer active.");
+  }
+  await updateDoc(boardRef, {
+    archivedAt: archived ? serverTimestamp() : null,
+    updatedAt: serverTimestamp(),
+  });
+}
+
 /** A current board is any board that is not deleted. Archived boards still count. */
 function boardMatchesStudent(
   board: Pick<WorkspaceBoard, "id" | "studentUid" | "studentEmail">,
