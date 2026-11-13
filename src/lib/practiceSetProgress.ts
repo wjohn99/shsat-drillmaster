@@ -15,6 +15,20 @@ export function practiceSetScopeId(type: PracticeSetTypeId): string {
   return `practice-set:${type}`;
 }
 
+/** One in-progress missed-question drill. A new list replaces it. */
+export const PINNED_PRACTICE_SCOPE_ID = "practice-set:pinned";
+
+export function sameQuestionOrder(left: string[], right: string[]): boolean {
+  return left.length > 0 && left.length === right.length && left.every((id, index) => id === right[index]);
+}
+
+/** A practice set can resume from question 1, before any answer is locked in. */
+export function practiceSetIsResumable<T extends { questionIds: string[] }>(
+  save: T | null | undefined,
+): save is T {
+  return Boolean(save && save.questionIds.length > 0);
+}
+
 export function practiceSetTypeFromScopeId(scopeId: string): PracticeSetTypeId | null {
   const prefix = "practice-set:";
   if (!scopeId.startsWith(prefix)) return null;

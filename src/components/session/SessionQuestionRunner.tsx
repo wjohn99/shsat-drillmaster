@@ -13,6 +13,7 @@ import { ProvisionalBadge } from "@/components/question/ProvisionalBadge";
 import { QuestionReviewPanel } from "@/components/question/QuestionReviewPanel";
 import { ReportQuestionButton } from "@/components/question/ReportQuestionButton";
 import { QuestionResponseFields } from "@/components/question/QuestionResponseFields";
+import { SubjectStripe } from "@/components/question/SubjectStripe";
 import { QuestionSolutionPanel } from "@/components/question/QuestionSolutionPanel";
 import { getSelectedChoiceIds, showsSkillToImprove } from "@/lib/questionExplanation";
 import type { Passage, Question } from "@/types";
@@ -101,6 +102,7 @@ export function SessionQuestionRunner({
   const [scratchPad, setScratchPad] = useState(initialProgress?.scratchPad ?? "");
   const [notesOpen, setNotesOpen] = useState(false);
   const notesRef = useRef<HTMLTextAreaElement>(null);
+  const questionPaneRef = useRef<HTMLDivElement>(null);
 
   const questionStartMsRef = useRef(Date.now());
   const eventsByQuestionId = useRef<Map<string, SessionAnalyticsEvent>>(
@@ -136,6 +138,23 @@ export function SessionQuestionRunner({
     if (!notesOpen) return;
     notesRef.current?.focus();
   }, [notesOpen]);
+
+  useEffect(() => {
+    questionPaneRef.current?.scrollTo?.({ top: 0 });
+  }, [currentQuestion?.id]);
+
+  useEffect(() => {
+    if (questions.length === 0) return;
+    const html = document.documentElement;
+    const htmlOverflow = html.style.overflow;
+    const bodyOverflow = document.body.style.overflow;
+    html.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+    return () => {
+      html.style.overflow = htmlOverflow;
+      document.body.style.overflow = bodyOverflow;
+    };
+  }, [questions.length]);
 
   const handleAnswerChange = (questionId: string, answer: string) => {
     if (lockedQuestionIds.has(questionId)) return;
@@ -387,13 +406,75 @@ export function SessionQuestionRunner({
   const feedback =
     showSolution && storedEvent ? { correct: storedEvent.correct } : null;
 
+  const questionHeader = (
+    <div className="flex flex-wrap items-center gap-2">
+      <Badge variant={currentQuestion.subject === "MATH" ? "default" : "secondary"}>
+        {currentQuestion.subject}
+      </Badge>
+      <ModuleBadge module={currentQuestion.module} />
+      <ProvisionalBadge question={currentQuestion} />
+    </div>
+  );
+
+  const questionBody = (
+    <>
+      {revealAnswers && feedback && (
+        <div
+          className={`rounded-lg border p-3 text-sm ${
+            feedback.correct
+              ? "border-success/30 bg-success/10 text-success"
+              : "border-destructive/30 bg-destructive/10 text-destructive"
+          }`}
+        >
+          {feedback.correct ? "Correct." : "Incorrect."}
+        </div>
+      )}
+      {showElaHighlighter && currentQuestion.subtype !== "INDY-IC" ? (
+        <div className="prose prose-sm max-w-none">
+          <HighlightableText
+            text={currentQuestion.stem}
+            storageKey={`${storageKeyPrefix}-stem-${currentQuestion.id}`}
+            variant="stem"
+          />
+        </div>
+      ) : (
+        <div className="prose prose-sm max-w-none">
+          <p className="text-base leading-relaxed whitespace-pre-wrap">
+            <MathText text={currentQuestion.stem} />
+          </p>
+        </div>
+      )}
+      <QuestionResponseFields
+        question={currentQuestion}
+        raw={raw}
+        disabled={showSolution || answerLocked}
+        showSolution={showSolution}
+        onChange={(value) => handleAnswerChange(currentQuestion.id, value)}
+        onToggleAta={(choiceId) => toggleAtaAnswer(currentQuestion.id, choiceId)}
+        eliminatedChoiceIds={eliminated[currentQuestion.id]}
+        onToggleEliminate={
+          answerLocked ? undefined : (choiceId) => toggleEliminate(currentQuestion.id, choiceId)
+        }
+      />
+      {showSolution && feedback && (
+        <QuestionSolutionPanel
+          question={currentQuestion}
+          isCorrect={feedback.correct}
+          selectedChoiceIds={getSelectedChoiceIds(currentQuestion, raw)}
+          showSkillToImprove={showsSkillToImprove(profile?.role)}
+        />
+      )}
+      <QuestionReviewPanel question={currentQuestion} />
+    </>
+  );
+
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex h-dvh max-h-dvh flex-col overflow-hidden">
       <Header />
 
-      <div className="container flex-1 py-6">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-4">
+      <div className="container flex min-h-0 flex-1 flex-col overflow-hidden px-4">
+        <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 py-2">
+          <div className="flex min-w-0 items-center gap-3">
             <Button variant="ghost" onClick={() => void handleExit()} disabled={savingExit}>
               {savingExit ? (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -402,12 +483,7 @@ export function SessionQuestionRunner({
               )}
               {savingExit ? "Saving..." : "Exit"}
             </Button>
-            <div>
-              <h1 className="text-2xl font-bold">{sessionTitle}</h1>
-              <p className="text-muted-foreground">
-                Question {currentQuestionIndex + 1} of {questions.length}
-              </p>
-            </div>
+            <h1 className="truncate text-xl font-bold">{sessionTitle}</h1>
           </div>
 
           <div className="flex items-center gap-2">
@@ -438,183 +514,87 @@ export function SessionQuestionRunner({
               source={storageKeyPrefix.startsWith("assignment") ? "worksheet" : "practice_set"}
               compact
             />
-            <Button
-              variant="outline"
-              onClick={() => toggleFlag(currentQuestion.id)}
-              className={flaggedQuestions.has(currentQuestion.id) ? "bg-warning text-white" : ""}
-            >
-              <Flag className="h-4 w-4" />
-            </Button>
           </div>
         </div>
 
-        <div className="mb-6">
-          <div className="flex justify-between text-sm text-muted-foreground mb-2">
-            <span>Progress</span>
-            <span>{Math.round(progress)}% Complete</span>
+        <div className="shrink-0 pb-2">
+          <Progress value={progress} className="h-1.5" />
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {questions.map((question, index) => {
+              const status = index === currentQuestionIndex ? "current" : getQuestionStatus(question);
+              return (
+                <button
+                  key={question.id}
+                  type="button"
+                  onClick={() => goToQuestion(index)}
+                  className={`h-8 w-8 rounded text-sm font-medium transition-all ${getStatusColor(status)}`}
+                >
+                  {index + 1}
+                </button>
+              );
+            })}
           </div>
-          <Progress value={progress} className="h-2" />
         </div>
 
-        <div className="grid lg:grid-cols-4 gap-6">
-          <div className="lg:col-span-3">
-            <Card>
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <Badge variant={currentQuestion.subject === "MATH" ? "default" : "secondary"}>
-                      {currentQuestion.subject}
-                    </Badge>
-                    <ModuleBadge module={currentQuestion.module} />
-                    <ProvisionalBadge question={currentQuestion} />
-                  </div>
-                  <div className="text-sm text-muted-foreground">Question #{currentQuestionIndex + 1}</div>
-                </div>
+        {passage ? (
+          <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,36vh)_minmax(0,1fr)] gap-3 overflow-hidden md:grid-cols-2 md:grid-rows-[minmax(0,1fr)]">
+            <Card className="flex min-h-0 flex-col overflow-hidden">
+              <CardHeader className="shrink-0 p-4 pb-2">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <BookOpen className="h-4 w-4" />
+                  {passage.title}
+                </CardTitle>
               </CardHeader>
-
-              <CardContent className="space-y-6">
-                {revealAnswers && feedback && (
-                  <div
-                    className={`rounded-lg border p-3 text-sm ${
-                      feedback.correct
-                        ? "border-success/30 bg-success/10 text-success"
-                        : "border-destructive/30 bg-destructive/10 text-destructive"
-                    }`}
-                  >
-                    {feedback.correct ? "Correct." : "Incorrect."}
-                  </div>
-                )}
-
-                {passage && showElaHighlighter && (
-                  <Card className="border-dashed bg-muted/20">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="flex items-center gap-2 text-base">
-                        <BookOpen className="h-4 w-4" />
-                        {passage.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                      <HighlightableText
-                        text={passage.body}
-                        storageKey={`${storageKeyPrefix}-passage-${passage.id}`}
-                        variant="passage"
-                      />
-                    </CardContent>
-                  </Card>
-                )}
-                {passage && !showElaHighlighter && (
-                  <Card className="border-dashed bg-muted/20">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="flex items-center gap-2 text-base">
-                        <BookOpen className="h-4 w-4" />
-                        {passage.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0 prose prose-sm max-w-none">
-                      {passage.body.split("\n\n").map((para, i) => (
-                        <p key={i} className="mb-4 last:mb-0 leading-relaxed whitespace-pre-wrap">
-                          {para}
-                        </p>
-                      ))}
-                    </CardContent>
-                  </Card>
-                )}
-
-                {showElaHighlighter && currentQuestion.subtype !== "INDY-IC" ? (
-                  <div className="prose prose-sm max-w-none">
-                    <HighlightableText
-                      text={currentQuestion.stem}
-                      storageKey={`${storageKeyPrefix}-stem-${currentQuestion.id}`}
-                      variant="stem"
-                    />
-                  </div>
+              <CardContent className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 pt-0">
+                {showElaHighlighter ? (
+                  <HighlightableText
+                    text={passage.body}
+                    storageKey={`${storageKeyPrefix}-passage-${passage.id}`}
+                    variant="passage"
+                  />
                 ) : (
                   <div className="prose prose-sm max-w-none">
-                    <p className="text-base leading-relaxed whitespace-pre-wrap">
-                      <MathText text={currentQuestion.stem} />
-                    </p>
+                    {passage.body.split("\n\n").map((para, i) => (
+                      <p key={i} className="mb-4 whitespace-pre-wrap leading-relaxed last:mb-0">
+                        {para}
+                      </p>
+                    ))}
                   </div>
-                )}
-
-                <QuestionResponseFields
-                  question={currentQuestion}
-                  raw={raw}
-                  disabled={showSolution || answerLocked}
-                  showSolution={showSolution}
-                  onChange={(value) => handleAnswerChange(currentQuestion.id, value)}
-                  onToggleAta={(choiceId) => toggleAtaAnswer(currentQuestion.id, choiceId)}
-                  eliminatedChoiceIds={eliminated[currentQuestion.id]}
-                  onToggleEliminate={
-                    answerLocked
-                      ? undefined
-                      : (choiceId) => toggleEliminate(currentQuestion.id, choiceId)
-                  }
-                />
-
-                {showSolution && feedback && (
-                  <QuestionSolutionPanel
-                    question={currentQuestion}
-                    isCorrect={feedback.correct}
-                    selectedChoiceIds={getSelectedChoiceIds(currentQuestion, raw)}
-                    showSkillToImprove={showsSkillToImprove(profile?.role)}
-                  />
                 )}
               </CardContent>
             </Card>
-
-            <QuestionReviewPanel question={currentQuestion} className="mt-6" />
-          </div>
-
-          <div className="lg:col-span-1">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Question Navigator</CardTitle>
-                <div className="flex items-center gap-4 text-xs">
-                  <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded bg-success" />
-                    <span>Answered</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded bg-warning" />
-                    <span>Flagged</span>
-                  </div>
-                </div>
+            <Card className="flex min-h-0 min-w-0 flex-col overflow-hidden">
+              <CardHeader className="relative shrink-0 space-y-0 p-4 pb-2">
+                <SubjectStripe subject={currentQuestion.subject} />
+                {questionHeader}
               </CardHeader>
-
-              <CardContent>
-                <div className="grid grid-cols-5 gap-2">
-                  {questions.map((question, index) => {
-                    const status = index === currentQuestionIndex ? "current" : getQuestionStatus(question);
-                    return (
-                      <button
-                        key={question.id}
-                        type="button"
-                        onClick={() => goToQuestion(index)}
-                        className={`h-8 w-8 rounded text-xs font-medium transition-all ${getStatusColor(status)}`}
-                      >
-                        {index + 1}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <div className="mt-6 text-sm">
-                  <div className="flex justify-between">
-                    <span>Answered:</span>
-                    <span>
-                      {Object.keys(answers).length}/{questions.length}
-                    </span>
-                  </div>
-                </div>
+              <CardContent
+                ref={questionPaneRef}
+                className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain p-4 pt-2"
+              >
+                {questionBody}
               </CardContent>
             </Card>
           </div>
-        </div>
+        ) : (
+          <Card className="flex min-h-0 flex-1 flex-col overflow-hidden">
+            <CardHeader className="relative shrink-0 space-y-0 p-4 pb-2">
+              <SubjectStripe subject={currentQuestion.subject} />
+              {questionHeader}
+            </CardHeader>
+            <CardContent
+              ref={questionPaneRef}
+              className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain p-4 pt-2"
+            >
+              {questionBody}
+            </CardContent>
+          </Card>
+        )}
       </div>
 
-      <div className="sticky bottom-0 z-20 shrink-0 border-t bg-background/95 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+      <div className="z-20 shrink-0 border-t bg-background/95 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
         {notesOpen ? (
-          <div id={notesPanelId} className="container space-y-2 pt-2">
+          <div id={notesPanelId} className="container space-y-2 px-4 pt-2">
             <NotesWorkbench
               compact
               text={notepad}
@@ -627,16 +607,28 @@ export function SessionQuestionRunner({
             />
           </div>
         ) : null}
-        <div className="container flex items-center justify-between gap-2 pt-2">
-          <Button
-            variant={notesOpen ? "default" : "outline"}
-            aria-expanded={notesOpen}
-            aria-controls={notesOpen ? notesPanelId : undefined}
-            onClick={() => setNotesOpen((open) => !open)}
-          >
-            <StickyNote className="h-4 w-4 mr-2" />
-            {notesOpen ? "Hide notes" : "Notes"}
-          </Button>
+        <div className="container flex flex-wrap items-center justify-between gap-2 px-4 pt-2">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <p className="text-sm font-medium tabular-nums">
+              Question {currentQuestionIndex + 1} of {questions.length}
+            </p>
+            <Button
+              variant={flaggedQuestions.has(currentQuestion.id) ? "default" : "outline"}
+              onClick={() => toggleFlag(currentQuestion.id)}
+            >
+              <Flag className="h-4 w-4 mr-2" />
+              {flaggedQuestions.has(currentQuestion.id) ? "Flagged" : "Flag"}
+            </Button>
+            <Button
+              variant={notesOpen ? "default" : "outline"}
+              aria-expanded={notesOpen}
+              aria-controls={notesOpen ? notesPanelId : undefined}
+              onClick={() => setNotesOpen((open) => !open)}
+            >
+              <StickyNote className="h-4 w-4 mr-2" />
+              {notesOpen ? "Hide notes" : "Notes"}
+            </Button>
+          </div>
           <div className="flex min-w-0 items-center justify-end gap-2">
             <Button variant="outline" onClick={prevQuestion} disabled={currentQuestionIndex === 0}>
               <ArrowLeft className="h-4 w-4 mr-2" />

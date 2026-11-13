@@ -10,15 +10,17 @@ import { useViewAsStudent } from "@/contexts/ViewAsStudentContext";
 import { isQuestionModule } from "@/lib/questionModule";
 import {
   isPracticeSetType,
+  PINNED_PRACTICE_SCOPE_ID,
+  practiceSetIsResumable,
   practiceSetScopeId,
   restoredPracticeQuestions,
+  sameQuestionOrder,
 } from "@/lib/practiceSetProgress";
 import { clearWorksheetProgress, fetchWorksheetProgress } from "@/lib/worksheetProgressService";
 import {
   clearWorksheetProgressLocal,
   loadWorksheetProgressLocal,
   pickNewerWorksheetProgress,
-  worksheetProgressIsStarted,
   type WorksheetProgressSave,
 } from "@/lib/worksheetProgressStorage";
 import type { Question, QuestionModule } from "@/types";
@@ -63,10 +65,16 @@ export default function QuestionSet() {
     [searchParams],
   );
   const resumeRequested = searchParams.get("resume") === "1" && practiceType != null && !viewAs;
-  const scopeId = practiceType ? practiceSetScopeId(practiceType) : null;
+  const loadPinned = pinnedIds.length > 0 && !viewAs;
+  const scopeId = practiceType
+    ? practiceSetScopeId(practiceType)
+    : loadPinned
+      ? PINNED_PRACTICE_SCOPE_ID
+      : null;
 
   useEffect(() => {
-    if (!resumeRequested || !profile?.uid || !scopeId) {
+    const shouldLoad = Boolean(profile?.uid && scopeId && !viewAs && (resumeRequested || loadPinned));
+    if (!shouldLoad || !profile?.uid || !scopeId) {
       setSaved(null);
       setProgressLoaded(true);
       return;
@@ -81,7 +89,7 @@ export default function QuestionSet() {
     return () => {
       cancelled = true;
     };
-  }, [resumeRequested, profile?.uid, scopeId]);
+  }, [resumeRequested, loadPinned, profile?.uid, scopeId, viewAs]);
 
   const filteredQuestions = useMemo(() => {
     const modules = (searchParams.get("modules")?.split(",") || searchParams.get("difficulties")?.split(",") || [])
@@ -96,11 +104,19 @@ export default function QuestionSet() {
     }).slice(0, count);
   }, [getFilteredQuestions, searchParams]);
 
+  const pinnedResume = Boolean(
+    loadPinned &&
+      saved &&
+      practiceSetIsResumable(saved) &&
+      sameQuestionOrder(saved.questionIds, pinnedIds),
+  );
+  const resumeThisSet = resumeRequested || pinnedResume;
+
   const resumedQuestions = useMemo(() => {
-    if (!resumeRequested || !saved || !worksheetProgressIsStarted(saved)) return null;
+    if (!resumeRequested || !practiceSetIsResumable(saved)) return null;
     const catalog = getFilteredQuestions({});
     const byId = new Map(catalog.map((question) => [question.id, question]));
-    return restoredPracticeQuestions(saved.questionIds, byId);
+    return restoredPracticeQuestions(saved?.questionIds ?? [], byId);
   }, [getFilteredQuestions, resumeRequested, saved]);
 
   const pinnedQuestions = useMemo(
@@ -120,7 +136,7 @@ export default function QuestionSet() {
     }
   };
 
-  if (loading || (resumeRequested && !progressLoaded)) {
+  if (loading || ((resumeRequested || loadPinned) && !progressLoaded)) {
     return (
       <div className="min-h-screen">
         <Header />
@@ -182,7 +198,7 @@ export default function QuestionSet() {
     <SessionQuestionRunner
       questions={questionSet}
       sessionTitle={pinnedIds.length > 0 ? "Missed questions" : "Practice set"}
-      storageKeyPrefix="practice-set"
+      storageKeyPrefix={scopeId ? `practice-${scopeId}` : "practice-set"}
       revealAnswers
       finishLabel="Finish practice set"
       notesKind="practice"
@@ -193,13 +209,13 @@ export default function QuestionSet() {
               scopeId,
               runSource: "self",
               assignmentId: null,
-              title: "Practice set",
+              title: pinnedIds.length > 0 ? "Missed questions" : "Practice set",
               tagCodes,
               tutorUid: null,
             }
           : undefined
       }
-      initialProgress={resumeRequested ? saved : null}
+      initialProgress={resumeThisSet ? saved : null}
       onExit={() => navigate("/practice")}
       onComplete={finishSet}
     />

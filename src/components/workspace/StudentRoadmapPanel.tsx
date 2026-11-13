@@ -39,6 +39,7 @@ import type {
 import { ATTENTION_STATUS_LABEL, ATTENTION_STATUS_ORDER } from "@/types/workspace";
 import { assignToStudentNavState } from "@/types/worksheetsNavigation";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
+import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDemoTutorial } from "@/contexts/DemoTutorialContext";
 import { DEMO_TUTORIAL_STEPS, tutorialOpensRoadmap } from "@/lib/demoTutorial";
@@ -86,7 +87,7 @@ function ScoreTile({
   return (
     <div className="rounded-lg border p-3">
       <RoadmapHeading>
-        <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+        <p className="text-sm font-medium text-muted-foreground">
           {label}
         </p>
       </RoadmapHeading>
@@ -105,6 +106,8 @@ export function StudentRoadmapPanel({
   cards = [],
   lists = [],
   onOpenCard,
+  aside,
+  embedded = false,
 }: {
   snapshot: StudentRoadmapSnapshot;
   readOnly: boolean;
@@ -115,6 +118,10 @@ export function StudentRoadmapPanel({
   cards?: WorkspaceCard[];
   lists?: WorkspaceList[];
   onOpenCard?: (cardId: string) => void;
+  /** Tutor-only column that opens with the roadmap, instead of a second collapse. */
+  aside?: ReactNode;
+  /** Sit inside the student card instead of drawing a second card. */
+  embedded?: boolean;
 }) {
   const { profile } = useAuth();
   const detailsRef = useRef<HTMLDetailsElement>(null);
@@ -274,23 +281,28 @@ export function StudentRoadmapPanel({
       : `Public School Day ${formatIsoDateLabel(SHSAT_2026_PLAN.schoolDayDate)}`;
 
   return (
-    <details ref={detailsRef} data-tour="student-roadmap" className="group rounded-xl border glass-surface mb-3">
-      <summary className="flex min-h-11 cursor-pointer list-none flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-5 [&::-webkit-details-marker]:hidden">
+    <details
+      ref={detailsRef}
+      data-tour="student-roadmap"
+      className={cn("group", embedded ? "border-t border-border/60" : "mb-3 rounded-xl border glass-surface")}
+    >
+      <summary
+        className={cn(
+          "flex min-h-11 cursor-pointer list-none flex-wrap items-center justify-between gap-3 py-3 [&::-webkit-details-marker]:hidden",
+          embedded ? "px-3 sm:px-5" : "px-4 sm:px-5",
+        )}
+      >
         <div className="min-w-0">
-          <h2 className="text-sm font-semibold tracking-tight">Roadmap</h2>
+          <h2 className="text-sm font-semibold tracking-tight">
+            {aside ? "Roadmap and notes" : "Roadmap"}
+          </h2>
           <RoadmapLatestLine updates={draft.progressUpdates ?? []} />
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <AttentionStatusLabel status={draft.status} />
           {!snapshot.board.diagnosticAssigned ? (
-            <Badge variant="outline">Diagnostic not assigned</Badge>
+            <Badge variant="outline">Diagnostic off</Badge>
           ) : null}
-          <span className="text-xs font-medium text-muted-foreground group-open:hidden">
-            Show roadmap
-          </span>
-          <span className="hidden text-xs font-medium text-muted-foreground group-open:inline">
-            Hide roadmap
-          </span>
           <ChevronDown
             className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180"
             aria-hidden
@@ -298,7 +310,14 @@ export function StudentRoadmapPanel({
         </div>
       </summary>
 
-      <div className="space-y-6 border-t border-border/60 px-4 pb-4 pt-4 sm:px-5 sm:pb-5">
+      <div
+        className={cn(
+          "border-t border-border/60 px-3 pb-4 pt-4 sm:px-5 sm:pb-5",
+          aside && "lg:grid lg:grid-cols-2 lg:items-start lg:gap-8",
+        )}
+      >
+      <div className="min-w-0 space-y-6">
+      {aside ? <h3 className="text-sm font-semibold">Roadmap</h3> : null}
       {settings ? (
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3">{settings}</div>
       ) : null}
@@ -311,7 +330,7 @@ export function StudentRoadmapPanel({
         onOpenCard={onOpenCard}
         onChange={applyProgress}
       />
-      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+      <div className={cn("grid gap-2 sm:grid-cols-2", !aside && "lg:grid-cols-4")}>
         <ScoreTile label="Starting point" value={startingDisplay} hint={startingHint}>
           {readOnly ? undefined : (
             <Input
@@ -448,7 +467,7 @@ export function StudentRoadmapPanel({
           <div className="grid gap-2 sm:grid-cols-2">
             <div className="rounded-lg border p-3">
               <RoadmapHeading className="mb-2">
-                <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                <p className="text-sm font-medium text-muted-foreground">
                   Diagnostics
                 </p>
               </RoadmapHeading>
@@ -470,7 +489,7 @@ export function StudentRoadmapPanel({
             </div>
             <div className="rounded-lg border p-3">
               <RoadmapHeading className="mb-2">
-                <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                <p className="text-sm font-medium text-muted-foreground">
                   Recent sessions
                 </p>
               </RoadmapHeading>
@@ -736,11 +755,28 @@ export function StudentRoadmapPanel({
             {snapshot.baseline &&
             snapshot.latestDiagnostic &&
             snapshot.baseline.id !== snapshot.latestDiagnostic.id ? (
-              <Button variant="outline" asChild>
-                <Link to="/practice/diagnostic" state={{ reviewSession: snapshot.baseline, returnTo }}>
-                  Diagnostic results
-                </Link>
-              </Button>
+              <>
+                <Button variant="outline" asChild>
+                  <Link to="/practice/diagnostic" state={{ reviewSession: snapshot.baseline, returnTo }}>
+                    Diagnostic results
+                  </Link>
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link
+                    to="/practice/diagnostic"
+                    state={{
+                      compareDiagnostics: {
+                        first: snapshot.baseline,
+                        latest: snapshot.latestDiagnostic,
+                        returnTo,
+                      },
+                      returnTo,
+                    }}
+                  >
+                    Compare diagnostics
+                  </Link>
+                </Button>
+              </>
             ) : null}
           </>
         ) : (
@@ -754,12 +790,14 @@ export function StudentRoadmapPanel({
                 : !snapshot.board.diagnosticAssigned
                   ? readOnly
                     ? DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE
-                    : "Turn on Assign diagnostic in the board header before this student can start it."
+                    : "Turn on Assign diagnostic at the top of this panel before this student can start it."
                   : "This student has not started the diagnostic yet."}
             </p>
           </div>
         )}
       </div>
+      </div>
+      {aside ? <div className="mt-6 min-w-0 border-t border-border/60 pt-6 lg:mt-0 lg:border-t-0 lg:pt-0">{aside}</div> : null}
       </div>
     </details>
   );

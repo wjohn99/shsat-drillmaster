@@ -52,7 +52,7 @@ describe("TutorPrivatePanel", () => {
     fetchNotes.mockResolvedValue([]);
     render(<TutorPrivatePanel boardId="sebastien" />);
 
-    expect(screen.getByText("Tutor Notes & Lesson Planning")).toBeTruthy();
+    expect(screen.getByText("Tutor notes")).toBeTruthy();
     expect(screen.getByText("Tutor only")).toBeTruthy();
     await waitFor(() => {
       expect(screen.getByRole("button", { name: "Add note" })).toBeTruthy();

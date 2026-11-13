@@ -203,6 +203,25 @@ export function currentDiagnosticSection(
   return ordered[save.sectionIndex] ?? ordered[0];
 }
 
+/** Where a saved diagnostic sitting should reopen, such as "ELA, question 12 of 50". */
+export function diagnosticResumePlace(
+  exam: AssembledDiagnosticExam,
+  save: Pick<DiagnosticExamSave, "firstSection" | "sectionIndex" | "unitIndex" | "questionIndexInUnit">,
+): string | null {
+  const section = currentDiagnosticSection(exam, save);
+  if (!section || section.questions.length === 0) return null;
+  const units = section.units;
+  const unitIndex =
+    units.length === 0 ? 0 : Math.min(Math.max(save.unitIndex, 0), units.length - 1);
+  let before = 0;
+  for (let i = 0; i < unitIndex; i += 1) before += unitQuestions(units[i]).length;
+  const inUnit = units[unitIndex] ? unitQuestions(units[unitIndex]).length : 1;
+  const indexInUnit = Math.min(Math.max(save.questionIndexInUnit, 0), Math.max(inUnit - 1, 0));
+  const number = Math.min(before + indexInUnit + 1, section.questions.length);
+  const subject = section.subject === "MATH" ? "Math" : "ELA";
+  return `${subject}, question ${number} of ${section.questions.length}`;
+}
+
 export function countAnsweredDiagnosticItems(
   exam: AssembledDiagnosticExam,
   answers: Record<string, string>,

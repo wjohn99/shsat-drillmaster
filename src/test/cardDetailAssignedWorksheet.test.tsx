@@ -8,7 +8,7 @@ import type { WorkspaceCard } from "@/types/workspace";
 
 const dueAt = {
   toDate: () => new Date(2026, 10, 2),
-  toMillis: () => Date.UTC(2026, 10, 2),
+  toMillis: () => Date.UTC(2020, 0, 1),
 } as Timestamp;
 
 const assignment: WorksheetAssignment = {

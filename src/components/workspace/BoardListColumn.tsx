@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Timestamp } from "firebase/firestore";
 import { Check, GripVertical, MessageSquare, MoreHorizontal, Paperclip, Pencil, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
@@ -38,16 +37,13 @@ import {
 } from "@/lib/workspaceService";
 import type { WorkspaceCard, WorkspaceList } from "@/types/workspace";
 import type { WorksheetAssignment } from "@/types/assignment";
-import {
-  formatAssignmentDueDate,
-  worksheetProgressStatus,
-  WORKSHEET_PROGRESS_LABEL,
-} from "@/lib/dashboardStats";
+import { worksheetProgressStatus, worksheetStatusLabel } from "@/lib/dashboardStats";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { LinkifiedText } from "@/components/workspace/LinkifiedText";
 import { isDemoTutorialSessionCardTitle } from "@/lib/demoTutorial";
 import { worksheetIdsOnCard } from "@/lib/cardWorksheets";
+import { StatusPill, worksheetStatusTone } from "@/components/status/StatusPill";
 
 function formatCardSessionDate(value?: string): string {
   if (!value) return "";
@@ -57,6 +53,10 @@ function formatCardSessionDate(value?: string): string {
   if (Number.isNaN(date.getTime())) return value.trim();
   return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }
+
+/** Two to four lists fill the board. More lists keep this minimum and scroll sideways. */
+export const boardListColumnWidthClass =
+  "w-full sm:w-auto sm:min-w-[20rem] sm:max-w-[40rem] sm:grow sm:basis-[20rem]";
 
 interface BoardListColumnProps {
   boardId: string;
@@ -352,7 +352,7 @@ export function BoardListColumn({
             ? "session-summaries"
             : undefined
         }
-        className="glass-surface flex w-full max-h-none shrink-0 flex-col overflow-hidden rounded-xl border sm:w-72 sm:max-h-[calc(100dvh-10rem)] sm:snap-start"
+        className={`glass-surface flex max-h-none shrink-0 flex-col overflow-hidden rounded-xl border sm:max-h-[calc(100dvh-10rem)] sm:snap-start ${boardListColumnWidthClass}`}
         onDragOver={(e) => {
           if (readOnly || !draggingCardIdRef.current) return;
           e.preventDefault();
@@ -472,7 +472,7 @@ export function BoardListColumn({
               style={{ top: dropLineTop }}
             >
               <div className="h-1.5 -translate-y-1/2 rounded-full bg-primary ring-4 ring-primary/20" />
-              <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary-foreground">
+              <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary px-2.5 py-0.5 text-sm font-medium text-primary-foreground">
                 Drop here
               </span>
             </div>
@@ -582,7 +582,7 @@ export function BoardListColumn({
                         </span>
                       </div>
                       {sessionWhen ? (
-                        <p className="mt-1 pl-7 text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                        <p className="mt-1 pl-7 text-sm text-muted-foreground">
                           {sessionWhen}
                         </p>
                       ) : null}
@@ -594,7 +594,7 @@ export function BoardListColumn({
                         />
                       ))}
                       {card.description ? (
-                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2 pl-7">
+                        <p className="mt-1 line-clamp-2 pl-7 text-sm text-muted-foreground">
                           <LinkifiedText text={card.description} stopClickPropagation />
                         </p>
                       ) : null}
@@ -602,7 +602,7 @@ export function BoardListColumn({
                         <div className="mt-2 pl-7 flex items-center gap-3 text-muted-foreground">
                           {(card.commentCount ?? 0) > 0 ? (
                             <span
-                              className="inline-flex items-center gap-1 text-[11px] tabular-nums"
+                              className="inline-flex items-center gap-1 text-sm tabular-nums"
                               aria-label={`${card.commentCount} ${card.commentCount === 1 ? "comment" : "comments"}`}
                             >
                               <MessageSquare className="h-3.5 w-3.5" aria-hidden />
@@ -611,7 +611,7 @@ export function BoardListColumn({
                           ) : null}
                           {(card.attachmentCount ?? 0) > 0 ? (
                             <span
-                              className="inline-flex items-center gap-1 text-[11px] tabular-nums"
+                              className="inline-flex items-center gap-1 text-sm tabular-nums"
                               aria-label={`${card.attachmentCount} ${card.attachmentCount === 1 ? "attachment" : "attachments"}`}
                             >
                               <Paperclip className="h-3.5 w-3.5" aria-hidden />
@@ -654,7 +654,7 @@ export function BoardListColumn({
           })}
 
           {listCards.length === 0 ? (
-            <p className="px-2 py-6 text-center text-xs text-muted-foreground">No cards yet</p>
+            <p className="px-2 py-6 text-center text-sm text-muted-foreground">No cards yet</p>
           ) : null}
         </div>
       </div>
@@ -762,28 +762,14 @@ function BoardCardAssignmentStatus({
   showTitle?: boolean;
 }) {
   const status = assignment ? worksheetProgressStatus(assignment) : "assigned";
-  const dueLabel = assignment && status !== "done" ? formatAssignmentDueDate(assignment) : "";
-  const variant = status === "done" ? "secondary" : status === "due" ? "destructive" : "default";
+  const label = worksheetStatusLabel(assignment);
 
   return (
     <div data-tour="assigned-worksheet" className="mt-1.5 pl-7">
       {showTitle && assignment?.title ? (
-        <p className="mb-1 line-clamp-1 text-[11px] text-muted-foreground">{assignment.title}</p>
+        <p className="mb-1 line-clamp-1 text-sm text-muted-foreground">{assignment.title}</p>
       ) : null}
-      <div className="flex flex-wrap items-center gap-1.5">
-      <Badge variant={variant} className="text-[10px] px-1.5 py-0">
-        {WORKSHEET_PROGRESS_LABEL[status]}
-      </Badge>
-      {dueLabel ? (
-        <span
-          className={
-            status === "due" ? "text-[10px] font-medium text-destructive" : "text-[10px] text-muted-foreground"
-          }
-        >
-          {dueLabel}
-        </span>
-      ) : null}
-      </div>
+      <StatusPill tone={worksheetStatusTone(status)}>{label}</StatusPill>
     </div>
   );
 }

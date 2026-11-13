@@ -355,14 +355,14 @@ export default function PracticeSetup() {
                               <div className="min-w-0 flex-1">
                                 <div className="flex flex-wrap items-center gap-2">
                                   <span className="text-sm font-semibold">{section.title}</span>
-                                  <Badge variant="outline" className="text-[10px] font-normal">
+                                  <Badge variant="outline" className="text-sm font-normal">
                                     {section.subject === "MATH" ? "Math" : "ELA"}
                                   </Badge>
                                   {selectedInSection > 0 ? (
-                                    <Badge className="text-[10px]">{selectedInSection} selected</Badge>
+                                    <Badge className="text-sm">{selectedInSection} selected</Badge>
                                   ) : null}
                                 </div>
-                                <p className="mt-0.5 line-clamp-1 text-xs font-normal text-muted-foreground">
+                                <p className="mt-0.5 line-clamp-1 text-sm font-normal text-muted-foreground">
                                   {section.description}
                                 </p>
                               </div>

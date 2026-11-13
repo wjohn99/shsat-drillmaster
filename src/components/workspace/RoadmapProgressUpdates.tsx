@@ -125,7 +125,7 @@ export function RoadmapProgressUpdates({
         <ul className="space-y-3">
           {visible.map((row) => (
             <li key={row.id} className="text-sm">
-              <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+              <p className="text-sm font-medium text-muted-foreground">
                 {formatIsoDateLabel(row.date) || "Update"}
               </p>
               <p className="mt-1 whitespace-pre-wrap">{row.changed}</p>

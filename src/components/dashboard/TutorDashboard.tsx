@@ -1,21 +1,15 @@
-import { Fragment, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDemoTutorial } from "@/contexts/DemoTutorialContext";
 import { useQuestionReports } from "@/contexts/QuestionReportsContext";
 import { questionReportReasonLabel } from "@/types/questionReport";
 import { toast } from "@/hooks/use-toast";
-import { CheckCircle2, Circle, Eye, Loader2 } from "lucide-react";
+import { ClipboardList, Eye, Loader2, UserPlus } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { StatusPill, diagnosticStatusTone, worksheetStatusTone } from "@/components/status/StatusPill";
+import { DashboardEmpty } from "./DashboardEmpty";
 import { DashboardShell } from "./DashboardShell";
 import {
   fetchAssignmentsForTutor,
@@ -35,12 +29,16 @@ import {
   countCompletedThisWeek,
   countOpenAssignments,
   formatAssignmentDate,
+  hasOpenAssignmentDueToday,
+  isAssignmentDueOnLocalDay,
+  pickCurrentOpenAssignment,
   worksheetProgressStatus,
-  WORKSHEET_PROGRESS_LABEL,
+  worksheetStatusLabel,
 } from "@/lib/dashboardStats";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type { StudentOption, TutorAssignmentRow } from "@/types/assignment";
 import { StudentQuickActions } from "@/components/workspace/StudentQuickActions";
+import { openCurrentWorksheetNavState } from "@/types/worksheetsNavigation";
 import { WorksheetEmptyState } from "@/components/worksheets/WorksheetEmptyState";
 import { assignToStudentNavState, type WorksheetsLocationState } from "@/types/worksheetsNavigation";
 import { Button } from "@/components/ui/button";
@@ -70,6 +68,8 @@ export function TutorDashboard() {
   const [sessions, setSessions] = useState<PracticeSessionRecord[]>([]);
   const [diagnosticInProgressUids, setDiagnosticInProgressUids] = useState<string[]>([]);
   const [diagnosticAssignedUids, setDiagnosticAssignedUids] = useState<string[]>([]);
+  const [archivedStudentCount, setArchivedStudentCount] = useState(0);
+  const [dueTodayOnly, setDueTodayOnly] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -79,8 +79,14 @@ export function TutorDashboard() {
       setError(null);
       try {
         if (profile?.role === "demo" && profile.uid) {
-          const boards = (await ensureDemoSandbox(profile.uid)).filter(
-            (board) => !isWorkspaceBoardArchived(board),
+          const sandboxBoards = await ensureDemoSandbox(profile.uid);
+          const boards = sandboxBoards.filter((board) => !isWorkspaceBoardArchived(board));
+          setArchivedStudentCount(
+            new Set(
+              sandboxBoards
+                .filter((board) => isWorkspaceBoardArchived(board))
+                .map((board) => board.studentUid),
+            ).size,
           );
           const assignments = await fetchAssignmentsForTutor().catch(() => []);
           if (cancelled) return;
@@ -132,10 +138,15 @@ export function TutorDashboard() {
             .filter((board) => isDemoAccountBoard(board, profile?.uid))
             .map((board) => board.studentUid),
         );
-        const visibleBoards = boards.filter(
-          (board) => !hiddenDemoUids.has(board.studentUid) && !isWorkspaceBoardArchived(board),
-        );
+        const classBoards = boards.filter((board) => !hiddenDemoUids.has(board.studentUid));
+        const visibleBoards = classBoards.filter((board) => !isWorkspaceBoardArchived(board));
         const assignedStudentUids = studentUidsAssignedToTutor(visibleBoards, profile?.uid);
+        setArchivedStudentCount(
+          studentUidsAssignedToTutor(
+            classBoards.filter((board) => isWorkspaceBoardArchived(board)),
+            profile?.uid,
+          ).size,
+        );
         const studentByUid = new Map(studentList.map((s) => [s.uid, s]));
         const boardByStudent = new Map(visibleBoards.map((board) => [board.studentUid, board]));
         const assignedStudents: StudentOption[] = [...assignedStudentUids]
@@ -189,14 +200,74 @@ export function TutorDashboard() {
     [allAssignments],
   );
 
-  const stats = useMemo(
-    () => ({
-      students: students.length,
+  const currentAssignmentByStudent = useMemo(() => {
+    const grouped = new Map<string, TutorAssignmentRow[]>();
+    for (const assignment of allAssignments) {
+      const list = grouped.get(assignment.assignedToStudentUid) ?? [];
+      list.push(assignment);
+      grouped.set(assignment.assignedToStudentUid, list);
+    }
+    const current = new Map<string, TutorAssignmentRow>();
+    for (const [uid, rows] of grouped) {
+      const picked = pickCurrentOpenAssignment(rows);
+      if (picked) current.set(uid, picked);
+    }
+    return current;
+  }, [allAssignments]);
+
+  const dueTodayStudentUids = useMemo(() => {
+    const grouped = new Map<string, TutorAssignmentRow[]>();
+    for (const assignment of allAssignments) {
+      const list = grouped.get(assignment.assignedToStudentUid) ?? [];
+      list.push(assignment);
+      grouped.set(assignment.assignedToStudentUid, list);
+    }
+    return new Set(
+      [...grouped.entries()]
+        .filter(([, rows]) => hasOpenAssignmentDueToday(rows))
+        .map(([uid]) => uid),
+    );
+  }, [allAssignments]);
+
+  const dueTodayLead = useMemo(
+    () =>
+      analytics.studentRows.flatMap((row) => {
+        if (!dueTodayStudentUids.has(row.studentUid)) return [];
+        return allAssignments
+          .filter(
+            (assignment) =>
+              assignment.assignedToStudentUid === row.studentUid &&
+              assignment.status === "todo" &&
+              isAssignmentDueOnLocalDay(assignment),
+          )
+          .map((assignment) => ({ row, assignment }));
+      }),
+    [allAssignments, analytics.studentRows, dueTodayStudentUids],
+  );
+
+  const visibleStudentRows = useMemo(
+    () =>
+      dueTodayOnly
+        ? analytics.studentRows.filter((row) => dueTodayStudentUids.has(row.studentUid))
+        : analytics.studentRows,
+    [analytics.studentRows, dueTodayOnly, dueTodayStudentUids],
+  );
+
+  const stats = useMemo(() => {
+    const finishedClass = students.length === 0 && archivedStudentCount > 0;
+    return {
+      students: finishedClass ? archivedStudentCount : students.length,
       open: countOpenAssignments(allAssignments),
       completedWeek: countCompletedThisWeek(allAssignments),
-    }),
-    [students.length, allAssignments],
-  );
+      archivedHint: finishedClass
+        ? "Finished, still saved"
+        : archivedStudentCount === 1
+          ? "1 finished student, still saved"
+          : archivedStudentCount > 1
+            ? `${archivedStudentCount} finished students, still saved`
+            : "In this class",
+    };
+  }, [students.length, allAssignments, archivedStudentCount]);
 
   if (loading) {
     return (
@@ -267,17 +338,62 @@ export function TutorDashboard() {
       actions={headerActions}
     >
       <div className="space-y-10">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Due today</CardTitle>
+            {dueTodayLead.length > 0 ? (
+              <CardDescription>
+                {dueTodayLead.length === 1
+                  ? "1 student has a worksheet due today."
+                  : `${dueTodayLead.length} worksheets are due today.`}
+              </CardDescription>
+            ) : null}
+          </CardHeader>
+          <CardContent>
+            {dueTodayLead.length === 0 ? (
+              <DashboardEmpty icon={ClipboardList}>No worksheets are due today.</DashboardEmpty>
+            ) : (
+              <ul className="divide-y">
+                {dueTodayLead.map(({ row, assignment }) => (
+                  <li
+                    key={assignment.id}
+                    className="flex flex-wrap items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
+                  >
+                    <div className="min-w-0">
+                      <p className="font-medium">{row.name}</p>
+                      <p className="text-sm text-muted-foreground">{assignment.title}</p>
+                    </div>
+                    <Button variant="outline" size="sm" asChild>
+                      <Link
+                        to="/worksheets"
+                        state={openCurrentWorksheetNavState(assignment, { returnTo: "/dashboard" })}
+                        aria-label={
+                          assignment.title
+                            ? `Open worksheet: ${assignment.title}`
+                            : "Open worksheet"
+                        }
+                      >
+                        Open worksheet
+                      </Link>
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </CardContent>
+        </Card>
+
         <section
           aria-label="Class snapshot"
           className="grid grid-cols-1 divide-y overflow-hidden rounded-xl border glass-surface sm:grid-cols-3 sm:divide-x sm:divide-y-0"
         >
           {[
-            { label: "Students", value: stats.students, hint: "In this class" },
+            { label: "Students", value: stats.students, hint: stats.archivedHint },
             { label: "Open assignments", value: stats.open, hint: "Waiting on a student" },
             { label: "Completed this week", value: stats.completedWeek, hint: "Last 7 days" },
           ].map((stat) => (
             <div key={stat.label} className="px-5 py-4">
-              <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+              <p className="text-sm font-medium text-muted-foreground">
                 {stat.label}
               </p>
               <p className="mt-1.5 font-serif text-3xl font-semibold tabular-nums tracking-tight">
@@ -289,138 +405,77 @@ export function TutorDashboard() {
         </section>
 
         <Card data-tour="student-progress">
-          <CardHeader>
-            <CardTitle className="text-lg">Student progress</CardTitle>
-            <CardDescription>
-              Diagnostic, open worksheets, and results for each board
-            </CardDescription>
+          <CardHeader className="space-y-0 gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div className="space-y-1.5">
+              <CardTitle className="text-lg">Student progress</CardTitle>
+              <CardDescription>
+                {dueTodayOnly
+                  ? "Students with a worksheet due today"
+                  : "Diagnostic, open worksheets, and results for each board"}
+              </CardDescription>
+            </div>
+            {analytics.studentRows.length > 0 ? (
+              <Button
+                type="button"
+                size="sm"
+                variant={dueTodayOnly ? "default" : "outline"}
+                aria-pressed={dueTodayOnly}
+                className="shrink-0"
+                onClick={() => setDueTodayOnly((on) => !on)}
+              >
+                Due today
+                {dueTodayStudentUids.size > 0 ? ` (${dueTodayStudentUids.size})` : ""}
+              </Button>
+            ) : null}
           </CardHeader>
           <CardContent>
             {analytics.studentRows.length === 0 ? (
-              <p className="py-4 text-center text-sm text-muted-foreground">
-                No students assigned to you yet. Add a student from Workspace, or ask another tutor
-                to assign you their board.
-              </p>
+              <DashboardEmpty icon={UserPlus}>
+                {archivedStudentCount > 0
+                  ? archivedStudentCount === 1
+                    ? "No active students. 1 finished student is still saved."
+                    : `No active students. ${archivedStudentCount} finished students are still saved.`
+                  : "No students yet, add one from Workspace or ask another tutor to assign you their board."}
+              </DashboardEmpty>
+            ) : visibleStudentRows.length === 0 ? (
+              <DashboardEmpty icon={ClipboardList}>No worksheets are due today.</DashboardEmpty>
             ) : (
-              <>
-                <div className="space-y-3 lg:hidden">
-                  {analytics.studentRows.map((row) => (
-                    <div key={row.studentUid} className="space-y-3 rounded-lg border p-3">
-                      <div className="min-w-0">
+              <ul className="divide-y">
+                {visibleStudentRows.map((row) => (
+                  <li
+                    key={row.studentUid}
+                    className="flex flex-col gap-3 py-3 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
                         <p className="font-medium">{row.name}</p>
-                        {row.email ? (
-                          <p className="truncate text-xs text-muted-foreground">{row.email}</p>
-                        ) : null}
+                        <StatusPill tone={diagnosticStatusTone(row.diagnosticStatus)}>
+                          {DIAGNOSTIC_STATUS_LABEL[row.diagnosticStatus]}
+                        </StatusPill>
                       </div>
-                      <dl className="grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
-                        <div>
-                          <dt className="text-xs text-muted-foreground">Diagnostic</dt>
-                          <dd className="mt-1">
-                            <Badge
-                              variant={
-                                row.diagnosticStatus === "finished"
-                                  ? "secondary"
-                                  : row.diagnosticStatus === "started"
-                                    ? "default"
-                                    : "outline"
-                              }
-                            >
-                              {DIAGNOSTIC_STATUS_LABEL[row.diagnosticStatus]}
-                            </Badge>
-                          </dd>
-                        </div>
-                        <div>
-                          <dt className="text-xs text-muted-foreground">Open</dt>
-                          <dd className="mt-1 tabular-nums">{row.openAssignments}</dd>
-                        </div>
-                        <div>
-                          <dt className="text-xs text-muted-foreground">Last active</dt>
-                          <dd className="mt-1">{row.lastActiveLabel}</dd>
-                        </div>
-                        <div>
-                          <dt className="text-xs text-muted-foreground">Avg accuracy</dt>
-                          <dd className="mt-1 tabular-nums">
-                            {row.avgAccuracy !== null ? `${row.avgAccuracy}%` : "-"}
-                          </dd>
-                        </div>
-                      </dl>
-                      <StudentQuickActions
-                        compact
-                        studentUid={row.studentUid}
-                        studentName={row.name}
-                        studentEmail={row.email}
-                        lastSession={row.lastSession}
-                        lastCompletedAssignment={row.lastCompletedAssignment}
-                        firstDiagnostic={row.firstDiagnostic}
-                        latestDiagnostic={row.latestDiagnostic}
-                      />
+                      {row.email ? (
+                        <p className="truncate text-sm text-muted-foreground">{row.email}</p>
+                      ) : null}
+                      <p className="text-sm text-muted-foreground">
+                        {row.openAssignments} open · Last active {row.lastActiveLabel}
+                        {row.avgAccuracy !== null ? ` · ${row.avgAccuracy}% accuracy` : ""}
+                      </p>
                     </div>
-                  ))}
-                </div>
-                <div className="hidden lg:block">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Student</TableHead>
-                        <TableHead>Diagnostic</TableHead>
-                        <TableHead className="text-right">Open</TableHead>
-                        <TableHead>Last active</TableHead>
-                        <TableHead className="text-right">Avg accuracy</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {analytics.studentRows.map((row) => (
-                        <Fragment key={row.studentUid}>
-                          <TableRow className="border-b-0 hover:bg-transparent">
-                            <TableCell className="pb-2">
-                              <div className="font-medium">{row.name}</div>
-                              {row.email ? (
-                                <p className="max-w-[220px] truncate text-xs text-muted-foreground">
-                                  {row.email}
-                                </p>
-                              ) : null}
-                            </TableCell>
-                            <TableCell className="pb-2">
-                              <Badge
-                                variant={
-                                  row.diagnosticStatus === "finished"
-                                    ? "secondary"
-                                    : row.diagnosticStatus === "started"
-                                      ? "default"
-                                      : "outline"
-                                }
-                              >
-                                {DIAGNOSTIC_STATUS_LABEL[row.diagnosticStatus]}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="pb-2 text-right tabular-nums">
-                              {row.openAssignments}
-                            </TableCell>
-                            <TableCell className="pb-2">{row.lastActiveLabel}</TableCell>
-                            <TableCell className="pb-2 text-right tabular-nums">
-                              {row.avgAccuracy !== null ? `${row.avgAccuracy}%` : "-"}
-                            </TableCell>
-                          </TableRow>
-                          <TableRow className="hover:bg-transparent">
-                            <TableCell colSpan={5} className="px-4 pb-4 pt-0">
-                              <StudentQuickActions
-                                compact
-                                studentUid={row.studentUid}
-                                studentName={row.name}
-                                studentEmail={row.email}
-                                lastSession={row.lastSession}
-                                lastCompletedAssignment={row.lastCompletedAssignment}
-                                firstDiagnostic={row.firstDiagnostic}
-                                latestDiagnostic={row.latestDiagnostic}
-                              />
-                            </TableCell>
-                          </TableRow>
-                        </Fragment>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </>
+                    <StudentQuickActions
+                      compact
+                      studentUid={row.studentUid}
+                      studentName={row.name}
+                      studentEmail={row.email}
+                      lastSession={row.lastSession}
+                      lastCompletedAssignment={row.lastCompletedAssignment}
+                      currentAssignment={currentAssignmentByStudent.get(row.studentUid) ?? null}
+                      firstDiagnostic={row.firstDiagnostic}
+                      latestDiagnostic={row.latestDiagnostic}
+                      returnTo="/dashboard"
+                    />
+                  </li>
+                ))}
+              </ul>
             )}
           </CardContent>
         </Card>
@@ -456,9 +511,9 @@ export function TutorDashboard() {
                           {item.studentName} · {item.detail}
                         </p>
                       </div>
-                      <Badge variant={item.reason === "overdue" ? "destructive" : "secondary"}>
+                      <StatusPill tone={item.reason === "overdue" ? "due" : "progress"}>
                         {item.reason === "overdue" ? "Overdue" : "Stale"}
-                      </Badge>
+                      </StatusPill>
                     </li>
                   ))}
                 </ul>
@@ -544,22 +599,9 @@ export function TutorDashboard() {
                         </p>
                       </div>
                       <div className="flex shrink-0 flex-col items-end gap-2">
-                        <Badge
-                          variant={
-                            progress === "done"
-                              ? "secondary"
-                              : progress === "due"
-                                ? "destructive"
-                                : "default"
-                          }
-                        >
-                          {progress === "done" ? (
-                            <CheckCircle2 className="mr-1 h-3 w-3" />
-                          ) : (
-                            <Circle className="mr-1 h-3 w-3" />
-                          )}
-                          {WORKSHEET_PROGRESS_LABEL[progress]}
-                        </Badge>
+                        <StatusPill tone={worksheetStatusTone(progress)}>
+                          {worksheetStatusLabel(row)}
+                        </StatusPill>
                         {row.status === "completed" ? (
                           <Button
                             size="sm"

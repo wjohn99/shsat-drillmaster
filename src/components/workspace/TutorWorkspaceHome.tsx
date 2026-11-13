@@ -7,7 +7,6 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { workspaceBoardAccentColor } from "@/lib/workspaceBoardColors";
 import { fetchAssignmentsForTutor, fetchTutors } from "@/lib/assignmentService";
 import { pickLatestCompletedAssignment } from "@/lib/dashboardStats";
-import { firstAndLatestDiagnostic } from "@/lib/diagnosticReport";
 import { fetchPracticeSessionsForTutor } from "@/lib/practiceSessionService";
 import {
   fetchAllWorkspaceBoards,
@@ -242,7 +241,6 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
                 {group.boards.map((board, boardIndex) => {
                   const isTourBoard = group === boardsByTutor[0] && boardIndex === 0;
                   const accent = workspaceBoardAccentColor(board.color);
-                  const diagnostic = firstAndLatestDiagnostic(sessions, board.studentUid);
                   const lastSession = lastSessionByStudent.get(board.studentUid);
                   return (
                     <Card
@@ -303,8 +301,6 @@ export function TutorWorkspaceHome({ onBoardCreated, readOnly = false }: TutorWo
                               studentEmail={board.studentEmail}
                               lastSession={lastSession}
                               lastCompletedAssignment={lastCompletedByStudent.get(board.studentUid)}
-                              firstDiagnostic={diagnostic.first}
-                              latestDiagnostic={diagnostic.latest}
                               showOpenBoard={false}
                               showFirstDiagnostic={false}
                               returnTo={WORKSPACE_HOME_PATH}

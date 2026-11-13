@@ -15,6 +15,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { DiagnosticCompare } from "@/components/diagnostic/DiagnosticCompare";
 import { DiagnosticExamRunner } from "@/components/diagnostic/DiagnosticExamRunner";
 import { DiagnosticItemReview } from "@/components/diagnostic/DiagnosticItemReview";
 import { DiagnosticModuleBreakdown } from "@/components/diagnostic/DiagnosticModuleBreakdown";
@@ -55,6 +56,7 @@ import {
   diagnosticAttemptLabel,
   orderDiagnosticSessionsOldestFirst,
 } from "@/lib/diagnosticReport";
+import { completedMs } from "@/lib/diagnosticResultLabel";
 import {
   fetchPracticeSessionsForStudent,
   resolveLinkedTutorUid,
@@ -66,13 +68,16 @@ import {
   buildDiagnosticCompletionEvents,
   countAnsweredDiagnosticItems,
   currentDiagnosticSection,
+  diagnosticResumePlace,
   mergeDiagnosticEventsWithExam,
 } from "@/lib/shsatDiagnostic";
 import {
   DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE,
+  diagnosticAssignmentStatusLine,
   isPermissionDenied,
   roleCanStartDiagnostic,
 } from "@/lib/diagnosticAccess";
+import type { DiagnosticCompareTarget } from "@/lib/diagnosticCompare";
 import { toast } from "@/hooks/use-toast";
 import type { DiagnosticEndReason, PracticeSessionRecord } from "@/types/practiceSession";
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
@@ -87,6 +92,7 @@ export default function DiagnosticExam() {
   const exam = useMemo(() => assembleDiagnosticExam(), []);
   const reviewNav = location.state as {
     reviewSession?: PracticeSessionRecord;
+    compareDiagnostics?: DiagnosticCompareTarget;
     returnTo?: string;
   } | null;
   const reviewFromNav = reviewNav?.reviewSession;
@@ -268,7 +274,7 @@ export default function DiagnosticExam() {
       events: session.events,
       endedReason: session.endedReason,
       accuracyPct: session.accuracyPct,
-      dateMs: session.completedAt?.toMillis?.() ?? 0,
+      dateMs: completedMs(session),
       isBaseline: session.isBaseline || index === 0,
     }));
     const accountIds = new Set(orderedAccountSessions.map((session) => session.id));
@@ -307,6 +313,7 @@ export default function DiagnosticExam() {
     ? countAnsweredDiagnosticItems(exam, progress.answers)
     : null;
   const saveSection = progress ? currentDiagnosticSection(exam, progress) : null;
+  const resumePlace = progress ? diagnosticResumePlace(exam, progress) : null;
   const resultsEvents = useMemo(
     () => (events.length === 0 ? events : mergeDiagnosticEventsWithExam(exam, events)),
     [exam, events],
@@ -580,8 +587,35 @@ export default function DiagnosticExam() {
     await persistAndUploadResults(completedEvents, reason);
   };
 
-  if (profile?.role === "parent" && !reviewFromNav) {
+  if (profile?.role === "parent" && !reviewFromNav && !reviewNav?.compareDiagnostics) {
     return <Navigate to="/dashboard" replace />;
+  }
+
+  if (reviewNav?.compareDiagnostics?.first && reviewNav.compareDiagnostics.latest) {
+    const compare = reviewNav.compareDiagnostics;
+    const backTo = compare.returnTo || reviewNav.returnTo || "/dashboard";
+    const openSitting = (session: PracticeSessionRecord) => {
+      navigate("/practice/diagnostic", {
+        state: { reviewSession: session, returnTo: backTo },
+      });
+    };
+    return (
+      <div className="min-h-screen">
+        <Header />
+        <div className="container max-w-3xl py-8">
+          <Button variant="ghost" className="mb-6 -ml-2" onClick={() => navigate(backTo)}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back
+          </Button>
+          <DiagnosticCompare
+            first={compare.first}
+            latest={compare.latest}
+            onOpenFirst={() => openSitting(compare.first)}
+            onOpenLatest={() => openSitting(compare.latest)}
+          />
+        </div>
+      </div>
+    );
   }
 
   if (phase === "exam" && profile) {
@@ -819,6 +853,13 @@ export default function DiagnosticExam() {
             <h1 className="font-serif text-2xl font-semibold tracking-tight">
               {SHSAT_DIAGNOSTIC_SPEC.name}
             </h1>
+            {profile?.role === "student" ? (
+              <p className="mt-3 text-sm text-muted-foreground">
+                {assignmentLoaded
+                  ? diagnosticAssignmentStatusLine(diagnosticAssigned, Boolean(progress))
+                  : "Checking whether this diagnostic is assigned."}
+              </p>
+            ) : null}
           </div>
 
           <Card className="mb-6">
@@ -899,8 +940,8 @@ export default function DiagnosticExam() {
                   {saveExpired
                     ? "The clock finished while you were away. Unanswered items will count as incorrect."
                     : progress.paused
-                      ? "The timer is stopped. Your answers are saved to your account."
-                      : "This attempt is saved to your account. Pause to stop the timer."}
+                      ? `The timer is stopped. Your place is saved${resumePlace ? ` at ${resumePlace}` : ""}.`
+                      : `This attempt is saved to your account${resumePlace ? ` at ${resumePlace}` : ""}. Pause to stop the timer.`}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">

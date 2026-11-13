@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { NotesWorkbench } from "@/components/notes/NotesWorkbench";
 import { HighlightableText } from "@/components/exam/HighlightableText";
 import { QuestionResponseFields } from "@/components/question/QuestionResponseFields";
+import { SubjectStripe } from "@/components/question/SubjectStripe";
 import { ReportQuestionButton } from "@/components/question/ReportQuestionButton";
 import { DiagnosticSectionMap, type DiagnosticMapCell } from "@/components/diagnostic/DiagnosticSectionMap";
 import { useExamLock } from "@/contexts/ExamLockContext";
@@ -366,14 +367,29 @@ export function DiagnosticExamRunner({
   }, [onExit, persistProgress, pausing, userId]);
 
   useEffect(() => {
+    const flush = () => {
+      if (finishedRef.current || leavingRef.current) return;
+      const save = persistProgressRef.current();
+      if (save) void saveDiagnosticProgress(userId, save).catch(() => undefined);
+    };
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden") flush();
+    };
     const onBeforeUnload = (event: BeforeUnloadEvent) => {
       if (finishedRef.current) return;
+      flush();
       event.preventDefault();
       event.returnValue = "";
     };
+    window.addEventListener("pagehide", flush);
+    document.addEventListener("visibilitychange", onVisibility);
     window.addEventListener("beforeunload", onBeforeUnload);
-    return () => window.removeEventListener("beforeunload", onBeforeUnload);
-  }, []);
+    return () => {
+      window.removeEventListener("pagehide", flush);
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("beforeunload", onBeforeUnload);
+    };
+  }, [userId]);
 
   useLayoutEffect(() => {
     const requestLeave = () => {
@@ -689,26 +705,13 @@ export function DiagnosticExamRunner({
             <div className="min-w-0">
               <h1 className="truncate text-xl font-bold">{exam.spec.name}</h1>
               <p className="text-sm text-muted-foreground">
-                {section.subject} · Question {globalIndex} of {sectionQuestions.length}
+                {section.subject}
                 {unit.elaPart !== "other" ? ` · ${elaPartLabel(unit.elaPart)}` : ""}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <ReportQuestionButton question={currentQuestion} source="diagnostic" compact />
-            {isPassageSet ? (
-              <Button
-                variant={flagged.has(currentQuestion.id) ? "default" : "outline"}
-                size="sm"
-                onClick={toggleFlag}
-                title="Flag this question to find it again in this passage set"
-              >
-                <Flag className="h-4 w-4" />
-                <span className="hidden sm:inline">
-                  {flagged.has(currentQuestion.id) ? "Flagged" : "Flag"}
-                </span>
-              </Button>
-            ) : null}
             <Button variant="outline" size="sm" onClick={() => setClockHidden((v) => !v)}>
               <Clock className="h-4 w-4 mr-1" />
               {clockHidden ? "Show time" : "Hide time"}
@@ -821,7 +824,10 @@ export function DiagnosticExamRunner({
                 </Card>
 
                 <Card className="flex min-h-0 min-w-0 flex-col overflow-hidden">
-                  <CardHeader className="shrink-0 p-4 pb-2">{questionMeta}</CardHeader>
+                  <CardHeader className="relative shrink-0 space-y-0 p-4 pb-2">
+                    <SubjectStripe subject={currentQuestion.subject} />
+                    {questionMeta}
+                  </CardHeader>
                   <CardContent
                     ref={questionPaneRef}
                     className="min-h-0 flex-1 space-y-6 overflow-y-auto overscroll-contain p-4 pt-0"
@@ -832,7 +838,10 @@ export function DiagnosticExamRunner({
               </div>
             ) : (
               <Card className="flex min-h-0 flex-1 flex-col overflow-hidden">
-                <CardHeader className="shrink-0 p-4 pb-2">{questionMeta}</CardHeader>
+                <CardHeader className="relative shrink-0 space-y-0 p-4 pb-2">
+                  <SubjectStripe subject={currentQuestion.subject} />
+                  {questionMeta}
+                </CardHeader>
                 <CardContent
                   ref={questionPaneRef}
                   className="min-h-0 flex-1 space-y-6 overflow-y-auto overscroll-contain p-4 pt-0"
@@ -861,16 +870,31 @@ export function DiagnosticExamRunner({
               />
             </div>
           ) : null}
-          <div className="container flex items-center justify-between gap-2 px-4 pt-2">
-            <Button
-              variant={notesOpen ? "default" : "outline"}
-              aria-expanded={notesOpen}
-              aria-controls={notesOpen ? "diagnostic-notepad" : undefined}
-              onClick={() => setNotesOpen((open) => !open)}
-            >
-              <StickyNote className="h-4 w-4 mr-2" />
-              {notesOpen ? "Hide notes" : "Notes"}
-            </Button>
+          <div className="container flex flex-wrap items-center justify-between gap-2 px-4 pt-2">
+            <div className="flex min-w-0 flex-wrap items-center gap-2">
+              <p className="text-sm font-medium tabular-nums">
+                Question {globalIndex} of {sectionQuestions.length}
+              </p>
+              {isPassageSet ? (
+                <Button
+                  variant={flagged.has(currentQuestion.id) ? "default" : "outline"}
+                  onClick={toggleFlag}
+                  title="Flag this question to find it again in this passage set"
+                >
+                  <Flag className="h-4 w-4 mr-2" />
+                  {flagged.has(currentQuestion.id) ? "Flagged" : "Flag"}
+                </Button>
+              ) : null}
+              <Button
+                variant={notesOpen ? "default" : "outline"}
+                aria-expanded={notesOpen}
+                aria-controls={notesOpen ? "diagnostic-notepad" : undefined}
+                onClick={() => setNotesOpen((open) => !open)}
+              >
+                <StickyNote className="h-4 w-4 mr-2" />
+                {notesOpen ? "Hide notes" : "Notes"}
+              </Button>
+            </div>
             <div className="flex min-w-0 items-center justify-end gap-2">
               {isPassageSet ? (
                 <Button

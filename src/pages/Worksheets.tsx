@@ -144,6 +144,8 @@ const Worksheets = () => {
   const [worksheetQuestions, setWorksheetQuestions] = useState<Question[]>([]);
   const [runnerPassages, setRunnerPassages] = useState<Passage[] | undefined>();
   const [presetTitle, setPresetTitle] = useState<string | null>(null);
+  const [previewKey, setPreviewKey] = useState<string | null>(null);
+  const [viewingAssignedWorksheet, setViewingAssignedWorksheet] = useState(false);
   const [sessionEvents, setSessionEvents] = useState<SessionAnalyticsEvent[]>([]);
   const [activeAssignment, setActiveAssignment] = useState<WorksheetAssignment | null>(null);
   const workspaceCompletionTargetRef = useRef<WorksheetsWorkspaceCompletionTarget | null>(
@@ -198,6 +200,7 @@ const Worksheets = () => {
   };
 
   const leaveWorksheets = (fallback: Mode = "home") => {
+    setViewingAssignedWorksheet(false);
     const to = returnToRef.current;
     if (to) {
       returnToRef.current = null;
@@ -666,6 +669,7 @@ const Worksheets = () => {
   };
 
   const startTutorOrSelfPreview = () => {
+    setViewingAssignedWorksheet(false);
     if (blockRepeatsForStudent && !excludedReadyRef.current) {
       toast({
         title: "Still checking submitted questions",
@@ -779,10 +783,31 @@ const Worksheets = () => {
     }
   };
 
+  const openAssignedWorksheetPreview = (assignment: WorksheetAssignment) => {
+    const picked = getQuestionsByIds(assignment.questionIds);
+    if (picked.length === 0) {
+      toast({
+        title: "Worksheet unavailable",
+        description: "None of the assigned questions could be loaded.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setActiveAssignment(null);
+    setPresetTitle(assignment.title || "Assigned worksheet");
+    setPreviewKey(assignment.id);
+    setViewingAssignedWorksheet(true);
+    resumeLockRef.current = null;
+    setActiveScopeId(null);
+    setRunSource("tutor-preview");
+    startWorksheetRun(picked, getPassagesForQuestions(picked), null);
+  };
+
   const startAssignedWorksheet = async (
     assignment: WorksheetAssignment,
     workspaceTarget?: WorksheetsWorkspaceCompletionTarget,
   ) => {
+    setViewingAssignedWorksheet(false);
     workspaceCompletionTargetRef.current = workspaceTarget ?? null;
     const picked = getQuestionsByIds(assignment.questionIds);
     if (picked.length === 0) {
@@ -877,6 +902,9 @@ const Worksheets = () => {
         navState.autoStartAssignment,
         navState.workspaceCompletionTarget,
       );
+    } else if (navState.openAssignment && tutorTools) {
+      if (questionsLoading) return;
+      openAssignedWorksheetPreview(navState.openAssignment);
     } else if (navState.reviewSession) {
       openReviewSession(
         navState.reviewSession,
@@ -895,7 +923,7 @@ const Worksheets = () => {
     navigate({ pathname: location.pathname, search: nextSearch }, { replace: true, state: null });
     // Keep search out of deps. Auto-start writes the attempt query itself.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authLoading, profile, role, location.state, location.pathname, navigate]);
+  }, [authLoading, profile, role, location.state, location.pathname, navigate, questionsLoading]);
 
   useEffect(() => {
     if (!attemptParam) {
@@ -1185,10 +1213,16 @@ const Worksheets = () => {
       ? `assignment-${activeAssignment.id}`
       : runSource === "self"
         ? `worksheet-self-${profile?.uid ?? "anon"}`
-        : "worksheet";
+        : previewKey
+          ? `tutor-open-${previewKey}`
+          : "worksheet";
 
   const exitRunner = () => {
     forgetActiveWorksheet();
+    if (viewingAssignedWorksheet) {
+      leaveWorksheets("home");
+      return;
+    }
     if (runSource === "assignment") {
       leaveWorksheets("home");
     } else {
@@ -1379,15 +1413,16 @@ const Worksheets = () => {
     );
   }
 
-  const resultsTitle =
-    runSource === "assignment"
+  const resultsTitle = viewingAssignedWorksheet
+    ? sessionTitle
+    : runSource === "assignment"
       ? "Assignment complete"
       : runSource === "self"
         ? "Practice complete"
         : "Worksheet complete";
 
   const backFromResults = () => {
-    if (runSource === "assignment") {
+    if (viewingAssignedWorksheet || runSource === "assignment") {
       leaveWorksheets("home");
     } else {
       leaveWorksheets("build");
@@ -1403,11 +1438,15 @@ const Worksheets = () => {
           <div className="max-w-5xl mx-auto space-y-6">
             <Button variant="ghost" onClick={backFromResults}>
               <ArrowLeft className="h-4 w-4 mr-2" />
-              {returnToRef.current
-                ? "Back to workspace"
-                : runSource === "assignment"
-                  ? "Back to worksheets"
-                  : "Back to builder"}
+              {viewingAssignedWorksheet
+                ? returnToRef.current
+                  ? "Back to dashboard"
+                  : "Back to worksheets"
+                : returnToRef.current
+                  ? "Back to workspace"
+                  : runSource === "assignment"
+                    ? "Back to worksheets"
+                    : "Back to builder"}
             </Button>
             <SessionResultsDashboard
               title={resultsTitle}
@@ -1418,7 +1457,9 @@ const Worksheets = () => {
                 { label: "Accuracy", value: `${worksheetAccuracyPct}%` },
               ]}
               footnote={
-                runSource === "self"
+                viewingAssignedWorksheet
+                  ? "This is the worksheet the student still has open. Answers on this screen are not saved to their assignment."
+                  : runSource === "self"
                   ? "Self-practice results are for your review only, not shared with your tutor."
                   : runSource === "assignment" &&
                       activeAssignment &&
@@ -1427,7 +1468,11 @@ const Worksheets = () => {
                     : "Statistics use your answers and time on each question in this worksheet."
               }
               footerActions={
-                tutorTools ? (
+                viewingAssignedWorksheet ? (
+                  <Button onClick={() => leaveWorksheets("home")}>
+                    {returnToRef.current ? "Back to dashboard" : "Back to worksheets"}
+                  </Button>
+                ) : tutorTools ? (
                   <>
                     <Button variant="outline" onClick={() => setMode("build")}>
                       Edit tags

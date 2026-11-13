@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
-import { CheckCircle2, Circle, Eye, Loader2, Play, Printer } from "lucide-react";
+import { Eye, Loader2, Play, Printer } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { StatusPill, worksheetStatusTone } from "@/components/status/StatusPill";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchAssignmentsForStudent } from "@/lib/assignmentService";
 import {
   formatAssignmentDueDate,
-  isAssignmentOverdue,
   worksheetProgressStatus,
-  WORKSHEET_PROGRESS_LABEL,
+  worksheetStatusLabel,
 } from "@/lib/dashboardStats";
 import type { WorksheetAssignment } from "@/types/assignment";
-import { cn } from "@/lib/utils";
 import { WorksheetEmptyState } from "./WorksheetEmptyState";
 
 interface StudentAssignmentsGridProps {
@@ -104,7 +102,6 @@ export function StudentAssignmentsGrid({
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
       {assignments.map((assignment) => {
         const isCompleted = assignment.status === "completed";
-        const overdue = isAssignmentOverdue(assignment);
         const progress = worksheetProgressStatus(assignment);
         const inProgress = !isCompleted && Boolean(inProgressAssignmentIds?.has(assignment.id));
         const dueLabel = formatAssignmentDueDate(assignment);
@@ -117,28 +114,19 @@ export function StudentAssignmentsGrid({
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between gap-2 mb-2">
                 <div className="flex flex-wrap items-center gap-2">
-                  <Badge
-                    variant={progress === "done" ? "secondary" : progress === "due" ? "destructive" : "default"}
-                    className="gap-1"
-                  >
-                    {progress === "done" ? (
-                      <CheckCircle2 className="h-3 w-3" />
-                    ) : progress === "assigned" ? (
-                      <Circle className="h-3 w-3" />
-                    ) : null}
-                    {inProgress ? "In progress" : WORKSHEET_PROGRESS_LABEL[progress]}
-                  </Badge>
-                  {dueLabel && !isCompleted ? (
-                    <span className={cn("text-xs", overdue ? "text-destructive font-medium" : "text-muted-foreground")}>
-                      Due {dueLabel}
-                    </span>
-                  ) : null}
+                  <StatusPill tone={worksheetStatusTone(progress)}>
+                    {progress === "assigned" && inProgress
+                      ? dueLabel
+                        ? `In progress, due ${dueLabel}`
+                        : "In progress"
+                      : worksheetStatusLabel(assignment)}
+                  </StatusPill>
                 </div>
                 {createdLabel && (
-                  <span className="text-xs text-muted-foreground shrink-0">Assigned {createdLabel}</span>
+                  <span className="shrink-0 text-sm text-muted-foreground">Assigned {createdLabel}</span>
                 )}
               </div>
-              <p className="text-xs font-medium text-primary mb-1">From your tutor</p>
+              <p className="mb-1 text-sm font-medium text-primary">From your tutor</p>
               <CardTitle className="text-lg leading-tight">{assignment.title}</CardTitle>
             </CardHeader>
             <CardContent>
@@ -149,7 +137,7 @@ export function StudentAssignmentsGrid({
                   ` · ${assignment.tagCodes.length} skill tag${assignment.tagCodes.length === 1 ? "" : "s"}`}
               </p>
               {assignment.revealAnswers === false ? (
-                <p className="text-xs text-muted-foreground mb-4">
+                <p className="mb-4 text-sm text-muted-foreground">
                   Answers and explanations stay hidden on this worksheet.
                 </p>
               ) : null}

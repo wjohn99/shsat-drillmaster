@@ -33,6 +33,8 @@ export type WorksheetsLocationState = {
   /** Prefill the student picker when opening the tutor builder. */
   assignToStudentUid?: string;
   autoStartAssignment?: WorksheetAssignment;
+  /** Tutor opens the questions on an assignment the student still owes. */
+  openAssignment?: WorksheetAssignment;
   /** When starting from a workspace card, used to log completion on that card. */
   workspaceCompletionTarget?: WorksheetsWorkspaceCompletionTarget;
   reviewAssignment?: WorksheetAssignment;
@@ -56,6 +58,16 @@ export function assignToStudentNavState(
     ...(options?.suggestedTagCodes?.length
       ? { suggestedTagCodes: options.suggestedTagCodes }
       : {}),
+  };
+}
+
+export function openCurrentWorksheetNavState(
+  assignment: WorksheetAssignment,
+  options?: { returnTo?: string },
+): WorksheetsLocationState {
+  return {
+    openAssignment: assignment,
+    ...(options?.returnTo ? { returnTo: options.returnTo } : {}),
   };
 }
 

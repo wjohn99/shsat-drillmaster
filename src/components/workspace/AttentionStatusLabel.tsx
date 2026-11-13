@@ -30,7 +30,7 @@ export function AttentionStatusLabel({
     return (
       <span
         className={cn(
-          "inline-flex shrink-0 items-center rounded-full border border-border/70 bg-muted/60 px-2 py-0.5 text-[11px] font-medium tracking-wide text-muted-foreground",
+          "inline-flex shrink-0 items-center rounded-full border border-border/70 bg-muted/60 px-2.5 py-0.5 text-sm font-medium text-muted-foreground",
           className,
         )}
       >
@@ -42,7 +42,7 @@ export function AttentionStatusLabel({
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-medium tracking-wide",
+        "inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-sm font-medium",
         LABEL[status],
         className,
       )}

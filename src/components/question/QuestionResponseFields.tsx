@@ -43,7 +43,7 @@ export function QuestionResponseFields({
   const eliminated = new Set(eliminatedChoiceIds);
   const selectedChoiceIds = new Set(getSelectedChoiceIds(question, raw));
   const selectedMcValue = [...selectedChoiceIds][0] ?? "";
-  const choiceControlClass = "mt-1 choice-control";
+  const choiceControlClass = "choice-control";
   const showMcChoices =
     Boolean(question.choices) &&
     !isIndyCheckboxMultiSubtype(question.subtype) &&
@@ -104,7 +104,7 @@ export function QuestionResponseFields({
       )}
 
       {isIndyCheckboxMultiSubtype(question.subtype) && question.choices && (
-        <div className="space-y-3">
+        <div className="space-y-2">
           <p className="text-sm text-muted-foreground">
             {question.subtype === "INDY-MS" && question.ms
               ? `Select ${question.ms.selectCount} answers.`
@@ -115,48 +115,49 @@ export function QuestionResponseFields({
             const showWrongPick = showSolution && checked && !choice.isCorrect;
             const showMissed = showSolution && !checked && choice.isCorrect;
             const isEliminated = eliminated.has(choice.id);
+            const choiceId = `${question.id}-${choice.id}`;
             return (
-              <div key={choice.id} className="space-y-1.5">
-                <div className="flex items-start space-x-3">
+              <div key={choice.id} className="flex items-stretch gap-2">
+                <Label
+                  className={cn(
+                    "flex min-h-14 w-full flex-1 cursor-pointer items-center gap-3 rounded-lg border px-4 py-3 text-base leading-snug",
+                    checked && !showSolution && "border-primary bg-primary/10",
+                    showSolution && choice.isCorrect && "border-success bg-success/10 font-medium text-success",
+                    showWrongPick && "border-destructive bg-destructive/10 text-destructive",
+                    showMissed && "border-warning text-warning",
+                    isEliminated && "text-muted-foreground line-through",
+                  )}
+                >
                   <Checkbox
-                    id={`${question.id}-${choice.id}`}
+                    id={choiceId}
                     checked={checked}
                     onCheckedChange={() => onToggleAta(choice.id)}
                     disabled={disabled}
                     className={choiceControlClass}
                   />
-                  <Label
-                    htmlFor={`${question.id}-${choice.id}`}
-                    className={cn(
-                      "flex-1 cursor-pointer text-sm leading-relaxed",
-                      showSolution && choice.isCorrect && "text-success font-medium",
-                      showWrongPick && "text-destructive",
-                      showMissed && "text-warning",
-                      isEliminated && "line-through text-muted-foreground",
-                    )}
-                  >
-                    <span className="font-medium mr-2">{choice.label}.</span>
+                  <span className="font-medium">{choice.label}.</span>
+                  <span className="min-w-0 flex-1">
                     <MathText text={choice.text} />
-                  </Label>
+                  </span>
                   {showSolution && showWrongPick ? (
-                    <span className="mt-0.5 shrink-0 rounded-md border border-destructive/40 bg-destructive/10 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-destructive">
+                    <span className="shrink-0 rounded-md border border-destructive/40 bg-destructive/10 px-2 py-0.5 text-sm font-medium text-destructive">
                       Selected
                     </span>
                   ) : null}
-                  {onToggleEliminate && !showSolution ? (
-                    <button
-                      type="button"
-                      className="text-[10px] uppercase tracking-wide text-muted-foreground hover:text-foreground shrink-0 mt-1"
-                      onClick={() => onToggleEliminate(choice.id)}
-                    >
-                      {isEliminated ? "Undo" : "Eliminate"}
-                    </button>
+                  {showSolution && choice.isCorrect ? (
+                    <CheckCircle className="h-5 w-5 shrink-0 text-success" />
                   ) : null}
-                  {showSolution && choice.isCorrect && (
-                    <CheckCircle className="h-4 w-4 shrink-0 text-success mt-1" />
-                  )}
-                  {showWrongPick && <XCircle className="h-4 w-4 shrink-0 text-destructive mt-1" />}
-                </div>
+                  {showWrongPick ? <XCircle className="h-5 w-5 shrink-0 text-destructive" /> : null}
+                </Label>
+                {onToggleEliminate && !showSolution ? (
+                  <button
+                    type="button"
+                    className="shrink-0 self-center rounded-lg px-3 py-3 text-sm font-medium text-muted-foreground hover:text-foreground"
+                    onClick={() => onToggleEliminate(choice.id)}
+                  >
+                    {isEliminated ? "Undo" : "Eliminate"}
+                  </button>
+                ) : null}
               </div>
             );
           })}
@@ -164,58 +165,56 @@ export function QuestionResponseFields({
       )}
 
       {showMcChoices && question.choices && (
-        <div className="space-y-3">
-          <RadioGroup
-            value={selectedMcValue || raw || ""}
-            onValueChange={onChange}
-            disabled={disabled && !showSolution}
-            className={cn(showSolution && "pointer-events-none")}
-          >
-            {question.choices.map((choice) => {
-              const isEliminated = eliminated.has(choice.id);
-              const isStudentPick = selectedChoiceIds.has(choice.id);
-              return (
-                <div key={choice.id} className="space-y-1.5">
-                  <div className="flex items-start space-x-3">
-                    <RadioGroupItem value={choice.id} id={choice.id} className={choiceControlClass} />
-                    <Label
-                      htmlFor={choice.id}
-                      className={cn(
-                        "flex-1 cursor-pointer text-sm leading-relaxed",
-                        showSolution && choice.isCorrect && "text-success font-medium",
-                        showSolution && isStudentPick && !choice.isCorrect && "text-destructive",
-                        isEliminated && "line-through text-muted-foreground",
-                      )}
-                    >
-                      <span className="font-medium mr-2">{choice.label}.</span>
-                      <MathText text={choice.text} />
-                    </Label>
-                    {showSolution && isStudentPick && !choice.isCorrect ? (
-                      <span className="mt-0.5 shrink-0 rounded-md border border-destructive/40 bg-destructive/10 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-destructive">
-                        Selected
-                      </span>
-                    ) : null}
-                    {onToggleEliminate && !showSolution ? (
-                      <button
-                        type="button"
-                        className="text-[10px] uppercase tracking-wide text-muted-foreground hover:text-foreground shrink-0 mt-1"
-                        onClick={() => onToggleEliminate(choice.id)}
-                      >
-                        {isEliminated ? "Undo" : "Eliminate"}
-                      </button>
-                    ) : null}
-                    {showSolution && choice.isCorrect && (
-                      <CheckCircle className="h-4 w-4 text-success mt-1" />
-                    )}
-                    {showSolution && isStudentPick && !choice.isCorrect && (
-                      <XCircle className="h-4 w-4 text-destructive mt-1" />
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </RadioGroup>
-        </div>
+        <RadioGroup
+          value={selectedMcValue || raw || ""}
+          onValueChange={onChange}
+          disabled={disabled && !showSolution}
+          className={cn("gap-2", showSolution && "pointer-events-none")}
+        >
+          {question.choices.map((choice) => {
+            const isEliminated = eliminated.has(choice.id);
+            const isStudentPick = selectedChoiceIds.has(choice.id);
+            return (
+              <div key={choice.id} className="flex items-stretch gap-2">
+                <Label
+                  className={cn(
+                    "flex min-h-14 w-full flex-1 cursor-pointer items-center gap-3 rounded-lg border px-4 py-3 text-base leading-snug",
+                    isStudentPick && !showSolution && "border-primary bg-primary/10",
+                    showSolution && choice.isCorrect && "border-success bg-success/10 font-medium text-success",
+                    showSolution && isStudentPick && !choice.isCorrect && "border-destructive bg-destructive/10 text-destructive",
+                    isEliminated && "text-muted-foreground line-through",
+                  )}
+                >
+                  <RadioGroupItem value={choice.id} id={choice.id} className={choiceControlClass} />
+                  <span className="font-medium">{choice.label}.</span>
+                  <span className="min-w-0 flex-1">
+                    <MathText text={choice.text} />
+                  </span>
+                  {showSolution && isStudentPick && !choice.isCorrect ? (
+                    <span className="shrink-0 rounded-md border border-destructive/40 bg-destructive/10 px-2 py-0.5 text-sm font-medium text-destructive">
+                      Selected
+                    </span>
+                  ) : null}
+                  {showSolution && choice.isCorrect ? (
+                    <CheckCircle className="h-5 w-5 shrink-0 text-success" />
+                  ) : null}
+                  {showSolution && isStudentPick && !choice.isCorrect ? (
+                    <XCircle className="h-5 w-5 shrink-0 text-destructive" />
+                  ) : null}
+                </Label>
+                {onToggleEliminate && !showSolution ? (
+                  <button
+                    type="button"
+                    className="shrink-0 self-center rounded-lg px-3 py-3 text-sm font-medium text-muted-foreground hover:text-foreground"
+                    onClick={() => onToggleEliminate(choice.id)}
+                  >
+                    {isEliminated ? "Undo" : "Eliminate"}
+                  </button>
+                ) : null}
+              </div>
+            );
+          })}
+        </RadioGroup>
       )}
 
       {question.subtype === "GRID_IN" && (

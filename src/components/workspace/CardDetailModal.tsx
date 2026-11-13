@@ -50,13 +50,14 @@ import {
 import { fetchWorksheetProgress } from "@/lib/worksheetProgressService";
 import { worksheetProgressIsStarted } from "@/lib/worksheetProgressStorage";
 import {
-  formatAssignmentDueDate,
   formatAttachmentDueDate,
   isAttachmentOverdue,
   worksheetProgressStatus,
-  WORKSHEET_PROGRESS_LABEL,
+  worksheetStatusLabel,
 } from "@/lib/dashboardStats";
+import { StatusPill, worksheetStatusTone } from "@/components/status/StatusPill";
 import { worksheetIdsOnCard } from "@/lib/cardWorksheets";
+import { resolveDemoHomeworkLink } from "@/lib/demoHomework";
 import { updateWorkspaceCard, deleteWorkspaceCard } from "@/lib/workspaceService";
 import type { WorksheetAssignment } from "@/types/assignment";
 import {
@@ -737,7 +738,7 @@ export function CardDetailModal({
           <div className="flex min-w-0 flex-col border-b border-border lg:min-h-0 lg:flex-1 lg:border-b-0 lg:border-r">
             <div className="space-y-3 px-4 pb-3 pt-4 pr-12 shrink-0 sm:px-6 sm:pt-5">
               {listTitle ? (
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                <p className="text-sm font-medium text-muted-foreground">
                   {listTitle}
                 </p>
               ) : null}
@@ -944,13 +945,17 @@ export function CardDetailModal({
                         <div key={assignment.id} className="rounded-lg border bg-background p-4 space-y-3">
                           <div>
                             <p className="font-medium">{assignment.title}</p>
-                            <p className="text-sm text-muted-foreground mt-1">
+                            <p className="mt-1 text-sm text-muted-foreground">
                               {assignment.questionIds.length} questions
-                              {formatAssignmentDueDate(assignment)
-                                ? ` · Due ${formatAssignmentDueDate(assignment)}`
-                                : ""}
-                              {` · ${WORKSHEET_PROGRESS_LABEL[worksheetProgressStatus(assignment)]}`}
                             </p>
+                            <div className="mt-2">
+                              <StatusPill tone={worksheetStatusTone(worksheetProgressStatus(assignment))}>
+                                {worksheetProgressStatus(assignment) === "assigned" &&
+                                linkedWorksheetInProgressIds.has(assignment.id)
+                                  ? "In progress"
+                                  : worksheetStatusLabel(assignment)}
+                              </StatusPill>
+                            </div>
                           </div>
                           <div className="flex flex-wrap gap-2">
                             {profile?.role === "student" && assignment.status === "todo" ? (
@@ -1413,7 +1418,8 @@ function AttachmentRow({
   const canRemove = !viewOnly && (isTutorView || isOwnAttachment);
   const canRename = !viewOnly && (isTutorView || isOwnAttachment);
   const canPreviewFile = (isPdf || isImage) && Boolean(downloadUrl);
-  const linkHref = isLink ? downloadUrl || attachment.externalUrl || null : null;
+  const rawLink = isLink ? downloadUrl || attachment.externalUrl || null : null;
+  const linkHref = rawLink ? resolveDemoHomeworkLink(rawLink) : null;
   const showHomeworkSubmit = isStudentView && !isOwnAttachment && !viewOnly;
 
   const openHref = (url: string) => {
@@ -1608,13 +1614,17 @@ function AttachmentRow({
           ) : (
             <p className="text-sm font-medium truncate">{attachment.fileName}</p>
           )}
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             Added {formatTimestamp(attachment.createdAt)}
             {attachment.uploadedByName ? ` by ${attachment.uploadedByName}` : ""}
-            {dueLabel ? ` · Due ${dueLabel}` : ""}
-            {overdue ? " · Overdue" : ""}
-            {hasSubmission ? " · Submitted" : ""}
           </p>
+          {hasSubmission || overdue || dueLabel ? (
+            <div className="mt-1.5">
+              <StatusPill tone={hasSubmission ? "finished" : overdue ? "due" : "progress"}>
+                {hasSubmission ? "Submitted" : dueLabel ? `Due ${dueLabel}` : "Overdue"}
+              </StatusPill>
+            </div>
+          ) : null}
         </div>
         <div className="flex shrink-0 flex-wrap items-center justify-end gap-1">
           {canPreviewFile ? (
@@ -1770,7 +1780,7 @@ function AttachmentRow({
               </div>
               <div className="flex items-center gap-2">
                 <div className="h-px flex-1 bg-border" />
-                <span className="text-[11px] uppercase tracking-wide text-muted-foreground">or</span>
+                <span className="text-sm text-muted-foreground">or</span>
                 <div className="h-px flex-1 bg-border" />
               </div>
               <input

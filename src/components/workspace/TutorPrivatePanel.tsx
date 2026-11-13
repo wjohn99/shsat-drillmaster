@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ChevronDown, FileText, Link2, Loader2, Paperclip, Plus, Trash2 } from "lucide-react";
+import { FileText, Link2, Loader2, Paperclip, Plus, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -248,44 +248,22 @@ export function TutorPrivatePanel({ boardId }: { boardId: string }) {
 
   return (
     <>
-      <details data-tour="tutor-private-notes" className="group rounded-xl border glass-surface mb-3">
-        <summary className="flex min-h-11 cursor-pointer list-none flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-5 [&::-webkit-details-marker]:hidden">
-          <div className="flex min-w-0 items-center gap-2">
-            <h2 className="text-sm font-semibold tracking-tight">Tutor Notes & Lesson Planning</h2>
-            <Badge variant="outline">Tutor only</Badge>
-          </div>
-          <div className="flex items-center gap-2 shrink-0">
-            {loading ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />
-            ) : notes.length > 0 ? (
-              <>
-                <span className="text-xs text-muted-foreground">
-                  {notes.length} {notes.length === 1 ? "note" : "notes"}
-                  {latestLabel ? ` · ${latestLabel}` : ""}
-                </span>
-                <span className="text-xs font-medium text-muted-foreground group-open:hidden">
-                  Show notes
-                </span>
-              </>
-            ) : (
-              <span className="text-xs font-medium text-muted-foreground group-open:hidden">
-                Add a lesson plan
-              </span>
-            )}
-            <span className="hidden text-xs font-medium text-muted-foreground group-open:inline">
-              Hide notes
+      <div data-tour="tutor-private-notes" className="space-y-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <h3 className="text-sm font-semibold">Tutor notes</h3>
+          <Badge variant="outline">Tutor only</Badge>
+          {loading ? (
+            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+          ) : notes.length > 0 ? (
+            <span className="text-sm text-muted-foreground">
+              {notes.length} {notes.length === 1 ? "note" : "notes"}
+              {latestLabel ? ` · ${latestLabel}` : ""}
             </span>
-            <ChevronDown
-              className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180"
-              aria-hidden
-            />
-          </div>
-        </summary>
-
-        <div className="space-y-3 border-t border-border/60 px-4 pb-4 pt-4 sm:px-5">
+          ) : null}
+        </div>
+        <div className="space-y-3">
           <p className="text-sm text-muted-foreground">
-            Lesson plans, session notes, observations, and next-session priorities. Students and
-            families cannot see this. For families, add a Latest update on the roadmap.
+            Lesson plans and session notes. Students and families cannot see this.
           </p>
           <Button type="button" size="sm" className="min-h-10" onClick={openNew}>
             <Plus className="mr-1 h-4 w-4" />
@@ -293,7 +271,7 @@ export function TutorPrivatePanel({ boardId }: { boardId: string }) {
           </Button>
           {notes.length === 0 && !loading ? (
             <p className="rounded-lg border border-dashed px-3 py-4 text-sm text-muted-foreground">
-              No tutor notes yet. Add a lesson plan, session notes, or next-session priorities.
+              No tutor notes yet.
             </p>
           ) : (
             <ul className="space-y-2">
@@ -331,7 +309,7 @@ export function TutorPrivatePanel({ boardId }: { boardId: string }) {
             </ul>
           )}
         </div>
-      </details>
+      </div>
 
       <Dialog open={composerOpen} onOpenChange={setComposerOpen}>
         <DialogContent className="max-h-[min(90dvh,900px)] max-w-2xl overflow-y-auto">

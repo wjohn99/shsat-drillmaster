@@ -16,6 +16,7 @@ import {
   type Timestamp,
   type Unsubscribe,
 } from "firebase/firestore";
+import { resolveDemoHomeworkLink } from "@/lib/demoHomework";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase";
 import {
   buildWorkspaceAttachmentStoragePath,
@@ -165,7 +166,7 @@ export function normalizeAttachmentUrl(raw: string): string {
 
 export function getAttachmentHref(attachment: WorkspaceCardAttachment): string | null {
   if (attachment.kind === "link" && attachment.externalUrl) {
-    return attachment.externalUrl;
+    return resolveDemoHomeworkLink(attachment.externalUrl);
   }
   return null;
 }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Archive, ArrowLeft, Loader2, Pencil, Plus } from "lucide-react";
+import { ArrowLeft, Loader2, Pencil, Plus } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   AlertDialog,
@@ -49,7 +49,7 @@ import type { TutorOption, WorksheetAssignment } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type { StudentRoadmap, WorkspaceBoard as WorkspaceBoardType, WorkspaceCard, WorkspaceList } from "@/types/workspace";
 import { AssignedTutorSelect } from "./AssignedTutorSelect";
-import { BoardListColumn } from "./BoardListColumn";
+import { BoardListColumn, boardListColumnWidthClass } from "./BoardListColumn";
 import { CardDetailModal } from "./CardDetailModal";
 import { EditBoardDetailsDialog } from "./EditBoardDetailsDialog";
 import { StudentQuickActions } from "./StudentQuickActions";
@@ -524,7 +524,8 @@ export function WorkspaceBoard({
       <div data-tour="student-board" className="mb-4 overflow-hidden rounded-xl border glass-surface">
         <div className="flex min-w-0">
           <div className="w-1.5 shrink-0" style={{ backgroundColor: boardAccent }} aria-hidden />
-          <div className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-3 px-3 py-3 sm:gap-4 sm:px-5 sm:py-4">
+          <div className="min-w-0 flex-1">
+          <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 px-3 py-3 sm:gap-4 sm:px-5 sm:py-4">
             <div className="flex min-w-0 items-center gap-2 sm:gap-3">
               {showBackLink ? (
                 <Button variant="ghost" size="sm" className="h-10 w-10 shrink-0 px-0 sm:h-9 sm:w-auto sm:px-3" asChild>
@@ -554,40 +555,13 @@ export function WorkspaceBoard({
                 {board.studentEmail ? (
                   <p className="truncate text-sm text-muted-foreground">{board.studentEmail}</p>
                 ) : null}
-                {!readOnly && !archived ? (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="mt-1 h-10 px-2 text-xs text-muted-foreground sm:h-8"
-                    onClick={() => setArchiveOpen(true)}
-                  >
-                    <Archive className="mr-1.5 h-3.5 w-3.5" />
-                    Archive board
-                  </Button>
-                ) : null}
-                {!readOnly ? (
-                  <div data-tour="assign-diagnostic" className="mt-2 flex items-center gap-2">
-                    <Switch
-                      id={`diagnostic-assigned-${board.id}`}
-                      checked={Boolean(board.diagnosticAssigned)}
-                      onCheckedChange={(checked) => void handleToggleDiagnosticAssigned(checked)}
-                      disabled={savingDiagnosticAssigned}
-                    />
-                    <Label
-                      htmlFor={`diagnostic-assigned-${board.id}`}
-                      className="text-xs font-normal text-muted-foreground"
-                    >
-                      Assign diagnostic
-                    </Label>
-                  </div>
-                ) : null}
               </div>
             </div>
             {!readOnly ? (
               <StudentQuickActions
                 tourId="board-actions"
-                stacked
+                layout="board"
+                onArchive={!archived ? () => setArchiveOpen(true) : undefined}
                 className="w-full sm:w-auto sm:shrink-0 sm:justify-end"
                 studentUid={board.studentUid}
                 studentName={board.studentName}
@@ -601,9 +575,6 @@ export function WorkspaceBoard({
               />
             ) : null}
           </div>
-        </div>
-      </div>
-
       {snapshot ? (
         <StudentRoadmapPanel
           snapshot={snapshot}
@@ -627,17 +598,25 @@ export function WorkspaceBoard({
             setCardModalOpen(true);
             replaceCardUrl(card.id);
           }}
+          embedded
+          aside={readOnly ? undefined : <TutorPrivatePanel boardId={boardId} />}
           settings={
             readOnly ? undefined : (
               <>
-                <AssignedTutorSelect
-                  board={board}
-                  tutors={tutors}
-                  compact
-                  onAssigned={(next) => {
-                    setBoard((prev) => (prev ? { ...prev, ...next } : prev));
-                  }}
-                />
+                <div data-tour="assign-diagnostic" className="flex items-center gap-2">
+                  <Switch
+                    id={`diagnostic-assigned-${board.id}`}
+                    checked={Boolean(board.diagnosticAssigned)}
+                    onCheckedChange={(checked) => void handleToggleDiagnosticAssigned(checked)}
+                    disabled={savingDiagnosticAssigned}
+                  />
+                  <Label
+                    htmlFor={`diagnostic-assigned-${board.id}`}
+                    className="text-sm font-normal"
+                  >
+                    Assign diagnostic
+                  </Label>
+                </div>
                 <div className="flex items-center gap-2">
                   <Switch
                     id={`diagnostic-extended-time-${board.id}`}
@@ -647,35 +626,39 @@ export function WorkspaceBoard({
                   />
                   <Label
                     htmlFor={`diagnostic-extended-time-${board.id}`}
-                    className="text-xs font-normal text-muted-foreground"
+                    className="text-sm font-normal"
                   >
-                    Extended time on diagnostic (360 min)
+                    Extended time (360 min)
                   </Label>
                 </div>
+                <AssignedTutorSelect
+                  board={board}
+                  tutors={tutors}
+                  compact
+                  onAssigned={(next) => {
+                    setBoard((prev) => (prev ? { ...prev, ...next } : prev));
+                  }}
+                />
               </>
             )
           }
         />
       ) : null}
-
-      {!readOnly ? <TutorPrivatePanel boardId={boardId} /> : null}
+          </div>
+        </div>
+      </div>
 
       <div className="mb-2 px-1">
-        <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+        <p className="text-sm font-medium text-muted-foreground">
           Session notes and homework
         </p>
-        {!readOnly ? (
-          <p className="text-xs text-muted-foreground">
-            Students and families see these lists. Keep lesson plans in Tutor notes above.
-          </p>
-        ) : null}
       </div>
       <div
         data-tour="board-lists"
-        className="flex flex-col items-stretch gap-4 pb-6 sm:min-h-[calc(100dvh-12rem)] sm:flex-row sm:items-start sm:overflow-x-auto sm:overscroll-x-contain sm:snap-x sm:snap-proximity sm:-mx-3 sm:px-3 md:-mx-4 md:px-4"
+        className="flex flex-col items-stretch gap-4 pb-6 sm:min-h-[calc(100dvh-12rem)] sm:flex-row sm:items-start sm:overflow-x-auto sm:overscroll-x-contain sm:snap-x sm:snap-proximity"
       >
         {lists.length === 0 ? (
-          <div className="w-full rounded-xl border border-dashed border-border bg-muted/40 px-4 py-6 sm:w-72 sm:shrink-0 sm:snap-start">
+          <div className={`rounded-xl border border-dashed border-border bg-muted/40 px-4 py-6 sm:shrink-0 sm:snap-start ${boardListColumnWidthClass}`}>
             <p className="text-sm text-muted-foreground">
               {canCreateListsAndCards
                 ? readOnly
@@ -715,7 +698,7 @@ export function WorkspaceBoard({
         ))}
 
         {canCreateListsAndCards && (
-          <div className="w-full sm:w-72 sm:shrink-0 sm:snap-start">
+          <div className={`sm:shrink-0 sm:snap-start ${boardListColumnWidthClass}`}>
             {addingList ? (
               <div className="space-y-2 rounded-xl border glass-surface p-3">
                 <Input

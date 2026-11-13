@@ -1,12 +1,23 @@
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
+  increment,
   query,
   setDoc,
   Timestamp,
+  updateDoc,
   writeBatch,
 } from "firebase/firestore";
+import {
+  DEMO_SAMPLE_HOMEWORK_ATTACHMENT_ID,
+  DEMO_SAMPLE_HOMEWORK_CARD_DESCRIPTION,
+  DEMO_SAMPLE_HOMEWORK_CARD_ID,
+  DEMO_SAMPLE_HOMEWORK_CARD_TITLE,
+  DEMO_SAMPLE_HOMEWORK_LINK_NAME,
+  DEMO_SAMPLE_HOMEWORK_URL,
+} from "@/lib/demoHomework";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase";
 import { serializeStudentRoadmap } from "@/lib/studentRoadmap";
 import type { StudentOption } from "@/types/assignment";
@@ -442,7 +453,99 @@ export async function ensureDemoSandbox(ownerUid: string): Promise<WorkspaceBoar
     }
   }
 
+  await ensureDemoSampleHomework(ownerUid, tutorName);
+
   return fetchDemoOwnedBoards(ownerUid);
+}
+
+async function ensureDemoSampleHomework(ownerUid: string, uploaderName: string): Promise<void> {
+  const boardId = demoSandboxBoardId(ownerUid, "avery");
+  const db = getFirebaseDb();
+  const boardSnap = await getDoc(doc(db, BOARDS_COLLECTION, boardId));
+  if (!boardSnap.exists()) return;
+
+  const cardsSnap = await getDocs(collection(db, BOARDS_COLLECTION, boardId, "cards"));
+  const titled = cardsSnap.docs.filter(
+    (cardDoc) => cardDoc.data().title === DEMO_SAMPLE_HOMEWORK_CARD_TITLE,
+  );
+  const activeCard = titled.find((cardDoc) => !cardDoc.data().deletedAt);
+  if (!activeCard && titled.length > 0) return;
+
+  let cardId = activeCard?.id;
+  if (!cardId) {
+    const listsSnap = await getDocs(collection(db, BOARDS_COLLECTION, boardId, "lists"));
+    const homework = listsSnap.docs.find((listDoc) => {
+      const data = listDoc.data();
+      return !data.deletedAt && String(data.title || "").trim().toLowerCase() === "homework";
+    });
+    let listId = homework?.id;
+    if (!listId) {
+      const listRef = doc(collection(db, BOARDS_COLLECTION, boardId, "lists"));
+      const positions = listsSnap.docs.map((listDoc) => Number(listDoc.data().position) || 0);
+      await setDoc(listRef, {
+        title: "Homework",
+        kind: "custom",
+        position: positions.length ? Math.max(...positions) + 1 : 0,
+        createdAt: Timestamp.now(),
+      });
+      listId = listRef.id;
+    }
+
+    const stableRef = doc(db, BOARDS_COLLECTION, boardId, "cards", DEMO_SAMPLE_HOMEWORK_CARD_ID);
+    const stableSnap = await getDoc(stableRef);
+    const cardRef =
+      stableSnap.exists() && stableSnap.data().title !== DEMO_SAMPLE_HOMEWORK_CARD_TITLE
+        ? doc(collection(db, BOARDS_COLLECTION, boardId, "cards"))
+        : stableRef;
+    if (stableSnap.exists() && stableSnap.data().deletedAt && cardRef.id === stableRef.id) return;
+
+    const cardPositions = cardsSnap.docs
+      .filter((cardDoc) => cardDoc.data().listId === listId && !cardDoc.data().deletedAt)
+      .map((cardDoc) => Number(cardDoc.data().position) || 0);
+    if (!stableSnap.exists() || cardRef.id !== stableRef.id) {
+      await setDoc(cardRef, {
+        listId,
+        title: DEMO_SAMPLE_HOMEWORK_CARD_TITLE,
+        description: DEMO_SAMPLE_HOMEWORK_CARD_DESCRIPTION,
+        position: cardPositions.length ? Math.max(...cardPositions) + 1 : 0,
+        completed: false,
+        commentCount: 0,
+        attachmentCount: 0,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+      });
+    }
+    cardId = cardRef.id;
+  }
+
+  const attachmentRef = doc(
+    db,
+    BOARDS_COLLECTION,
+    boardId,
+    "cards",
+    cardId,
+    "attachments",
+    DEMO_SAMPLE_HOMEWORK_ATTACHMENT_ID,
+  );
+  const attachmentSnap = await getDoc(attachmentRef);
+  if (attachmentSnap.exists()) return;
+
+  const user = getFirebaseAuth().currentUser;
+  if (!user) return;
+  await setDoc(attachmentRef, {
+    kind: "link",
+    fileName: DEMO_SAMPLE_HOMEWORK_LINK_NAME,
+    externalUrl: DEMO_SAMPLE_HOMEWORK_URL,
+    contentType: "text/link",
+    sizeBytes: 0,
+    uploadedByUid: user.uid,
+    uploadedByName: uploaderName.slice(0, 200) || "Tutor",
+    createdAt: Timestamp.now(),
+  });
+  await updateDoc(doc(db, BOARDS_COLLECTION, boardId, "cards", cardId), {
+    attachmentCount: increment(1),
+    updatedAt: Timestamp.now(),
+  });
 }
 
 export async function fetchDemoStudents(ownerUid: string): Promise<StudentOption[]> {

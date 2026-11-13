@@ -6,6 +6,7 @@ import {
   Circle,
   Flame,
   Loader2,
+  ChevronDown,
   Play,
   Target,
   TrendingUp,
@@ -13,19 +14,22 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { StatusPill, worksheetStatusTone } from "@/components/status/StatusPill";
 import { Progress } from "@/components/ui/progress";
 import { DashboardShell } from "./DashboardShell";
 import { StatTile } from "./StatTile";
 import { AccuracyTrendChart } from "./AccuracyTrendChart";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchAssignmentsForStudent } from "@/lib/assignmentService";
-import { DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE } from "@/lib/diagnosticAccess";
+import { diagnosticAssignmentStatusLine } from "@/lib/diagnosticAccess";
+import type { DiagnosticExamSave } from "@/lib/diagnosticExamStorage";
 import { fetchDiagnosticProgress } from "@/lib/diagnosticProgressService";
 import { fetchPracticeSessionsForStudent } from "@/lib/practiceSessionService";
 import { fetchWorksheetProgressForUser } from "@/lib/worksheetProgressService";
 import { worksheetProgressIsStarted } from "@/lib/worksheetProgressStorage";
 import { loadTutorVisibleStudentView } from "@/lib/studentView";
 import type { ViewAsStudent } from "@/lib/viewAsStudent";
+import { assembleDiagnosticExam, diagnosticResumePlace } from "@/lib/shsatDiagnostic";
 import { fetchWorkspaceBoard } from "@/lib/workspaceService";
 import {
   buildStudentDashboardAnalytics,
@@ -35,11 +39,13 @@ import {
   countOpenAssignments,
   formatAssignmentDate,
   getNextTodoAssignment,
+  worksheetProgressStatus,
+  worksheetStatusLabel,
 } from "@/lib/dashboardStats";
 import type { WorksheetAssignment } from "@/types/assignment";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type { WorksheetsLocationState } from "@/types/worksheetsNavigation";
-import { WorksheetEmptyState } from "@/components/worksheets/WorksheetEmptyState";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 const PREVIEW_LIMIT = 3;
 
@@ -55,6 +61,8 @@ export function StudentDashboard({ viewAs = null }: { viewAs?: ViewAsStudent | n
   const [diagnosticSessions, setDiagnosticSessions] = useState<PracticeSessionRecord[]>([]);
   const [diagnosticAssigned, setDiagnosticAssigned] = useState(false);
   const [diagnosticInProgress, setDiagnosticInProgress] = useState(false);
+  const [diagnosticSave, setDiagnosticSave] = useState<DiagnosticExamSave | null>(null);
+  const diagnosticExam = useMemo(() => assembleDiagnosticExam(), []);
   const [inProgressAssignmentIds, setInProgressAssignmentIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -74,6 +82,7 @@ export function StudentDashboard({ viewAs = null }: { viewAs?: ViewAsStudent | n
           setDiagnosticSessions(visible.sessions.filter((s) => s.sessionType === "diagnostic"));
           setDiagnosticAssigned(Boolean(visible.board?.diagnosticAssigned));
           setDiagnosticInProgress(visible.diagnosticInProgress);
+          setDiagnosticSave(null);
           setInProgressAssignmentIds(new Set());
           return;
         }
@@ -93,6 +102,7 @@ export function StudentDashboard({ viewAs = null }: { viewAs?: ViewAsStudent | n
         setDiagnosticSessions(allSessions.filter((s) => s.sessionType === "diagnostic"));
         setDiagnosticAssigned(Boolean(board?.diagnosticAssigned));
         setDiagnosticInProgress(Boolean(progress));
+        setDiagnosticSave(progress);
         setInProgressAssignmentIds(
           new Set(
             worksheetProgress
@@ -126,6 +136,13 @@ export function StudentDashboard({ viewAs = null }: { viewAs?: ViewAsStudent | n
   );
 
   const nextAssignment = useMemo(() => getNextTodoAssignment(assignments), [assignments]);
+  const resumeWorksheet =
+    assignments.find(
+      (assignment) => assignment.status === "todo" && inProgressAssignmentIds.has(assignment.id),
+    ) ?? null;
+  const leadWorksheet = resumeWorksheet ?? nextAssignment;
+  const showDiagnosticLead = !leadWorksheet && (diagnosticInProgress || diagnosticAssigned);
+  const diagnosticPlace = diagnosticSave ? diagnosticResumePlace(diagnosticExam, diagnosticSave) : null;
   const openCount = countOpenAssignments(assignments);
   const completedCount = assignments.filter((a) => a.status === "completed").length;
   const recentPreview = assignments.slice(0, PREVIEW_LIMIT);
@@ -192,39 +209,74 @@ export function StudentDashboard({ viewAs = null }: { viewAs?: ViewAsStudent | n
       }
     >
       <div className="space-y-8">
-        {nextAssignment ? (
-          <Card className="border-border">
+        {leadWorksheet ? (
+          <Card className="border-primary/20">
             <CardHeader>
-              <p className="text-xs font-medium text-primary uppercase tracking-wide">
-                Up next
+              <p className="text-sm font-medium text-primary">
+                {resumeWorksheet ? "Resume" : "Start"}
               </p>
-              <CardTitle>{nextAssignment.title}</CardTitle>
+              <CardTitle className="text-2xl">{leadWorksheet.title}</CardTitle>
               <CardDescription>
-                From your tutor · {nextAssignment.questionIds.length} questions
-                {formatAssignmentDate(nextAssignment)
-                  ? ` · Assigned ${formatAssignmentDate(nextAssignment)}`
+                From your tutor · {leadWorksheet.questionIds.length} questions
+                {formatAssignmentDate(leadWorksheet)
+                  ? ` · Assigned ${formatAssignmentDate(leadWorksheet)}`
                   : ""}
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex flex-col items-start gap-3">
+              <StatusPill tone={worksheetStatusTone(worksheetProgressStatus(leadWorksheet))}>
+                {resumeWorksheet && worksheetProgressStatus(leadWorksheet) !== "due"
+                  ? "In progress"
+                  : worksheetStatusLabel(leadWorksheet)}
+              </StatusPill>
               {preview ? (
                 <p className="text-sm text-muted-foreground">
                   {viewAs?.displayName} starts this worksheet from their account.
                 </p>
               ) : (
-                <Button onClick={() => startAssignment(nextAssignment)}>
-                  <Play className="h-5 w-5 mr-2" />
-                  {inProgressAssignmentIds.has(nextAssignment.id) ? "Resume assignment" : "Start assignment"}
-                </Button>
+                <div className="flex flex-wrap gap-2">
+                  <Button size="lg" onClick={() => startAssignment(leadWorksheet)}>
+                    <Play className="h-5 w-5 mr-2" />
+                    {resumeWorksheet ? "Resume" : "Start"}
+                  </Button>
+                  {diagnosticInProgress ? (
+                    <Button size="lg" variant="outline" asChild>
+                      <Link to="/practice/diagnostic">Resume diagnostic</Link>
+                    </Button>
+                  ) : diagnosticAssigned ? (
+                    <Button size="lg" variant="outline" asChild>
+                      <Link to="/practice/diagnostic">Open diagnostic</Link>
+                    </Button>
+                  ) : null}
+                </div>
               )}
             </CardContent>
           </Card>
-        ) : null}
+        ) : showDiagnosticLead ? null : (
+          <Card>
+            <CardHeader>
+              <p className="text-sm font-medium text-primary">Start</p>
+              <CardTitle className="text-2xl">Practice on your own</CardTitle>
+              <CardDescription>No worksheet or diagnostic is waiting.</CardDescription>
+            </CardHeader>
+            {preview ? null : (
+              <CardContent>
+                <Button size="lg" asChild>
+                  <Link to="/practice">
+                    <Play className="h-5 w-5 mr-2" />
+                    Start practice
+                  </Link>
+                </Button>
+              </CardContent>
+            )}
+          </Card>
+        )}
 
+        {showDiagnosticLead ? (
         <Card className="border-primary/20">
           <CardHeader>
-            <p className="text-xs font-medium text-primary uppercase tracking-wide">
-              Full exam
+            <p className="text-sm font-medium text-primary">
+              {diagnosticInProgress ? "Resume" : "Start"}
             </p>
             <CardTitle className="text-2xl">SHSAT diagnostic</CardTitle>
             <CardDescription>
@@ -232,19 +284,32 @@ export function StudentDashboard({ viewAs = null }: { viewAs?: ViewAsStudent | n
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-start gap-3">
+            <StatusPill
+              tone={diagnosticInProgress || diagnosticAssigned ? "progress" : "neutral"}
+            >
+              {diagnosticInProgress ? "In progress" : diagnosticAssigned ? "Assigned" : "Not assigned"}
+            </StatusPill>
+            <p className="text-sm text-muted-foreground">
+              {preview
+                ? diagnosticAssigned
+                  ? "The diagnostic is assigned. Results show here after they submit."
+                  : "The diagnostic is not assigned yet."
+                : diagnosticAssignmentStatusLine(diagnosticAssigned, diagnosticInProgress)}
+              {!preview && diagnosticPlace ? ` Saved at ${diagnosticPlace}.` : ""}
+            </p>
             <div className="flex flex-wrap gap-2">
-            {preview ? null : diagnosticAssigned ? (
-              <Button size="lg" asChild>
-                <Link to="/practice/diagnostic">
-                  <Play className="h-5 w-5 mr-2" />
-                  Open diagnostic
-                </Link>
-              </Button>
-            ) : diagnosticInProgress ? (
+            {preview ? null : diagnosticInProgress ? (
               <Button size="lg" asChild>
                 <Link to="/practice/diagnostic">
                   <Play className="h-5 w-5 mr-2" />
                   Resume diagnostic
+                </Link>
+              </Button>
+            ) : diagnosticAssigned ? (
+              <Button size="lg" asChild>
+                <Link to="/practice/diagnostic">
+                  <Play className="h-5 w-5 mr-2" />
+                  Open diagnostic
                 </Link>
               </Button>
             ) : (
@@ -288,23 +353,57 @@ export function StudentDashboard({ viewAs = null }: { viewAs?: ViewAsStudent | n
               </>
             ) : null}
             </div>
-            {preview ? (
-              <p className="text-sm text-muted-foreground">
-                {diagnosticAssigned
-                  ? "The diagnostic is assigned. Results show here after they submit."
-                  : "The diagnostic is not assigned yet."}
-              </p>
-            ) : !diagnosticAssigned ? (
-              <p className="text-sm text-muted-foreground">
-                {diagnosticInProgress
-                  ? "You can resume this sitting. Your tutor has to assign the diagnostic before you can start a new one."
-                  : DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE}
-              </p>
-            ) : null}
           </CardContent>
         </Card>
+        ) : null}
 
-        {!nextAssignment ? <WorksheetEmptyState role="student" /> : null}
+        {diagnosticSessions.length > 0 && !showDiagnosticLead ? (
+          <Collapsible>
+            <Card>
+              <CollapsibleTrigger className="flex w-full items-center justify-between gap-3 px-6 py-4 text-left">
+                <span>
+                  <span className="block text-lg font-semibold">Scores</span>
+                  <span className="mt-1 block text-sm text-muted-foreground">
+                    Diagnostic results from finished sittings
+                  </span>
+                </span>
+                <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <CardContent className="flex flex-wrap gap-2 pt-0">
+                  {diagnosticSessions.length === 1 ? (
+                    <Button variant="outline" asChild>
+                      <Link to="/practice/diagnostic" state={{ reviewSession: diagnosticSessions[0] }}>
+                        View results
+                      </Link>
+                    </Button>
+                  ) : (
+                    <>
+                      <Button variant="outline" asChild>
+                        <Link
+                          to="/practice/diagnostic"
+                          state={{
+                            reviewSession: [...diagnosticSessions].sort(
+                              (a, b) =>
+                                (a.completedAt?.toMillis?.() ?? 0) - (b.completedAt?.toMillis?.() ?? 0),
+                            )[0],
+                          }}
+                        >
+                          Diagnostic results
+                        </Link>
+                      </Button>
+                      <Button variant="outline" asChild>
+                        <Link to="/practice/diagnostic" state={{ reviewSession: diagnosticSessions[0] }}>
+                          View latest results
+                        </Link>
+                      </Button>
+                    </>
+                  )}
+                </CardContent>
+              </CollapsibleContent>
+            </Card>
+          </Collapsible>
+        ) : null}
 
         <section className="grid sm:grid-cols-2 gap-4">
           <StatTile
@@ -433,7 +532,7 @@ export function StudentDashboard({ viewAs = null }: { viewAs?: ViewAsStudent | n
                               ? "Diagnostic"
                               : "Self-practice"}
                         </Badge>
-                        <span className="text-xs text-muted-foreground">{item.dateLabel}</span>
+                        <span className="text-sm text-muted-foreground">{item.dateLabel}</span>
                       </div>
                       <p className="font-medium truncate">{item.title}</p>
                       <p className="text-sm text-muted-foreground">
@@ -477,9 +576,11 @@ export function StudentDashboard({ viewAs = null }: { viewAs?: ViewAsStudent | n
                       </p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      <Badge variant={row.status === "completed" ? "secondary" : "default"}>
-                        {row.status === "completed" ? "Done" : "Assigned"}
-                      </Badge>
+                      <StatusPill tone={worksheetStatusTone(worksheetProgressStatus(row))}>
+                        {worksheetProgressStatus(row) === "assigned" && inProgressAssignmentIds.has(row.id)
+                          ? "In progress"
+                          : worksheetStatusLabel(row)}
+                      </StatusPill>
                       {row.status === "completed" ? (
                         <Button size="sm" variant="outline" onClick={() => openAssignmentResults(row)}>
                           View results

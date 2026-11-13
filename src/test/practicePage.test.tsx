@@ -35,6 +35,7 @@ vi.mock("@/lib/diagnosticProgressService", () => ({
 import Practice from "@/pages/Practice";
 import { fetchPracticeSessionsForStudent } from "@/lib/practiceSessionService";
 import { fetchWorksheetProgressForUser } from "@/lib/worksheetProgressService";
+import { fetchWorkspaceBoard } from "@/lib/workspaceService";
 
 function stamp(iso: string) {
   const date = new Date(iso);
@@ -90,6 +91,10 @@ describe("Practice page", () => {
     expect(screen.getAllByText("Next: topics, module, and set size.")).toHaveLength(3);
     expect(screen.getByText("Unfinished set, question 3 of 5.")).toBeTruthy();
 
+    const status = await screen.findByText("Assigned. You can start when you are ready.");
+    const openDiagnostic = screen.getByRole("link", { name: /Open diagnostic/ });
+    expect(status.compareDocumentPosition(openDiagnostic) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+
     const resume = screen.getByRole("link", { name: /Resume/ });
     expect(resume.getAttribute("href")).toBe("/practice-set?type=math&resume=1");
     expect(screen.getByRole("link", { name: "New set" }).getAttribute("href")).toBe("/practice/math");
@@ -100,5 +105,24 @@ describe("Practice page", () => {
       "Results, Mar 2, 2026",
       "Results, Nov 9, 2026",
     ]);
+  });
+
+  it("shows that the diagnostic is not assigned before the start button", async () => {
+    vi.mocked(fetchPracticeSessionsForStudent).mockResolvedValue([]);
+    vi.mocked(fetchWorksheetProgressForUser).mockResolvedValue([]);
+    vi.mocked(fetchWorkspaceBoard).mockResolvedValue({ diagnosticAssigned: false } as never);
+
+    render(
+      <MemoryRouter>
+        <Practice />
+      </MemoryRouter>,
+    );
+
+    const status = await screen.findByText(
+      "Your tutor has to assign this diagnostic before you can start it.",
+    );
+    const start = screen.getByRole("button", { name: /Open diagnostic/ });
+    expect(start.hasAttribute("disabled")).toBe(true);
+    expect(status.compareDocumentPosition(start) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 });

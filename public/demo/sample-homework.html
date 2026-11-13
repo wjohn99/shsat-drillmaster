@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sample homework</title>
+  <style>
+    body {
+      margin: 0;
+      background: #f7f6f3;
+      color: #1c1917;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+    main {
+      max-width: 40rem;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem;
+    }
+    .note {
+      font-family: system-ui, sans-serif;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      background: #fff;
+      border: 1px solid #e7e5e4;
+      border-radius: 0.75rem;
+      padding: 0.9rem 1rem;
+      margin: 0 0 1.25rem;
+    }
+    label {
+      display: block;
+      font-family: system-ui, sans-serif;
+      font-size: 0.75rem;
+      font-weight: 650;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin: 1rem 0 0.35rem;
+    }
+    input, textarea {
+      width: 100%;
+      box-sizing: border-box;
+      font: 1rem/1.4 system-ui, sans-serif;
+      padding: 0.65rem 0.75rem;
+      border: 1px solid #d6d3d1;
+      border-radius: 0.5rem;
+      background: #fff;
+    }
+    textarea { min-height: 8rem; resize: vertical; }
+    button {
+      margin-top: 1.25rem;
+      font: 600 1rem/1 system-ui, sans-serif;
+      background: #1c1917;
+      color: #fff;
+      border: 0;
+      border-radius: 999px;
+      padding: 0.8rem 1.4rem;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.65; cursor: default; }
+    #status {
+      font-family: system-ui, sans-serif;
+      min-height: 1.4rem;
+      margin-top: 0.9rem;
+      font-weight: 650;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Sample homework</h1>
+    <p class="note">
+      This is the sample page on Avery Chen's board. Press Submit the same way a student turns in homework.
+      It sends a real response to the student homework form. The name and answers start out labeled as a demo, so the row can be deleted.
+    </p>
+    <form
+      id="homework"
+      method="POST"
+      action="https://docs.google.com/forms/d/e/1FAIpQLSeFIS70jbALi6uQMiKul9Qd_5q6oavkXsUat4Aqdm-axclqoA/formResponse"
+      target="hf"
+      accept-charset="UTF-8"
+    >
+      <label for="student-name">Full name</label>
+      <input id="student-name" name="entry.469494776" required value="Avery Chen (sample)" />
+      <label for="answers">Answers</label>
+      <textarea id="answers" name="entry.1222803705" required>DEMO sample homework from Avery Chen. Please delete this row.</textarea>
+      <button id="submit" type="submit">Submit</button>
+    </form>
+    <p id="status" role="status"></p>
+    <iframe name="hf" hidden title="Submission result"></iframe>
+  </main>
+  <script>
+    var form = document.getElementById("homework");
+    var button = document.getElementById("submit");
+    var status = document.getElementById("status");
+    form.addEventListener("submit", function () {
+      button.disabled = true;
+      button.textContent = "Submitted";
+      status.textContent = "Submitted. Nice work!";
+    });
+  </script>
+</body>
+</html>

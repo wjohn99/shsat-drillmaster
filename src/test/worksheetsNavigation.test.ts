@@ -3,9 +3,11 @@ import {
   WORKSHEET_SELF_SCOPE_ID,
 } from "@/lib/worksheetProgressStorage";
 import {
+  openCurrentWorksheetNavState,
   parseWorksheetAttemptParam,
   worksheetAttemptSearch,
 } from "@/types/worksheetsNavigation";
+import type { WorksheetAssignment } from "@/types/assignment";
 
 describe("worksheet attempt URL", () => {
   it("round-trips an assignment id and custom practice scope", () => {
@@ -13,6 +15,14 @@ describe("worksheet attempt URL", () => {
     expect(parseWorksheetAttemptParam(worksheetAttemptSearch(WORKSHEET_SELF_SCOPE_ID))).toBe(
       WORKSHEET_SELF_SCOPE_ID,
     );
+  });
+
+  it("opens the current worksheet and returns to the dashboard", () => {
+    const assignment = { id: "assign-9", title: "Algebra set" } as WorksheetAssignment;
+    expect(openCurrentWorksheetNavState(assignment, { returnTo: "/dashboard" })).toEqual({
+      openAssignment: assignment,
+      returnTo: "/dashboard",
+    });
   });
 
   it("reads the attempt from a full worksheets URL search string", () => {

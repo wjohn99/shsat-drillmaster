@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   diagnosticResultButtonLabel,
   diagnosticSessionsByDate,
+  diagnosticSittingDate,
 } from "@/lib/diagnosticResultLabel";
 
 function session(id: string, iso: string, attemptNumber?: number) {
@@ -21,6 +22,17 @@ describe("diagnostic result labels", () => {
     expect(ordered.map((row) => row.id)).toEqual(["earlier", "later"]);
     expect(diagnosticResultButtonLabel(earlier, ordered)).toBe("Results, Mar 2, 2026");
     expect(diagnosticResultButtonLabel(later, ordered)).toBe("Results, Nov 9, 2026");
+  });
+
+  it("reads a sitting date after navigation drops the timestamp methods", () => {
+    const date = new Date(2026, 2, 2, 15, 0, 0);
+    const ms = date.getTime();
+    expect(
+      diagnosticSittingDate({
+        completedAt: { seconds: Math.floor(ms / 1000), nanoseconds: (ms % 1000) * 1e6 },
+      }),
+    ).toBe("Mar 2, 2026");
+    expect(diagnosticSittingDate({ completedAt: null })).toBe("Date unavailable");
   });
 
   it("adds the time when two sittings share a day", () => {

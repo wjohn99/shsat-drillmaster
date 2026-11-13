@@ -6,9 +6,10 @@ import { BoardListColumn } from "@/components/workspace/BoardListColumn";
 import type { WorksheetAssignment } from "@/types/assignment";
 import type { WorkspaceCard, WorkspaceList } from "@/types/workspace";
 
+const futureDue = new Date(2099, 0, 15);
 const dueAt = {
-  toDate: () => new Date(2026, 10, 2),
-  toMillis: () => Date.UTC(2026, 10, 2),
+  toDate: () => futureDue,
+  toMillis: () => futureDue.getTime(),
 } as Timestamp;
 
 const list: WorkspaceList = {
@@ -63,7 +64,7 @@ describe("assigned worksheet on a session card", () => {
     );
 
     expect(screen.getByText("10.12.26 Session 2")).toBeTruthy();
-    expect(screen.getByText("Assigned")).toBeTruthy();
+    expect(screen.getByText(/Assigned, due/)).toBeTruthy();
     expect(document.querySelector("[data-tour='assigned-worksheet']")).toBeTruthy();
   });
 });

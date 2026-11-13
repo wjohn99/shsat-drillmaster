@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
   isPracticeSetType,
+  PINNED_PRACTICE_SCOPE_ID,
+  practiceSetIsResumable,
   practiceSetScopeId,
   practiceSetTypeFromScopeId,
   restoredPracticeQuestions,
+  sameQuestionOrder,
   unfinishedSetLabel,
 } from "@/lib/practiceSetProgress";
 
@@ -15,6 +18,15 @@ describe("practice set progress", () => {
     );
     expect(practiceSetTypeFromScopeId("self")).toBeNull();
     expect(isPracticeSetType("diagnostic")).toBe(false);
+  });
+
+  it("resumes a set that is still on question 1", () => {
+    expect(practiceSetIsResumable({ questionIds: ["q1"] })).toBe(true);
+    expect(practiceSetIsResumable({ questionIds: [] })).toBe(false);
+    expect(practiceSetIsResumable(null)).toBe(false);
+    expect(sameQuestionOrder(["a", "b"], ["a", "b"])).toBe(true);
+    expect(sameQuestionOrder(["a"], ["b"])).toBe(false);
+    expect(PINNED_PRACTICE_SCOPE_ID).toBe("practice-set:pinned");
   });
 
   it("describes the question the student would return to", () => {

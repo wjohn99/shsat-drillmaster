@@ -12,10 +12,26 @@ import logoIcon from "@/assets/logo-icon.png";
 type SignInAudience = "student" | "parent" | "tutor" | "demo";
 
 const SIGN_IN_OPTIONS = [
-  { id: "student", label: "Student" },
-  { id: "parent", label: "Parent" },
-  { id: "tutor", label: "Tutor" },
-  { id: "demo", label: "Demo" },
+  {
+    id: "student",
+    label: "Student",
+    detail: "Opens a student account.",
+  },
+  {
+    id: "parent",
+    label: "Parent",
+    detail: "Links to one student. Does not create a student.",
+  },
+  {
+    id: "tutor",
+    label: "Tutor",
+    detail: "Only works if this email is on the tutor list.",
+  },
+  {
+    id: "demo",
+    label: "Demo",
+    detail: "Opens a sample class. Does not open a live tutor account.",
+  },
 ] as const;
 
 function isEmail(value: string): boolean {
@@ -85,7 +101,7 @@ export default function Login() {
         />
         <Wordmark tone="light" />
         <div className="relative max-w-md">
-          <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-brand-cream">
+          <p className="text-sm font-medium text-brand-cream">
             Built by tutors. For tutors.
           </p>
           <h1 className="mt-4 font-serif text-4xl font-semibold leading-[1.15] tracking-tight lg:text-5xl">
@@ -106,25 +122,10 @@ export default function Login() {
           <div className="rounded-2xl border bg-card p-7 shadow-sm sm:p-8">
           <h2 className="font-serif text-3xl font-semibold tracking-tight">Sign in</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Choose Student, Parent, Tutor, or Demo, then continue with Google.
+            Choose who is signing in. Each one opens a different kind of account.
           </p>
 
-          <div
-            role="radiogroup"
-            aria-label="Sign in as"
-            className="relative mt-6 grid grid-cols-4 rounded-full bg-foreground/[0.06] p-1 shadow-[inset_0_1px_2px_hsl(220_40%_16%/0.08)]"
-          >
-            <span
-              aria-hidden
-              className={cn(
-                "pointer-events-none absolute bottom-1 left-1 top-1 w-[calc((100%-8px)/4)] rounded-full",
-                "border border-white/80 bg-white/80 shadow-[0_6px_16px_-8px_hsl(220_40%_16%/0.45),inset_0_1px_0_hsl(0_0%_100%/0.95)]",
-                "backdrop-blur-xl transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none",
-                audience === "parent" && "translate-x-full",
-                audience === "tutor" && "translate-x-[200%]",
-                audience === "demo" && "translate-x-[300%]",
-              )}
-            />
+          <div role="radiogroup" aria-label="Sign in as" className="mt-6 grid grid-cols-2 gap-3">
             {SIGN_IN_OPTIONS.map((option) => {
               const selected = audience === option.id;
               return (
@@ -134,15 +135,21 @@ export default function Login() {
                   role="radio"
                   aria-checked={selected}
                   className={cn(
-                    "relative z-10 h-9 rounded-full text-[13px] font-medium transition-colors duration-300",
-                    selected ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+                    "rounded-xl border px-3 py-3 text-left transition-colors",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                    selected
+                      ? "border-primary bg-primary/10"
+                      : "border-border bg-background hover:bg-muted/60",
                   )}
                   onClick={() => {
                     setAudience(option.id);
                     setFormError(null);
                   }}
                 >
-                  {option.label}
+                  <span className="block text-sm font-medium">{option.label}</span>
+                  <span className="mt-1 block text-sm leading-snug text-muted-foreground">
+                    {option.detail}
+                  </span>
                 </button>
               );
             })}
@@ -166,22 +173,12 @@ export default function Login() {
               </Alert>
             )}
 
-            {audience === "student" ? (
-              <p className="text-sm text-muted-foreground">
-                Use Google to open your dashboard. No password.
-              </p>
-            ) : audience === "tutor" ? (
-              <p className="text-sm text-muted-foreground">
-                Sign in with your Google account. This opens only when that email is on the tutor list.
-              </p>
-            ) : audience === "demo" ? (
-              <p className="text-sm text-muted-foreground">
-                Sign in with Google to open or create a demo account.
-              </p>
-            ) : (
+            {audience === "parent" ? (
               <div className="space-y-3">
                 <div className="space-y-2">
-                  <Label htmlFor="student-email">Student email, first time only</Label>
+                  <Label htmlFor="student-email" className="text-sm font-medium">
+                    Student email, first time only
+                  </Label>
                   <Input
                     id="student-email"
                     type="email"
@@ -191,11 +188,11 @@ export default function Login() {
                     placeholder="student@email.com"
                   />
                 </div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   First time, enter your student's account email and sign in with your Google account. Returning parents leave this blank and sign in with your Google account.
                 </p>
               </div>
-            )}
+            ) : null}
 
             <GoogleSignInButton
               onClick={handleSignIn}

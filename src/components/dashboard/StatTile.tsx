@@ -12,7 +12,7 @@ export function StatTile({ label, value, hint }: StatTileProps) {
   return (
     <Card>
       <CardContent className="pt-5">
-        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+        <p className="text-sm font-medium text-muted-foreground">
           {label}
         </p>
         <p className="mt-2 font-serif text-3xl font-semibold tabular-nums tracking-tight">{value}</p>

@@ -6,6 +6,7 @@ import {
   type UploadMetadata,
 } from "firebase/storage";
 
+import { resolveDemoHomeworkLink } from "@/lib/demoHomework";
 import { getFirebaseStorage } from "@/lib/firebase";
 import { type WorkspaceFileContentType } from "@/lib/workspaceUploadLimits";
 import type { WorkspaceCardAttachment } from "@/types/workspace";
@@ -91,7 +92,7 @@ export async function resolveAttachmentDownloadUrl(
   attachment: WorkspaceCardAttachment,
 ): Promise<string | null> {
   if (attachment.kind === "link" && attachment.externalUrl) {
-    return attachment.externalUrl;
+    return resolveDemoHomeworkLink(attachment.externalUrl);
   }
   if (!attachment.storagePath) {
     return null;

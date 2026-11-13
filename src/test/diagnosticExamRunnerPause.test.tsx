@@ -31,6 +31,8 @@ vi.mock("@/lib/diagnosticExamStorage", async (importOriginal) => {
 });
 
 import { DiagnosticExamRunner } from "@/components/diagnostic/DiagnosticExamRunner";
+import { saveDiagnosticProgress } from "@/lib/diagnosticProgressService";
+import { persistDiagnosticSave } from "@/lib/diagnosticExamStorage";
 
 afterEach(cleanup);
 
@@ -190,5 +192,28 @@ describe("DiagnosticExamRunner submit check", () => {
     fireEvent.click(screen.getByRole("button", { name: "Back to submit check" }));
     expect(screen.getByText("No unanswered questions, 1 flagged.")).toBeTruthy();
     expect(screen.getByRole("button", { name: "Flagged question 2" })).toBeTruthy();
+  });
+
+  it("saves the current question when the page is hidden", () => {
+    render(
+      <DiagnosticExamRunner
+        exam={exam}
+        userId="student-1"
+        firstSection="MATH"
+        deadlineAt={Date.now() + 60 * 60 * 1000}
+        onExit={() => {}}
+        onComplete={() => {}}
+      />,
+    );
+    vi.mocked(persistDiagnosticSave).mockClear();
+    vi.mocked(saveDiagnosticProgress).mockClear();
+    window.dispatchEvent(new Event("pagehide"));
+    expect(persistDiagnosticSave).toHaveBeenCalled();
+    const save = vi.mocked(persistDiagnosticSave).mock.calls.at(-1)?.[1];
+    expect(save?.questionIndexInUnit).toBe(0);
+    expect(save?.sectionIndex).toBe(0);
+    expect(saveDiagnosticProgress).toHaveBeenCalledWith("student-1", expect.objectContaining({
+      questionIndexInUnit: 0,
+    }));
   });
 });

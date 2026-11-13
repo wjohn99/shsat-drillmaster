@@ -1,7 +1,9 @@
 /**
  * Email workspace activity:
  *   student posts on their board -> assigned tutor
- *   tutor posts on a student's board -> that student only
+ *   tutor posts on a student's board -> that student, and parents linked to that student
+ *   tutor posts a progress update -> parents linked to that student
+ * Student comments, work submissions, and worksheet submissions do not email parents.
  *
  * Setup:
  *   firebase functions:secrets:set MAILGUN_API_KEY
@@ -16,12 +18,15 @@
 
 const { initializeApp } = require("firebase-admin/app");
 const { getFirestore, FieldValue } = require("firebase-admin/firestore");
-const { onDocumentCreated } = require("firebase-functions/v2/firestore");
+const { onDocumentCreated, onDocumentUpdated } = require("firebase-functions/v2/firestore");
 const { onCall, HttpsError } = require("firebase-functions/v2/https");
 const { defineSecret } = require("firebase-functions/params");
 const { logger } = require("firebase-functions");
 const {
   isSendableEmail,
+  newTutorProgressUpdates,
+  parentLinkMatchesStudent,
+  parentNotifyAudience,
   workspaceBoardUrl,
   workspaceNotifyAudience,
 } = require("./workspaceNotify");
@@ -91,6 +96,76 @@ async function resolveStudentEmail(board) {
   return String(userSnap.data()?.email || "").trim();
 }
 
+async function actorIsTutor(actorUid) {
+  const uid = String(actorUid || "").trim();
+  if (!uid) return false;
+  const userSnap = await db.doc(`users/${uid}`).get();
+  if (!userSnap.exists) return false;
+  return userSnap.data()?.role === "tutor";
+}
+
+async function resolveLinkedParentEmails(board) {
+  const student = String(board?.studentUid || "").trim();
+  if (!student) return [];
+  const studentEmail = normalizeEmail(board.studentEmail);
+  const snap = await db.collection("parent_links").where("studentUid", "==", student).get();
+  const emails = [];
+  const seen = new Set();
+  for (const row of snap.docs) {
+    const data = row.data() || {};
+    if (!parentLinkMatchesStudent(data, student)) continue;
+    const email = String(data.parentEmail || "").trim();
+    const key = normalizeEmail(email);
+    if (!isSendableEmail(email) || !key || key === studentEmail || seen.has(key)) continue;
+    seen.add(key);
+    emails.push(email);
+  }
+  return emails;
+}
+
+async function notifyLinkedParents({
+  board,
+  actorUid,
+  actorName,
+  actionLabel,
+  preview,
+  cardId,
+}) {
+  if (parentNotifyAudience(board, actorUid) !== "linked_parents") return;
+  if (!(await actorIsTutor(actorUid))) {
+    logger.info("skip parent notify: actor is not a tutor", { boardId: board.id, actorUid });
+    return;
+  }
+
+  const studentUid = String(board.studentUid || "").trim();
+  const recipients = await resolveLinkedParentEmails(board);
+  if (recipients.length === 0) {
+    logger.info("skip parent notify: no linked parent", { boardId: board.id, studentUid });
+    return;
+  }
+
+  const studentName = String(board.studentName || "your student").trim() || "your student";
+  const senderName = String(actorName || board.assignedTutorName || "Your tutor").trim() || "Your tutor";
+  const appUrl = env("APP_URL", "https://stepprephub.com");
+  const boardUrl = workspaceBoardUrl(appUrl, board, cardId);
+  const previewText = clip(preview, 500);
+  const subject = `${senderName} ${actionLabel} on ${clip(studentName, 80)}'s board`;
+  const sentence = `${senderName} ${actionLabel} on ${studentName}'s board.`;
+  const text = [sentence, previewText ? `Details: ${previewText}` : null, `Open board: ${boardUrl}`]
+    .filter(Boolean)
+    .join("\n");
+  const html = `
+    <p><strong>${escapeHtml(senderName)}</strong> ${escapeHtml(actionLabel)} on ${escapeHtml(studentName)}'s board.</p>
+    ${previewText ? `<p>${escapeHtml(previewText)}</p>` : ""}
+    <p><a href="${escapeHtml(boardUrl)}">Open board</a></p>
+  `;
+
+  for (const to of recipients) {
+    await sendMailgun({ to, subject, text, html });
+    logger.info("parent notified", { boardId: board.id, studentUid, to, subject });
+  }
+}
+
 async function sendMailgun({ to, subject, text, html }) {
   const apiKey = mailgunApiKey.value();
   const domain = env("MAILGUN_DOMAIN", "mg.stepprephub.com");
@@ -131,6 +206,17 @@ async function notifyWorkspaceActivity({
   if (!audience) {
     logger.info("skip notify: no audience", { boardId, actorUid });
     return;
+  }
+
+  if (audience === "board_student") {
+    await notifyLinkedParents({
+      board,
+      actorUid,
+      actorName,
+      actionLabel,
+      preview,
+      cardId,
+    });
   }
 
   const to =
@@ -362,5 +448,30 @@ exports.onStudentAttachmentSubmission = onDocumentCreated(
       actionLabel: "submitted completed work",
       preview: data.notes || data.submissionUrl,
     });
+  },
+);
+
+exports.onTutorProgressUpdate = onDocumentUpdated(
+  {
+    ...triggerOptions,
+    document: "workspace_boards/{boardId}",
+  },
+  async (event) => {
+    const before = event.data?.before?.data() || {};
+    const after = event.data?.after?.data() || {};
+    if (after.deletedAt) return;
+    const board = { id: event.params.boardId, ...after };
+    const added = newTutorProgressUpdates(before.roadmap, after.roadmap, board);
+    for (const update of added) {
+      const preview = update.next ? `${update.changed}\nNext: ${update.next}` : update.changed;
+      await notifyLinkedParents({
+        board,
+        actorUid: update.createdByUid,
+        actorName: update.createdByName,
+        actionLabel: "posted a progress update",
+        preview,
+        cardId: update.cardId,
+      });
+    }
   },
 );

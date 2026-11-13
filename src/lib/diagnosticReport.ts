@@ -1,4 +1,5 @@
 import { isFormatTagCode, tagCategoryForCode } from "@/data/taggingScheme";
+import { completedMs } from "@/lib/diagnosticResultLabel";
 import { moduleLabel } from "@/lib/questionModule";
 import type { PracticeSessionRecord } from "@/types/practiceSession";
 import type { SessionAnalyticsEvent } from "@/types/sessionAnalytics";
@@ -186,11 +187,7 @@ export function diagnosticAttemptLabel(attemptNumber: number, total: number): st
 export function orderDiagnosticSessionsOldestFirst(
   sessions: PracticeSessionRecord[],
 ): PracticeSessionRecord[] {
-  return [...sessions].sort((a, b) => {
-    const aMs = a.completedAt?.toMillis?.() ?? 0;
-    const bMs = b.completedAt?.toMillis?.() ?? 0;
-    return aMs - bMs;
-  });
+  return [...sessions].sort((a, b) => completedMs(a) - completedMs(b));
 }
 
 export function firstAndLatestDiagnostic(

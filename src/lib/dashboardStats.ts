@@ -46,6 +46,60 @@ export function isAssignmentOverdue(assignment: WorksheetAssignment): boolean {
   return dueMs > 0 && dueMs < Date.now();
 }
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+function startOfLocalDay(ms: number): number {
+  const date = new Date(ms);
+  date.setHours(0, 0, 0, 0);
+  return date.getTime();
+}
+
+function dueMillis(assignment: { dueAt?: { toMillis?: () => number } | null }): number {
+  const due = assignment.dueAt?.toMillis?.() ?? 0;
+  return due > 0 ? due : Number.POSITIVE_INFINITY;
+}
+
+/** True when the due timestamp falls on the same local calendar day as `now`. */
+export function isAssignmentDueOnLocalDay(
+  assignment: { dueAt?: { toMillis?: () => number } | null },
+  now = Date.now(),
+): boolean {
+  const due = dueMillis(assignment);
+  if (!Number.isFinite(due)) return false;
+  const start = startOfLocalDay(now);
+  return due >= start && due < start + DAY_MS;
+}
+
+export function hasOpenAssignmentDueToday(
+  assignments: Array<{ status: WorksheetAssignment["status"]; dueAt?: WorksheetAssignment["dueAt"] }>,
+  now = Date.now(),
+): boolean {
+  return assignments.some(
+    (assignment) => assignment.status === "todo" && isAssignmentDueOnLocalDay(assignment, now),
+  );
+}
+
+type OpenAssignmentCandidate = {
+  status: WorksheetAssignment["status"];
+  dueAt?: { toMillis?: () => number } | null;
+  createdAt?: { toMillis?: () => number } | null;
+};
+
+/** Soonest open worksheet. Undated work comes after anything with a due date. */
+export function pickCurrentOpenAssignment<T extends OpenAssignmentCandidate>(
+  assignments: T[],
+): T | null {
+  const open = assignments.filter((assignment) => assignment.status === "todo");
+  if (open.length === 0) return null;
+  return [...open].sort((a, b) => {
+    const dueDelta = dueMillis(a) - dueMillis(b);
+    if (dueDelta !== 0) return dueDelta;
+    const aCreated = a.createdAt?.toMillis?.() ?? 0;
+    const bCreated = b.createdAt?.toMillis?.() ?? 0;
+    return aCreated - bCreated;
+  })[0];
+}
+
 export type WorksheetProgressStatus = "assigned" | "due" | "done";
 
 export const WORKSHEET_PROGRESS_LABEL: Record<WorksheetProgressStatus, string> = {
@@ -60,6 +114,15 @@ export function worksheetProgressStatus(
   if (assignment.status === "completed") return "done";
   if (isAssignmentOverdue(assignment)) return "due";
   return "assigned";
+}
+
+/** Status word for a worksheet pill. The due date stays on the pill while the work is open. */
+export function worksheetStatusLabel(assignment: WorksheetAssignment | null | undefined): string {
+  const status = assignment ? worksheetProgressStatus(assignment) : "assigned";
+  const dueLabel = assignment && status !== "done" ? formatAssignmentDueDate(assignment) : "";
+  if (status === "due" && dueLabel) return `Due ${dueLabel}`;
+  if (status === "assigned" && dueLabel) return `Assigned, due ${dueLabel}`;
+  return WORKSHEET_PROGRESS_LABEL[status];
 }
 
 export function pickLatestCompletedAssignment<T extends WorksheetAssignment>(

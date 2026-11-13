@@ -6,18 +6,52 @@ type DatedSession = {
   attemptNumber?: number;
 };
 
-function completedMs(session: DatedSession): number {
-  const stamp = session.completedAt;
-  if (!stamp) return 0;
-  if (typeof stamp.toMillis === "function") {
-    const ms = stamp.toMillis();
+function millisFromStamp(stamp: unknown): number {
+  if (stamp == null || stamp === "") return 0;
+  if (typeof stamp === "number") return Number.isFinite(stamp) ? stamp : 0;
+  if (stamp instanceof Date) {
+    const ms = stamp.getTime();
     return Number.isFinite(ms) ? ms : 0;
   }
-  if (typeof stamp.toDate === "function") {
-    const ms = stamp.toDate().getTime();
+  if (typeof stamp === "string") {
+    const ms = Date.parse(stamp);
     return Number.isFinite(ms) ? ms : 0;
+  }
+  if (typeof stamp !== "object") return 0;
+
+  const value = stamp as {
+    toMillis?: () => number;
+    toDate?: () => Date;
+    seconds?: number;
+    nanoseconds?: number;
+    _seconds?: number;
+    _nanoseconds?: number;
+  };
+  if (typeof value.toMillis === "function") {
+    const ms = value.toMillis();
+    if (Number.isFinite(ms)) return ms;
+  }
+  if (typeof value.toDate === "function") {
+    const ms = value.toDate().getTime();
+    if (Number.isFinite(ms)) return ms;
+  }
+  const seconds = typeof value.seconds === "number" ? value.seconds : value._seconds;
+  const nanoseconds =
+    typeof value.nanoseconds === "number" ? value.nanoseconds : value._nanoseconds ?? 0;
+  if (typeof seconds === "number" && Number.isFinite(seconds)) {
+    return seconds * 1000 + nanoseconds / 1e6;
   }
   return 0;
+}
+
+export function completedMs(session: { completedAt?: unknown } | null | undefined): number {
+  return millisFromStamp(session?.completedAt);
+}
+
+export function diagnosticSittingDate(session: { completedAt?: unknown } | null | undefined): string {
+  const ms = completedMs(session);
+  if (!ms) return "Date unavailable";
+  return formatDate(new Date(ms));
 }
 
 function formatDate(date: Date): string {

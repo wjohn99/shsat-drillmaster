@@ -3,19 +3,24 @@ import { useEffect, useMemo, useState } from "react";
 import { Header } from "@/components/layout/Header";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SubjectStripe } from "@/components/question/SubjectStripe";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { StatusPill } from "@/components/status/StatusPill";
 import { ArrowRight } from "lucide-react";
 import { SHSAT_DIAGNOSTIC_SPEC } from "@/data/shsatDiagnosticForm";
-import { DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE } from "@/lib/diagnosticAccess";
+import { diagnosticAssignmentStatusLine } from "@/lib/diagnosticAccess";
 import { fetchDiagnosticProgress } from "@/lib/diagnosticProgressService";
+import type { DiagnosticExamSave } from "@/lib/diagnosticExamStorage";
 import {
   diagnosticResultButtonLabel,
   diagnosticSessionsByDate,
 } from "@/lib/diagnosticResultLabel";
-import { assembleDiagnosticExam } from "@/lib/shsatDiagnostic";
+import { assembleDiagnosticExam, diagnosticResumePlace } from "@/lib/shsatDiagnostic";
 import {
+  PINNED_PRACTICE_SCOPE_ID,
   PRACTICE_SET_TYPE_IDS,
+  practiceSetIsResumable,
   practiceSetScopeId,
   unfinishedSetLabel,
   type PracticeSetTypeId,
@@ -25,9 +30,9 @@ import { fetchWorksheetProgressForUser } from "@/lib/worksheetProgressService";
 import {
   loadWorksheetProgressLocal,
   pickNewerWorksheetProgress,
-  worksheetProgressIsStarted,
   type WorksheetProgressSave,
 } from "@/lib/worksheetProgressStorage";
+import { practiceMissedQuestionsHref } from "@/lib/diagnosticSubmitCheck";
 import { useAuth } from "@/contexts/AuthContext";
 import { useViewAsStudent } from "@/contexts/ViewAsStudentContext";
 import { loadTutorVisibleStudentView } from "@/lib/studentView";
@@ -42,10 +47,12 @@ const Practice = () => {
   const [diagnosticSessions, setDiagnosticSessions] = useState<PracticeSessionRecord[]>([]);
   const [diagnosticAssigned, setDiagnosticAssigned] = useState(isTutor);
   const [diagnosticInProgress, setDiagnosticInProgress] = useState(false);
+  const [diagnosticSave, setDiagnosticSave] = useState<DiagnosticExamSave | null>(null);
   const [diagnosticAccessLoaded, setDiagnosticAccessLoaded] = useState(isTutor);
   const [practiceProgress, setPracticeProgress] = useState<
     Partial<Record<PracticeSetTypeId, WorksheetProgressSave>>
   >({});
+  const [pinnedProgress, setPinnedProgress] = useState<WorksheetProgressSave | null>(null);
 
   useEffect(() => {
     if (!profile || viewAs) return;
@@ -62,8 +69,10 @@ const Practice = () => {
     };
   }, [profile, viewAs]);
 
+  const accountUid = profile?.uid;
+  const accountRole = profile?.role;
   useEffect(() => {
-    if (!profile) return;
+    if (!accountUid) return;
     if (viewAs) {
       let cancelled = false;
       setDiagnosticAccessLoaded(false);
@@ -71,6 +80,7 @@ const Practice = () => {
         if (cancelled) return;
         setDiagnosticAssigned(Boolean(visible.board?.diagnosticAssigned));
         setDiagnosticInProgress(visible.diagnosticInProgress);
+        setDiagnosticSave(null);
         setDiagnosticSessions(
           visible.sessions.filter((session) => session.sessionType === "diagnostic"),
         );
@@ -80,7 +90,7 @@ const Practice = () => {
         cancelled = true;
       };
     }
-    if (profile.role === "tutor" || profile.role === "demo") {
+    if (accountRole === "tutor" || accountRole === "demo") {
       setDiagnosticAssigned(true);
       setDiagnosticAccessLoaded(true);
       return;
@@ -88,22 +98,24 @@ const Practice = () => {
     let cancelled = false;
     setDiagnosticAccessLoaded(false);
     void Promise.all([
-      fetchWorkspaceBoard(profile.uid).catch(() => null),
-      fetchDiagnosticProgress(profile.uid).catch(() => null),
+      fetchWorkspaceBoard(accountUid).catch(() => null),
+      fetchDiagnosticProgress(accountUid).catch(() => null),
     ]).then(([board, progress]) => {
       if (cancelled) return;
       setDiagnosticAssigned(Boolean(board?.diagnosticAssigned));
       setDiagnosticInProgress(Boolean(progress));
+      setDiagnosticSave(progress);
       setDiagnosticAccessLoaded(true);
     });
     return () => {
       cancelled = true;
     };
-  }, [profile, viewAs]);
+  }, [accountUid, accountRole, viewAs]);
 
   useEffect(() => {
     if (!profile?.uid || viewAs) {
       setPracticeProgress({});
+      setPinnedProgress(null);
       return;
     }
     const userId = profile.uid;
@@ -120,8 +132,14 @@ const Practice = () => {
             loadWorksheetProgressLocal(userId, scopeId),
             remote,
           );
-          if (save && worksheetProgressIsStarted(save)) next[type] = save;
+          if (practiceSetIsResumable(save)) next[type] = save;
         }
+        const pinnedRemote = rows.find((save) => save.scopeId === PINNED_PRACTICE_SCOPE_ID) ?? null;
+        const pinned = pickNewerWorksheetProgress(
+          loadWorksheetProgressLocal(userId, PINNED_PRACTICE_SCOPE_ID),
+          pinnedRemote,
+        );
+        setPinnedProgress(practiceSetIsResumable(pinned) ? pinned : null);
         setPracticeProgress(next);
       });
     return () => {
@@ -130,6 +148,12 @@ const Practice = () => {
   }, [profile, viewAs]);
 
   const canStartDiagnostic = isTutor || (!viewAs && diagnosticAssigned);
+  const diagnosticPlace =
+    !viewAs && diagnosticSave ? diagnosticResumePlace(diagnostic, diagnosticSave) : null;
+  const studentDiagnosticStatus =
+    !viewAs && !isTutor && diagnosticAccessLoaded
+      ? diagnosticAssignmentStatusLine(diagnosticAssigned, diagnosticInProgress)
+      : null;
   const datedDiagnostics =
     diagnosticSessions.length > 1 ? diagnosticSessionsByDate(diagnosticSessions) : [];
 
@@ -189,7 +213,7 @@ const Practice = () => {
         <Card className="mb-10" data-tour="diagnostic-card">
           <CardHeader className="gap-6 md:flex-row md:items-start md:justify-between">
             <div className="max-w-2xl">
-              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+              <p className="text-sm font-medium text-muted-foreground">
                 {SHSAT_DIAGNOSTIC_SPEC.testSeason}
               </p>
               <CardTitle className="mt-1 text-xl">{SHSAT_DIAGNOSTIC_SPEC.name}</CardTitle>
@@ -205,45 +229,79 @@ const Practice = () => {
             </div>
             <div className="flex shrink-0 flex-col gap-2">
               {viewAs ? (
+                <>
+                  {diagnosticAccessLoaded ? (
+                    <StatusPill
+                      tone={
+                        diagnosticSessions.length > 0
+                          ? "finished"
+                          : diagnosticAssigned
+                            ? "progress"
+                            : "neutral"
+                      }
+                    >
+                      {diagnosticSessions.length > 0
+                        ? "Finished"
+                        : diagnosticAssigned
+                          ? "Assigned"
+                          : "Not assigned"}
+                    </StatusPill>
+                  ) : null}
+                  <p className="max-w-xs text-sm text-muted-foreground">
+                    {!diagnosticAccessLoaded
+                      ? "Checking whether this diagnostic is assigned."
+                      : diagnosticSessions.length > 0
+                        ? "Open the submitted results below."
+                        : diagnosticAssigned
+                          ? "The diagnostic is assigned. Results show here after they submit."
+                          : "The diagnostic is not assigned yet."}
+                  </p>
+                </>
+              ) : !diagnosticAccessLoaded && !isTutor ? (
                 <p className="max-w-xs text-sm text-muted-foreground">
-                  {diagnosticSessions.length > 0
-                    ? "Open the submitted results below."
-                    : diagnosticAssigned
-                      ? "Results show here after they submit."
-                      : "The diagnostic is not assigned yet."}
+                  Checking whether this diagnostic is assigned.
                 </p>
-              ) : canStartDiagnostic ? (
-                <Button asChild>
-                  <Link to="/practice/diagnostic">
-                    Open diagnostic
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              ) : !viewAs && diagnosticInProgress ? (
-                <Button asChild>
-                  <Link to="/practice/diagnostic">
-                    Resume diagnostic
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
               ) : (
-                <Button disabled>
-                  Open diagnostic
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+                <>
+                  {studentDiagnosticStatus ? (
+                    <>
+                      <StatusPill tone={diagnosticInProgress || diagnosticAssigned ? "progress" : "neutral"}>
+                        {diagnosticInProgress ? "In progress" : diagnosticAssigned ? "Assigned" : "Not assigned"}
+                      </StatusPill>
+                      <p className="max-w-xs text-sm text-muted-foreground">
+                        {studentDiagnosticStatus}
+                        {diagnosticPlace ? ` Saved at ${diagnosticPlace}.` : ""}
+                      </p>
+                    </>
+                  ) : null}
+                  {diagnosticInProgress ? (
+                    <Button asChild>
+                      <Link to="/practice/diagnostic">
+                        Resume diagnostic
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
+                  ) : canStartDiagnostic ? (
+                    <Button asChild>
+                      <Link to="/practice/diagnostic">
+                        Open diagnostic
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
+                  ) : (
+                    <Button disabled>
+                      Open diagnostic
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  )}
+                </>
               )}
-              {viewAs ? null : isTutor ? (
+              {viewAs || !isTutor ? null : (
                 <p className="max-w-xs text-sm text-muted-foreground">
                   Students can see this here, and can start it only after you assign it on their
                   workspace board.
                 </p>
-              ) : diagnosticAccessLoaded && !diagnosticAssigned ? (
-                <p className="max-w-xs text-sm text-muted-foreground">
-                  {diagnosticInProgress
-                    ? "You can resume this sitting. Your tutor has to assign the diagnostic before you can start a new one."
-                    : DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE}
-                </p>
-              ) : null}
+              )}
               {diagnosticSessions.length === 1 ? (
                 <Button variant="outline" asChild>
                   <Link to="/practice/diagnostic" state={{ reviewSession: diagnosticSessions[0] }}>
@@ -263,6 +321,28 @@ const Practice = () => {
           </CardHeader>
         </Card>
 
+        {pinnedProgress ? (
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="text-lg">Missed questions</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                {unfinishedSetLabel(
+                  pinnedProgress.currentQuestionIndex,
+                  pinnedProgress.questionIds.length,
+                )}
+              </p>
+            </CardHeader>
+            <CardContent>
+              <Button asChild>
+                <Link to={practiceMissedQuestionsHref(pinnedProgress.questionIds)}>
+                  Resume
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        ) : null}
+
         <div className="mb-4">
           <h2 className="font-serif text-xl font-semibold">Skill practice</h2>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -273,9 +353,10 @@ const Practice = () => {
           {practiceTypes.map((type) => {
             const unfinished = practiceProgress[type.id];
             return (
-            <Card key={type.id} className="flex h-full flex-col">
+            <Card key={type.id} className="relative flex h-full flex-col overflow-hidden">
+              <SubjectStripe subject={type.subject} />
               <CardHeader>
-                <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                <p className="text-sm font-medium text-muted-foreground">
                   {type.subject}
                 </p>
                 <CardTitle className="mt-1 text-lg">{type.title}</CardTitle>
@@ -287,7 +368,7 @@ const Practice = () => {
                     <h4 className="mb-2 text-sm font-medium">Topics</h4>
                     <div className="flex flex-wrap content-start gap-2">
                       {type.features.map((feature, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
+                        <Badge key={index} variant="outline" className="text-sm font-normal">
                           {feature}
                         </Badge>
                       ))}

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -26,7 +26,19 @@ import {
   SECTION_OPTIONS,
 } from "@/data/questionSubmissionConstants";
 import { PassageIdCombobox } from "@/components/submission/PassageIdCombobox";
+import { StatusPill } from "@/components/status/StatusPill";
 import { getPassageText, listPassageIds } from "@/lib/passageLibrary";
+import {
+  clearQuestionSubmissionDraft,
+  emptyQuestionSubmissionDraft,
+  loadQuestionSubmissionDraft,
+  loadQuestionSubmissionReceipts,
+  questionSubmissionDraftHasContent,
+  recordQuestionSubmissionReceipt,
+  saveQuestionSubmissionDraft,
+  type QuestionSubmissionDraft,
+  type QuestionSubmissionReceipt,
+} from "@/lib/questionSubmissionDraft";
 import {
   isSheetExportConfigured,
   submitQuestion,
@@ -73,7 +85,7 @@ function Chip({
       type="button"
       onClick={onClick}
       className={cn(
-        "inline-flex items-center rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors",
+        "inline-flex items-center rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors",
         active
           ? chipActiveStyles[variant]
           : "border-border bg-background text-muted-foreground hover:bg-muted",
@@ -84,34 +96,26 @@ function Chip({
   );
 }
 
-const emptyForm = {
-  section: "" as Subject | "",
-  module: "" as QuestionModule | "",
-  type: "" as QuestionSubmissionType | "",
-  format: "INDY-MCQ" as QuestionFormatCode,
-  skillTagCodes: [] as string[],
-  author: "",
-  passageId: "",
-  passage: "",
-  question: "",
-  choiceA: "",
-  choiceB: "",
-  choiceC: "",
-  choiceD: "",
-  correctAnswer: "",
-  explanation: "",
-  commonTrap: "",
-};
+const emptyForm: QuestionSubmissionDraft = emptyQuestionSubmissionDraft;
 
 export function QuestionSubmissionForm() {
-  const { profile } = useAuth();
+  const { profile, loading } = useAuth();
   const sheetLinked = isSheetExportConfigured();
-  const [form, setForm] = useState(emptyForm);
+  const [form, setForm] = useState<QuestionSubmissionDraft>(emptyForm);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [previewId, setPreviewId] = useState<string | null>(null);
   const [passageIds, setPassageIds] = useState<string[]>(() => listPassageIds());
+  const [draftReady, setDraftReady] = useState(false);
+  const [draftNote, setDraftNote] = useState("");
+  const [receipts, setReceipts] = useState<QuestionSubmissionReceipt[]>([]);
+  const formRef = useRef(form);
+  formRef.current = form;
+  const receiptsRef = useRef<HTMLDivElement>(null);
+  const pinReceipt = useRef(false);
+  const displayNameRef = useRef(profile?.displayName ?? "");
+  displayNameRef.current = profile?.displayName ?? "";
 
   const isPassageBased = form.type ? isPassageBasedType(form.type) : false;
   const answerMode = getFormatAnswerMode(form.format);
@@ -119,10 +123,59 @@ export function QuestionSubmissionForm() {
   const choicesRequired = formatRequiresChoices(form.format);
 
   useEffect(() => {
-    if (profile?.displayName && !form.author) {
-      setForm((prev) => ({ ...prev, author: profile.displayName }));
+    if (loading) return;
+    const uid = profile?.uid;
+    if (!uid) {
+      setDraftReady(true);
+      return;
     }
-  }, [profile?.displayName, form.author]);
+    const draft = loadQuestionSubmissionDraft(uid);
+    if (draft) {
+      setForm({
+        ...draft,
+        author: draft.author || displayNameRef.current,
+      });
+      setDraftNote("Draft restored.");
+    }
+    setReceipts(loadQuestionSubmissionReceipts(uid));
+    setDraftReady(true);
+  }, [loading, profile?.uid]);
+
+  useEffect(() => {
+    if (!draftReady || !profile?.displayName) return;
+    setForm((prev) => (prev.author.trim() ? prev : { ...prev, author: profile.displayName ?? "" }));
+  }, [draftReady, profile?.displayName]);
+
+  useEffect(() => {
+    if (!draftReady || !profile?.uid) return;
+    const uid = profile.uid;
+    if (questionSubmissionDraftHasContent(form)) {
+      saveQuestionSubmissionDraft(uid, form);
+    } else {
+      clearQuestionSubmissionDraft(uid);
+    }
+  }, [draftReady, form, profile?.uid]);
+
+  useEffect(() => {
+    if (!draftReady || !profile?.uid) return;
+    const uid = profile.uid;
+    const flush = () => {
+      const current = formRef.current;
+      if (questionSubmissionDraftHasContent(current)) {
+        saveQuestionSubmissionDraft(uid, current);
+      } else {
+        clearQuestionSubmissionDraft(uid);
+      }
+    };
+    window.addEventListener("pagehide", flush);
+    return () => window.removeEventListener("pagehide", flush);
+  }, [draftReady, profile?.uid]);
+
+  useEffect(() => {
+    if (!pinReceipt.current) return;
+    pinReceipt.current = false;
+    receiptsRef.current?.scrollIntoView?.({ block: "start" });
+  }, [receipts]);
 
   const typeOptions = useMemo(
     () => (form.section ? getTypesForSection(form.section) : []),
@@ -289,19 +342,31 @@ export function QuestionSubmissionForm() {
         setPassageIds(listPassageIds());
       }
 
-      setSuccess(
-        result.pending
-          ? "Submitted for review! Refresh the Google Sheet to confirm the new row appeared. If nothing shows up, redeploy the Apps Script (see scripts/question-submission-sheet.gs)."
-          : `Submitted! Question ID: ${result.questionId}. It has been added to the question bank tracker for review.`,
-      );
-      setForm({
+      const nextForm: QuestionSubmissionDraft = {
         ...emptyForm,
         author: profile.displayName || "",
-        section: form.section as Subject,
-        module: form.module as QuestionModule,
-        type: form.type as QuestionSubmissionType,
+        section: form.section,
+        module: form.module,
+        type: form.type,
         format: form.format,
-      });
+      };
+      formRef.current = nextForm;
+      clearQuestionSubmissionDraft(profile.uid);
+      setDraftNote("");
+      pinReceipt.current = true;
+      setReceipts(
+        recordQuestionSubmissionReceipt(profile.uid, {
+          questionId: result.questionId,
+          pending: result.pending,
+          question: input.question,
+        }),
+      );
+      setSuccess(
+        result.pending
+          ? "Sent. The tracker did not return an ID. Refresh the Google Sheet to confirm the new row. If nothing shows up, redeploy the Apps Script (see scripts/question-submission-sheet.gs)."
+          : `Submitted. Question ID ${result.questionId} is In Review in the question bank tracker.`,
+      );
+      setForm(nextForm);
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Failed to submit question.";
@@ -311,20 +376,73 @@ export function QuestionSubmissionForm() {
     }
   };
 
+  if (!draftReady) {
+    return (
+      <div className="mx-auto max-w-2xl">
+        <div className="rounded-xl border bg-card p-6 shadow-sm md:p-8">
+          <h1 className="text-lg font-medium">DrillMaster Question Submission</h1>
+          <p className="mt-2 text-sm text-muted-foreground">Loading your draft.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit} className="mx-auto max-w-2xl">
       <div className="rounded-xl border bg-card p-6 shadow-sm md:p-8">
         <div className="mb-6">
           <h1 className="text-lg font-medium">DrillMaster Question Submission</h1>
+          {draftNote ? (
+            <p className="mt-2 text-sm text-muted-foreground">{draftNote}</p>
+          ) : null}
         </div>
 
-        <p className="mb-3.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-          Question metadata
-        </p>
+        {receipts.length > 0 ? (
+          <div
+            ref={receiptsRef}
+            className="sticky top-20 z-20 -mx-6 mb-8 scroll-mt-24 border-y bg-card px-6 py-4 md:-mx-8 md:px-8"
+          >
+            <p className="text-sm font-medium">Submitted</p>
+            {success ? <p className="mt-1 text-sm text-muted-foreground">{success}</p> : null}
+            <ul className="mt-3 max-h-48 space-y-2 overflow-y-auto">
+              {receipts.map((receipt) => (
+                <li
+                  key={`${receipt.submittedAt}-${receipt.questionId}`}
+                  className="rounded-lg border bg-background px-3 py-2 text-sm"
+                >
+                  <div className="flex flex-wrap items-center gap-2">
+                    <StatusPill tone={receipt.status === "In Review" ? "progress" : "neutral"}>
+                      {receipt.status}
+                    </StatusPill>
+                    {receipt.questionId ? (
+                      <span className="text-muted-foreground">{receipt.questionId}</span>
+                    ) : null}
+                  </div>
+                  {receipt.preview ? (
+                    <p className="mt-1 text-muted-foreground">{receipt.preview}</p>
+                  ) : null}
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {new Date(receipt.submittedAt).toLocaleString(undefined, {
+                      month: "short",
+                      day: "numeric",
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
+                    {receipt.pending
+                      ? ". The tracker did not return an ID. Check the Google Sheet."
+                      : ". In Review means the tracker accepted it. It joins the live question bank after approval."}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
+        <h2 className="mb-4 text-base font-medium">Setup</h2>
 
         <div className="mb-5 grid gap-3 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+            <Label className="text-sm font-medium">
               Section
             </Label>
             <div className="flex flex-wrap gap-1.5">
@@ -342,7 +460,7 @@ export function QuestionSubmissionForm() {
           </div>
 
           <div className="space-y-2">
-            <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+            <Label className="text-sm font-medium">
               Module
             </Label>
             <div className="flex flex-wrap gap-1.5">
@@ -361,7 +479,7 @@ export function QuestionSubmissionForm() {
         </div>
 
         <div className="mb-5 space-y-2">
-          <Label htmlFor="question-type" className="text-xs uppercase tracking-wide text-muted-foreground">
+          <Label htmlFor="question-type" className="text-sm font-medium">
             Question type
           </Label>
           <Select
@@ -386,10 +504,10 @@ export function QuestionSubmissionForm() {
         </div>
 
         <div className="mb-5 space-y-2">
-          <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+          <Label className="text-sm font-medium">
             Skill Tags
           </Label>
-          <p className="text-xs text-muted-foreground">Select all that apply.</p>
+          <p className="text-sm text-muted-foreground">Select all that apply.</p>
           {!form.type ? (
             <p className="text-sm text-muted-foreground">Select a question type first.</p>
           ) : (
@@ -403,7 +521,7 @@ export function QuestionSubmissionForm() {
                     title={option.label}
                     onClick={() => toggleSkillTag(option.code)}
                     className={cn(
-                      "inline-flex items-center rounded-full border px-3 py-1.5 font-mono text-xs font-medium transition-colors",
+                      "inline-flex items-center rounded-full border px-3 py-1.5 font-mono text-sm font-medium transition-colors",
                       active
                         ? "border-primary bg-primary/10 text-primary"
                         : "border-border bg-background text-muted-foreground hover:bg-muted",
@@ -418,7 +536,7 @@ export function QuestionSubmissionForm() {
         </div>
 
         <div className="mb-5 space-y-2">
-          <Label htmlFor="question-format" className="text-xs uppercase tracking-wide text-muted-foreground">
+          <Label htmlFor="question-format" className="text-sm font-medium">
             Format
           </Label>
           <Select
@@ -439,7 +557,7 @@ export function QuestionSubmissionForm() {
         </div>
 
         <div className="mb-5 space-y-2">
-          <Label htmlFor="author" className="text-xs uppercase tracking-wide text-muted-foreground">
+          <Label htmlFor="author" className="text-sm font-medium">
             Author
           </Label>
           <Input
@@ -450,25 +568,21 @@ export function QuestionSubmissionForm() {
           />
         </div>
 
-        <p className="mb-5 min-h-4 font-mono text-[11px] text-muted-foreground">
+        <p className="mb-2 min-h-5 font-mono text-sm text-muted-foreground">
           {previewId
             ? `Question ID preview: ${previewId}`
             : "Question ID will appear once type is selected"}
         </p>
 
-        <hr className="my-6 border-border" />
-
-        <p className="mb-3.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-          Question content
-        </p>
+        <h2 className="mb-4 mt-8 border-t pt-6 text-base font-medium">Question</h2>
 
         {isPassageBased && (
           <>
             <div className="mb-5 space-y-2">
-              <Label htmlFor="passage-id" className="text-xs uppercase tracking-wide text-muted-foreground">
+              <Label htmlFor="passage-id" className="text-sm font-medium">
                 Passage ID
               </Label>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-sm text-muted-foreground">
                 Select a saved passage or type a new ID. New passages are saved for reuse on this device.
               </p>
               <PassageIdCombobox
@@ -480,7 +594,7 @@ export function QuestionSubmissionForm() {
             </div>
 
             <div className="mb-5 space-y-2">
-              <Label htmlFor="passage" className="text-xs uppercase tracking-wide text-muted-foreground">
+              <Label htmlFor="passage" className="text-sm font-medium">
                 Passage
               </Label>
               <Textarea
@@ -495,7 +609,7 @@ export function QuestionSubmissionForm() {
         )}
 
         <div className="mb-5 space-y-2">
-          <Label htmlFor="question" className="text-xs uppercase tracking-wide text-muted-foreground">
+          <Label htmlFor="question" className="text-sm font-medium">
             Question
           </Label>
           <Textarea
@@ -511,19 +625,23 @@ export function QuestionSubmissionForm() {
           />
         </div>
 
+        <h2 className="mb-4 mt-8 border-t pt-6 text-base font-medium">
+          {showChoices ? "Choices" : "Answer"}
+        </h2>
+
         {showChoices && (
           <div className="mb-5 space-y-2">
-            <Label className="text-xs uppercase tracking-wide text-muted-foreground">
-              {choicesRequired ? "Choice A – D" : "Options / items"}
-              {!choicesRequired && (
-                <span className="font-normal normal-case text-muted-foreground"> (optional)</span>
-              )}
+            <Label className="text-sm font-medium">
+              {choicesRequired ? "Choices A to D" : "Options or items"}
+              {!choicesRequired ? (
+                <span className="font-normal text-muted-foreground"> (optional)</span>
+              ) : null}
             </Label>
             {(["A", "B", "C", "D"] as const).map((letter) => {
               const key = `choice${letter}` as "choiceA" | "choiceB" | "choiceC" | "choiceD";
               return (
                 <div key={letter} className="grid grid-cols-[28px_1fr] items-center gap-2">
-                  <span className="text-center text-xs font-medium text-muted-foreground">
+                  <span className="text-center text-sm font-medium text-muted-foreground">
                     {letter}
                   </span>
                   <Input
@@ -542,10 +660,10 @@ export function QuestionSubmissionForm() {
         )}
 
         <div className="mb-5 space-y-2">
-          <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+          <Label className="text-sm font-medium">
             Correct Answer
           </Label>
-          <p className="text-xs text-muted-foreground">{CORRECT_ANSWER_HINTS[answerMode]}</p>
+          <p className="text-sm text-muted-foreground">{CORRECT_ANSWER_HINTS[answerMode]}</p>
 
           {answerMode === "mcq" ? (
             <div className="grid grid-cols-4 gap-2">
@@ -585,14 +703,10 @@ export function QuestionSubmissionForm() {
           )}
         </div>
 
-        <hr className="my-6 border-border" />
-
-        <p className="mb-3.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-          Explanation
-        </p>
+        <h2 className="mb-4 mt-8 border-t pt-6 text-base font-medium">Explanation</h2>
 
         <div className="mb-5 space-y-2">
-          <Label htmlFor="explanation" className="text-xs uppercase tracking-wide text-muted-foreground">
+          <Label htmlFor="explanation" className="text-sm font-medium">
             Step-by-step explanation
           </Label>
           <Textarea
@@ -605,7 +719,7 @@ export function QuestionSubmissionForm() {
         </div>
 
         <div className="mb-5 space-y-2">
-          <Label htmlFor="common-trap" className="text-xs uppercase tracking-wide text-muted-foreground">
+          <Label htmlFor="common-trap" className="text-sm font-medium">
             Common Trap
           </Label>
           <Textarea
@@ -617,28 +731,23 @@ export function QuestionSubmissionForm() {
           />
         </div>
 
-        {error && (
-          <div className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-            {error}
-          </div>
-        )}
-
-        {success && (
-          <div className="mb-4 rounded-lg border border-[#3B6D11]/30 bg-[#EAF3DE] px-4 py-3 text-sm font-medium text-[#27500A]">
-            {success}
-          </div>
-        )}
-
-        <Button type="submit" className="w-full" disabled={submitting || !sheetLinked}>
-          {submitting ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Submitting...
-            </>
-          ) : (
-            "Submit for review"
-          )}
-        </Button>
+        <div className="sticky bottom-0 z-10 -mx-6 -mb-6 mt-8 rounded-b-xl border-t bg-card px-6 py-4 md:-mx-8 md:-mb-8 md:px-8">
+          {error ? (
+            <div className="mb-3 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+              {error}
+            </div>
+          ) : null}
+          <Button type="submit" className="w-full" disabled={submitting || !sheetLinked}>
+            {submitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Submitting...
+              </>
+            ) : (
+              "Submit for review"
+            )}
+          </Button>
+        </div>
       </div>
     </form>
   );

@@ -24,6 +24,7 @@ import {
 import { QuestionsStatus } from "@/components/questions/QuestionsStatus";
 import { useQuestions } from "@/contexts/QuestionsContext";
 import { ModuleBadge } from "@/components/question/ModuleBadge";
+import { SubjectStripe } from "@/components/question/SubjectStripe";
 import { ProvisionalBadge } from "@/components/question/ProvisionalBadge";
 import { QuestionReportsPanel } from "@/components/question/QuestionReportsPanel";
 import { QuestionReviewPanel } from "@/components/question/QuestionReviewPanel";
@@ -350,8 +351,9 @@ export default function Question() {
             )}
 
             {/* Question */}
-            <Card data-tour="question-practice">
-              <CardHeader>
+            <Card data-tour="question-practice" className="overflow-hidden">
+              <CardHeader className="relative">
+                <SubjectStripe subject={question.subject} />
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
                     <Badge variant={subjectVariant === 'math' ? 'default' : 'secondary'}>
