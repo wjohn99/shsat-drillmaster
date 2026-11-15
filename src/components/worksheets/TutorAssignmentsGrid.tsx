@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { Eye, Loader2, Printer } from "lucide-react";
+import { ChevronDown, Eye, Loader2, Printer } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { StatusPill, worksheetStatusTone } from "@/components/status/StatusPill";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { fetchDemoStudents } from "@/lib/demoSandbox";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchAssignmentsForTutor, fetchStudents } from "@/lib/assignmentService";
@@ -28,6 +29,7 @@ export function TutorAssignmentsGrid({
   const [assignments, setAssignments] = useState<TutorAssignmentRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [completedOpen, setCompletedOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -111,6 +113,9 @@ export function TutorAssignmentsGrid({
               {assignment.revealAnswers === false ? (
                 <Badge variant="outline">Cold diagnostic</Badge>
               ) : null}
+              {assignment.allowSkip === true ? (
+                <Badge variant="outline">Skipping allowed</Badge>
+              ) : null}
             </div>
             {createdLabel && (
               <span className="shrink-0 text-sm text-muted-foreground">Assigned {createdLabel}</span>
@@ -165,12 +170,22 @@ export function TutorAssignmentsGrid({
         </div>
       )}
       {completedAssignments.length > 0 && (
-        <div>
-          <h3 className="text-lg font-semibold mb-4">Completed assignments</h3>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {completedAssignments.map(renderCard)}
-          </div>
-        </div>
+        <Collapsible open={completedOpen} onOpenChange={setCompletedOpen}>
+          <CollapsibleTrigger className="group flex w-full items-center justify-between gap-3 rounded-lg py-1 text-left">
+            <h3 className="text-lg font-semibold">
+              Completed assignments
+              <span className="ml-2 text-sm font-normal text-muted-foreground">
+                {completedAssignments.length}
+              </span>
+            </h3>
+            <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+          </CollapsibleTrigger>
+          <CollapsibleContent className="pt-4">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {completedAssignments.map(renderCard)}
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
       )}
     </div>
   );

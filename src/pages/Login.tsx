@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Navigate, useLocation, useSearchParams } from "react-router-dom";
+import { isDiagnosticSignupSearch } from "@/lib/diagnosticAccess";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,22 +24,53 @@ function isEmail(value: string): boolean {
 }
 
 export default function Login() {
-  const { profile, error, isConfigured, signInWithGoogle } = useAuth();
+  const { profile, error, isConfigured, signInWithGoogle, grantDiagnosticAccess } = useAuth();
   const location = useLocation();
   const [searchParams] = useSearchParams();
+  const startDiagnostic = isDiagnosticSignupSearch(location.search);
   const [signingIn, setSigningIn] = useState(false);
+  const [openingDiagnostic, setOpeningDiagnostic] = useState(false);
   const [audience, setAudience] = useState<SignInAudience>(
-    searchParams.get("as") === "demo" ? "demo" : "student",
+    searchParams.get("as") === "demo" && !startDiagnostic ? "demo" : "student",
   );
   const [studentEmail, setStudentEmail] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
 
-  if (profile) {
+  const needsDiagnosticGrant =
+    startDiagnostic && profile?.role === "student" && profile.diagnosticAssigned !== true;
+
+  useEffect(() => {
+    if (!needsDiagnosticGrant || !profile) return;
+    let cancelled = false;
+    setOpeningDiagnostic(true);
+    void grantDiagnosticAccess()
+      .catch(() => {
+        if (!cancelled) setFormError("Could not open the diagnostic. Try again.");
+      })
+      .finally(() => {
+        if (!cancelled) setOpeningDiagnostic(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [grantDiagnosticAccess, needsDiagnosticGrant, profile]);
+
+  if (profile && needsDiagnosticGrant && !formError) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background px-6">
+        <p className="text-sm text-muted-foreground">Opening the diagnostic...</p>
+      </div>
+    );
+  }
+
+  if (profile && !needsDiagnosticGrant) {
     const from = (location.state as { from?: { pathname?: string; search?: string } } | null)?.from;
     const to =
-      from?.pathname && from.pathname !== "/login"
-        ? `${from.pathname}${from.search || ""}`
-        : "/dashboard";
+      startDiagnostic && profile.role === "student"
+        ? "/practice/diagnostic"
+        : from?.pathname && from.pathname !== "/login"
+          ? `${from.pathname}${from.search || ""}`
+          : "/dashboard";
     return <Navigate to={to} replace />;
   }
 
@@ -55,7 +87,9 @@ export default function Login() {
 
       setSigningIn(true);
       try {
-        if (audience === "tutor") {
+        if (startDiagnostic) {
+          await signInWithGoogle({ diagnostic: true });
+        } else if (audience === "tutor") {
           await signInWithGoogle({ tutor: true });
         } else if (audience === "demo") {
           await signInWithGoogle({ demo: true });
@@ -104,11 +138,16 @@ export default function Login() {
             <Wordmark tone="dark" />
           </div>
           <div className="rounded-2xl border bg-card p-7 shadow-sm sm:p-8">
-          <h2 className="font-serif text-3xl font-semibold tracking-tight">Sign in</h2>
+          <h2 className="font-serif text-3xl font-semibold tracking-tight">
+            {startDiagnostic ? "Start the diagnostic" : "Sign in"}
+          </h2>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Choose Student, Parent, Tutor, or Demo, then continue with Google.
+            {startDiagnostic
+              ? "Sign in with your Google account. The exam opens as soon as you sign in."
+              : "Choose Student, Parent, Tutor, or Demo, then continue with Google."}
           </p>
 
+          {startDiagnostic ? null : (
           <div
             role="radiogroup"
             aria-label="Sign in as"
@@ -147,6 +186,7 @@ export default function Login() {
               );
             })}
           </div>
+          )}
 
           <div className="mt-6 space-y-4">
             {!isConfigured && (
@@ -166,7 +206,11 @@ export default function Login() {
               </Alert>
             )}
 
-            {audience === "student" ? (
+            {startDiagnostic ? (
+              <p className="text-sm text-muted-foreground">
+                If a parent is helping you sign in, they should use your Google account, not theirs. No password.
+              </p>
+            ) : audience === "student" ? (
               <p className="text-sm text-muted-foreground">
                 Use Google to open your dashboard. No password.
               </p>
@@ -199,8 +243,8 @@ export default function Login() {
 
             <GoogleSignInButton
               onClick={handleSignIn}
-              loading={signingIn}
-              disabled={!isConfigured || signingIn || (audience === "parent" && !studentEmailBlank && !studentEmailReady)}
+              loading={signingIn || openingDiagnostic}
+              disabled={!isConfigured || signingIn || openingDiagnostic || (audience === "parent" && !studentEmailBlank && !studentEmailReady)}
               className="h-12 bg-background"
             />
 

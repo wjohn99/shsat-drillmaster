@@ -5,7 +5,7 @@ import { useDemoTutorial } from "@/contexts/DemoTutorialContext";
 import { useQuestionReports } from "@/contexts/QuestionReportsContext";
 import { questionReportReasonLabel } from "@/types/questionReport";
 import { toast } from "@/hooks/use-toast";
-import { ClipboardList, Eye, Loader2, UserPlus } from "lucide-react";
+import { ClipboardList, Copy, Eye, Loader2, UserPlus } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { StatusPill, diagnosticStatusTone, worksheetStatusTone } from "@/components/status/StatusPill";
@@ -18,6 +18,7 @@ import {
 import { fetchPracticeSessionsForTutor } from "@/lib/practiceSessionService";
 import { fetchDiagnosticProgressForTutor } from "@/lib/diagnosticProgressService";
 import { buildTutorDashboardAnalytics, DIAGNOSTIC_STATUS_LABEL } from "@/lib/dashboardAnalytics";
+import { DIAGNOSTIC_SIGNUP_PATH, diagnosticProspects } from "@/lib/diagnosticAccess";
 import { ensureDemoSandbox } from "@/lib/demoSandbox";
 import {
   fetchAllWorkspaceBoards,
@@ -70,6 +71,9 @@ export function TutorDashboard() {
   const [diagnosticAssignedUids, setDiagnosticAssignedUids] = useState<string[]>([]);
   const [archivedStudentCount, setArchivedStudentCount] = useState(0);
   const [dueTodayOnly, setDueTodayOnly] = useState(false);
+  const [prospects, setProspects] = useState<StudentOption[]>([]);
+  const [prospectSessions, setProspectSessions] = useState<PracticeSessionRecord[]>([]);
+  const [prospectInProgressUids, setProspectInProgressUids] = useState<string[]>([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -106,6 +110,9 @@ export function TutorDashboard() {
           );
           setSessions([]);
           setDiagnosticInProgressUids([]);
+          setProspects([]);
+          setProspectSessions([]);
+          setProspectInProgressUids([]);
           setDiagnosticAssignedUids(
             boards.filter((board) => board.diagnosticAssigned).map((board) => board.studentUid),
           );
@@ -160,10 +167,19 @@ export function TutorDashboard() {
             studentName: nameByUid.get(a.assignedToStudentUid) ?? "Student",
           }));
 
+        const prospectStudents = diagnosticProspects(
+          studentList.filter((student) => !hiddenDemoUids.has(student.uid)),
+          assignedStudentUids,
+        );
+        const prospectUids = new Set(prospectStudents.map((student) => student.uid));
+
         setStudents(assignedStudents);
         setAllAssignments(rows);
         setSessions(sessionRows.filter((session) => assignedStudentUids.has(session.userId)));
         setDiagnosticInProgressUids(inProgressUids.filter((uid) => assignedStudentUids.has(uid)));
+        setProspects(prospectStudents);
+        setProspectSessions(sessionRows.filter((session) => prospectUids.has(session.userId)));
+        setProspectInProgressUids(inProgressUids.filter((uid) => prospectUids.has(uid)));
         setDiagnosticAssignedUids(
           visibleBoards
             .filter((board) => board.diagnosticAssigned && assignedStudentUids.has(board.studentUid))
@@ -193,6 +209,18 @@ export function TutorDashboard() {
         diagnosticAssignedUids,
       ),
     [students, allAssignments, sessions, diagnosticInProgressUids, diagnosticAssignedUids],
+  );
+
+  const prospectAnalytics = useMemo(
+    () =>
+      buildTutorDashboardAnalytics(
+        prospects,
+        [],
+        prospectSessions,
+        prospectInProgressUids,
+        prospects.map((student) => student.uid),
+      ),
+    [prospectInProgressUids, prospectSessions, prospects],
   );
 
   const recentAssignments = useMemo(
@@ -680,6 +708,82 @@ export function TutorDashboard() {
               )}
             </div>
           </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-col gap-4 space-y-0 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0 space-y-1.5">
+              <CardTitle className="text-lg">Diagnostic exam signups</CardTitle>
+              <CardDescription>
+                For a prospective student who does not have an account yet. They sign in with
+                Google and the exam opens. If they join later, the result is already on their
+                account.
+              </CardDescription>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              className="shrink-0 self-start"
+              onClick={() => {
+                const link = `${window.location.origin}${DIAGNOSTIC_SIGNUP_PATH}`;
+                void navigator.clipboard.writeText(link).then(
+                  () => toast({ title: "Diagnostic link copied" }),
+                  () => toast({ title: "Could not copy the link", variant: "destructive" }),
+                );
+              }}
+            >
+              <Copy className="mr-2 h-4 w-4" />
+              Copy link
+            </Button>
+          </CardHeader>
+          {prospectAnalytics.studentRows.length > 0 ? (
+            <CardContent>
+              <ul className="divide-y border-t">
+              {prospectAnalytics.studentRows.map((row) => (
+                <li
+                  key={row.studentUid}
+                  className="flex flex-col gap-3 py-3 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium">{row.name}</p>
+                    {row.email ? (
+                      <p className="truncate text-xs text-muted-foreground">{row.email}</p>
+                    ) : null}
+                    <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                      <Badge
+                        variant={
+                          row.diagnosticStatus === "finished"
+                            ? "secondary"
+                            : row.diagnosticStatus === "started"
+                              ? "default"
+                              : "outline"
+                        }
+                      >
+                        {DIAGNOSTIC_STATUS_LABEL[row.diagnosticStatus]}
+                      </Badge>
+                      {row.latestDiagnostic ? (
+                        <span className="text-xs text-muted-foreground tabular-nums">
+                          {row.latestDiagnostic.correctCount}/{row.latestDiagnostic.questionsAnswered}
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+                  <StudentQuickActions
+                    compact
+                    showOpenBoard={false}
+                    showLastResults={false}
+                    studentUid={row.studentUid}
+                    studentName={row.name}
+                    studentEmail={row.email}
+                    firstDiagnostic={row.firstDiagnostic}
+                    latestDiagnostic={row.latestDiagnostic}
+                    returnTo="/dashboard"
+                  />
+                </li>
+              ))}
+              </ul>
+            </CardContent>
+          ) : null}
         </Card>
       </div>
     </DashboardShell>

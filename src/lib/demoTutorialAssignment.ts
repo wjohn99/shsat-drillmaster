@@ -64,6 +64,7 @@ export async function ensureDemoTutorialAssignmentOnSessionCard(input: {
       tagCodes: [...DEMO_TUTORIAL_ALGEBRA_TAGS],
       dueAt,
       revealAnswers: true,
+      allowSkip: false,
       workspace: {
         boardId: input.boardId,
         listId: card.listId,

@@ -45,7 +45,9 @@ const Practice = () => {
   const isTutor = (profile?.role === "tutor" || profile?.role === "demo") && !viewAs;
   const diagnostic = useMemo(() => assembleDiagnosticExam(), []);
   const [diagnosticSessions, setDiagnosticSessions] = useState<PracticeSessionRecord[]>([]);
-  const [diagnosticAssigned, setDiagnosticAssigned] = useState(isTutor);
+  const [diagnosticAssigned, setDiagnosticAssigned] = useState(
+    isTutor || profile?.diagnosticAssigned === true,
+  );
   const [diagnosticInProgress, setDiagnosticInProgress] = useState(false);
   const [diagnosticSave, setDiagnosticSave] = useState<DiagnosticExamSave | null>(null);
   const [diagnosticAccessLoaded, setDiagnosticAccessLoaded] = useState(isTutor);
@@ -78,7 +80,9 @@ const Practice = () => {
       setDiagnosticAccessLoaded(false);
       void loadTutorVisibleStudentView(viewAs.uid).then((visible) => {
         if (cancelled) return;
-        setDiagnosticAssigned(Boolean(visible.board?.diagnosticAssigned));
+        setDiagnosticAssigned(
+          Boolean(visible.board?.diagnosticAssigned) || visible.diagnosticAssigned,
+        );
         setDiagnosticInProgress(visible.diagnosticInProgress);
         setDiagnosticSave(null);
         setDiagnosticSessions(
@@ -102,7 +106,9 @@ const Practice = () => {
       fetchDiagnosticProgress(accountUid).catch(() => null),
     ]).then(([board, progress]) => {
       if (cancelled) return;
-      setDiagnosticAssigned(Boolean(board?.diagnosticAssigned));
+      setDiagnosticAssigned(
+        profile.diagnosticAssigned === true || Boolean(board?.diagnosticAssigned),
+      );
       setDiagnosticInProgress(Boolean(progress));
       setDiagnosticSave(progress);
       setDiagnosticAccessLoaded(true);

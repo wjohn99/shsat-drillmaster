@@ -14,6 +14,7 @@ import {
   authErrorMessage,
   completeGoogleRedirect,
   ensureDemoWelcomePending,
+  grantStudentDiagnosticAccess,
   markDemoWelcomePending,
   signInWithGoogle as authSignInWithGoogle,
   signOut as authSignOut,
@@ -35,6 +36,7 @@ interface AuthContextValue {
   error: string | null;
   isConfigured: boolean;
   signInWithGoogle: (intent?: ParentSignInIntent) => Promise<void>;
+  grantDiagnosticAccess: () => Promise<void>;
   signOut: () => Promise<void>;
   enterDemoMode: () => Promise<void>;
   exitDemoMode: () => Promise<void>;
@@ -145,6 +147,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [applyAccountProfile],
   );
 
+  const grantDiagnosticAccess = useCallback(async () => {
+    if (!accountProfile) return;
+    const next = await grantStudentDiagnosticAccess(accountProfile);
+    applyAccountProfile(next);
+  }, [accountProfile, applyAccountProfile]);
+
   const signOut = useCallback(async () => {
     setError(null);
     setLoading(true);
@@ -204,6 +212,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       error,
       isConfigured: isFirebaseConfigured,
       signInWithGoogle,
+      grantDiagnosticAccess,
       signOut,
       enterDemoMode,
       exitDemoMode,
@@ -215,6 +224,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       demoBusy,
       enterDemoMode,
       error,
+      grantDiagnosticAccess,
       exitDemoMode,
       isDemoMode,
       loading,

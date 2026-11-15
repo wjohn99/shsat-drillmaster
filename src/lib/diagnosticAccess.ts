@@ -11,11 +11,38 @@ export function diagnosticAssignmentStatusLine(assigned: boolean, inProgress: bo
   return DIAGNOSTIC_ASSIGNMENT_REQUIRED_MESSAGE;
 }
 
+/** Shared link. Student sign-in, then the exam. */
+export const DIAGNOSTIC_SIGNUP_PATH = "/login?start=diagnostic";
+
+export function isDiagnosticSignupSearch(search: string): boolean {
+  return new URLSearchParams(search).get("start") === "diagnostic";
+}
+
 export function roleCanStartDiagnostic(
   role: string | undefined,
   diagnosticAssigned: boolean,
 ): boolean {
   return role === "tutor" || role === "demo" || diagnosticAssigned;
+}
+
+export function studentCanStartDiagnostic(input: {
+  role?: string | null;
+  profileAssigned?: boolean;
+  boardAssigned?: boolean;
+}): boolean {
+  return roleCanStartDiagnostic(
+    input.role ?? undefined,
+    Boolean(input.profileAssigned || input.boardAssigned),
+  );
+}
+
+/** Students who opened the diagnostic link and do not have a board yet. */
+export function diagnosticProspects<T extends { uid: string; diagnosticAssigned?: boolean }>(
+  students: T[],
+  boardStudentUids: Iterable<string>,
+): T[] {
+  const onABoard = new Set(boardStudentUids);
+  return students.filter((student) => student.diagnosticAssigned === true && !onABoard.has(student.uid));
 }
 
 export function isPermissionDenied(err: unknown): boolean {

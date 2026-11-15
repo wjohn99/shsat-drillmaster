@@ -209,6 +209,61 @@ describe("SessionQuestionRunner account progress", () => {
   });
 });
 
+describe("SessionQuestionRunner ordered questions", () => {
+  it("does not open a later question until the student reaches it", () => {
+    render(
+      <SessionQuestionRunner
+        questions={questions}
+        sessionTitle="Homework"
+        storageKeyPrefix="test"
+        allowSkip={false}
+        onExit={() => {}}
+        onComplete={() => {}}
+      />,
+    );
+    expect(screen.getByText("First stem")).toBeTruthy();
+    expect(screen.getByText(/Answer in order/)).toBeTruthy();
+    const later = screen.getByRole("button", { name: "Question 2, not open yet" });
+    expect(later.hasAttribute("disabled")).toBe(true);
+    fireEvent.click(later);
+    expect(screen.getByText("First stem")).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("radio", { name: /A\./ }));
+    fireEvent.click(screen.getByRole("button", { name: /Check answer/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Continue/ }));
+    expect(screen.getByText("Second stem")).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "1" }));
+    expect(screen.getByText("First stem")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "2" }));
+    expect(screen.getByText("Second stem")).toBeTruthy();
+  });
+
+  it("still opens a later question the student already reached", () => {
+    render(
+      <SessionQuestionRunner
+        questions={questions}
+        sessionTitle="Homework"
+        storageKeyPrefix="test"
+        allowSkip={false}
+        onExit={() => {}}
+        onComplete={() => {}}
+        progressKey={progressKey}
+        initialProgress={savedProgress({
+          currentQuestionIndex: 0,
+          maxReachedIndex: 1,
+          answers: {},
+          lockedQuestionIds: [],
+          events: [],
+        })}
+      />,
+    );
+    expect(screen.getByText("First stem")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "2" }));
+    expect(screen.getByText("Second stem")).toBeTruthy();
+  });
+});
+
 describe("SessionQuestionRunner notes", () => {
   it("opens an inline notepad without covering the question, and restores saved notes", () => {
     render(

@@ -92,6 +92,7 @@ function parseAssignment(
     title: (data.title as string) ?? "Assigned worksheet",
     tagCodes: (data.tagCodes as string[]) ?? [],
     revealAnswers: data.revealAnswers !== false,
+    allowSkip: data.allowSkip === true,
   };
 }
 
@@ -100,12 +101,18 @@ export function assignmentRevealsAnswers(assignment: { revealAnswers?: boolean }
   return assignment.revealAnswers !== false;
 }
 
+/** Older assignments omit the field and do not allow skipping ahead. */
+export function assignmentAllowsSkip(assignment: { allowSkip?: boolean } | null | undefined): boolean {
+  return assignment?.allowSkip === true;
+}
+
 function mapStudentDoc(id: string, data: DocumentData): StudentOption {
   return {
     uid: id,
     displayName: (data.displayName as string) || (data.email as string) || "Student",
     email: (data.email as string) ?? "",
     lastActiveAt: data.lastActiveAt,
+    diagnosticAssigned: data.diagnosticAssigned === true,
   };
 }
 
@@ -296,6 +303,8 @@ export interface CreateAssignmentInput {
   dueAt: Timestamp;
   /** False hides answers and explanations from the student during the sitting. */
   revealAnswers: boolean;
+  /** True lets the student jump ahead. False keeps the questions in order. */
+  allowSkip: boolean;
   workspace?: CreateAssignmentWorkspaceInput;
 }
 
@@ -336,6 +345,7 @@ export async function createAssignment(
     tagCodes: input.tagCodes,
     dueAt: input.dueAt,
     revealAnswers: input.revealAnswers,
+    allowSkip: input.allowSkip,
     status: "todo" satisfies AssignmentStatus,
     createdAt: serverTimestamp(),
     workspaceBoardId: input.workspace?.boardId ?? null,

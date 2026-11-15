@@ -239,6 +239,14 @@ export async function createWorkspaceBoard(
   const db = getFirebaseDb();
   const boardRef = doc(db, BOARDS_COLLECTION, student.uid);
   const now = Timestamp.now();
+  let prospectDiagnostic = false;
+  try {
+    const userSnap = await getDoc(doc(db, "users", student.uid));
+    prospectDiagnostic = userSnap.exists() && userSnap.data()?.diagnosticAssigned === true;
+  } catch {
+    prospectDiagnostic = false;
+  }
+  const assignDiagnostic = Boolean(opts?.diagnosticAssigned || prospectDiagnostic);
 
   const alreadyExisted = await runTransaction(db, async (tx) => {
     const existing = await tx.get(boardRef);
@@ -261,10 +269,10 @@ export async function createWorkspaceBoard(
       assignedTutorEmail: auth.currentUser?.email || "",
       createdAt: now,
       ...(opts?.demoAccount ? { demoAccount: true } : {}),
-      ...(opts?.diagnosticAssigned ? { diagnosticAssigned: true } : {}),
+      ...(assignDiagnostic ? { diagnosticAssigned: true } : {}),
       roadmap: {
         ...serializeStudentRoadmap(emptyStudentRoadmap()),
-        ...(opts?.diagnosticAssigned ? { diagnosticAssigned: true } : {}),
+        ...(assignDiagnostic ? { diagnosticAssigned: true } : {}),
       },
       roadmapUpdatedAt: now,
       updatedAt: now,

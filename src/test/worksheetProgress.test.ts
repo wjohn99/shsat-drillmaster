@@ -29,6 +29,21 @@ describe("worksheet progress storage", () => {
       updatedAt: 10,
     });
     expect(worksheetProgressIsStarted(save)).toBe(false);
+    expect(save?.maxReachedIndex).toBeUndefined();
+  });
+
+  it("keeps the furthest question already opened", () => {
+    const save = normalizeWorksheetProgressSave({
+      userId: "uid1",
+      scopeId: "assign-9",
+      questionIds: ["q1", "q2", "q3"],
+      currentQuestionIndex: 0,
+      maxReachedIndex: 2,
+      answers: {},
+      updatedAt: 10,
+    });
+    expect(save?.maxReachedIndex).toBe(2);
+    expect(save?.currentQuestionIndex).toBe(0);
   });
 
   it("treats notes-only progress as started", () => {

@@ -22,6 +22,11 @@ export interface WorksheetAssignment {
    * while taking the worksheet (cold diagnostic). Missing means show them.
    */
   revealAnswers: boolean;
+  /**
+   * When true, the student can jump to any question from the navigator.
+   * Missing or false keeps the worksheet in order.
+   */
+  allowSkip?: boolean;
 }
 
 export interface StudentOption {
@@ -29,6 +34,8 @@ export interface StudentOption {
   displayName: string;
   email: string;
   lastActiveAt?: Timestamp;
+  /** Signed up from the diagnostic link. */
+  diagnosticAssigned?: boolean;
 }
 
 export interface TutorOption {

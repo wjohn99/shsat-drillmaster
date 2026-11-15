@@ -23,6 +23,7 @@ import { shouldShowElaHighlighter } from "@/lib/elaHighlighter";
 import { HighlightableText } from "@/components/exam/HighlightableText";
 import { MathText } from "@/lib/mathText";
 import { canSubmitQuestionAnswer, isQuestionAnswerCorrect } from "@/lib/sessionGrading";
+import { reachedQuestionIndex } from "@/lib/worksheetSkip";
 import { openWorksheetPrintTab } from "@/lib/worksheetPrint";
 import { saveWorksheetProgress } from "@/lib/worksheetProgressService";
 import {
@@ -54,6 +55,11 @@ export interface SessionQuestionRunnerProps {
    * or explanation. Used for a cold diagnostic assignment.
    */
   revealAnswers?: boolean;
+  /**
+   * When false, the student can go back to a question they already reached,
+   * and cannot open a later question from the navigator.
+   */
+  allowSkip?: boolean;
   /** Optional passage list for assigned items that are not in the viewer catalog. */
   passageCatalog?: Passage[];
   finishLabel?: string;
@@ -71,6 +77,7 @@ export function SessionQuestionRunner({
   onComplete,
   storageKeyPrefix,
   revealAnswers = true,
+  allowSkip = true,
   passageCatalog,
   finishLabel = "Finish worksheet",
   notesKind = "worksheet",
@@ -85,6 +92,14 @@ export function SessionQuestionRunner({
     if (questions.length === 0) return 0;
     return Math.min(Math.max(0, index), questions.length - 1);
   });
+  const [maxReachedIndex, setMaxReachedIndex] = useState(() =>
+    reachedQuestionIndex({
+      questionIds: questions.map((question) => question.id),
+      currentQuestionIndex: initialProgress?.currentQuestionIndex ?? 0,
+      lockedQuestionIds: initialProgress?.lockedQuestionIds,
+      maxReachedIndex: initialProgress?.maxReachedIndex,
+    }),
+  );
   const [answers, setAnswers] = useState<Record<string, string>>(
     () => initialProgress?.answers ?? {},
   );
@@ -186,6 +201,7 @@ export function SessionQuestionRunner({
   };
 
   const goToQuestion = (index: number) => {
+    if (!allowSkip && index > maxReachedIndex) return;
     setCurrentQuestionIndex(index);
   };
 
@@ -201,6 +217,7 @@ export function SessionQuestionRunner({
       tagCodes: progressKey.tagCodes,
       questionIds: questions.map((question) => question.id),
       currentQuestionIndex,
+      maxReachedIndex,
       answers,
       flagged: [...flaggedQuestions],
       lockedQuestionIds: [...lockedQuestionIds],
@@ -224,6 +241,7 @@ export function SessionQuestionRunner({
     progressKey,
     questions,
     revealAnswers,
+    maxReachedIndex,
   ]);
 
   const persistProgress = useCallback((): WorksheetProgressSave | null => {
@@ -331,7 +349,9 @@ export function SessionQuestionRunner({
       onComplete(ordered);
       return;
     }
-    setCurrentQuestionIndex((i) => i + 1);
+    const next = currentQuestionIndex + 1;
+    setMaxReachedIndex((max) => Math.max(max, next));
+    setCurrentQuestionIndex(next);
   };
 
   const recordCurrentAndAdvance = () => {
@@ -522,18 +542,27 @@ export function SessionQuestionRunner({
           <div className="mt-2 flex flex-wrap gap-1.5">
             {questions.map((question, index) => {
               const status = index === currentQuestionIndex ? "current" : getQuestionStatus(question);
+              const blocked = !allowSkip && index > maxReachedIndex;
               return (
                 <button
                   key={question.id}
                   type="button"
+                  disabled={blocked}
+                  aria-label={blocked ? `Question ${index + 1}, not open yet` : undefined}
                   onClick={() => goToQuestion(index)}
-                  className={`h-8 w-8 rounded text-sm font-medium transition-all ${getStatusColor(status)}`}
+                  className={`h-8 w-8 rounded text-sm font-medium transition-all disabled:cursor-not-allowed disabled:opacity-40 ${getStatusColor(status)}`}
                 >
                   {index + 1}
                 </button>
               );
             })}
           </div>
+          {allowSkip ? null : (
+            <p className="mt-2 text-xs text-muted-foreground">
+              Answer in order. Later questions open after you reach them. You can go back to one you
+              already opened.
+            </p>
+          )}
         </div>
 
         {passage ? (

@@ -86,6 +86,8 @@ interface CustomWorksheetBuilderProps {
   onAssign?: () => void;
   revealAnswers?: boolean;
   onRevealAnswersChange?: (value: boolean) => void;
+  allowSkip?: boolean;
+  onAllowSkipChange?: (value: boolean) => void;
 }
 
 const DEFAULT_OPEN_SECTIONS: WorksheetSectionId[] = [
@@ -144,6 +146,8 @@ export function CustomWorksheetBuilder({
   onAssign,
   revealAnswers = false,
   onRevealAnswersChange,
+  allowSkip = false,
+  onAllowSkipChange,
 }: CustomWorksheetBuilderProps) {
   const isTutor = variant === "tutor";
   const choosingQuestions = questionPickMode === "chosen";
@@ -425,6 +429,25 @@ export function CustomWorksheetBuilder({
                   {revealAnswers
                     ? "The student sees the correct answer after they check each question. They cannot change that answer afterward."
                     : "The student answers without seeing the key. You can still review each question after they submit."}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 rounded-lg border bg-muted/30 p-3">
+              <Switch
+                id="allow-skip"
+                checked={allowSkip}
+                onCheckedChange={(checked) => onAllowSkipChange?.(checked)}
+                className="mt-0.5"
+              />
+              <div className="space-y-1">
+                <Label htmlFor="allow-skip" className="font-medium cursor-pointer">
+                  Allow skipping questions
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  {allowSkip
+                    ? "The student can jump to any question from the question navigator."
+                    : "The student answers in order. They can go back to a question they already reached, and they cannot open a later one before that."}
                 </p>
               </div>
             </div>

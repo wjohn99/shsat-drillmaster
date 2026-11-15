@@ -80,7 +80,9 @@ export function StudentDashboard({ viewAs = null }: { viewAs?: ViewAsStudent | n
           setSelfSessions([]);
           setAssignmentSessions(visible.sessions.filter((s) => s.sessionType === "assignment"));
           setDiagnosticSessions(visible.sessions.filter((s) => s.sessionType === "diagnostic"));
-          setDiagnosticAssigned(Boolean(visible.board?.diagnosticAssigned));
+          setDiagnosticAssigned(
+            Boolean(visible.board?.diagnosticAssigned) || visible.diagnosticAssigned,
+          );
           setDiagnosticInProgress(visible.diagnosticInProgress);
           setDiagnosticSave(null);
           setInProgressAssignmentIds(new Set());
@@ -100,7 +102,9 @@ export function StudentDashboard({ viewAs = null }: { viewAs?: ViewAsStudent | n
         setSelfSessions(allSessions.filter((s) => s.sessionType === "self"));
         setAssignmentSessions(allSessions.filter((s) => s.sessionType === "assignment"));
         setDiagnosticSessions(allSessions.filter((s) => s.sessionType === "diagnostic"));
-        setDiagnosticAssigned(Boolean(board?.diagnosticAssigned));
+        setDiagnosticAssigned(
+          profile.diagnosticAssigned === true || Boolean(board?.diagnosticAssigned),
+        );
         setDiagnosticInProgress(Boolean(progress));
         setDiagnosticSave(progress);
         setInProgressAssignmentIds(

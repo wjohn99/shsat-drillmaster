@@ -31,6 +31,7 @@ function toFirestorePayload(save: WorksheetProgressSave) {
     tagCodes: save.tagCodes,
     questionIds: save.questionIds,
     currentQuestionIndex: save.currentQuestionIndex,
+    ...(typeof save.maxReachedIndex === "number" ? { maxReachedIndex: save.maxReachedIndex } : {}),
     answers: save.answers,
     flagged: save.flagged,
     lockedQuestionIds: save.lockedQuestionIds,

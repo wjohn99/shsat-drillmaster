@@ -15,6 +15,8 @@ export type WorksheetProgressSave = {
   tagCodes: string[];
   questionIds: string[];
   currentQuestionIndex: number;
+  /** Furthest question opened. Omitted on older saves. */
+  maxReachedIndex?: number;
   answers: Record<string, string>;
   flagged: string[];
   lockedQuestionIds: string[];
@@ -76,6 +78,8 @@ export function normalizeWorksheetProgressSave(raw: unknown): WorksheetProgressS
   }
   const questionIds = Array.isArray(parsed.questionIds) ? parsed.questionIds.map(String) : [];
   const currentQuestionIndex = Math.max(0, Math.floor(Number(parsed.currentQuestionIndex) || 0));
+  const rawMax = Number(parsed.maxReachedIndex);
+  const maxReachedIndex = Number.isFinite(rawMax) ? Math.max(0, Math.floor(rawMax)) : undefined;
   return {
     userId,
     scopeId,
@@ -86,6 +90,12 @@ export function normalizeWorksheetProgressSave(raw: unknown): WorksheetProgressS
     questionIds,
     currentQuestionIndex:
       questionIds.length > 0 ? Math.min(currentQuestionIndex, questionIds.length - 1) : currentQuestionIndex,
+    ...(maxReachedIndex === undefined
+      ? {}
+      : {
+          maxReachedIndex:
+            questionIds.length > 0 ? Math.min(maxReachedIndex, questionIds.length - 1) : maxReachedIndex,
+        }),
     answers,
     flagged: Array.isArray(parsed.flagged) ? parsed.flagged.map(String) : [],
     lockedQuestionIds: Array.isArray(parsed.lockedQuestionIds) ? parsed.lockedQuestionIds.map(String) : [],

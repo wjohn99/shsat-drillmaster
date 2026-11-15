@@ -3,6 +3,7 @@ import {
   getDoc,
   serverTimestamp,
   setDoc,
+  updateDoc,
   type DocumentSnapshot,
 } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
@@ -71,6 +72,8 @@ export interface ParentSignInIntent {
   returning?: boolean;
   tutor?: boolean;
   demo?: boolean;
+  /** Student signup that opens the diagnostic and records access on the account. */
+  diagnostic?: boolean;
 }
 
 const DEMO_WELCOME_KEY = "drillmaster.demoWelcome";
@@ -99,13 +102,15 @@ export function dismissDemoWelcome(): void {
 }
 
 export function stageParentSignIn(intent: ParentSignInIntent): void {
-  const stored = intent.tutor
-    ? { tutor: true }
-    : intent.demo
-      ? { demo: true }
-      : intent.studentEmail
-        ? { studentEmail: normalizeEmail(intent.studentEmail) }
-        : { returning: true };
+  const stored = intent.diagnostic
+    ? { diagnostic: true }
+    : intent.tutor
+      ? { tutor: true }
+      : intent.demo
+        ? { demo: true }
+        : intent.studentEmail
+          ? { studentEmail: normalizeEmail(intent.studentEmail) }
+          : { returning: true };
   sessionStorage.setItem(PARENT_SIGN_IN_KEY, JSON.stringify(stored));
 }
 
@@ -118,6 +123,7 @@ function readParentIntent(): ParentSignInIntent | null {
     const raw = sessionStorage.getItem(PARENT_SIGN_IN_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<ParentSignInIntent>;
+    if (parsed.diagnostic) return { diagnostic: true };
     if (parsed.tutor) return { tutor: true };
     if (parsed.demo) return { demo: true };
     if (parsed.returning && !parsed.studentEmail) return { returning: true };
@@ -156,6 +162,7 @@ function parseUserProfile(snapshot: DocumentSnapshot): AppUserProfile {
     createdAt: data.createdAt,
     lastActiveAt: data.lastActiveAt,
     demoMode: data.demoMode === true,
+    diagnosticAssigned: data.diagnosticAssigned === true,
   };
 }
 
@@ -275,6 +282,8 @@ async function writeUserProfile(firebaseUser: User): Promise<AppUserProfile> {
     role = "student";
   }
 
+  const grantDiagnostic = intent?.diagnostic === true && role === "student";
+
   const profileData = {
     uid: firebaseUser.uid,
     email,
@@ -283,6 +292,7 @@ async function writeUserProfile(firebaseUser: User): Promise<AppUserProfile> {
     role,
     lastActiveAt: serverTimestamp(),
     ...(existing.exists() ? {} : { createdAt: serverTimestamp() }),
+    ...(grantDiagnostic ? { diagnosticAssigned: true } : {}),
   };
 
   clearStagedParentSignIn();
@@ -302,6 +312,15 @@ async function discardParentSignIn(firebaseUser: User, hadProfile: boolean): Pro
     }
   }
   await firebaseSignOut(getFirebaseAuth());
+}
+
+/** Marks a student account as allowed to take the diagnostic. No board required. */
+export async function grantStudentDiagnosticAccess(
+  profile: AppUserProfile,
+): Promise<AppUserProfile> {
+  if (profile.role !== "student" || profile.diagnosticAssigned) return profile;
+  await updateDoc(doc(getFirebaseDb(), "users", profile.uid), { diagnosticAssigned: true });
+  return { ...profile, diagnosticAssigned: true };
 }
 
 export async function fetchUserProfile(uid: string): Promise<AppUserProfile | null> {

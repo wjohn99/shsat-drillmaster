@@ -88,6 +88,7 @@ describe("ensureDemoTutorialAssignmentOnSessionCard", () => {
     expect(createAssignment).toHaveBeenCalledWith(
       expect.objectContaining({
         questionIds: ["q1", "q2"],
+        allowSkip: false,
         assignedToStudentUid: "demo-tutor-1-avery",
         title: expect.stringMatching(/Linear Equations/),
         workspace: expect.objectContaining({ existingCardId: "card-session-2" }),

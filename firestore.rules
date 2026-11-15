@@ -32,7 +32,8 @@ service cloud.firestore {
       return data.uid == userId
         && data.email == request.auth.token.email
         && data.role in ['student', 'tutor', 'parent', 'demo']
-        && roleMatchesWhitelist(data.role, data.email);
+        && roleMatchesWhitelist(data.role, data.email)
+        && (!('diagnosticAssigned' in data) || data.diagnosticAssigned == true);
     }
 
     function parentLink() {
@@ -82,12 +83,20 @@ service cloud.firestore {
 
     function diagnosticAssignedToSignedInUser() {
       return isSignedIn()
-        && exists(/databases/$(database)/documents/workspace_boards/$(request.auth.uid))
         && (
-          get(/databases/$(database)/documents/workspace_boards/$(request.auth.uid)).data.diagnosticAssigned == true
+          (
+            exists(/databases/$(database)/documents/users/$(request.auth.uid))
+            && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.diagnosticAssigned == true
+          )
           || (
-            get(/databases/$(database)/documents/workspace_boards/$(request.auth.uid)).data.roadmap is map
-            && get(/databases/$(database)/documents/workspace_boards/$(request.auth.uid)).data.roadmap.diagnosticAssigned == true
+            exists(/databases/$(database)/documents/workspace_boards/$(request.auth.uid))
+            && (
+              get(/databases/$(database)/documents/workspace_boards/$(request.auth.uid)).data.diagnosticAssigned == true
+              || (
+                get(/databases/$(database)/documents/workspace_boards/$(request.auth.uid)).data.roadmap is map
+                && get(/databases/$(database)/documents/workspace_boards/$(request.auth.uid)).data.roadmap.diagnosticAssigned == true
+              )
+            )
           )
         );
     }
@@ -172,7 +181,9 @@ service cloud.firestore {
         && request.resource.data.status == 'todo'
         && request.resource.data.dueAt is timestamp
         && (!('revealAnswers' in request.resource.data)
-            || request.resource.data.revealAnswers is bool);
+            || request.resource.data.revealAnswers is bool)
+        && (!('allowSkip' in request.resource.data)
+            || request.resource.data.allowSkip is bool);
 
       // Demo tutors assign only to their sample students.
       allow create: if isDemo()
@@ -185,7 +196,9 @@ service cloud.firestore {
         && request.resource.data.status == 'todo'
         && request.resource.data.dueAt is timestamp
         && (!('revealAnswers' in request.resource.data)
-            || request.resource.data.revealAnswers is bool);
+            || request.resource.data.revealAnswers is bool)
+        && (!('allowSkip' in request.resource.data)
+            || request.resource.data.allowSkip is bool);
 
       // Tutor links assignment to a workspace card after create.
       allow update: if isTutor()

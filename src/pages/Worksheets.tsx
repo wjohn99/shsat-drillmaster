@@ -34,6 +34,7 @@ import { useViewAsStudent } from "@/contexts/ViewAsStudentContext";
 import { openWorksheetPrintTab } from "@/lib/worksheetPrint";
 import {
   assignmentDueDateInputToTimestamp,
+  assignmentAllowsSkip,
   assignmentRevealsAnswers,
   createAssignment,
   defaultAssignmentDueDateInput,
@@ -160,6 +161,7 @@ const Worksheets = () => {
   const minAssignmentDueDate = useMemo(() => toAssignmentDueDateInputValue(new Date()), []);
   const [showOnWorkspace, setShowOnWorkspace] = useState(true);
   const [revealAnswers, setRevealAnswers] = useState(false);
+  const [allowSkip, setAllowSkip] = useState(false);
   const [workspaceBoardExists, setWorkspaceBoardExists] = useState(false);
   const [workspaceLists, setWorkspaceLists] = useState<WorkspaceList[]>([]);
   const [workspaceCards, setWorkspaceCards] = useState<WorkspaceCard[]>([]);
@@ -1093,6 +1095,7 @@ const Worksheets = () => {
         tagCodes: questionPickMode === "chosen" ? contentSkillCodes(picked) : selectedCodes,
         dueAt,
         revealAnswers,
+        allowSkip,
         workspace: placeOnWorkspace
           ? {
               boardId: selectedStudentUid,
@@ -1134,7 +1137,9 @@ const Worksheets = () => {
               ? `${student.displayName} can start from Active Assignments or their workspace (due ${dueLabel}).`
               : `${student.displayName} will see this in Active Assignments (due ${dueLabel}).`
             : `The student will see this in Active Assignments (due ${dueLabel}).`
-        }${revealAnswers ? "" : " Answers and explanations stay hidden."}`,
+        }${revealAnswers ? "" : " Answers and explanations stay hidden."}${
+          allowSkip ? " The student can skip ahead." : " Questions stay in order."
+        }`,
       });
       setAssignmentsRefreshKey((k) => k + 1);
       setSelectedStudentUid("");
@@ -1318,6 +1323,13 @@ const Worksheets = () => {
           runSource === "assignment" && activeAssignment
             ? assignmentRevealsAnswers(activeAssignment)
             : true
+        }
+        allowSkip={
+          runSource === "assignment" && activeAssignment
+            ? assignmentAllowsSkip(activeAssignment)
+            : runSource === "tutor-preview"
+              ? allowSkip
+              : true
         }
         progressKey={
           profile?.uid &&
@@ -1581,6 +1593,8 @@ const Worksheets = () => {
               onAssign={handleAssignToStudent}
               revealAnswers={revealAnswers}
               onRevealAnswersChange={setRevealAnswers}
+              allowSkip={allowSkip}
+              onAllowSkipChange={setAllowSkip}
             />
           </div>
         )}

@@ -1,5 +1,7 @@
+import { doc, getDoc } from "firebase/firestore";
 import { fetchAssignmentsForTutor } from "@/lib/assignmentService";
 import { fetchDiagnosticProgress } from "@/lib/diagnosticProgressService";
+import { getFirebaseDb } from "@/lib/firebase";
 import { fetchPracticeSessionsForTutor } from "@/lib/practiceSessionService";
 import { fetchWorkspaceBoard } from "@/lib/workspaceService";
 import type { WorksheetAssignment } from "@/types/assignment";
@@ -11,13 +13,15 @@ export interface TutorVisibleStudentView {
   sessions: PracticeSessionRecord[];
   board: WorkspaceBoard | null;
   diagnosticInProgress: boolean;
+  /** Account flag from the diagnostic signup link. */
+  diagnosticAssigned: boolean;
 }
 
 /** Assignments, submitted results, and diagnostic access a tutor can see for one student. */
 export async function loadTutorVisibleStudentView(
   studentUid: string,
 ): Promise<TutorVisibleStudentView> {
-  const [assignmentRows, sessionRows, board] = await Promise.all([
+  const [assignmentRows, sessionRows, board, diagnosticAssigned] = await Promise.all([
     fetchAssignmentsForTutor()
       .then((rows) => rows.filter((row) => row.assignedToStudentUid === studentUid))
       .catch(() => [] as WorksheetAssignment[]),
@@ -25,6 +29,9 @@ export async function loadTutorVisibleStudentView(
       .then((rows) => rows.filter((row) => row.userId === studentUid))
       .catch(() => [] as PracticeSessionRecord[]),
     fetchWorkspaceBoard(studentUid).catch(() => null),
+    getDoc(doc(getFirebaseDb(), "users", studentUid))
+      .then((snapshot) => snapshot.exists() && snapshot.data().diagnosticAssigned === true)
+      .catch(() => false),
   ]);
 
   let diagnosticInProgress = false;
@@ -39,5 +46,6 @@ export async function loadTutorVisibleStudentView(
     sessions: sessionRows,
     board,
     diagnosticInProgress,
+    diagnosticAssigned,
   };
 }
