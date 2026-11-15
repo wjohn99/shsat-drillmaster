@@ -22,3 +22,8 @@ export function worksheetIdsAfterLink(existing: readonly string[], assignmentId:
   if (!assignmentId || existing.includes(assignmentId)) return [...existing];
   return [...existing, assignmentId];
 }
+
+/** Drop one worksheet and keep the others on the card, in the same order. */
+export function worksheetIdsAfterUnlink(existing: readonly string[], assignmentId: string): string[] {
+  return existing.filter((id) => id !== assignmentId);
+}

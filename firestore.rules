@@ -235,6 +235,17 @@ service cloud.firestore {
       allow update: if isTutor()
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['readerUids'])
         && request.resource.data.readerUids is list;
+
+      // An open worksheet can be taken back. Completed results stay.
+      allow delete: if isTutor()
+        && resource.data.tutorUid == request.auth.uid
+        && resource.data.status == 'todo';
+
+      allow delete: if isDemo()
+        && resource.data.tutorUid == request.auth.uid
+        && resource.data.demoAccount == true
+        && resource.data.status == 'todo'
+        && demoOwnsBoard(resource.data.assignedToStudentUid);
     }
 
     match /worksheet_question_history/{studentUid} {

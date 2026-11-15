@@ -3,12 +3,23 @@ import { ChevronDown, Eye, Loader2, Printer } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { StatusPill, worksheetStatusTone } from "@/components/status/StatusPill";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { fetchDemoStudents } from "@/lib/demoSandbox";
 import { useAuth } from "@/contexts/AuthContext";
-import { fetchAssignmentsForTutor, fetchStudents } from "@/lib/assignmentService";
+import { fetchAssignmentsForTutor, fetchStudents, removeOpenAssignment } from "@/lib/assignmentService";
 import { worksheetProgressStatus, worksheetStatusLabel } from "@/lib/dashboardStats";
+import { toast } from "@/hooks/use-toast";
 import type { TutorAssignmentRow } from "@/types/assignment";
 import { WorksheetEmptyState } from "./WorksheetEmptyState";
 
@@ -30,6 +41,8 @@ export function TutorAssignmentsGrid({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [completedOpen, setCompletedOpen] = useState(false);
+  const [assignmentToRemove, setAssignmentToRemove] = useState<TutorAssignmentRow | null>(null);
+  const [removing, setRemoving] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -153,13 +166,43 @@ export function TutorAssignmentsGrid({
                 Print / Save PDF
               </Button>
             ) : null}
+            {isCompleted ? null : (
+              <Button
+                className="w-full"
+                size="sm"
+                variant="outline"
+                onClick={() => setAssignmentToRemove(assignment)}
+              >
+                Remove
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
     );
   };
 
+  const confirmRemove = async () => {
+    if (!assignmentToRemove) return;
+    setRemoving(true);
+    try {
+      await removeOpenAssignment(assignmentToRemove);
+      setAssignments((current) => current.filter((row) => row.id !== assignmentToRemove.id));
+      toast({ title: "Worksheet removed" });
+      setAssignmentToRemove(null);
+    } catch (err) {
+      toast({
+        title: "Could not remove the worksheet",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setRemoving(false);
+    }
+  };
+
   return (
+    <>
     <div className="space-y-10">
       {openAssignments.length > 0 && (
         <div>
@@ -188,5 +231,36 @@ export function TutorAssignmentsGrid({
         </Collapsible>
       )}
     </div>
+    <AlertDialog
+      open={assignmentToRemove != null}
+      onOpenChange={(open) => {
+        if (!open && !removing) setAssignmentToRemove(null);
+      }}
+    >
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Remove this worksheet?</AlertDialogTitle>
+          <AlertDialogDescription>
+            {assignmentToRemove
+              ? `${assignmentToRemove.studentName} will no longer see ${assignmentToRemove.title}. You can assign a new one after.`
+              : "The student will no longer see this worksheet."}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={removing}>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            disabled={removing}
+            onClick={(event) => {
+              event.preventDefault();
+              void confirmRemove();
+            }}
+          >
+            {removing ? "Removing…" : "Remove"}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+    </>
   );
 }

@@ -1,6 +1,7 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -21,7 +22,7 @@ import type {
 } from "@/types/assignment";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase";
 import { parentReaderUidsForStudent } from "@/lib/parentLinkService";
-import { worksheetIdsOnCard } from "@/lib/cardWorksheets";
+import { worksheetIdsAfterUnlink, worksheetIdsOnCard } from "@/lib/cardWorksheets";
 import { logWorksheetCompletedOnCard } from "@/lib/workspaceCardContentService";
 import {
   mergeSubmittedQuestionIds,
@@ -357,6 +358,48 @@ export async function createAssignment(
       : {}),
   });
   return docRef.id;
+}
+
+async function unlinkAssignmentFromCard(
+  boardId: string,
+  cardId: string,
+  assignmentId: string,
+): Promise<void> {
+  const cardRef = doc(getFirebaseDb(), WORKSPACE_BOARDS_COLLECTION, boardId, "cards", cardId);
+  const snap = await getDoc(cardRef);
+  if (!snap.exists() || snap.data().deletedAt) return;
+  const data = snap.data();
+  const remaining = worksheetIdsAfterUnlink(
+    worksheetIdsOnCard({
+      assignmentId: typeof data.assignmentId === "string" ? data.assignmentId : null,
+      assignmentIds: Array.isArray(data.assignmentIds) ? data.assignmentIds : [],
+    }),
+    assignmentId,
+  );
+  await updateDoc(cardRef, {
+    assignmentId: remaining[0] ?? null,
+    assignmentIds: remaining,
+    updatedAt: serverTimestamp(),
+  });
+}
+
+/** Takes an open worksheet off the student. Completed results stay. */
+export async function removeOpenAssignment(assignment: WorksheetAssignment): Promise<void> {
+  if (assignment.status !== "todo") {
+    throw new Error("Completed worksheets stay on the account.");
+  }
+  const auth = getFirebaseAuth();
+  if (!auth.currentUser) {
+    throw new Error("You must be signed in to remove a worksheet.");
+  }
+
+  if (assignment.workspaceBoardId || assignment.workspaceCardId) {
+    const target = await resolveWorkspaceTargetForAssignment(assignment);
+    if (target) {
+      await unlinkAssignmentFromCard(target.boardId, target.cardId, assignment.id);
+    }
+  }
+  await deleteDoc(doc(getFirebaseDb(), ASSIGNMENTS_COLLECTION, assignment.id));
 }
 
 export async function setAssignmentWorkspaceCard(

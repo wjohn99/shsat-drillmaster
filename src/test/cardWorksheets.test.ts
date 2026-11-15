@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { worksheetIdsAfterLink, worksheetIdsOnCard } from "@/lib/cardWorksheets";
+import { worksheetIdsAfterLink, worksheetIdsAfterUnlink, worksheetIdsOnCard } from "@/lib/cardWorksheets";
 
 describe("worksheets on a card", () => {
   it("keeps a worksheet that was saved before cards held a list", () => {
@@ -19,5 +19,12 @@ describe("worksheets on a card", () => {
 
   it("does not add the same worksheet twice", () => {
     expect(worksheetIdsAfterLink(["first", "second"], "first")).toEqual(["first", "second"]);
+  });
+
+  it("drops one worksheet and keeps the rest in order", () => {
+    expect(worksheetIdsAfterUnlink(["first", "second", "third"], "second")).toEqual([
+      "first",
+      "third",
+    ]);
   });
 });

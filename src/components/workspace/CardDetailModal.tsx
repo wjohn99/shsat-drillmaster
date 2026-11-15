@@ -46,6 +46,7 @@ import {
   assignmentDueDateInputToTimestamp,
   defaultAssignmentDueDateInput,
   fetchAssignmentById,
+  removeOpenAssignment,
 } from "@/lib/assignmentService";
 import { fetchWorksheetProgress } from "@/lib/worksheetProgressService";
 import { worksheetProgressIsStarted } from "@/lib/worksheetProgressStorage";
@@ -281,6 +282,8 @@ export function CardDetailModal({
   );
   const [deleteCardOpen, setDeleteCardOpen] = useState(false);
   const [deletingCard, setDeletingCard] = useState(false);
+  const [assignmentToRemove, setAssignmentToRemove] = useState<WorksheetAssignment | null>(null);
+  const [removingAssignment, setRemovingAssignment] = useState(false);
 
   useEffect(() => {
     if (!card) return;
@@ -547,6 +550,26 @@ export function CardDetailModal({
     } catch {
       setCompleted(!checked);
       toast({ title: "Could not update status", variant: "destructive" });
+    }
+  };
+
+  const handleRemoveAssignment = async () => {
+    if (!assignmentToRemove || !isTutorView) return;
+    setRemovingAssignment(true);
+    try {
+      await removeOpenAssignment(assignmentToRemove);
+      setLinkedAssignments((current) => current.filter((row) => row.id !== assignmentToRemove.id));
+      setAssignmentToRemove(null);
+      onUpdated();
+      toast({ title: "Worksheet removed" });
+    } catch (err) {
+      toast({
+        title: "Could not remove the worksheet",
+        description: err instanceof Error ? err.message : "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setRemovingAssignment(false);
     }
   };
 
@@ -983,6 +1006,14 @@ export function CardDetailModal({
                               >
                                 View last results
                               </Button>
+                            ) : isTutorView ? (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setAssignmentToRemove(assignment)}
+                              >
+                                Remove
+                              </Button>
                             ) : null}
                           </div>
                         </div>
@@ -1315,6 +1346,36 @@ export function CardDetailModal({
             }}
           >
             {deletingCard ? "Deleting…" : "Delete card"}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+    <AlertDialog
+      open={assignmentToRemove != null}
+      onOpenChange={(open) => {
+        if (!open && !removingAssignment) setAssignmentToRemove(null);
+      }}
+    >
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Remove this worksheet?</AlertDialogTitle>
+          <AlertDialogDescription>
+            {assignmentToRemove
+              ? `${assignmentToRemove.title} comes off this card and the student will no longer see it. You can assign a new one after.`
+              : "The student will no longer see this worksheet."}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={removingAssignment}>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            disabled={removingAssignment}
+            onClick={(event) => {
+              event.preventDefault();
+              void handleRemoveAssignment();
+            }}
+          >
+            {removingAssignment ? "Removing…" : "Remove"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
