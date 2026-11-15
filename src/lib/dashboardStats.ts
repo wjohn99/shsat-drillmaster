@@ -125,6 +125,18 @@ export function worksheetStatusLabel(assignment: WorksheetAssignment | null | un
   return WORKSHEET_PROGRESS_LABEL[status];
 }
 
+/** One-line pill for the worksheet cards. Open work uses the same Due date shape. */
+export function worksheetCardStatusLabel(
+  assignment: WorksheetAssignment,
+  inProgress = false,
+): string {
+  if (assignment.status === "completed") return "Done";
+  if (inProgress) return "In progress";
+  const dueLabel = formatAssignmentDueDate(assignment);
+  if (dueLabel) return `Due ${dueLabel}`;
+  return worksheetProgressStatus(assignment) === "due" ? "Due" : "Assigned";
+}
+
 export function pickLatestCompletedAssignment<T extends WorksheetAssignment>(
   assignments: T[],
 ): T | null {

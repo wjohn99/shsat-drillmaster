@@ -18,7 +18,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { fetchDemoStudents } from "@/lib/demoSandbox";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchAssignmentsForTutor, fetchStudents, removeOpenAssignment } from "@/lib/assignmentService";
-import { worksheetProgressStatus, worksheetStatusLabel } from "@/lib/dashboardStats";
+import { worksheetCardStatusLabel, worksheetProgressStatus } from "@/lib/dashboardStats";
 import { toast } from "@/hooks/use-toast";
 import type { TutorAssignmentRow } from "@/types/assignment";
 import { WorksheetEmptyState } from "./WorksheetEmptyState";
@@ -118,21 +118,18 @@ export function TutorAssignmentsGrid({
     return (
       <Card key={assignment.id}>
         <CardHeader className="pb-3">
-          <div className="flex items-center justify-between gap-2 mb-2">
-            <div className="flex flex-wrap items-center gap-2 min-w-0">
-              <StatusPill tone={worksheetStatusTone(progress)}>
-                {worksheetStatusLabel(assignment)}
-              </StatusPill>
-              {assignment.revealAnswers === false ? (
-                <Badge variant="outline">Cold diagnostic</Badge>
-              ) : null}
-              {assignment.allowSkip === true ? (
-                <Badge variant="outline">Skipping allowed</Badge>
-              ) : null}
-            </div>
-            {createdLabel && (
-              <span className="shrink-0 text-sm text-muted-foreground">Assigned {createdLabel}</span>
-            )}
+          <div className="mb-2 flex h-7 items-center gap-2">
+            <StatusPill tone={worksheetStatusTone(progress)} className="h-7 shrink-0 whitespace-nowrap">
+              {worksheetCardStatusLabel(assignment)}
+            </StatusPill>
+            {assignment.allowSkip === true ? (
+              <Badge variant="outline" className="h-7 shrink-0 whitespace-nowrap">
+                Skipping allowed
+              </Badge>
+            ) : null}
+            {createdLabel ? (
+              <span className="ml-auto shrink-0 text-sm text-muted-foreground">Assigned {createdLabel}</span>
+            ) : null}
           </div>
           <p className="mb-1 text-sm font-medium text-primary">{assignment.studentName}</p>
           <CardTitle className="text-lg leading-tight">{assignment.title}</CardTitle>

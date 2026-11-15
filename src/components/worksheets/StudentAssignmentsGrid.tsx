@@ -6,9 +6,8 @@ import { StatusPill, worksheetStatusTone } from "@/components/status/StatusPill"
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchAssignmentsForStudent } from "@/lib/assignmentService";
 import {
-  formatAssignmentDueDate,
+  worksheetCardStatusLabel,
   worksheetProgressStatus,
-  worksheetStatusLabel,
 } from "@/lib/dashboardStats";
 import type { WorksheetAssignment } from "@/types/assignment";
 import { WorksheetEmptyState } from "./WorksheetEmptyState";
@@ -104,7 +103,6 @@ export function StudentAssignmentsGrid({
         const isCompleted = assignment.status === "completed";
         const progress = worksheetProgressStatus(assignment);
         const inProgress = !isCompleted && Boolean(inProgressAssignmentIds?.has(assignment.id));
-        const dueLabel = formatAssignmentDueDate(assignment);
         const createdLabel = assignment.createdAt?.toDate
           ? assignment.createdAt.toDate().toLocaleDateString()
           : "";
@@ -112,19 +110,13 @@ export function StudentAssignmentsGrid({
         return (
           <Card key={assignment.id}>
             <CardHeader className="pb-3">
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <div className="flex flex-wrap items-center gap-2">
-                  <StatusPill tone={worksheetStatusTone(progress)}>
-                    {progress === "assigned" && inProgress
-                      ? dueLabel
-                        ? `In progress, due ${dueLabel}`
-                        : "In progress"
-                      : worksheetStatusLabel(assignment)}
-                  </StatusPill>
-                </div>
-                {createdLabel && (
-                  <span className="shrink-0 text-sm text-muted-foreground">Assigned {createdLabel}</span>
-                )}
+              <div className="mb-2 flex h-7 items-center gap-2">
+                <StatusPill tone={worksheetStatusTone(progress)} className="h-7 shrink-0 whitespace-nowrap">
+                  {worksheetCardStatusLabel(assignment, inProgress)}
+                </StatusPill>
+                {createdLabel ? (
+                  <span className="ml-auto shrink-0 text-sm text-muted-foreground">Assigned {createdLabel}</span>
+                ) : null}
               </div>
               <p className="mb-1 text-sm font-medium text-primary">From your tutor</p>
               <CardTitle className="text-lg leading-tight">{assignment.title}</CardTitle>
